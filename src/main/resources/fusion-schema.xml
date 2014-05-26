@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<core>
+    <!-- the fields of the fusion schema -->
+    <!-- supported types: text, int, long, float, double, boolean, date -->
+    <!-- default type is "text" -->
+    <!-- mappings in <fields> below use the following field names: -->
+    <fusion-schema-fields>
+        <field name="id" />
+        <field name="city" />
+        <field name="title" />
+        <field name="numberExample" type="int" />
+        <field name="mappingExample" />
+        <field name="computingExample" />
+        <field name="publicationDate" type="date" format="dd.MM.yyyy" />
+    </fusion-schema-fields>
+
+    <!-- type attribute's value in <fields> is one of the following names: -->
+    <!-- predefined internally: -->
+    <!-- <script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile" /> -->
+    <!-- <script-type name="beanshell-file" class="org.outermedia.solrfusion.types.BshFile" /> -->
+    <!-- <script-type name="javascript" class="org.outermedia.solrfusion.types.Js" /> -->
+    <!-- <script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh" /> -->
+    <!-- <script-type name="java-class" class="org.outermedia.solrfusion.types.Java" /> -->
+    <!-- <script-type name="regexp" class="org.outermedia.solrfusion.types.RegularExpression" /> -->
+    <!-- <script-type name="static-table-file" class="org.outermedia.solrfusion.types.TableFile"/> -->
+    <!-- <script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/> -->
+
+    <default-search-field>title</default-search-field>
+    
+    <!-- in a Solr query the operator is explicitly set to rewrite the default -->
+    <default-operator>AND</default-operator>
+
+    <!-- "id" is one name of <fusion-fields> -->
+    <id-generator fusion-name="id"
+        class="org.outermedia.solrfusion.xyz.DefaultIdGeneratorFactory" />
+
+    <solr-servers>
+        <!-- global settings -->
+        <timeout>4000</timeout>
+        <desaster-limit>3</desaster-limit>
+        <error key="desaster-limit">Ihre Anfrage konnte nicht von ausreichend
+            vielen Systemen beantwortet werden.
+        </error>
+        
+        <!-- factory controls re-usage of created objects -->
+        <query-parser class="org.outermedia.solrfusion.EdisMaxQueryParserFactory">
+
+        <response-parser class="org.ulrfusion.DefaultResponseParseFactory" />
+
+        <response-renderer type="xml"
+            class="org.outermedia.solrfusion.DefaultXmlResponseRendererFactory" />
+
+        <response-renderer type="json"
+            class="org.outermedia.solrfusion.DefaultJsonResponseRendererFactory" />
+
+        <response-renderer type="php"
+            class="org.outermedia.solrfusion.DefaultPhpResponseRendererFactory" />
+
+        <!-- merge solr documents of different solrs into one -->
+        <!-- "prio" controls which non empty value to use at first -->
+        <merge fusion-name="ISBN" class="org.outermedia.solrfusion.xyz.DefaultMergeStrategyFactory">
+            <target prio="1" target-name="Bibliothek A"/>
+            <target prio="2" target-name="Bibliothek B"/>
+        </merge>         
+
+        <!-- first server, use XML include if you want to put -->
+        <!-- this block in a separate file -->
+        <solr-server name="Bibliothek A" version="3.6"
+            class="org.outermedia.solrfusion.DefaultSolrAdapterFactory">
+
+            <url>http://host:port/solr/xyz</url>
+
+            <score factor="1.2"
+                class="org.outermedia.solrfusion.xyz.DefaultScoreFactory" />
+
+            <!-- overwrite global setting example -->
+            <response-parser
+                class="org.outermedia.solr.fusion.SpecialResponseParseFactory" />
+                
+            <!-- the <id-generator> has to know how to identify solr -->
+            <!-- docs by id -->
+            <unique-key>id</unique-key>
+
+            <!-- the following field mappings have to cover all -->
+            <!-- fields listed in <fusion-schema-fields> -->
+
+            <!-- simply map a field name, values are not converted -->
+            <field name="start" fusion-name="city" />
+            
+            <!-- use the wildcard "*" as postfix in name and fusion-name -->
+            <!-- to address dynamic fields -->
+            <!-- both fields have to use a wildcard! -->
+            <field name="*_text" fusion-name="*_t" />
+            <field name="int_*" fusion-name="i_*" />
+
+            <!-- mapping is defined in a table, which is stored in a file -->
+            <field name="u" fusion-name="user">
+                <change>
+                    <!-- the mapping has to be bijective -->
+                    <query-response type="static-table-file">
+                        mapping_file-username.xml
+                    </query-response>
+                </change>
+            </field>
+            
+            <!-- mapping is defined in a table -->
+            <field name="u" fusion-name="user">
+                <change>
+                    <!-- the mapping has to be bijective -->
+                    <query-response type="static-table">
+                        <entry>
+                            <value>u1</value>
+                            <fusion-value>user1</fusion-value>
+                        </entry>
+                        <entry>
+                            <value>u2</value>
+                            <fusion-value>user2</fusion-value>
+                        </entry>
+                    </query-response>
+                </change>
+            </field>
+
+            <!-- map a field with extra operations on the values -->
+            <!-- in the query and response -->
+            <!-- valid operations are <change>, <add>, <drop> -->
+            <!-- <change> is only processed when a value exists -->
+            <!-- <add>/<drop> are always processed-->
+            <!-- operations are processed in textual order -->
+            <!-- <change>: <response> searches "name" in the solr -->
+            <!-- response and maps it to "fusion-name" -->
+            <!-- <add>: <response> ignores the perhaps missing "name" -->
+            <!-- in the solr response and adds a value for "fusion-name" -->
+            <!-- <change>: <query> searches "fusion-name" in the -->
+            <!-- fusion query and maps it to the "name" in the solr query -->
+            <!-- <add>: <query> ignores the perhaps missing "fusion-name" -->
+            <!-- in the fusion query and adds a value for "name" in -->
+            <!-- the solr query -->
+            <!-- <drop> removes the field either from the query or -->
+            <!-- response -->
+            <field name="start" fusion-name="city">
+                <change>
+                    <response type="javascript-file">Pfad.js</response>
+                    <!--
+                    <response type="java-class">org.outermedia.solrfusion.ComplexAction</response>
+                    -->
+                    <query type="beanshell-file">Pfad.bsh</query>
+                    <!--
+                    <query type="beanshell">
+                        currentQuery = currentQuery
+                            .replace("XXX",System.currentTimeMillis());
+                    </query>
+                    <query type="regexp">
+                       <pattern>ab(.*)ende</pattern>
+                       <replacement>AB\1de</replacement>
+                   </query>
+                   -->
+                </change>
+            </field>
+
+            <!-- ignore field in response -->
+            <field name="ende52">
+                <drop>
+                    <response />
+                </drop>
+            </field>
+
+            <!-- ignore field in query -->
+            <field fusion-name="ende52">
+                <drop>
+                    <query />
+                </drop>
+            </field>
+
+            <!-- ignore field in query and response -->
+            <field name="ende52" fusion-name="ende">
+                <drop>
+                    <response />
+                    <query />
+                </drop>
+            </field>
+
+            <!-- add field to response, but ignore query value -->
+            <field name="ende51" fusion-name="ende">
+                <drop>
+                    <query />
+                </drop>
+                <add>
+                    <!-- <query> not valid, because field is dropped -->
+                    <response type="beanshell-file">Pfad.bsh</response>
+                </add>
+            </field>
+                    
+            <!-- split "B x H x T" into 3 fields -->
+            <!-- it is not possible to join the response -->
+            <!-- if three <field> rules were used -->
+            <!-- name contains three field names: w(idth), -->
+            <!-- h(eight) and d(epth) -->
+            <field name="w,h,d" fusion-name="measure">
+                <change>
+                    <!-- rewrite default field(s) to a certain one -->
+                    <!-- the value of "as-name" is a member of "name" -->
+                    <query type="extract-width" as-name="w" />
+                    <query type="extract-height" as-name="h" />
+                    <query type="extract-depth" as-name="d" />
+                    <response type="merge-measure-units">
+                        <width-field>w</width-field>
+                        <height-field>h</height-field>
+                        <depth-field>d</depth-field>
+                    </response>
+                </change>
+            </field>
+                    
+            <!-- merge 3 fields into "B x H x T" -->
+            <field name="measure" fusion-name="w,h,d">
+                <change>
+                    <response type="extract-width" as-fusion-name="w" />
+                    <response type="extract-height" as-fusion-name="h" />
+                    <response type="extract-depth" as-fusion-name="d" />
+                    <query type="merge-measure-units">
+                        <width-field>w</width-field>
+                        <height-field>h</height-field>
+                        <depth-field>d</depth-field>
+                    </query>
+                </change>
+            </field>
+
+        </solr-server>        
+            
+        <!-- more solr servers definitions ... -->
+
+    </solr-server>
+</core>
