@@ -14,7 +14,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Data holder class to store one field mapping.
+ * Data holder class to store one field mapping configuration.
  * 
  * @author ballmann
  * 

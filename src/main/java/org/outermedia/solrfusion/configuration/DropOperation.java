@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Data holder to store drop operations.
+ * Data holder to store drop operation configurations.
  * 
  * @author ballmann
  * 

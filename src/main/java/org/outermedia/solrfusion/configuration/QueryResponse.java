@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Data holder class to store one "query-response".
+ * Data holder class to store one "query-response" configuration.
  * 
  * @author ballmann
  * 
@@ -18,7 +18,7 @@ import lombok.ToString;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "queryResponse", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
 {
-	"nodes"
+	"typeConfig"
 })
 @Getter
 @Setter

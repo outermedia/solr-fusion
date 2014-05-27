@@ -1,113 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<core>
+<om:core
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:om="http://solrfusion.outermedia.org/configuration/" 
+    xmlns="http://solrfusion.outermedia.org/configuration/type/"
+    xsi:schemaLocation="http://solrfusion.outermedia.org/configuration/ ../../main/resources/configuration.xsd "
+>
     <!-- the fields of the fusion schema -->
     <!-- supported types: text, int, long, float, double, boolean, date -->
     <!-- default type is "text" -->
     <!-- mappings in <fields> below use the following field names: -->
-    <fusion-schema-fields>
-        <field name="id" />
-        <field name="city" />
-        <field name="title" />
-        <field name="numberExample" type="int" />
-        <field name="mappingExample" />
-        <field name="computingExample" />
-        <field name="publicationDate" type="date" format="dd.MM.yyyy" />
-    </fusion-schema-fields>
+    <om:fusion-schema-fields>
+        <om:field name="id" />
+        <om:field name="city" />
+        <om:field name="title" />
+        <om:field name="numberExample" type="int" />
+        <om:field name="mappingExample" />
+        <om:field name="computingExample" />
+        <om:field name="publicationDate" type="date" format="dd.MM.yyyy" />
+    </om:fusion-schema-fields>
 
-    <!-- type attribute's value in <fields> is one of the following names: -->
-    <!-- predefined internally: -->
-    <!-- <script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile" /> -->
-    <!-- <script-type name="beanshell-file" class="org.outermedia.solrfusion.types.BshFile" /> -->
-    <!-- <script-type name="javascript" class="org.outermedia.solrfusion.types.Js" /> -->
-    <!-- <script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh" /> -->
-    <!-- <script-type name="java-class" class="org.outermedia.solrfusion.types.Java" /> -->
-    <!-- <script-type name="regexp" class="org.outermedia.solrfusion.types.RegularExpression" /> -->
-    <!-- <script-type name="static-table-file" class="org.outermedia.solrfusion.types.TableFile"/> -->
-    <!-- <script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/> -->
+    <!-- general type attribute's value in <fields> is one of the following names: -->
+    <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile" />
+    <om:script-type name="beanshell-file" class="org.outermedia.solrfusion.types.BshFile" />
+    <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js" />
+    <om:script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh" />
+    <om:script-type name="java-class" class="org.outermedia.solrfusion.types.Java" />
+    <om:script-type name="regexp" class="org.outermedia.solrfusion.types.RegularExpression" />
+    <om:script-type name="static-table-file" class="org.outermedia.solrfusion.types.TableFile"/>
+    <om:script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/>
 
-    <default-search-field>title</default-search-field>
+    <om:default-search-field>title</om:default-search-field>
     
     <!-- in a Solr query the operator is explicitly set to rewrite the default -->
-    <default-operator>AND</default-operator>
+    <om:default-operator>AND</om:default-operator>
 
     <!-- "id" is one name of <fusion-fields> -->
-    <id-generator fusion-name="id"
-        class="org.outermedia.solrfusion.xyz.DefaultIdGeneratorFactory" />
+    <om:id-generator fusion-name="id"
+        class="org.outermedia.solrfusion.DefaultIdGenerator$Factory" />
 
-    <solr-servers>
+    <om:solr-servers>
         <!-- global settings -->
-        <timeout>4000</timeout>
-        <desaster-limit>3</desaster-limit>
-        <error key="desaster-limit">Ihre Anfrage konnte nicht von ausreichend
+        <om:timeout>4000</om:timeout>
+        <om:desaster-limit>3</om:desaster-limit>
+        <om:error key="desaster-limit">Ihre Anfrage konnte nicht von ausreichend
             vielen Systemen beantwortet werden.
-        </error>
+        </om:error>
         
         <!-- factory controls re-usage of created objects -->
-        <query-parser class="org.outermedia.solrfusion.EdisMaxQueryParserFactory">
+        <om:query-parser class="org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory"/>
 
-        <response-parser class="org.ulrfusion.DefaultResponseParseFactory" />
+        <om:response-parser class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory" />
 
-        <response-renderer type="xml"
-            class="org.outermedia.solrfusion.DefaultXmlResponseRendererFactory" />
+        <om:response-renderer type="xml"
+            class="org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory" />
 
-        <response-renderer type="json"
-            class="org.outermedia.solrfusion.DefaultJsonResponseRendererFactory" />
+        <om:response-renderer type="json"
+            class="org.outermedia.solrfusion.response.DefaultJsonResponseRenderer$Factory" />
 
-        <response-renderer type="php"
-            class="org.outermedia.solrfusion.DefaultPhpResponseRendererFactory" />
+        <om:response-renderer type="php"
+            class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory" />
 
         <!-- merge solr documents of different solrs into one -->
         <!-- "prio" controls which non empty value to use at first -->
-        <merge fusion-name="ISBN" class="org.outermedia.solrfusion.xyz.DefaultMergeStrategyFactory">
-            <target prio="1" target-name="Bibliothek A"/>
-            <target prio="2" target-name="Bibliothek B"/>
-        </merge>         
+        <om:merge fusion-name="ISBN" class="org.outermedia.solrfusion.DefaultMergeStrategy$Factory">
+            <om:target prio="1" target-name="Bibliothek A"/>
+            <om:target prio="2" target-name="Bibliothek B"/>
+        </om:merge>         
 
         <!-- first server, use XML include if you want to put -->
         <!-- this block in a separate file -->
-        <solr-server name="Bibliothek A" version="3.6"
-            class="org.outermedia.solrfusion.DefaultSolrAdapterFactory">
+        <om:solr-server name="Bibliothek A" version="3.6"
+            class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
-            <url>http://host:port/solr/xyz</url>
+            <om:url>http://host:port/solr/xyz</om:url>
 
-            <score factor="1.2"
-                class="org.outermedia.solrfusion.xyz.DefaultScoreFactory" />
+            <om:score factor="1.2"
+                class="org.outermedia.solrfusion.DefaultScore$Factory" />
 
             <!-- overwrite global setting example -->
-            <response-parser
-                class="org.outermedia.solr.fusion.SpecialResponseParseFactory" />
+            <om:response-parser
+                class="org.outermedia.solrfusion.SpecialResponseParser$Factory" />
                 
             <!-- the <id-generator> has to know how to identify solr -->
             <!-- docs by id -->
-            <unique-key>id</unique-key>
+            <om:unique-key>id</om:unique-key>
 
             <!-- the following field mappings have to cover all -->
             <!-- fields listed in <fusion-schema-fields> -->
 
             <!-- simply map a field name, values are not converted -->
-            <field name="start" fusion-name="city" />
+            <om:field name="start" fusion-name="city" />
             
             <!-- use the wildcard "*" as postfix in name and fusion-name -->
             <!-- to address dynamic fields -->
             <!-- both fields have to use a wildcard! -->
-            <field name="*_text" fusion-name="*_t" />
-            <field name="int_*" fusion-name="i_*" />
+            <om:field name="*_text" fusion-name="*_t" />
+            <om:field name="int_*" fusion-name="i_*" />
 
             <!-- mapping is defined in a table, which is stored in a file -->
-            <field name="u" fusion-name="user">
-                <change>
+            <om:field name="u" fusion-name="user">
+                <om:change>
                     <!-- the mapping has to be bijective -->
-                    <query-response type="static-table-file">
-                        mapping_file-username.xml
-                    </query-response>
-                </change>
-            </field>
+                    <om:query-response type="static-table-file">
+                        <file>mapping_file-username.xml</file>
+                    </om:query-response>
+                </om:change>
+            </om:field>
             
             <!-- mapping is defined in a table -->
-            <field name="u" fusion-name="user">
-                <change>
+            <om:field name="u" fusion-name="user">
+                <om:change>
                     <!-- the mapping has to be bijective -->
-                    <query-response type="static-table">
+                    <om:query-response type="static-table">
                         <entry>
                             <value>u1</value>
                             <fusion-value>user1</fusion-value>
@@ -116,117 +120,119 @@
                             <value>u2</value>
                             <fusion-value>user2</fusion-value>
                         </entry>
-                    </query-response>
-                </change>
-            </field>
+                    </om:query-response>
+                </om:change>
+            </om:field>
 
             <!-- map a field with extra operations on the values -->
             <!-- in the query and response -->
-            <!-- valid operations are <change>, <add>, <drop> -->
-            <!-- <change> is only processed when a value exists -->
-            <!-- <add>/<drop> are always processed-->
+            <!-- valid operations are <om:change>, <om:add>, <om:drop> -->
+            <!-- <om:change> is only processed when a value exists -->
+            <!-- <om:add>/<om:drop> are always processed-->
             <!-- operations are processed in textual order -->
-            <!-- <change>: <response> searches "name" in the solr -->
+            <!-- <om:change>: <om:response> searches "name" in the solr -->
             <!-- response and maps it to "fusion-name" -->
-            <!-- <add>: <response> ignores the perhaps missing "name" -->
+            <!-- <om:add>: <om:response> ignores the perhaps missing "name" -->
             <!-- in the solr response and adds a value for "fusion-name" -->
-            <!-- <change>: <query> searches "fusion-name" in the -->
+            <!-- <om:change>: <om:query> searches "fusion-name" in the -->
             <!-- fusion query and maps it to the "name" in the solr query -->
-            <!-- <add>: <query> ignores the perhaps missing "fusion-name" -->
+            <!-- <om:add>: <om:query> ignores the perhaps missing "fusion-name" -->
             <!-- in the fusion query and adds a value for "name" in -->
             <!-- the solr query -->
-            <!-- <drop> removes the field either from the query or -->
+            <!-- <om:drop> removes the field either from the query or -->
             <!-- response -->
-            <field name="start" fusion-name="city">
-                <change>
-                    <response type="javascript-file">Pfad.js</response>
-                    <!--
-                    <response type="java-class">org.outermedia.solrfusion.ComplexAction</response>
-                    -->
-                    <query type="beanshell-file">Pfad.bsh</query>
-                    <!--
-                    <query type="beanshell">
+            <om:field name="start" fusion-name="city">
+                <om:change>
+                    <om:response type="javascript-file"><file>Pfad.js</file></om:response>     
+                    <!--             
+                    <om:response type="java-class"><class>org.outermedia.solrfusion.ComplexAction</class></om:response>            
+                    -->       
+                    <om:query type="beanshell-file"><file>Pfad.bsh</file></om:query>     
+                    <!--                
+                    <om:query type="beanshell">
+                        <script>
                         currentQuery = currentQuery
                             .replace("XXX",System.currentTimeMillis());
-                    </query>
-                    <query type="regexp">
+                        </script>
+                    </om:query>
+                    <om:query type="regexp">
                        <pattern>ab(.*)ende</pattern>
                        <replacement>AB\1de</replacement>
-                   </query>
+                   </om:query>                 
                    -->
-                </change>
-            </field>
+                </om:change>
+            </om:field>
 
             <!-- ignore field in response -->
-            <field name="ende52">
-                <drop>
-                    <response />
-                </drop>
-            </field>
+            <om:field name="ende52">
+                <om:drop>
+                    <om:response />
+                </om:drop>
+            </om:field>
 
             <!-- ignore field in query -->
-            <field fusion-name="ende52">
-                <drop>
-                    <query />
-                </drop>
-            </field>
+            <om:field fusion-name="ende52">
+                <om:drop>
+                    <om:query />
+                </om:drop>
+            </om:field>
 
             <!-- ignore field in query and response -->
-            <field name="ende52" fusion-name="ende">
-                <drop>
-                    <response />
-                    <query />
-                </drop>
-            </field>
+            <om:field name="ende52" fusion-name="ende">
+                <om:drop>
+                    <om:response />
+                    <om:query />
+                </om:drop>
+            </om:field>
 
             <!-- add field to response, but ignore query value -->
-            <field name="ende51" fusion-name="ende">
-                <drop>
-                    <query />
-                </drop>
-                <add>
-                    <!-- <query> not valid, because field is dropped -->
-                    <response type="beanshell-file">Pfad.bsh</response>
-                </add>
-            </field>
+            <om:field name="ende51" fusion-name="ende">
+                <om:drop>
+                    <om:query />
+                </om:drop>
+                <om:add>
+                    <!-- <om:query> not valid, because field is dropped -->
+                    <om:response type="beanshell-file"><file>Pfad.bsh</file></om:response>
+                </om:add>
+            </om:field>
                     
             <!-- split "B x H x T" into 3 fields -->
             <!-- it is not possible to join the response -->
             <!-- if three <field> rules were used -->
             <!-- name contains three field names: w(idth), -->
             <!-- h(eight) and d(epth) -->
-            <field name="w,h,d" fusion-name="measure">
-                <change>
+            <om:field name="w,h,d" fusion-name="measure">
+                <om:change>
                     <!-- rewrite default field(s) to a certain one -->
                     <!-- the value of "as-name" is a member of "name" -->
-                    <query type="extract-width" as-name="w" />
-                    <query type="extract-height" as-name="h" />
-                    <query type="extract-depth" as-name="d" />
-                    <response type="merge-measure-units">
+                    <om:query type="extract-width" name="w" />
+                    <om:query type="extract-height" name="h" />
+                    <om:query type="extract-depth" name="d" />
+                    <om:response type="merge-measure-units">
                         <width-field>w</width-field>
                         <height-field>h</height-field>
                         <depth-field>d</depth-field>
-                    </response>
-                </change>
-            </field>
+                    </om:response>
+                </om:change>
+            </om:field>
                     
             <!-- merge 3 fields into "B x H x T" -->
-            <field name="measure" fusion-name="w,h,d">
-                <change>
-                    <response type="extract-width" as-fusion-name="w" />
-                    <response type="extract-height" as-fusion-name="h" />
-                    <response type="extract-depth" as-fusion-name="d" />
-                    <query type="merge-measure-units">
+            <om:field name="measure" fusion-name="w,h,d">
+                <om:change>
+                    <om:response type="extract-width" fusion-name="w" />
+                    <om:response type="extract-height" fusion-name="h" />
+                    <om:response type="extract-depth" fusion-name="d" />
+                    <om:query type="merge-measure-units">
                         <width-field>w</width-field>
                         <height-field>h</height-field>
                         <depth-field>d</depth-field>
-                    </query>
-                </change>
-            </field>
+                    </om:query>
+                </om:change>
+            </om:field>
 
-        </solr-server>        
+        </om:solr-server>        
             
         <!-- more solr servers definitions ... -->
 
-    </solr-server>
-</core>
+    </om:solr-servers>
+</om:core>

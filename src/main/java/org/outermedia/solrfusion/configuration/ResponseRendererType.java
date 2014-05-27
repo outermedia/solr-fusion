@@ -5,7 +5,8 @@ import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * The three supported response renderer types.
+ * The three supported response renderer types: <li>{@link #XML}</li><li>
+ * {@link #JSON}</li><li>{@link #PHP}</li>
  * 
  * @author ballmann
  * 

@@ -13,8 +13,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.outermedia.solrfusion.response.ResponseRendererIfc;
+
 /**
- * Data holder class keeping the configuration.
+ * Data holder class keeping the fusion configuration.
  * 
  * @author ballmann
  * 
@@ -50,4 +52,16 @@ public class Configuration
 
 	@XmlElement(name = "solr-servers", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
 	private GlobalSearchServerConfig searchServers;
+
+	/**
+	 * Find a response renderer by type.
+	 * 
+	 * @param type is either PHP, JSON or XML (see {@link ResponseRendererType})
+	 * @return null for an error or an instance of {@link ResponseRendererIfc}
+	 */
+	public ResponseRendererIfc getResponseRendererByType(
+		ResponseRendererType type)
+	{
+		return searchServers.getResponseRendererByType(type);
+	}
 }

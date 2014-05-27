@@ -8,8 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.outermedia.solrfusion.response.ResponseParserIfc;
+
 /**
- * Data holder class to store the response parser factory's class.
+ * Data holder class to store the response parser factory's class configuration.
  * 
  * @author ballmann
  * 
@@ -20,5 +22,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class ResponseParserFactory extends ConfiguredFactory
+public class ResponseParserFactory extends
+	ConfiguredFactory<ResponseParserIfc, ResponseParserFactory>
 {}

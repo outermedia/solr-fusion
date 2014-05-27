@@ -11,8 +11,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Abstract data holder class to store targets (&lt;query&gt;, &lt;response&gt;,
- * &lt;query-response&gt;).
+ * Abstract data holder class to store target configurations (&lt;query&gt;,
+ * &lt;response&gt;, &lt;query-response&gt;).
  * 
  * @author ballmann
  * 

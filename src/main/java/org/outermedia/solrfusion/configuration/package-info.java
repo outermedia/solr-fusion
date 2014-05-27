@@ -1,0 +1,2 @@
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://solrfusion.outermedia.org/configuration/", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+package org.outermedia.solrfusion.configuration;

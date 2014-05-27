@@ -8,8 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.outermedia.solrfusion.query.QueryParserIfc;
+
 /**
- * Data holder class to store the query parser factory's class.
+ * Data holder class to store the query parser factory's class configuration.
  * 
  * @author ballmann
  * 
@@ -20,5 +22,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class QueryParserFactory extends ConfiguredFactory
+public class QueryParserFactory extends
+	ConfiguredFactory<QueryParserIfc, QueryParserFactory>
 {}

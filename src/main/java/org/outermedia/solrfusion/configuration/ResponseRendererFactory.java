@@ -9,8 +9,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.outermedia.solrfusion.response.ResponseRendererIfc;
+
 /**
- * Data holder class to store the response renderer factory's class.
+ * Data holder class to store the response renderer factory's class
+ * configuration.
  * 
  * @author ballmann
  * 
@@ -21,8 +24,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class ResponseRendererFactory extends ConfiguredFactory
+public class ResponseRendererFactory extends
+	ConfiguredFactory<ResponseRendererIfc, ResponseRendererFactory>
 {
 	@XmlAttribute(name = "type", required = true)
-	private ResponseRendererType fusionFieldName;
+	private ResponseRendererType type;
 }

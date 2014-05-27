@@ -6,11 +6,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 
 /**
  * Data holder keeping one search server's configuration.
@@ -28,7 +31,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class SearchServerConfig extends ConfiguredFactory
+public class SearchServerConfig extends
+	ConfiguredFactory<SearchServerAdapterIfc, SearchServerConfig>
 {
 	@XmlAttribute(name = "name", required = true)
 	private String searchServerName;
@@ -50,4 +54,8 @@ public class SearchServerConfig extends ConfiguredFactory
 
 	@XmlElement(name = "field", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
 	private List<FieldMapping> fieldMappings;
+
+	@XmlTransient
+	private Initiable<SearchServerConfig> searchServer;
+
 }

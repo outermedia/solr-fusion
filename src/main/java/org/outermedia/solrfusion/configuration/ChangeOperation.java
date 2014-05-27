@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Data holder to store change operations.
+ * Data holder to store change operation configurations.
  * 
  * @author ballmann
  * 

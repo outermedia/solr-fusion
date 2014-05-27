@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.outermedia.solrfusion.response.ResponseRendererIfc;
+
 /**
  * Data holder class keeping the global search server configuration and all
  * search server specific settings.
@@ -23,7 +25,7 @@ import lombok.ToString;
 @XmlType(name = "globalSearchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
 {
 	"timeout", "desasterLimit", "desasterMessage", "queryParserFactory",
-	"defaultResponseParserFactory", "responseRendererFactories",
+	"defaultResponseParserFactory", "responseRendererFactories", "merge",
 	"searchServers"
 })
 @Getter
@@ -38,7 +40,7 @@ public class GlobalSearchServerConfig
 	private int desasterLimit;
 
 	@XmlElement(name = "error", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-	private String desasterMessage;
+	private Message desasterMessage;
 
 	@XmlElement(name = "query-parser", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
 	private QueryParserFactory queryParserFactory;
@@ -49,10 +51,32 @@ public class GlobalSearchServerConfig
 	@XmlElement(name = "response-renderer", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
 	private List<ResponseRendererFactory> responseRendererFactories;
 
-	/*
-	 TODO <merge>
-	 */
+	@XmlElement(name = "merge", namespace = "http://solrfusion.outermedia.org/configuration/", required = false)
+	private Merge merge;
 
 	@XmlElement(name = "solr-server", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
 	private List<SearchServerConfig> searchServers;
+
+	/**
+	 * Find a response renderer by type.
+	 * 
+	 * @param type is either PHP, JSON or XML (see {@link ResponseRendererType})
+	 * @return null for an error or an instance of {@link ResponseRendererIfc}
+	 */
+	public ResponseRendererIfc getResponseRendererByType(
+		ResponseRendererType type)
+	{
+		ResponseRendererIfc result = null;
+		if (responseRendererFactories != null && type != null)
+		{
+			for (ResponseRendererFactory rr : responseRendererFactories)
+			{
+				if (type.equals(rr.getType()))
+				{
+					result = rr.getImplementation();
+				}
+			}
+		}
+		return result;
+	}
 }

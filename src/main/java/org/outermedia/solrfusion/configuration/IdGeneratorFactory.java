@@ -9,8 +9,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.outermedia.solrfusion.IdGeneratorIfc;
+
 /**
- * Data holder class keeping the factory's class and field id.
+ * Data holder class keeping the factory's class and field id configuration.
  * 
  * @author ballmann
  * 
@@ -21,7 +23,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class IdGeneratorFactory extends ConfiguredFactory
+public class IdGeneratorFactory extends
+	ConfiguredFactory<IdGeneratorIfc, IdGeneratorFactory>
 {
 	@XmlAttribute(name = "fusion-name", required = true)
 	private String fusionFieldName;

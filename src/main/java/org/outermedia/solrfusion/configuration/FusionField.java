@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Data holder class keeping the fusion schema fields.
+ * Data holder class keeping the fusion schema field configurations.
  * 
  * @author ballmann
  * 
@@ -26,7 +26,7 @@ public class FusionField
 	@XmlAttribute(name = "name", required = true)
 	private String fieldName;
 
-	@XmlAttribute(name = "type", required = true)
+	@XmlAttribute(name = "type", required = false)
 	private String type = "string";
 
 	@XmlAttribute(name = "format", required = false)

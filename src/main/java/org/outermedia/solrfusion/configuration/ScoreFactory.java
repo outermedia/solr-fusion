@@ -9,8 +9,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.outermedia.solrfusion.ScoreCorrectorIfc;
+
 /**
- * Data holder class to store the score factory's class.
+ * Data holder class to store the score factory's class configuration.
  * 
  * @author ballmann
  * 
@@ -21,7 +23,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class ScoreFactory extends ConfiguredFactory
+public class ScoreFactory extends
+	ConfiguredFactory<ScoreCorrectorIfc, ScoreFactory>
 {
 	@XmlAttribute(name = "factor", required = true)
 	private double factor;

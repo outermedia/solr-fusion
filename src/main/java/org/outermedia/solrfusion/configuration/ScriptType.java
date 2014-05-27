@@ -10,8 +10,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.outermedia.solrfusion.types.AbstractType;
+
 /**
- * Data holder class keeping the script types.
+ * Data holder class keeping the script type configurations.
  * 
  * @author ballmann
  * 
@@ -22,7 +24,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class ScriptType extends ConfiguredFactory
+public class ScriptType extends ConfiguredFactory<AbstractType, ScriptType>
 {
 	@XmlID
 	@XmlAttribute(name = "name", required = true)

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema elementFormDefault="qualified" version="1.0" targetNamespace="http://solrfusion.outermedia.org/configuration/" xmlns:tns="http://solrfusion.outermedia.org/configuration/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="core">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="fusion-schema-fields">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="field" type="tns:fieldType" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="script-type" type="tns:scriptType" maxOccurs="unbounded"/>
+        <xs:element name="default-search-field" type="xs:string"/>
+        <xs:element name="default-operator" type="xs:string"/>
+        <xs:element name="id-generator" type="tns:idGenerator"/>
+        <xs:element name="solr-servers" type="tns:globalSearchServerConfig"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="fieldType">
+    <xs:sequence/>
+    <xs:attribute name="format" type="xs:string"/>
+    <xs:attribute name="type" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="scriptType">
+    <xs:sequence/>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+    <xs:attribute name="name" type="xs:ID" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="idGenerator">
+    <xs:sequence/>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+    <xs:attribute name="fusion-name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="globalSearchServerConfig">
+    <xs:sequence>
+      <xs:element name="timeout" type="xs:int"/>
+      <xs:element name="desaster-limit" type="xs:int"/>
+      <xs:element name="error" type="tns:message"/>
+      <xs:element name="query-parser" type="tns:queryParser"/>
+      <xs:element name="response-parser" type="tns:responseParser"/>
+      <xs:element name="response-renderer" type="tns:responseRenderer" maxOccurs="unbounded"/>
+      <xs:element name="merge" type="tns:merge" minOccurs="0"/>
+      <xs:element name="solr-server" type="tns:searchServerConfig" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="message">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="key" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="queryParser">
+    <xs:sequence/>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="responseParser">
+    <xs:sequence/>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="responseRenderer">
+    <xs:sequence/>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+    <xs:attribute name="type" type="tns:responseRendererType" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="merge">
+    <xs:sequence>
+      <xs:element name="target" type="tns:mergeTarget" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+    <xs:attribute name="fusion-name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="mergeTarget">
+    <xs:sequence/>
+    <xs:attribute name="target-name" type="xs:string" use="required"/>
+    <xs:attribute name="prio" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="searchServerConfig">
+    <xs:sequence>
+      <xs:element name="url" type="xs:string"/>
+      <xs:element name="score" type="tns:scoreFactory"/>
+      <xs:element name="response-parser" type="tns:responseParser" minOccurs="0"/>
+      <xs:element name="unique-key" type="xs:string"/>
+      <xs:element name="field" type="tns:fieldMapping" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+    <xs:attribute name="version" type="xs:string" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="scoreFactory">
+    <xs:sequence/>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+    <xs:attribute name="factor" type="xs:double" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="fieldMapping">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="add" type="tns:addOperation"/>
+        <xs:element name="drop" type="tns:dropOperation"/>
+        <xs:element name="change" type="tns:changeOperation"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="fusion-name" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="addOperation">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="query" type="tns:query"/>
+        <xs:element name="response" type="tns:response"/>
+        <xs:element name="query-response" type="tns:queryResponse"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="query">
+    <xs:sequence>
+      <xs:any processContents="skip" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="fusion-name" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="type" type="xs:IDREF"/>
+  </xs:complexType>
+
+  <xs:complexType name="response">
+    <xs:sequence>
+      <xs:any processContents="skip" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="fusion-name" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="type" type="xs:IDREF"/>
+  </xs:complexType>
+
+  <xs:complexType name="queryResponse">
+    <xs:sequence>
+      <xs:any processContents="skip" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="fusion-name" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="type" type="xs:IDREF"/>
+  </xs:complexType>
+
+  <xs:complexType name="dropOperation">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="query" type="tns:query"/>
+        <xs:element name="response" type="tns:response"/>
+        <xs:element name="query-response" type="tns:queryResponse"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="changeOperation">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="query" type="tns:query"/>
+        <xs:element name="response" type="tns:response"/>
+        <xs:element name="query-response" type="tns:queryResponse"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="responseRendererType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="xml"/>
+      <xs:enumeration value="json"/>
+      <xs:enumeration value="php"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+
