@@ -84,7 +84,7 @@ public class Configuration
 	 * respond the disaster message (see {@link #getDisasterMessage()}) is
 	 * thrown.
 	 * 
-	 * @return
+	 * @return the minimal number of responding servers
 	 */
 	public int getDisasterLimit()
 	{

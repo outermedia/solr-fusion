@@ -65,7 +65,7 @@ public class Util
 	 * @param xmlPath the resource path whose content is returned by xmlReader
 	 *            (only used in log statement)
 	 * @param xmlReader the xml to read in
-	 * @param schemaPat hnull (no validation) or a resource path to an XML
+	 * @param schemaPath null (no validation) or a resource path to an XML
 	 *            schema file.
 	 * @return null for error or an instance of class docClass.
 	 * @throws JAXBException
