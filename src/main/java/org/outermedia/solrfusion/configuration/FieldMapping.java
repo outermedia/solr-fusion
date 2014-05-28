@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlType;
 
 import lombok.Getter;
@@ -24,7 +23,7 @@ import lombok.ToString;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "fieldMapping", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
 {
-	"nodes"
+	"operations"
 })
 @Getter
 @Setter
@@ -34,9 +33,8 @@ public class FieldMapping
 	@XmlAttribute(name = "name")
 	private String searchServersName;
 
-	@XmlIDREF
 	@XmlAttribute(name = "fusion-name")
-	private FusionField fusionName;
+	private String fusionName;
 
 	@XmlElements(value =
 	{
@@ -44,5 +42,5 @@ public class FieldMapping
 		@XmlElement(name = "drop", type = DropOperation.class, namespace = "http://solrfusion.outermedia.org/configuration/"),
 		@XmlElement(name = "change", type = ChangeOperation.class, namespace = "http://solrfusion.outermedia.org/configuration/")
 	})
-	private List<Operation> nodes;
+	private List<Operation> operations;
 }

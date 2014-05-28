@@ -3,7 +3,6 @@ package org.outermedia.solrfusion.configuration;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlType;
 
 import lombok.Getter;
@@ -24,7 +23,6 @@ import lombok.ToString;
 @ToString
 public class FusionField
 {
-	@XmlID
 	@XmlAttribute(name = "name", required = true)
 	private String fieldName;
 
