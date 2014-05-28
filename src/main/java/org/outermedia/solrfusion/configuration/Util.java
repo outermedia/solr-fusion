@@ -5,18 +5,29 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -145,4 +156,74 @@ public class Util
 		return result;
 	}
 
+	/**
+	 * Get the value for a given xpath and a list of elements. VERY IMPORTANT:
+	 * Use the ":" e.g. in //:script, otherwise no xpath will match.
+	 * 
+	 * @param xpathStr is the xpath.
+	 * @param typeConfig is a list of dom w3c elements
+	 * @return null if nothing is found or the value of the first(!) matched
+	 *         element
+	 * @throws XPathExpressionException
+	 */
+	public String getValueOfXpath(String xpathStr, List<Element> typeConfig)
+		throws XPathExpressionException
+	{
+		String result = null;
+		List<Element> nl = xpath(xpathStr, typeConfig);
+		if (nl.size() > 0)
+		{
+			result = nl.get(0).getTextContent();
+		}
+		return result;
+	}
+
+	/**
+	 * Get a elements, matching the given xpath. VERY IMPORTANT: Use the ":"
+	 * e.g. in //:script, otherwise no xpath will match.
+	 * 
+	 * @param xpathStr is the xpath
+	 * @param typeConfig is a list of dom w3c elements
+	 * @return a list of w3c org elements (perhaps empty)
+	 * @throws XPathExpressionException
+	 */
+	public List<Element> xpath(String xpathStr, List<Element> typeConfig)
+		throws XPathExpressionException
+	{
+		List<Element> result = new ArrayList<>();
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
+		xpath.setNamespaceContext(new NamespaceContext()
+		{
+			public String getNamespaceURI(String prefix)
+			{
+				// only the default name space is possible
+				return "http://solrfusion.outermedia.org/configuration/type/";
+			}
+
+			public String getPrefix(String uri)
+			{
+				throw new UnsupportedOperationException();
+			}
+
+			public Iterator<?> getPrefixes(String uri)
+			{
+				throw new UnsupportedOperationException();
+			}
+		});
+		XPathExpression expr = xpath.compile(xpathStr);
+		for (Element e : typeConfig)
+		{
+			Object r = expr.evaluate(e, XPathConstants.NODESET);
+			NodeList nl = (NodeList) r;
+			if (nl != null && nl.getLength() > 0)
+			{
+				for (int i = 0; i < nl.getLength(); i++)
+				{
+					result.add((Element) nl.item(0));
+				}
+			}
+		}
+		return result;
+	}
 }
