@@ -30,7 +30,7 @@ import org.outermedia.solrfusion.response.ResponseRendererIfc;
 @XmlType(name = "", propOrder =
 {
 	"fusionFields", "scriptTypes", "defaultSearchField", "defaultOperator",
-	"idGeneratorFactory", "searchServers"
+	"idGeneratorFactory", "searchServerConfigs"
 })
 @XmlRootElement(name = "core", namespace = "http://solrfusion.outermedia.org/configuration/")
 @Getter
@@ -55,7 +55,7 @@ public class Configuration
 	private IdGeneratorFactory idGeneratorFactory;
 
 	@XmlElement(name = "solr-servers", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-	private GlobalSearchServerConfig searchServers;
+	private GlobalSearchServerConfig searchServerConfigs;
 
 	/**
 	 * Find a response renderer by type.
@@ -66,7 +66,7 @@ public class Configuration
 	public ResponseRendererIfc getResponseRendererByType(
 		ResponseRendererType type)
 	{
-		return searchServers.getResponseRendererByType(type);
+		return searchServerConfigs.getResponseRendererByType(type);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class Configuration
 	 */
 	public int getTimeout()
 	{
-		return searchServers.getTimeout();
+		return searchServerConfigs.getTimeout();
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class Configuration
 	 */
 	public int getDisasterLimit()
 	{
-		return searchServers.getDisasterLimit();
+		return searchServerConfigs.getDisasterLimit();
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class Configuration
 	 */
 	public Message getDisasterMessage()
 	{
-		return searchServers.getDisasterMessage();
+		return searchServerConfigs.getDisasterMessage();
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class Configuration
 	 */
 	public QueryParserIfc getQueryParser()
 	{
-		return searchServers.getQueryParser();
+		return searchServerConfigs.getQueryParser();
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class Configuration
 	 */
 	public ResponseParserIfc getDefaultResponseParser()
 	{
-		return searchServers.getDefaultResponseParser();
+		return searchServerConfigs.getDefaultResponseParser();
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class Configuration
 	 */
 	public MergeStrategyIfc getMerger()
 	{
-		return searchServers.getMerger();
+		return searchServerConfigs.getMerger();
 	}
 
 	/**
@@ -142,6 +142,6 @@ public class Configuration
 	 */
 	public List<SearchServerAdapterIfc> getSearchServers()
 	{
-		return searchServers.getSearchServers();
+		return searchServerConfigs.getSearchServers();
 	}
 }
