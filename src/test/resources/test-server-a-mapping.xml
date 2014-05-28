@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <om:solr-server name="Bibliothek A" version="3.6"
-    class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:om="http://solrfusion.outermedia.org/configuration/"
-    xmlns="http://solrfusion.outermedia.org/configuration/type/"
->
+    class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:om="http://solrfusion.outermedia.org/configuration/"
+    xmlns="http://solrfusion.outermedia.org/configuration/type/">
 
     <om:url>http://host:port/solr/xyz</om:url>
 
-    <om:score factor="1.2"
-        class="org.outermedia.solrfusion.DefaultScore$Factory" />
+    <om:score factor="1.2" class="org.outermedia.solrfusion.DefaultScore$Factory" />
 
             <!-- overwrite global setting example -->
-    <om:response-parser class="org.outermedia.solrfusion.SpecialResponseParser$Factory" />
+    <om:response-parser
+        class="org.outermedia.solrfusion.SpecialResponseParser$Factory" />
                 
             <!-- the <id-generator> has to know how to identify solr -->
             <!-- docs by id -->
@@ -85,10 +84,10 @@
                 <file>Pfad.bsh</file>
             </om:query>
             <om:query type="beanshell">
-                <script>
-                    currentQuery = currentQuery
-                    .replace("XXX",System.currentTimeMillis());
-                </script>
+                <script><![CDATA[
+                    currentQuery =
+                        currentQuery.replace("XXX",System.currentTimeMillis());
+                ]]></script>
             </om:query>
             <om:query type="regexp">
                 <pattern>ab(.*)ende</pattern>

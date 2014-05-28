@@ -16,14 +16,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         <om:field name="numberExample" type="int" />
         <om:field name="mappingExample" />
         <om:field name="computingExample" />
-        <om:field name="publicationDate" type="date" format="dd.MM.yyyy" />
-        <om:field name="*_t" />
-        <om:field name="i_*" />
-        <om:field name="user" />
-        <om:field name="ende52" />
-        <om:field name="ende" />
-        <om:field name="measure" />
-        <om:field name="w,h,d" />        
+        <om:field name="publicationDate" type="date" format="dd.MM.yyyy" />     
     </om:fusion-schema-fields>
 
     <!-- general type attribute's value in <fields> is one of the following names: -->
