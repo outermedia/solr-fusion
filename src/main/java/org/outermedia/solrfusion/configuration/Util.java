@@ -9,9 +9,6 @@ import java.net.URL;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.ValidationEvent;
-import javax.xml.bind.ValidationEventHandler;
-import javax.xml.bind.ValidationEventLocator;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
@@ -89,6 +86,7 @@ public class Util
 		spf.setXIncludeAware(true);
 		spf.setNamespaceAware(true);
 		URL schemaUrl = null;
+		XmlValidationHandler validationHandler = null;
 		if (schemaPath != null)
 		{
 			schemaUrl = Util.class.getResource("/" + schemaPath);
@@ -98,24 +96,8 @@ public class Util
 					.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
 				Schema schema = sf.newSchema(schemaUrl);
 				u.setSchema(schema);
-				u.setEventHandler(new ValidationEventHandler()
-				{
-
-					@Override
-					public boolean handleEvent(ValidationEvent ve)
-					{
-						if (ve.getSeverity() == ValidationEvent.FATAL_ERROR
-							|| ve.getSeverity() == ValidationEvent.ERROR)
-						{
-							ValidationEventLocator locator = ve.getLocator();
-							log.error("{}: {} at line={}, column={}",
-								locator.getURL(), ve.getMessage(),
-								locator.getLineNumber(),
-								locator.getColumnNumber());
-						}
-						return true;
-					}
-				});
+				validationHandler = new XmlValidationHandler();
+				u.setEventHandler(validationHandler);
 			}
 			else
 			{
@@ -133,7 +115,13 @@ public class Util
 		xr.setFeature(
 			"http://apache.org/xml/features/xinclude/fixup-base-uris", false);
 		SAXSource source = new SAXSource(xr, new InputSource(xmlReader));
-		return (T) u.unmarshal(source);
+		T result = (T) u.unmarshal(source);
+		if (validationHandler != null && validationHandler.isFoundErrors())
+		{
+			log.warn("Discarding unmarshalled xml result, because of validation errors.");
+			result = null;
+		}
+		return result;
 	}
 
 	/**
