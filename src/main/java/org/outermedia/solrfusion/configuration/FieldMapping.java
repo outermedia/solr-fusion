@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlType;
 
 import lombok.Getter;
@@ -33,8 +34,9 @@ public class FieldMapping
 	@XmlAttribute(name = "name")
 	private String searchServersName;
 
+	@XmlIDREF
 	@XmlAttribute(name = "fusion-name")
-	private String fusionName;
+	private FusionField fusionName;
 
 	@XmlElements(value =
 	{
