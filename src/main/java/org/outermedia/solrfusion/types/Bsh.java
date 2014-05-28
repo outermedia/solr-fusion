@@ -2,9 +2,9 @@ package org.outermedia.solrfusion.types;
 
 import java.util.List;
 
-import javax.xml.bind.Element;
-
 import lombok.ToString;
+
+import org.w3c.dom.Element;
 
 /**
  * A Bean Shell interpreter which evaluates expressions contained in the xml to

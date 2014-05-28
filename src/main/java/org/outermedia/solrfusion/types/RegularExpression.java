@@ -2,9 +2,9 @@ package org.outermedia.solrfusion.types;
 
 import java.util.List;
 
-import javax.xml.bind.Element;
-
 import lombok.ToString;
+
+import org.w3c.dom.Element;
 
 /**
  * A regular expression which matches a pattern and applies a replacement in
