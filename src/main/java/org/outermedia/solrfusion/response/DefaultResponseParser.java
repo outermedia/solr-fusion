@@ -2,7 +2,6 @@ package org.outermedia.solrfusion.response;
 
 import lombok.ToString;
 
-import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ResponseParserFactory;
 
 /**
@@ -13,9 +12,14 @@ import org.outermedia.solrfusion.configuration.ResponseParserFactory;
  */
 
 @ToString
-public class DefaultResponseParser implements Initiable<ResponseParserFactory>,
-	ResponseParserIfc
+public class DefaultResponseParser implements ResponseParserIfc
 {
+	/**
+	 * Factory creates instances only.
+	 */
+	private DefaultResponseParser()
+	{}
+
 	public static class Factory
 	{
 		public static DefaultResponseParser getInstance()

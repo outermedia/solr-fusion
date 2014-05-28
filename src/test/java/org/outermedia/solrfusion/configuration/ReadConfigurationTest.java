@@ -49,7 +49,7 @@ public class ReadConfigurationTest
 				+ config2, cfg2);
 
 		String config2Out = cfg2.toString();
-		// System.out.println("CONFIG2 " + config2Out);
+		System.out.println("CONFIG2 " + config2Out);
 
 		Assert.assertEquals(
 			"<xi:include> should work transparently, but differences occurred",

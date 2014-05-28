@@ -13,6 +13,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.outermedia.solrfusion.MergeStrategyIfc;
+import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.query.QueryParserIfc;
+import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 
 /**
@@ -63,5 +67,81 @@ public class Configuration
 		ResponseRendererType type)
 	{
 		return searchServers.getResponseRendererByType(type);
+	}
+
+	/**
+	 * Get the response timeout in seconds.
+	 * 
+	 * @return a number greater 0.
+	 */
+	public int getTimeout()
+	{
+		return searchServers.getTimeout();
+	}
+
+	/**
+	 * The minimal number of search servers which have to respond. If too few
+	 * respond the disaster message (see {@link #getDisasterMessage()}) is
+	 * thrown.
+	 * 
+	 * @return
+	 */
+	public int getDisasterLimit()
+	{
+		return searchServers.getDisasterLimit();
+	}
+
+	/**
+	 * Get the disaster message (see {@link #getDisasterLimit()}) when too few
+	 * server respond.
+	 * 
+	 * @return a Message object which contains a key and the text
+	 */
+	public Message getDisasterMessage()
+	{
+		return searchServers.getDisasterMessage();
+	}
+
+	/**
+	 * Get the query parser instance.
+	 * 
+	 * @return an instance of QueryParserIfc
+	 */
+	public QueryParserIfc getQueryParser()
+	{
+		return searchServers.getQueryParser();
+	}
+
+	/**
+	 * Get the default response parser. Please note that
+	 * {@link SearchServerAdapterIfc} can use a special response parser.
+	 * 
+	 * @return an instance of ResponseParserIfc.
+	 */
+	public ResponseParserIfc getDefaultResponseParser()
+	{
+		return searchServers.getDefaultResponseParser();
+	}
+
+	/**
+	 * Get the optionally declared merge strategy.
+	 * 
+	 * @return an instance of MergeStrategyIfc
+	 */
+	public MergeStrategyIfc getMerger()
+	{
+		return searchServers.getMerger();
+	}
+
+	/**
+	 * Get all configured search servers. Every call of this method returns a
+	 * new list object, but the {@link SearchServerAdapterIfc} instances are
+	 * re-used.
+	 * 
+	 * @return a list of SearchServerAdapterIfc
+	 */
+	public List<SearchServerAdapterIfc> getSearchServers()
+	{
+		return searchServers.getSearchServers();
 	}
 }

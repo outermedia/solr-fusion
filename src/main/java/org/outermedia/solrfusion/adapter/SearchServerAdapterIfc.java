@@ -12,5 +12,6 @@ import org.outermedia.solrfusion.configuration.SearchServerConfig;
 
 public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
 {
+
 	// TODO defined required methods e.g. send, receive
 }

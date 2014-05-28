@@ -2,7 +2,6 @@ package org.outermedia.solrfusion;
 
 import lombok.ToString;
 
-import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.Merge;
 
 /**
@@ -13,8 +12,14 @@ import org.outermedia.solrfusion.configuration.Merge;
  */
 
 @ToString
-public class DefaultMergeStrategy implements Initiable<Merge>, MergeStrategyIfc
+public class DefaultMergeStrategy implements MergeStrategyIfc
 {
+	/**
+	 * Factory creates instances only.
+	 */
+	private DefaultMergeStrategy()
+	{}
+
 	public static class Factory
 	{
 		public static DefaultMergeStrategy getInstance()

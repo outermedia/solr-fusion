@@ -3,7 +3,7 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:om="http://solrfusion.outermedia.org/configuration/" 
     xmlns="http://solrfusion.outermedia.org/configuration/type/"
-    xsi:schemaLocation="http://solrfusion.outermedia.org/configuration/ ../../main/resources/configuration.xsd "
+    xsi:schemaLocation="http://solrfusion.outermedia.org/configuration/ configuration.xsd"
 >
     <!-- the fields of the fusion schema -->
     <!-- supported types: text, int, long, float, double, boolean, date -->
@@ -41,8 +41,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <om:solr-servers>
         <!-- global settings -->
         <om:timeout>4000</om:timeout>
-        <om:desaster-limit>3</om:desaster-limit>
-        <om:error key="desaster-limit">Ihre Anfrage konnte nicht von ausreichend
+        <om:disaster-limit>3</om:disaster-limit>
+        <om:error key="disaster-limit">Ihre Anfrage konnte nicht von ausreichend
             vielen Systemen beantwortet werden.
         </om:error>
         
@@ -201,10 +201,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             <!-- if three <field> rules were used -->
             <!-- name contains three field names: w(idth), -->
             <!-- h(eight) and d(epth) -->
+            <!--  
             <om:field name="w,h,d" fusion-name="measure">
                 <om:change>
-                    <!-- rewrite default field(s) to a certain one -->
-                    <!-- the value of "as-name" is a member of "name" -->
                     <om:query type="extract-width" name="w" />
                     <om:query type="extract-height" name="h" />
                     <om:query type="extract-depth" name="d" />
@@ -215,8 +214,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                     </om:response>
                 </om:change>
             </om:field>
+            -->
                     
             <!-- merge 3 fields into "B x H x T" -->
+            <!--  
             <om:field name="measure" fusion-name="w,h,d">
                 <om:change>
                     <om:response type="extract-width" fusion-name="w" />
@@ -229,6 +230,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                     </om:query>
                 </om:change>
             </om:field>
+            -->
 
         </om:solr-server>        
             

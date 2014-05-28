@@ -47,8 +47,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <om:solr-servers>
         <!-- global settings -->
         <om:timeout>4000</om:timeout>
-        <om:desaster-limit>3</om:desaster-limit>
-        <om:error key="desaster-limit">Ihre Anfrage konnte nicht von ausreichend
+        <om:disaster-limit>3</om:disaster-limit>
+        <om:error key="disaster-limit">Ihre Anfrage konnte nicht von ausreichend
             vielen Systemen beantwortet werden.
         </om:error>
         
