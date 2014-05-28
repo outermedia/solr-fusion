@@ -31,7 +31,7 @@ import org.outermedia.solrfusion.response.ResponseRendererIfc;
 {
 	"timeout", "disasterLimit", "disasterMessage", "queryParserFactory",
 	"defaultResponseParserFactory", "responseRendererFactories", "merge",
-	"searchServers"
+	"searchServerConfigs"
 })
 @Getter
 @Setter
@@ -60,7 +60,7 @@ public class GlobalSearchServerConfig
 	private Merge merge;
 
 	@XmlElement(name = "solr-server", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-	private List<SearchServerConfig> searchServers;
+	private List<SearchServerConfig> searchServerConfigs;
 
 	/**
 	 * Find a response renderer by type.
@@ -126,9 +126,9 @@ public class GlobalSearchServerConfig
 	public List<SearchServerAdapterIfc> getSearchServers()
 	{
 		List<SearchServerAdapterIfc> result = new ArrayList<>();
-		if (searchServers != null)
+		if (searchServerConfigs != null)
 		{
-			for (SearchServerConfig config : searchServers)
+			for (SearchServerConfig config : searchServerConfigs)
 			{
 				result.add(config.getImplementation());
 			}
