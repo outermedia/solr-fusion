@@ -3,7 +3,6 @@ package org.outermedia.solrfusion;
 import lombok.ToString;
 
 import org.outermedia.solrfusion.configuration.IdGeneratorFactory;
-import org.outermedia.solrfusion.configuration.Initiable;
 
 /**
  * The unified documents need an id, which are created by this generator.
@@ -13,9 +12,13 @@ import org.outermedia.solrfusion.configuration.Initiable;
  */
 
 @ToString
-public class DefaultIdGenerator implements Initiable<IdGeneratorFactory>,
-	IdGeneratorIfc
+public class DefaultIdGenerator implements IdGeneratorIfc
 {
+	/**
+	 * Factory creates instances only.
+	 */
+	private DefaultIdGenerator()
+	{}
 
 	public static class Factory
 	{

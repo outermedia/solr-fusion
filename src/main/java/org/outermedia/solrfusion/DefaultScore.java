@@ -2,7 +2,6 @@ package org.outermedia.solrfusion;
 
 import lombok.ToString;
 
-import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ScoreFactory;
 
 /**
@@ -14,8 +13,14 @@ import org.outermedia.solrfusion.configuration.ScoreFactory;
  */
 
 @ToString
-public class DefaultScore implements Initiable<ScoreFactory>, ScoreCorrectorIfc
+public class DefaultScore implements ScoreCorrectorIfc
 {
+	/**
+	 * Factory creates instances only.
+	 */
+	private DefaultScore()
+	{}
+
 	public static class Factory
 	{
 		public static DefaultScore getInstance()

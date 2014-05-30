@@ -2,7 +2,6 @@ package org.outermedia.solrfusion.query;
 
 import lombok.ToString;
 
-import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.QueryParserFactory;
 
 /**
@@ -13,9 +12,14 @@ import org.outermedia.solrfusion.configuration.QueryParserFactory;
  */
 
 @ToString
-public class EdisMaxQueryParser implements Initiable<QueryParserFactory>,
-	QueryParserIfc
+public class EdisMaxQueryParser implements QueryParserIfc
 {
+	/**
+	 * Factory creates instances only.
+	 */
+	private EdisMaxQueryParser()
+	{}
+
 	public static class Factory
 	{
 		public static EdisMaxQueryParser getInstance()

@@ -6,7 +6,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import lombok.Getter;
@@ -54,8 +53,5 @@ public class SearchServerConfig extends
 
 	@XmlElement(name = "field", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
 	private List<FieldMapping> fieldMappings;
-
-	@XmlTransient
-	private Initiable<SearchServerConfig> searchServer;
 
 }

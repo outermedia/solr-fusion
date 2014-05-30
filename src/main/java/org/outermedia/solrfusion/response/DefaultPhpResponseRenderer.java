@@ -2,7 +2,6 @@ package org.outermedia.solrfusion.response;
 
 import lombok.ToString;
 
-import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 
 /**
@@ -13,9 +12,15 @@ import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
  */
 
 @ToString
-public class DefaultPhpResponseRenderer implements
-	Initiable<ResponseRendererFactory>, ResponseRendererIfc
+public class DefaultPhpResponseRenderer implements ResponseRendererIfc
 {
+
+	/**
+	 * Factory creates instances only.
+	 */
+	private DefaultPhpResponseRenderer()
+	{}
+
 	public static class Factory
 	{
 		public static DefaultPhpResponseRenderer getInstance()

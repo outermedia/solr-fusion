@@ -2,7 +2,6 @@ package org.outermedia.solrfusion.response;
 
 import lombok.ToString;
 
-import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 
 /**
@@ -13,9 +12,14 @@ import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
  */
 
 @ToString
-public class DefaultJsonResponseRenderer implements
-	Initiable<ResponseRendererFactory>, ResponseRendererIfc
+public class DefaultJsonResponseRenderer implements ResponseRendererIfc
 {
+	/**
+	 * Factory creates instances only.
+	 */
+	private DefaultJsonResponseRenderer()
+	{}
+
 	public static class Factory
 	{
 		public static DefaultJsonResponseRenderer getInstance()

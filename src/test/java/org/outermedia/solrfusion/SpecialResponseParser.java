@@ -5,9 +5,19 @@ import lombok.ToString;
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ResponseParserFactory;
 
+/**
+ * Dummy implementation for unit test.
+ * 
+ * @author ballmann
+ * 
+ */
+
 @ToString
 public class SpecialResponseParser implements Initiable<ResponseParserFactory>
 {
+	private SpecialResponseParser()
+	{}
+
 	public static class Factory
 	{
 		public static Object getInstance()
@@ -19,8 +29,7 @@ public class SpecialResponseParser implements Initiable<ResponseParserFactory>
 	@Override
 	public void init(ResponseParserFactory config)
 	{
-		// TODO Auto-generated method stub
-
+		// NOP
 	}
 
 }

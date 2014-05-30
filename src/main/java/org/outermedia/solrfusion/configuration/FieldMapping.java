@@ -23,7 +23,7 @@ import lombok.ToString;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "fieldMapping", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
 {
-	"nodes"
+	"operations"
 })
 @Getter
 @Setter
@@ -42,5 +42,5 @@ public class FieldMapping
 		@XmlElement(name = "drop", type = DropOperation.class, namespace = "http://solrfusion.outermedia.org/configuration/"),
 		@XmlElement(name = "change", type = ChangeOperation.class, namespace = "http://solrfusion.outermedia.org/configuration/")
 	})
-	private List<Operation> nodes;
+	private List<Operation> operations;
 }

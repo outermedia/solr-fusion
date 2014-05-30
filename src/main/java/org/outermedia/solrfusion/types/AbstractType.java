@@ -2,12 +2,11 @@ package org.outermedia.solrfusion.types;
 
 import java.util.List;
 
-import javax.xml.bind.Element;
-
 import lombok.ToString;
 
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ScriptType;
+import org.w3c.dom.Element;
 
 /**
  * Abstract parent class of all "types" which are referenced in &lt;query&gt;,

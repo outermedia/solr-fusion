@@ -2,7 +2,6 @@ package org.outermedia.solrfusion.configuration;
 
 import java.util.List;
 
-import javax.xml.bind.Element;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -15,6 +14,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import org.outermedia.solrfusion.types.AbstractType;
+import org.w3c.dom.Element;
 
 /**
  * Abstract data holder class to store the configuration of common attributes of

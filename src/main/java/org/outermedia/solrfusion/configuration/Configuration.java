@@ -13,6 +13,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.outermedia.solrfusion.MergeStrategyIfc;
+import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.query.QueryParserIfc;
+import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 
 /**
@@ -26,7 +30,7 @@ import org.outermedia.solrfusion.response.ResponseRendererIfc;
 @XmlType(name = "", propOrder =
 {
 	"fusionFields", "scriptTypes", "defaultSearchField", "defaultOperator",
-	"idGeneratorFactory", "searchServers"
+	"idGeneratorFactory", "searchServerConfigs"
 })
 @XmlRootElement(name = "core", namespace = "http://solrfusion.outermedia.org/configuration/")
 @Getter
@@ -51,7 +55,7 @@ public class Configuration
 	private IdGeneratorFactory idGeneratorFactory;
 
 	@XmlElement(name = "solr-servers", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-	private GlobalSearchServerConfig searchServers;
+	private GlobalSearchServerConfig searchServerConfigs;
 
 	/**
 	 * Find a response renderer by type.
@@ -62,6 +66,82 @@ public class Configuration
 	public ResponseRendererIfc getResponseRendererByType(
 		ResponseRendererType type)
 	{
-		return searchServers.getResponseRendererByType(type);
+		return searchServerConfigs.getResponseRendererByType(type);
+	}
+
+	/**
+	 * Get the response timeout in seconds.
+	 * 
+	 * @return a number greater 0.
+	 */
+	public int getTimeout()
+	{
+		return searchServerConfigs.getTimeout();
+	}
+
+	/**
+	 * The minimal number of search servers which have to respond. If too few
+	 * respond the disaster message (see {@link #getDisasterMessage()}) is
+	 * thrown.
+	 * 
+	 * @return the minimal number of responding servers
+	 */
+	public int getDisasterLimit()
+	{
+		return searchServerConfigs.getDisasterLimit();
+	}
+
+	/**
+	 * Get the disaster message (see {@link #getDisasterLimit()}) when too few
+	 * server respond.
+	 * 
+	 * @return a Message object which contains a key and the text
+	 */
+	public Message getDisasterMessage()
+	{
+		return searchServerConfigs.getDisasterMessage();
+	}
+
+	/**
+	 * Get the query parser instance.
+	 * 
+	 * @return an instance of QueryParserIfc
+	 */
+	public QueryParserIfc getQueryParser()
+	{
+		return searchServerConfigs.getQueryParser();
+	}
+
+	/**
+	 * Get the default response parser. Please note that
+	 * {@link SearchServerAdapterIfc} can use a special response parser.
+	 * 
+	 * @return an instance of ResponseParserIfc.
+	 */
+	public ResponseParserIfc getDefaultResponseParser()
+	{
+		return searchServerConfigs.getDefaultResponseParser();
+	}
+
+	/**
+	 * Get the optionally declared merge strategy.
+	 * 
+	 * @return an instance of MergeStrategyIfc
+	 */
+	public MergeStrategyIfc getMerger()
+	{
+		return searchServerConfigs.getMerger();
+	}
+
+	/**
+	 * Get all configured search servers. Every call of this method returns a
+	 * new list object, but the {@link SearchServerAdapterIfc} instances are
+	 * re-used.
+	 * 
+	 * @return a list of SearchServerAdapterIfc
+	 */
+	public List<SearchServerAdapterIfc> getSearchServers()
+	{
+		return searchServerConfigs.getSearchServers();
 	}
 }

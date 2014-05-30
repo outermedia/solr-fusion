@@ -3,7 +3,6 @@ package org.outermedia.solrfusion.adapter.solr;
 import lombok.ToString;
 
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
-import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 
 /**
@@ -14,9 +13,13 @@ import org.outermedia.solrfusion.configuration.SearchServerConfig;
  */
 
 @ToString
-public class DefaultSolrAdapter implements Initiable<SearchServerConfig>,
-	SearchServerAdapterIfc
+public class DefaultSolrAdapter implements SearchServerAdapterIfc
 {
+	/**
+	 * Factory creates instances only.
+	 */
+	private DefaultSolrAdapter()
+	{}
 
 	public static class Factory
 	{
