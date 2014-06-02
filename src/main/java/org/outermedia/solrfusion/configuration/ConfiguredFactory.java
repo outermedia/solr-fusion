@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.configuration;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
@@ -30,6 +31,11 @@ public abstract class ConfiguredFactory<T extends Initiable<C>, C>
 	@XmlAttribute(name = "class", required = true)
 	private String classFactory;
 
+	/**
+	 * Stores an object of class {@link #classFactory}. This field is
+	 * automatically set during xml unmarshalling. See
+	 * {@link #afterUnmarshal(Unmarshaller, Object)}.
+	 */
 	@XmlTransient
 	private T implementation;
 
@@ -39,9 +45,12 @@ public abstract class ConfiguredFactory<T extends Initiable<C>, C>
 	 * 
 	 * @param u is the unmarshaller
 	 * @param parent the parent object
+	 * @throws UnmarshalException is thrown when exceptions occur during object
+	 *             creation of the {@link #implementation} field
 	 */
 	@SuppressWarnings("unchecked")
 	protected void afterUnmarshal(Unmarshaller u, Object parent)
+		throws UnmarshalException
 	{
 		if (classFactory != null)
 		{
@@ -74,6 +83,7 @@ public abstract class ConfiguredFactory<T extends Initiable<C>, C>
 			{
 				log.error("Caught exception while creating instance {}",
 					classFactory, e);
+				throw new UnmarshalException("", e);
 			}
 		}
 		else
