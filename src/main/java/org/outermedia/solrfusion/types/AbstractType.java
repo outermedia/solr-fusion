@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ScriptType;
+import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
 
 /**
@@ -33,7 +34,8 @@ public abstract class AbstractType implements Initiable<ScriptType>
 	 * Pass the configuration when the type is used.
 	 * 
 	 * @param typeConfig a list of XML elements
+	 * @param util helper which simplifies to apply xpaths
 	 */
-	public abstract void passArguments(List<Element> typeConfig);
+	public abstract void passArguments(List<Element> typeConfig, Util util);
 
 }

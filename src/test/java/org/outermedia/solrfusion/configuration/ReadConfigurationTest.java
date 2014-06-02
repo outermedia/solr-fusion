@@ -1,6 +1,9 @@
 package org.outermedia.solrfusion.configuration;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -10,7 +13,10 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.outermedia.solrfusion.types.Bsh;
 import org.xml.sax.SAXException;
+
+import com.google.common.io.Files;
 
 public class ReadConfigurationTest
 {
@@ -24,7 +30,7 @@ public class ReadConfigurationTest
 
 	@Test
 	public void readFusionSchema() throws JAXBException, SAXException,
-		FileNotFoundException, ParserConfigurationException
+		ParserConfigurationException, IOException
 	{
 		// one xml file which contains servers too
 		String config1 = "test-fusion-schema.xml";
@@ -38,7 +44,7 @@ public class ReadConfigurationTest
 			"Expected configuration object, but could't read in the xml file "
 				+ config1, cfg1);
 
-		String config1Out = cfg1.toString();
+		String config1Out = addNewlines(cfg1.toString());
 		// System.out.println("CONFIG1 " + config1Out);
 
 		// this configuration uses <xi:include> to include server declarations
@@ -49,27 +55,27 @@ public class ReadConfigurationTest
 			"Expected configuration object, but could't read in the xml file "
 				+ config2, cfg2);
 
-		String config2Out = cfg2.toString();
-		// System.out.println("CONFIG2 " + config2Out);
+		String config2Out = addNewlines(cfg2.toString());
+		// System.out.println("CONFIG2\n" + config2Out);
 
 		Assert.assertEquals(
 			"<xi:include> should work transparently, but differences occurred",
-			config1Out, config2Out);
+			addNewlines(config1Out), (config2Out));
 
-		String expected = "Configuration(fusionFields=[FusionField(fieldName=id, type=string, format=null), FusionField(fieldName=city, type=string, format=null), FusionField(fieldName=title, type=string, format=null), FusionField(fieldName=numberExample, type=int, format=null), FusionField(fieldName=mappingExample, type=string, format=null), FusionField(fieldName=computingExample, type=string, format=null), FusionField(fieldName=publicationDate, type=date, format=dd.MM.yyyy)], scriptTypes=[ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.JsFile, implementation=JsFile(super=AbstractType())), name=javascript-file), ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.BshFile, implementation=BshFile(super=AbstractType())), name=beanshell-file), ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.Js, implementation=Js(super=AbstractType())), name=javascript), ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.Bsh, implementation=Bsh(super=AbstractType())), name=beanshell), ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.Java, implementation=Java(super=AbstractType())), name=java-class), ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.RegularExpression, implementation=RegularExpression(super=AbstractType())), name=regexp), ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.TableFile, implementation=TableFile(super=AbstractType())), name=static-table-file), ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.Table, implementation=Table(super=AbstractType())), name=static-table), ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()), name=extract-width), ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()), name=extract-height), ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()), name=extract-depth), ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()), name=merge-measure-units)], defaultSearchField=title, defaultOperator=AND, idGeneratorFactory=IdGeneratorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultIdGenerator$Factory, implementation=DefaultIdGenerator()), fusionFieldName=id), searchServerConfigs=GlobalSearchServerConfig(timeout=4000, disasterLimit=3, disasterMessage=Message(key=disaster-limit, text=Ihre Anfrage konnte nicht von ausreichend\n"
-			+ "            vielen Systemen beantwortet werden.\n"
-			+ "        ), queryParserFactory=QueryParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory, implementation=EdisMaxQueryParser())), defaultResponseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultResponseParser$Factory, implementation=DefaultResponseParser())), responseRendererFactories=[ResponseRendererFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory, implementation=DefaultXmlResponseRenderer()), type=XML), ResponseRendererFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultJsonResponseRenderer$Factory, implementation=DefaultJsonResponseRenderer()), type=JSON), ResponseRendererFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory, implementation=DefaultPhpResponseRenderer()), type=PHP)], merge=Merge(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultMergeStrategy$Factory, implementation=DefaultMergeStrategy()), fusionName=ISBN, targets=[MergeTarget(prio=1, targetName=Bibliothek A), MergeTarget(prio=2, targetName=Bibliothek B)]), searchServerConfigs=[SearchServerConfig(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory, implementation=DefaultSolrAdapter()), searchServerName=Bibliothek A, searchServerVersion=3.6, url=http://host:port/solr/xyz, scoreFactory=ScoreFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultScore$Factory, implementation=DefaultScore()), factor=1.2), responseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.SpecialResponseParser$Factory, implementation=SpecialResponseParser())), idFieldName=id, fieldMappings=[FieldMapping(searchServersName=start, fusionName=city, operations=null), FieldMapping(searchServersName=*_text, fusionName=*_t, operations=null), FieldMapping(searchServersName=int_*, fusionName=i_*, operations=null), FieldMapping(searchServersName=u, fusionName=user, operations=[ChangeOperation(super=Operation(targets=[QueryResponse(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.TableFile, implementation=TableFile(super=AbstractType())), name=static-table-file), name=null, fusionName=null, typeConfig=[[file: null]], typeImpl=TableFile(super=AbstractType())))]))]), FieldMapping(searchServersName=u, fusionName=user, operations=[ChangeOperation(super=Operation(targets=[QueryResponse(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.Table, implementation=Table(super=AbstractType())), name=static-table), name=null, fusionName=null, typeConfig=[[entry: null], [entry: null]], typeImpl=Table(super=AbstractType())))]))]), FieldMapping(searchServersName=start, fusionName=city, operations=[ChangeOperation(super=Operation(targets=[Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.JsFile, implementation=JsFile(super=AbstractType())), name=javascript-file), name=null, fusionName=null, typeConfig=[[file: null]], typeImpl=JsFile(super=AbstractType()))), Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.Java, implementation=Java(super=AbstractType())), name=java-class), name=null, fusionName=null, typeConfig=[[class: null]], typeImpl=Java(super=AbstractType()))), Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.BshFile, implementation=BshFile(super=AbstractType())), name=beanshell-file), name=null, fusionName=null, typeConfig=[[file: null]], typeImpl=BshFile(super=AbstractType()))), Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.Bsh, implementation=Bsh(super=AbstractType())), name=beanshell), name=null, fusionName=null, typeConfig=[[script: null]], typeImpl=Bsh(super=AbstractType()))), Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.RegularExpression, implementation=RegularExpression(super=AbstractType())), name=regexp), name=null, fusionName=null, typeConfig=[[pattern: null], [replacement: null]], typeImpl=RegularExpression(super=AbstractType())))]))]), FieldMapping(searchServersName=ende52, fusionName=null, operations=[DropOperation(super=Operation(targets=[Response(super=Target(type=null, name=null, fusionName=null, typeConfig=null, typeImpl=null))]))]), FieldMapping(searchServersName=null, fusionName=ende52, operations=[DropOperation(super=Operation(targets=[Query(super=Target(type=null, name=null, fusionName=null, typeConfig=null, typeImpl=null))]))]), FieldMapping(searchServersName=ende52, fusionName=ende, operations=[DropOperation(super=Operation(targets=[Response(super=Target(type=null, name=null, fusionName=null, typeConfig=null, typeImpl=null)), Query(super=Target(type=null, name=null, fusionName=null, typeConfig=null, typeImpl=null))]))]), FieldMapping(searchServersName=ende51, fusionName=ende, operations=[DropOperation(super=Operation(targets=[Query(super=Target(type=null, name=null, fusionName=null, typeConfig=null, typeImpl=null))])), AddOperation(super=Operation(targets=[Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.BshFile, implementation=BshFile(super=AbstractType())), name=beanshell-file), name=null, fusionName=null, typeConfig=[[file: null]], typeImpl=BshFile(super=AbstractType())))]))]), FieldMapping(searchServersName=w,h,d, fusionName=measure, operations=[ChangeOperation(super=Operation(targets=[Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()), name=extract-width), name=w, fusionName=null, typeConfig=null, typeImpl=null)), Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()), name=extract-height), name=h, fusionName=null, typeConfig=null, typeImpl=null)), Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()), name=extract-depth), name=d, fusionName=null, typeConfig=null, typeImpl=null)), Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()), name=merge-measure-units), name=null, fusionName=null, typeConfig=[[width-field: null], [height-field: null], [depth-field: null]], typeImpl=DummyType()))]))]), FieldMapping(searchServersName=measure, fusionName=w,h,d, operations=[ChangeOperation(super=Operation(targets=[Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()), name=extract-width), name=null, fusionName=w, typeConfig=null, typeImpl=null)), Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()), name=extract-height), name=null, fusionName=h, typeConfig=null, typeImpl=null)), Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()), name=extract-depth), name=null, fusionName=d, typeConfig=null, typeImpl=null)), Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()), name=merge-measure-units), name=null, fusionName=null, typeConfig=[[width-field: null], [height-field: null], [depth-field: null]], typeImpl=DummyType()))]))])])]))";
+		String expected = Files
+			.toString(new File("src/test/resources/schema-toString.txt"),
+				Charset.forName("UTF-8"));
 
-		//		System.out.println("E " + addNewlines(expected));
-		//		System.out.println("F " + addNewlines(config2Out));
+		expected = addNewlines(expected);
 
-		Assert.assertEquals("Found different configuration",
-			addNewlines(expected), addNewlines(config2Out));
+		Assert.assertEquals("Found different configuration", expected,
+			config2Out);
 	}
 
 	protected String addNewlines(String s)
 	{
-		return s.replace("[", "{\n\t");
+		return s.replace("[", "[\n\t").replace("),", "),\n\t")
+			.replaceAll("\\n\\s+", "\n ");
 	}
 
 	@Test
@@ -99,12 +105,13 @@ public class ReadConfigurationTest
 		Target beanShellQuery = cfg.getSearchServerConfigs()
 			.getSearchServerConfigs().get(0).getFieldMappings().get(5)
 			.getOperations().get(0).getTargets().get(3);
-		System.out.println("Config "
-			+ beanShellQuery.getTypeConfig().toString());
-		String xpathStr = "//:script";
-		String r = xmlUtil.getValueOfXpath(xpathStr,
-			beanShellQuery.getTypeConfig());
-		System.out.println("R=" + r);
-		// TODO check r and implement Bsh.passArguments()
+		Bsh bsh = Bsh.getInstance();
+		bsh.passArguments(beanShellQuery.getTypeConfig(), xmlUtil);
+		String r = bsh.getCode().replace(" ", "").replace("\n", "");
+		Assert
+			.assertEquals(
+				"Xpath returned wrong value",
+				"currentQuery=currentQuery.replace(\"XXX\",System.currentTimeMillis());",
+				r);
 	}
 }

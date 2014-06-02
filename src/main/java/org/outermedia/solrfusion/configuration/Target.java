@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
 @XmlTransient
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "util")
 @Slf4j
 public abstract class Target
 {
@@ -43,6 +43,14 @@ public abstract class Target
 
 	@XmlAnyElement
 	private List<Element> typeConfig;
+
+	@XmlTransient
+	private Util util;
+
+	public Target()
+	{
+		util = new Util();
+	}
 
 	/**
 	 * Instance of the declared {@link Target#type}
@@ -64,7 +72,7 @@ public abstract class Target
 			try
 			{
 				typeImpl = (AbstractType) type.getImplementation();
-				if (typeImpl != null) typeImpl.passArguments(typeConfig);
+				if (typeImpl != null) typeImpl.passArguments(typeConfig, util);
 			}
 			catch (Exception e)
 			{

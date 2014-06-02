@@ -175,6 +175,7 @@ public class Util
 		{
 			result = nl.get(0).getTextContent();
 		}
+		if (result != null) result = result.trim();
 		return result;
 	}
 

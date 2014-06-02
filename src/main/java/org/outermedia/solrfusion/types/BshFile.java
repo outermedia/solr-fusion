@@ -4,6 +4,7 @@ import java.util.List;
 
 import lombok.ToString;
 
+import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
 
 /**
@@ -19,7 +20,7 @@ public class BshFile extends AbstractType
 {
 
 	@Override
-	public void passArguments(List<Element> typeConfig)
+	public void passArguments(List<Element> typeConfig, Util util)
 	{
 		// TODO Auto-generated method stub
 
