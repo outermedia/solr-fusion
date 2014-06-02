@@ -9,30 +9,27 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.xml.sax.SAXException;
 
 public class ResponseRendererTest
 {
 
-	protected Util xmlUtil;
+	protected TestHelper helper;
 
 	@Before
 	public void setup()
 	{
-		xmlUtil = new Util();
+		helper = new TestHelper();
 	}
 
 	@Test
 	public void findCertainRenderer() throws FileNotFoundException,
 		JAXBException, SAXException, ParserConfigurationException
 	{
-		String config = "test-fusion-schema.xml";
-		Configuration cfg = xmlUtil
-			.unmarshal(Configuration.class, config, null);
-		Assert.assertNotNull(
-			"Expected configuration object, but could't read in the xml file "
-				+ config, cfg);
+		Configuration cfg = helper
+			.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
 		ResponseRendererIfc xmlRenderer = cfg
 			.getResponseRendererByType(ResponseRendererType.XML);

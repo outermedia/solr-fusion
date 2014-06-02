@@ -13,6 +13,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.types.Bsh;
 import org.xml.sax.SAXException;
 
@@ -20,12 +21,12 @@ import com.google.common.io.Files;
 
 public class ReadConfigurationTest
 {
-	protected Util xmlUtil;
+	protected TestHelper helper;
 
 	@Before
 	public void setup()
 	{
-		xmlUtil = new Util();
+		helper = new TestHelper();
 	}
 
 	@Test
@@ -33,30 +34,12 @@ public class ReadConfigurationTest
 		ParserConfigurationException, IOException
 	{
 		// one xml file which contains servers too
-		String config1 = "test-fusion-schema.xml";
-
-		// with validation
-		String schemaPath = "configuration.xsd";
-
-		Configuration cfg1 = xmlUtil.unmarshal(Configuration.class, config1,
-			schemaPath);
-		Assert.assertNotNull(
-			"Expected configuration object, but could't read in the xml file "
-				+ config1, cfg1);
-
-		String config1Out = addNewlines(cfg1.toString());
-		// System.out.println("CONFIG1 " + config1Out);
+		String config1Out = addNewlines(helper.readFusionSchemaWithValidation(
+			"test-fusion-schema.xml", "configuration.xsd").toString());
 
 		// this configuration uses <xi:include> to include server declarations
-		String config2 = "test-global-fusion-schema.xml";
-		Configuration cfg2 = xmlUtil.unmarshal(Configuration.class, config2,
-			schemaPath);
-		Assert.assertNotNull(
-			"Expected configuration object, but could't read in the xml file "
-				+ config2, cfg2);
-
-		String config2Out = addNewlines(cfg2.toString());
-		// System.out.println("CONFIG2\n" + config2Out);
+		String config2Out = addNewlines(helper.readFusionSchemaWithValidation(
+			"test-global-fusion-schema.xml", "configuration.xsd").toString());
 
 		Assert.assertEquals(
 			"<xi:include> should work transparently, but differences occurred",
@@ -82,17 +65,8 @@ public class ReadConfigurationTest
 	public void checkXpath() throws FileNotFoundException, JAXBException,
 		SAXException, ParserConfigurationException, XPathExpressionException
 	{
-		// one xml file which contains servers too
-		String config = "test-fusion-schema.xml";
-
-		// with validation
-		String schemaPath = "configuration.xsd";
-
-		Configuration cfg = xmlUtil.unmarshal(Configuration.class, config,
-			schemaPath);
-		Assert.assertNotNull(
-			"Expected configuration object, but could't read in the xml file "
-				+ config, cfg);
+		Configuration cfg = helper
+			.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
 		/*
 		    <om:query type="beanshell">
@@ -106,7 +80,7 @@ public class ReadConfigurationTest
 			.getSearchServerConfigs().get(0).getFieldMappings().get(5)
 			.getOperations().get(0).getTargets().get(3);
 		Bsh bsh = Bsh.getInstance();
-		bsh.passArguments(beanShellQuery.getTypeConfig(), xmlUtil);
+		bsh.passArguments(beanShellQuery.getTypeConfig(), helper.getXmlUtil());
 		String r = bsh.getCode().replace(" ", "").replace("\n", "");
 		Assert
 			.assertEquals(

@@ -1,8 +1,18 @@
 package org.outermedia.solrfusion.query;
 
-import lombok.ToString;
+import java.util.Map;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+
+import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryParserFactory;
+import org.outermedia.solrfusion.query.parser.ParseException;
+import org.outermedia.solrfusion.query.parser.Query;
+import org.outermedia.solrfusion.query.parser.QueryParser;
+import org.outermedia.solrfusion.query.parser.QueryParser.Operator;
 
 /**
  * A common solr query parser.
@@ -12,8 +22,12 @@ import org.outermedia.solrfusion.configuration.QueryParserFactory;
  */
 
 @ToString
+@Slf4j
+@Getter
+@Setter
 public class EdisMaxQueryParser implements QueryParserIfc
 {
+
 	/**
 	 * Factory creates instances only.
 	 */
@@ -35,4 +49,33 @@ public class EdisMaxQueryParser implements QueryParserIfc
 
 	}
 
+	@Override
+	public Query parse(Configuration config, Map<String, Float> boosts,
+		String queryString)
+	{
+		Query result = null;
+		String defaultOpStr = config.getDefaultOperator();
+		Operator defaultOp = QueryParser.Operator.AND;
+		try
+		{
+			defaultOp = QueryParser.Operator.valueOf(defaultOpStr);
+		}
+		catch (Exception e)
+		{
+			log.error(
+				"Found illegal default operator '{}'. Expected either 'or' or 'and'. Using {}.",
+				defaultOpStr, defaultOp, e);
+		}
+		QueryParser parser = new QueryParser(config.getDefaultSearchField(),
+			config, boosts, defaultOp);
+		try
+		{
+			result = parser.parse(queryString);
+		}
+		catch (ParseException e)
+		{
+			log.error("Couldn't parse query: {}", queryString, e);
+		}
+		return result;
+	}
 }
