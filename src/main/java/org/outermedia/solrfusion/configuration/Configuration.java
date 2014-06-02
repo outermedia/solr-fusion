@@ -33,8 +33,6 @@ import org.outermedia.solrfusion.response.ResponseRendererIfc;
 	"idGeneratorFactory", "searchServerConfigs"
 })
 @XmlRootElement(name = "core", namespace = "http://solrfusion.outermedia.org/configuration/")
-@Getter
-@Setter
 @ToString
 public class Configuration
 {
@@ -43,18 +41,28 @@ public class Configuration
 	private List<FusionField> fusionFields;
 
 	@XmlElement(name = "script-type", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+	@Getter
+	@Setter
 	private List<ScriptType> scriptTypes;
 
 	@XmlElement(name = "default-search-field", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+	@Getter
+	@Setter
 	private String defaultSearchField;
 
 	@XmlElement(name = "default-operator", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+	@Getter
+	@Setter
 	private String defaultOperator;
 
 	@XmlElement(name = "id-generator", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+	@Getter
+	@Setter
 	private IdGeneratorFactory idGeneratorFactory;
 
 	@XmlElement(name = "solr-servers", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+	@Getter
+	@Setter
 	private GlobalSearchServerConfig searchServerConfigs;
 
 	/**
@@ -143,5 +151,14 @@ public class Configuration
 	public List<SearchServerAdapterIfc> getSearchServers()
 	{
 		return searchServerConfigs.getSearchServers();
+	}
+
+	public FusionField findFieldByName(String name)
+	{
+		for (FusionField ff : fusionFields)
+		{
+			if (ff.getFieldName().equals(name)) return ff;
+		}
+		return null;
 	}
 }

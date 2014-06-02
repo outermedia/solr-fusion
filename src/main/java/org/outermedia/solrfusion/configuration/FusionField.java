@@ -23,6 +23,7 @@ import lombok.ToString;
 @ToString
 public class FusionField
 {
+
 	@XmlAttribute(name = "name", required = true)
 	private String fieldName;
 
@@ -31,4 +32,23 @@ public class FusionField
 
 	@XmlAttribute(name = "format", required = false)
 	private String format;
+
+	/**
+	 * Get the {@link #type}'s corresponding enum.
+	 * 
+	 * @return null for unknown or an instance
+	 */
+	public DefaultFieldType getFieldType()
+	{
+		DefaultFieldType result = null;
+		try
+		{
+			result = DefaultFieldType.valueOf(type.toUpperCase());
+		}
+		catch (Exception e)
+		{
+			// NOP
+		}
+		return result;
+	}
 }
