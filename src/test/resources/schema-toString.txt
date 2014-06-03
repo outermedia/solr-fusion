@@ -37,7 +37,7 @@ Configuration(fusionFields=[
  vielen Systemen beantwortet werden.
  ),
  queryParserFactory=QueryParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory, implementation=EdisMaxQueryParser())),
- defaultResponseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultResponseParser$Factory, implementation=DefaultResponseParser())),
+ defaultResponseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultResponseParser$Factory, implementation=DefaultResponseParser(result=null))),
  responseRendererFactories=[
  ResponseRendererFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory, implementation=DefaultXmlResponseRenderer()),
  type=XML),

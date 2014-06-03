@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name="", factoryClass=DefaultResponseParser.Factory.class, factoryMethod="getInstance")
-@XmlRootElement(name = "response") //, namespace = "http://solrfusion.outermedia.org/configuration/")
+@XmlRootElement(name = "response")
 @ToString
 public class DefaultResponseParser implements ResponseParserIfc
 {
@@ -42,7 +42,7 @@ public class DefaultResponseParser implements ResponseParserIfc
 
 	}
 
-    @XmlElement(name = "result", required = true) //, namespace = "http://solrfusion.outermedia.org/configuration/"
+    @XmlElement(name = "result", required = true)
     @Getter
     @Setter
     private Result result;
