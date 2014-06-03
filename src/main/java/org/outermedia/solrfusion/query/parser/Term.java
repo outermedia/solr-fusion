@@ -11,19 +11,19 @@ import org.outermedia.solrfusion.configuration.FusionField;
 @Setter
 public class Term
 {
-	private String field;
+	private String fusionFieldName;
 	private String termStr;
 	private FusionField fusionField;
 
 	public Term(String field, String termStr)
 	{
-		this.field = field;
+		this.fusionFieldName = field;
 		this.termStr = termStr;
 	}
 
 	public String field()
 	{
-		return field;
+		return fusionFieldName;
 	}
 
 }
