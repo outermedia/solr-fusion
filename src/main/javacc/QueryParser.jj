@@ -102,7 +102,7 @@ public class QueryParser {
     field = f;
     this.boosts = boosts;
     this.configuration = configuration;
-    this.operator = operator;
+    this.operator = defaultOperator;
   }
 
   /** Parses a query string, returning a {@link org.apache.lucene.search.Query}.

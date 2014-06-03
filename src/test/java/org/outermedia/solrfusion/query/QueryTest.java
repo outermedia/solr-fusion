@@ -64,7 +64,7 @@ public class QueryTest
         Assert.assertNotNull(
                 "Expected query object, but couldn't parse query string '" + query
                         + "'", o);
-        String expected = "BooleanQuery(super=Query(), clauses=[BooleanClause(occur=OCCUR_SHOULD, q=TermQuery(super=Query(), term=Term(fusionFieldName=title, termStr=Schiller, fusionField=FusionField(fieldName=title, type=string, format=null)))), BooleanClause(occur=OCCUR_SHOULD, q=TermQuery(super=Query(), term=Term(fusionFieldName=title, termStr=Müller, fusionField=FusionField(fieldName=title, type=string, format=null))))])";
+        String expected = "BooleanQuery(super=Query(), clauses=[BooleanClause(occur=OCCUR_MUST, q=TermQuery(super=Query(), term=Term(fusionFieldName=title, termStr=Schiller, fusionField=FusionField(fieldName=title, type=string, format=null)))), BooleanClause(occur=OCCUR_MUST, q=TermQuery(super=Query(), term=Term(fusionFieldName=title, termStr=Müller, fusionField=FusionField(fieldName=title, type=string, format=null))))])";
         Assert.assertEquals("Got different query object than expected",
                 expected, o.toString());
     }
