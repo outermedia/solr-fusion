@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+    <lst name="responseHeader">
+        <int name="status">0</int>
+        <int name="QTime">1</int>
+        <lst name="params">
+            <str name="q"/>
+        </lst>
+    </lst>
+    <result name="response" numFound="59612" start="0" maxScore="1.0">
+        <doc>
+            <float name="score">1.0</float>
+            <str name="dbName">Perinorm - Datenbank für Normen und technische Regeln</str>
+            <str name="dbodid">beuth_pn_</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=beuth_pn&amp;param=DE30029152</str>
+            <str name="description">Bibliographische Datenbank (monatlich aktualisiert, 3sprachig) mit ca. 1.100.000
+                Daten von Normen aus 23 Ländern, (z.B. ANSI, DIN, ISO), technischen Regeln sowie von deutschen
+                Rechtsvorschriften mit technischen Bezug und geltenden EU-Richtlinien.
+                Der Volltextzugriff auf Normen ist nur bei entsprechender Lizenz verfügbar!
+            </str>
+            <str name="id">6566</str>
+            <str name="keywords">Norm, DIN-Norm, Internationale Norm, Regeln der Technik, Verzeichnis</str>
+            <str name="permission">babre, babz, badd, bag, bal, bapl, barie, dbod, doegel, fhef, fhj, fhndh, fhsm,
+                gwttud, hbmst, htwdd, htwk, htwm, slub, tubfr, ubbuw, ubil, whz, zigr
+            </str>
+            <str name="publisher">Beuth Verlag GmbH</str>
+            <str name="sourceid">beuth_pn_DE30029152</str>
+            <str name="titleVT_de">Technische Lieferbedingungen für Absperrarmaturen - Absperrarmaturen für Gasleitungen
+                und Gasanlagen - Anforderungen und Prüfungen
+            </str>
+            <str name="titleVT_eng">Technical delivery conditions for shut-off devices - shut-off devices for gas
+                installations and for gas pipelines - requirements and tests
+            </str>
+        </doc>
+        <doc>
+            <float name="score">1.0</float>
+            <str name="dbName">Perinorm - Datenbank für Normen und technische Regeln</str>
+            <str name="dbodid">beuth_pn_</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=beuth_pn&amp;param=DE30029153</str>
+            <str name="description">Bibliographische Datenbank (monatlich aktualisiert, 3sprachig) mit ca. 1.100.000
+                Daten von Normen aus 23 Ländern, (z.B. ANSI, DIN, ISO), technischen Regeln sowie von deutschen
+                Rechtsvorschriften mit technischen Bezug und geltenden EU-Richtlinien.
+                Der Volltextzugriff auf Normen ist nur bei entsprechender Lizenz verfügbar!
+            </str>
+            <str name="id">6567</str>
+            <str name="keywords">Norm, DIN-Norm, Internationale Norm, Regeln der Technik, Verzeichnis</str>
+            <str name="permission">babre, babz, badd, bag, bal, bapl, barie, dbod, doegel, fhef, fhj, fhndh, fhsm,
+                gwttud, hbmst, htwdd, htwk, htwm, slub, tubfr, ubbuw, ubil, whz, zigr
+            </str>
+            <str name="publisher">Beuth Verlag GmbH</str>
+            <str name="sourceid">beuth_pn_DE30029153</str>
+            <str name="titleVT_de">Genormte Datenelementtypen mit Klassifikationsschema für elektrische Bauteile - Teil
+                2: EXPRESS-Datenmodell (IEC 3D/159/CDV:2007); Englische Fassung prEN 61360-2:2007
+            </str>
+            <str name="titleVT_eng">Standard data element types with associated classification scheme for electric
+                components - Part 2: EXPRESS dictionary schema (IEC 3D/159/CDV:2007); English version prEN 61360-2:2007
+            </str>
+        </doc>
+        <doc>
+            <float name="score">1.0</float>
+            <str name="dbName">Perinorm - Datenbank für Normen und technische Regeln</str>
+            <str name="dbodid">beuth_pn_</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=beuth_pn&amp;param=DE30029154</str>
+            <str name="description">Bibliographische Datenbank (monatlich aktualisiert, 3sprachig) mit ca. 1.100.000
+                Daten von Normen aus 23 Ländern, (z.B. ANSI, DIN, ISO), technischen Regeln sowie von deutschen
+                Rechtsvorschriften mit technischen Bezug und geltenden EU-Richtlinien.
+                Der Volltextzugriff auf Normen ist nur bei entsprechender Lizenz verfügbar!
+            </str>
+            <str name="id">6568</str>
+            <str name="keywords">Norm, DIN-Norm, Internationale Norm, Regeln der Technik, Verzeichnis</str>
+            <str name="permission">babre, babz, badd, bag, bal, bapl, barie, dbod, doegel, fhef, fhj, fhndh, fhsm,
+                gwttud, hbmst, htwdd, htwk, htwm, slub, tubfr, ubbuw, ubil, whz, zigr
+            </str>
+            <str name="publisher">Beuth Verlag GmbH</str>
+            <str name="sourceid">beuth_pn_DE30029154</str>
+            <str name="titleVT_de">Lösemittel für Beschichtungsstoffe - Bestimmung des Siedeverhaltens (Siedebereich und
+                Siedeverlauf)
+            </str>
+            <str name="titleVT_eng">Solvents for paints and varnishes - Determination of distillation characteristics
+                (boiling range and boiling temperature as a function of distilled volume)
+            </str>
+        </doc>
+        <doc>
+            <float name="score">1.0</float>
+            <str name="dbName">Perinorm - Datenbank für Normen und technische Regeln</str>
+            <str name="dbodid">beuth_pn_</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=beuth_pn&amp;param=DE30029155</str>
+            <str name="description">Bibliographische Datenbank (monatlich aktualisiert, 3sprachig) mit ca. 1.100.000
+                Daten von Normen aus 23 Ländern, (z.B. ANSI, DIN, ISO), technischen Regeln sowie von deutschen
+                Rechtsvorschriften mit technischen Bezug und geltenden EU-Richtlinien.
+                Der Volltextzugriff auf Normen ist nur bei entsprechender Lizenz verfügbar!
+            </str>
+            <str name="id">6569</str>
+            <str name="keywords">Norm, DIN-Norm, Internationale Norm, Regeln der Technik, Verzeichnis</str>
+            <str name="permission">babre, babz, badd, bag, bal, bapl, barie, dbod, doegel, fhef, fhj, fhndh, fhsm,
+                gwttud, hbmst, htwdd, htwk, htwm, slub, tubfr, ubbuw, ubil, whz, zigr
+            </str>
+            <str name="publisher">Beuth Verlag GmbH</str>
+            <str name="sourceid">beuth_pn_DE30029155</str>
+            <str name="titleVT_de">Zahnheilkunde - Kunststoffe - Teil 1: Prothesenkunststoffe (ISO 20795-1:2008);
+                Deutsche Fassung EN ISO 20795-1:2008
+            </str>
+            <str name="titleVT_eng">Dentistry - Base polymers - Part 1: Denture base polymers (ISO 20795-1:2008); German
+                version EN ISO 20795-1:2008
+            </str>
+        </doc>
+        <doc>
+            <float name="score">1.0</float>
+            <str name="dbName">Perinorm - Datenbank für Normen und technische Regeln</str>
+            <str name="dbodid">beuth_pn_</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=beuth_pn&amp;param=DE30029156</str>
+            <str name="description">Bibliographische Datenbank (monatlich aktualisiert, 3sprachig) mit ca. 1.100.000
+                Daten von Normen aus 23 Ländern, (z.B. ANSI, DIN, ISO), technischen Regeln sowie von deutschen
+                Rechtsvorschriften mit technischen Bezug und geltenden EU-Richtlinien.
+                Der Volltextzugriff auf Normen ist nur bei entsprechender Lizenz verfügbar!
+            </str>
+            <str name="id">6570</str>
+            <str name="keywords">Norm, DIN-Norm, Internationale Norm, Regeln der Technik, Verzeichnis</str>
+            <str name="permission">babre, babz, badd, bag, bal, bapl, barie, dbod, doegel, fhef, fhj, fhndh, fhsm,
+                gwttud, hbmst, htwdd, htwk, htwm, slub, tubfr, ubbuw, ubil, whz, zigr
+            </str>
+            <str name="publisher">Beuth Verlag GmbH</str>
+            <str name="sourceid">beuth_pn_DE30029156</str>
+            <str name="titleVT_de">Kleine Wasserfahrzeuge - Von motorgetriebenen Sportbooten abgestrahlter Luftschall -
+                Teil 1: Vorbeifahrtmessungen (ISO 14509-1:2008); Deutsche Fassung EN ISO 14509-1:2008
+            </str>
+            <str name="titleVT_eng">Small craft - Airborne sound emitted by powered recreational craft - Part 1: Pass-by
+                measurement procedures (ISO 14509-1:2008); German version EN ISO 14509-1:2008
+            </str>
+        </doc>
+        <doc>
+            <float name="score">1.0</float>
+            <str name="dbName">Perinorm - Datenbank für Normen und technische Regeln</str>
+            <str name="dbodid">beuth_pn_</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=beuth_pn&amp;param=DE30029158</str>
+            <str name="description">Bibliographische Datenbank (monatlich aktualisiert, 3sprachig) mit ca. 1.100.000
+                Daten von Normen aus 23 Ländern, (z.B. ANSI, DIN, ISO), technischen Regeln sowie von deutschen
+                Rechtsvorschriften mit technischen Bezug und geltenden EU-Richtlinien.
+                Der Volltextzugriff auf Normen ist nur bei entsprechender Lizenz verfügbar!
+            </str>
+            <str name="id">6571</str>
+            <str name="keywords">Norm, DIN-Norm, Internationale Norm, Regeln der Technik, Verzeichnis</str>
+            <str name="permission">babre, babz, badd, bag, bal, bapl, barie, dbod, doegel, fhef, fhj, fhndh, fhsm,
+                gwttud, hbmst, htwdd, htwk, htwm, slub, tubfr, ubbuw, ubil, whz, zigr
+            </str>
+            <str name="publisher">Beuth Verlag GmbH</str>
+            <str name="sourceid">beuth_pn_DE30029158</str>
+            <str name="titleVT_de">Chemische Desinfektionsmittel und Antiseptika - Quantitativer Oberflächenversuch zur
+                Bestimmung der bakteriziden Wirkung chemischer Desinfektionsmittel und Antiseptika für den
+                Veterinärbereich auf nicht-porösen Oberflächen ohne mechanische Wirkung - Prüfverfahren und
+                Anforderungen (Phase 2, Stufe 2); Deutsche Fassung EN 14349:2007
+            </str>
+            <str name="titleVT_eng">Chemical disinfectants and antiseptics - Quantitative surface test for the
+                evaluation of bactericidal activity of chemical disinfectants and antiseptics used in veterinary area on
+                non-porous surfaces without mechanical action - Test method and requirements (phase 2, step 2); German
+                version EN 14349:2007
+            </str>
+        </doc>
+        <doc>
+            <float name="score">1.0</float>
+            <str name="dbName">Perinorm - Datenbank für Normen und technische Regeln</str>
+            <str name="dbodid">beuth_pn_</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=beuth_pn&amp;param=DE30029159</str>
+            <str name="description">Bibliographische Datenbank (monatlich aktualisiert, 3sprachig) mit ca. 1.100.000
+                Daten von Normen aus 23 Ländern, (z.B. ANSI, DIN, ISO), technischen Regeln sowie von deutschen
+                Rechtsvorschriften mit technischen Bezug und geltenden EU-Richtlinien.
+                Der Volltextzugriff auf Normen ist nur bei entsprechender Lizenz verfügbar!
+            </str>
+            <str name="id">6572</str>
+            <str name="keywords">Norm, DIN-Norm, Internationale Norm, Regeln der Technik, Verzeichnis</str>
+            <str name="permission">babre, babz, badd, bag, bal, bapl, barie, dbod, doegel, fhef, fhj, fhndh, fhsm,
+                gwttud, hbmst, htwdd, htwk, htwm, slub, tubfr, ubbuw, ubil, whz, zigr
+            </str>
+            <str name="publisher">Beuth Verlag GmbH</str>
+            <str name="sourceid">beuth_pn_DE30029159</str>
+            <str name="titleVT_de">Zuverlässigkeitsmanagement - Teil 3-4: Anwendungsleitfaden - Anleitung zum Festlegen
+                von Zuverlässigkeitsforderungen (IEC 60300-3-4:2007); Deutsche Fassung EN 60300-3-4:2008
+            </str>
+            <str name="titleVT_eng">Dependability management - Part 3-4: Application guide - Guide to the specification
+                of dependability requirements (IEC 60300-3-4:2007); German version EN 60300-3-4:2008
+            </str>
+        </doc>
+        <doc>
+            <float name="score">1.0</float>
+            <str name="dbName">Perinorm - Datenbank für Normen und technische Regeln</str>
+            <str name="dbodid">beuth_pn_</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=beuth_pn&amp;param=DE30029160</str>
+            <str name="description">Bibliographische Datenbank (monatlich aktualisiert, 3sprachig) mit ca. 1.100.000
+                Daten von Normen aus 23 Ländern, (z.B. ANSI, DIN, ISO), technischen Regeln sowie von deutschen
+                Rechtsvorschriften mit technischen Bezug und geltenden EU-Richtlinien.
+                Der Volltextzugriff auf Normen ist nur bei entsprechender Lizenz verfügbar!
+            </str>
+            <str name="id">6573</str>
+            <str name="keywords">Norm, DIN-Norm, Internationale Norm, Regeln der Technik, Verzeichnis</str>
+            <str name="permission">babre, babz, badd, bag, bal, bapl, barie, dbod, doegel, fhef, fhj, fhndh, fhsm,
+                gwttud, hbmst, htwdd, htwk, htwm, slub, tubfr, ubbuw, ubil, whz, zigr
+            </str>
+            <str name="publisher">Beuth Verlag GmbH</str>
+            <str name="sourceid">beuth_pn_DE30029160</str>
+            <str name="titleVT_de">Metallische industrielle Rohrleitungen - Teil 1: Allgemeines; Deutsche Fassung EN
+                13480-1:2002+A2:2008
+            </str>
+            <str name="titleVT_eng">Metallic industrial piping - Part 1: General; German version EN
+                13480-1:2002+A2:2008
+            </str>
+        </doc>
+        <doc>
+            <float name="score">1.0</float>
+            <str name="dbName">Perinorm - Datenbank für Normen und technische Regeln</str>
+            <str name="dbodid">beuth_pn_</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=beuth_pn&amp;param=DE30029164</str>
+            <str name="description">Bibliographische Datenbank (monatlich aktualisiert, 3sprachig) mit ca. 1.100.000
+                Daten von Normen aus 23 Ländern, (z.B. ANSI, DIN, ISO), technischen Regeln sowie von deutschen
+                Rechtsvorschriften mit technischen Bezug und geltenden EU-Richtlinien.
+                Der Volltextzugriff auf Normen ist nur bei entsprechender Lizenz verfügbar!
+            </str>
+            <str name="id">6574</str>
+            <str name="keywords">Norm, DIN-Norm, Internationale Norm, Regeln der Technik, Verzeichnis</str>
+            <str name="permission">babre, babz, badd, bag, bal, bapl, barie, dbod, doegel, fhef, fhj, fhndh, fhsm,
+                gwttud, hbmst, htwdd, htwk, htwm, slub, tubfr, ubbuw, ubil, whz, zigr
+            </str>
+            <str name="publisher">Beuth Verlag GmbH</str>
+            <str name="sourceid">beuth_pn_DE30029164</str>
+            <str name="titleVT_de">Sicherheit von Maschinen - Sicherheitsanforderungen an Konstruktion und Bau von
+                Druck- und Papierverarbeitungsmaschinen - Teil 3: Schneidemaschinen; Englische Fassung EN
+                1010-3:2002/FprA1:2009
+            </str>
+            <str name="titleVT_eng">Safety of machinery - Safety requirements for the design and construction of
+                printing and paper converting machines - Part 3: Cutting machines; English version EN
+                1010-3:2002/FprA1:2009
+            </str>
+        </doc>
+        <doc>
+            <float name="score">1.0</float>
+            <str name="dbName">Perinorm - Datenbank für Normen und technische Regeln</str>
+            <str name="dbodid">beuth_pn_</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=beuth_pn&amp;param=DE30029165</str>
+            <str name="description">Bibliographische Datenbank (monatlich aktualisiert, 3sprachig) mit ca. 1.100.000
+                Daten von Normen aus 23 Ländern, (z.B. ANSI, DIN, ISO), technischen Regeln sowie von deutschen
+                Rechtsvorschriften mit technischen Bezug und geltenden EU-Richtlinien.
+                Der Volltextzugriff auf Normen ist nur bei entsprechender Lizenz verfügbar!
+            </str>
+            <str name="id">6575</str>
+            <str name="keywords">Norm, DIN-Norm, Internationale Norm, Regeln der Technik, Verzeichnis</str>
+            <str name="permission">babre, babz, badd, bag, bal, bapl, barie, dbod, doegel, fhef, fhj, fhndh, fhsm,
+                gwttud, hbmst, htwdd, htwk, htwm, slub, tubfr, ubbuw, ubil, whz, zigr
+            </str>
+            <str name="publisher">Beuth Verlag GmbH</str>
+            <str name="sourceid">beuth_pn_DE30029165</str>
+            <str name="titleVT_de">Sicherheit von Maschinen - Sicherheitsanforderungen an Konstruktion und Bau von
+                Druck- und Papierverarbeitungsmaschinen - Teil 4: Buchbinderei-, Papierverarbeitungs- und
+                Papierveredelungsmaschinen; Englische Fassung EN 1010-4:2004/FprA1:2009
+            </str>
+            <str name="titleVT_eng">Safety of machinery - Safety requirements for the design and construction of
+                printing and paper converting machines - Part 4: Bookbinding, paper converting and finishing machines;
+                English version EN 1010-4:2004/FprA1:2009
+            </str>
+        </doc>
+    </result>
+</response>
