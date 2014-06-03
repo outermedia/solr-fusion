@@ -29,7 +29,7 @@ public class QueryTest
 	}
 
 	@Test
-	public void parseQuery() throws FileNotFoundException, JAXBException,
+	public void parseTermQuery() throws FileNotFoundException, JAXBException,
 		SAXException, ParserConfigurationException
 	{
 		Configuration cfg = helper
@@ -43,16 +43,29 @@ public class QueryTest
 		Assert.assertNotNull(
 			"Expected query object, but could't parse query string '" + query
 				+ "'", o);
-		String expected = "TermQuery(super=Query(), term=Term(field=title, termStr=Schiller, fusionField=FusionField(fieldName=title, type=string, format=null)))";
+		String expected = "TermQuery(super=Query(), term=Term(fusionFieldName=title, termStr=Schiller, fusionField=FusionField(fieldName=title, type=string, format=null)))";
 		Assert.assertEquals("Got different query object than expected",
 			expected, o.toString());
+    }
 
-		// TODO check diacritical chars!
-		query = "title:Schiller title:Müller";
-		o = p.parse(cfg, boosts, query);
-		Assert.assertNotNull(
-			"Expected query object, but could't parse query string '" + query
-				+ "'", o);
-		System.out.println("Q " + o);
-	}
+    @Test
+    public void parseTermConjunctionQuery() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        Configuration cfg = helper
+                .readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+
+        String query = "title:Schiller title:Müller";
+        EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
+        p.init(new QueryParserFactory());
+        Map<String, Float> boosts = new HashMap<String, Float>();
+        // check diacritical chars
+        Query o = p.parse(cfg, boosts, query);
+        Assert.assertNotNull(
+                "Expected query object, but couldn't parse query string '" + query
+                        + "'", o);
+        String expected = "BooleanQuery(super=Query(), clauses=[BooleanClause(occur=OCCUR_SHOULD, q=TermQuery(super=Query(), term=Term(fusionFieldName=title, termStr=Schiller, fusionField=FusionField(fieldName=title, type=string, format=null)))), BooleanClause(occur=OCCUR_SHOULD, q=TermQuery(super=Query(), term=Term(fusionFieldName=title, termStr=Müller, fusionField=FusionField(fieldName=title, type=string, format=null))))])";
+        Assert.assertEquals("Got different query object than expected",
+                expected, o.toString());
+    }
 }
