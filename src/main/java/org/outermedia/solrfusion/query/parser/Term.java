@@ -6,6 +6,12 @@ import lombok.ToString;
 
 import org.outermedia.solrfusion.configuration.FusionField;
 
+/**
+ * Data holder which stores a fusion field name and its value.
+ *
+ * @author sballmann
+ */
+
 @ToString
 @Getter
 @Setter
