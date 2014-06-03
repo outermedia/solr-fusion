@@ -5,5 +5,5 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class MatchAllDocsQuery extends Query
 {
-
+    // TODO
 }
