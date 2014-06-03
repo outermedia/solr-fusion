@@ -41,7 +41,7 @@ public class QueryTest
 		Map<String, Float> boosts = new HashMap<String, Float>();
 		Query o = p.parse(cfg, boosts, query);
 		Assert.assertNotNull(
-			"Expected query object, but could't parse query string '" + query
+			"Expected query object, but couldn't parse query string '" + query
 				+ "'", o);
 		String expected = "TermQuery(super=Query(), term=Term(fusionFieldName=title, termStr=Schiller, fusionField=FusionField(fieldName=title, type=string, format=null)))";
 		Assert.assertEquals("Got different query object than expected",
