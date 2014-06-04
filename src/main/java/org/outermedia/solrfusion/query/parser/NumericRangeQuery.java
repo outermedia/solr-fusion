@@ -1,10 +1,19 @@
 package org.outermedia.solrfusion.query.parser;
 
 import lombok.ToString;
+import org.outermedia.solrfusion.query.QueryVisitor;
+import org.outermedia.solrfusion.types.ScriptEnv;
 
 @ToString(callSuper = true)
 public class NumericRangeQuery extends Query
 {
+    private String fusionFieldName;
+
+    @Override
+    public void accept(QueryVisitor visitor, ScriptEnv env)
+    {
+        visitor.visitQuery(this, env);
+    }
 
 	public static NumericRangeQuery newLongRange(String field, Long min,
 		Long max, boolean inclusive, boolean inclusive2)

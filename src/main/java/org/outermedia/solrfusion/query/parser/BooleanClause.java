@@ -15,12 +15,12 @@ public class BooleanClause
     }
 
     private Occur occur = Occur.OCCUR_MAY; // TODO correct initialization?
-    private Query q;
+    private Query query;
 
 
-    public BooleanClause(Query q, Occur occur)
+    public BooleanClause(Query query, Occur occur)
     {
-        this.q = q;
+        this.query = query;
         this.occur = occur;
     }
 

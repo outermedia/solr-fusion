@@ -1,24 +1,40 @@
 package org.outermedia.solrfusion.query.parser;
 
+import lombok.ToString;
+import org.outermedia.solrfusion.mapper.QueryMapper;
+import org.outermedia.solrfusion.query.QueryVisitor;
+import org.outermedia.solrfusion.types.ScriptEnv;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.ToString;
 
 @ToString(callSuper = true)
 public class BooleanQuery extends Query
 {
-	private List<BooleanClause> clauses;
+    private List<BooleanClause> clauses;
 
-	public BooleanQuery(boolean disableCoord)
-	{
-		clauses = new ArrayList<>();
-		// TODO Auto-generated constructor stub 
-	}
+    public BooleanQuery(boolean disableCoord)
+    {
+        clauses = new ArrayList<>();
+        // TODO Auto-generated constructor stub
+    }
 
-	public void add(BooleanClause clause)
-	{
-		clauses.add(clause);
-	}
+    public void add(BooleanClause clause)
+    {
+        clauses.add(clause);
+    }
 
+    @Override
+    public void accept(QueryVisitor visitor, ScriptEnv env)
+    {
+        visitor.visitQuery(this, env);
+    }
+
+    public void visitQueryClauses(QueryMapper queryMapper, ScriptEnv env)
+    {
+        for (BooleanClause c : clauses)
+        {
+            c.getQuery().accept(queryMapper, env);
+        }
+    }
 }

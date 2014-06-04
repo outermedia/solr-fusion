@@ -3,6 +3,8 @@ package org.outermedia.solrfusion.query.parser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.outermedia.solrfusion.query.QueryVisitor;
+import org.outermedia.solrfusion.types.ScriptEnv;
 
 /**
  * This class represents a simple term query aka "&lt;field&gt;:&lt;value&gt;".
@@ -15,10 +17,37 @@ import lombok.ToString;
 @Setter
 public class TermQuery extends Query
 {
-	private Term term;
+    private Term term;
 
-	public TermQuery(Term term)
-	{
-		this.term = term;
-	}
+    public TermQuery(Term term)
+    {
+        this.term = term;
+    }
+
+    @Override
+    public void accept(QueryVisitor visitor, ScriptEnv env)
+    {
+        visitor.visitQuery(this, env);
+    }
+
+    public String getFusionFieldName()
+    {
+        return term.getFusionFieldName();
+    }
+
+    public String getFusionFieldValue()
+    {
+        return term.getFusionFieldValue();
+    }
+
+    public String getSearchServerFieldName()
+    {
+        return term.getSearchServerFieldName();
+    }
+
+    public String getSearchServerFieldValue()
+    {
+        return term.getSearchServerFieldValue();
+    }
+
 }

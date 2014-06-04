@@ -1,11 +1,10 @@
 package org.outermedia.solrfusion.types;
 
-import java.util.List;
-
 import lombok.ToString;
-
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
+
+import java.util.List;
 
 /**
  * A given Java class is used to compute a field conversion.
@@ -25,7 +24,13 @@ public class Java extends AbstractType
 
 	}
 
-	public static Java getInstance()
+    @Override
+    public String apply(ScriptEnv env)
+    {
+        return null; // TODO
+    }
+
+    public static Java getInstance()
 	{
 		return new Java();
 	}

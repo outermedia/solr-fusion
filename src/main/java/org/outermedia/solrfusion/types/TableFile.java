@@ -1,11 +1,10 @@
 package org.outermedia.solrfusion.types;
 
-import java.util.List;
-
 import lombok.ToString;
-
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
+
+import java.util.List;
 
 /**
  * A mapping table, contained in a file, is used to replace field values.
@@ -25,7 +24,13 @@ public class TableFile extends AbstractType
 
 	}
 
-	public static TableFile getInstance()
+    @Override
+    public String apply(ScriptEnv env)
+    {
+        return null; // TODO
+    }
+
+    public static TableFile getInstance()
 	{
 		return new TableFile();
 	}

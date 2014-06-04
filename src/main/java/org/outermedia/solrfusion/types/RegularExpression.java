@@ -1,11 +1,10 @@
 package org.outermedia.solrfusion.types;
 
-import java.util.List;
-
 import lombok.ToString;
-
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
+
+import java.util.List;
 
 /**
  * A regular expression which matches a pattern and applies a replacement in
@@ -26,7 +25,13 @@ public class RegularExpression extends AbstractType
 
 	}
 
-	public static RegularExpression getInstance()
+    @Override
+    public String apply(ScriptEnv env)
+    {
+        return null; // TODO
+    }
+
+    public static RegularExpression getInstance()
 	{
 		return new RegularExpression();
 	}

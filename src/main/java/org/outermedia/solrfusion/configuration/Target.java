@@ -1,20 +1,20 @@
 package org.outermedia.solrfusion.configuration;
 
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.types.AbstractType;
+import org.outermedia.solrfusion.types.ScriptEnv;
+import org.w3c.dom.Element;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlTransient;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
-
-import org.outermedia.solrfusion.types.AbstractType;
-import org.w3c.dom.Element;
+import java.util.List;
 
 /**
  * Abstract data holder class to store the configuration of common attributes of
@@ -45,6 +45,8 @@ public abstract class Target
 	private List<Element> typeConfig;
 
 	@XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
 	private Util util;
 
 	public Target()
@@ -56,6 +58,8 @@ public abstract class Target
 	 * Instance of the declared {@link Target#type}
 	 */
 	@XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
 	private AbstractType typeImpl;
 
 	/**
@@ -83,4 +87,9 @@ public abstract class Target
 			}
 		}
 	}
+
+    public String apply(ScriptEnv env)
+    {
+        return typeImpl.apply(env);
+    }
 }

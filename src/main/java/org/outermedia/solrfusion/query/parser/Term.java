@@ -6,6 +6,9 @@ import lombok.ToString;
 
 import org.outermedia.solrfusion.configuration.FusionField;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Data holder which stores a fusion field name and its value.
  *
@@ -18,13 +21,27 @@ import org.outermedia.solrfusion.configuration.FusionField;
 public class Term
 {
 	private String fusionFieldName;
-	private String termStr;
+	private String fusionFieldValue;
 	private FusionField fusionField;
+    private String searchServerFieldName;
+    private String searchServerFieldValue;
 
-	public Term(String field, String termStr)
+    // set by an remove operation
+    private boolean removed;
+
+    // set by a change operation
+    private boolean wasMapped;
+
+    // added by an add operation
+    private List<Query> newQueries;
+
+
+    public Term(String field, String termStr)
 	{
 		this.fusionFieldName = field;
-		this.termStr = termStr;
+		this.fusionFieldValue = termStr;
+        removed = false;
+        wasMapped = false;
 	}
 
 	public String field()
@@ -32,4 +49,12 @@ public class Term
 		return fusionFieldName;
 	}
 
+    public void addNewSearchServerQuery(String searchServersFieldName, String searchServersFieldValue)
+    {
+        if (newQueries == null)
+        {
+            newQueries = new ArrayList<>();
+        }
+        newQueries.add(new TermQuery(new Term(searchServersFieldName, searchServersFieldValue)));
+    }
 }

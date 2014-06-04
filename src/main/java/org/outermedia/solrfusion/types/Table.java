@@ -1,11 +1,10 @@
 package org.outermedia.solrfusion.types;
 
-import java.util.List;
-
 import lombok.ToString;
-
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
+
+import java.util.List;
 
 /**
  * A mapping table, embedded in the xml, is used to replace field values.
@@ -25,7 +24,13 @@ public class Table extends AbstractType
 
 	}
 
-	public static Table getInstance()
+    @Override
+    public String apply(ScriptEnv env)
+    {
+        return null; // TODO
+    }
+
+    public static Table getInstance()
 	{
 		return new Table();
 	}

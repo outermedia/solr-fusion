@@ -1,13 +1,12 @@
 package org.outermedia.solrfusion.types;
 
-import java.util.List;
-
 import lombok.ToString;
-
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ScriptType;
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
+
+import java.util.List;
 
 /**
  * Abstract parent class of all "types" which are referenced in &lt;query&gt;,
@@ -38,4 +37,5 @@ public abstract class AbstractType implements Initiable<ScriptType>
 	 */
 	public abstract void passArguments(List<Element> typeConfig, Util util);
 
+    public abstract String apply(ScriptEnv env);
 }

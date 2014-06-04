@@ -1,11 +1,10 @@
 package org.outermedia.solrfusion.types;
 
-import java.util.List;
-
 import lombok.ToString;
-
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
+
+import java.util.List;
 
 /**
  * A Javascript Shell interpreter which evaluates expressions contained in the
@@ -15,9 +14,12 @@ import org.w3c.dom.Element;
  * 
  */
 
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"engine", "engineName"})
 public class Js extends AbstractType
 {
+
+    // either js, rhino, JavaScript, javascript, ECMAScript or ecmascript
+    private String engineName = "js";
 
 	@Override
 	public void passArguments(List<Element> typeConfig, Util util)
@@ -26,7 +28,13 @@ public class Js extends AbstractType
 
 	}
 
-	public static Js getInstance()
+    @Override
+    public String apply(ScriptEnv env)
+    {
+        return null; // TODO
+    }
+
+    public static Js getInstance()
 	{
 		return new Js();
 	}

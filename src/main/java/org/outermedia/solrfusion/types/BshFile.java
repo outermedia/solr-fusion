@@ -1,11 +1,10 @@
 package org.outermedia.solrfusion.types;
 
-import java.util.List;
-
 import lombok.ToString;
-
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
+
+import java.util.List;
 
 /**
  * A Bean Shell interpreter which evaluates expressions contained in a file to
@@ -26,7 +25,13 @@ public class BshFile extends AbstractType
 
 	}
 
-	public static BshFile getInstance()
+    @Override
+    public String apply(ScriptEnv env)
+    {
+        return null; // TODO
+    }
+
+    public static BshFile getInstance()
 	{
 		return new BshFile();
 	}

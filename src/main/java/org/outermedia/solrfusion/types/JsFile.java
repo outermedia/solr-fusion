@@ -1,11 +1,10 @@
 package org.outermedia.solrfusion.types;
 
-import java.util.List;
-
 import lombok.ToString;
-
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
+
+import java.util.List;
 
 /**
  * A Javascript Shell interpreter which evaluates expressions contained in a
@@ -26,7 +25,13 @@ public class JsFile extends AbstractType
 
 	}
 
-	public static JsFile getInstance()
+    @Override
+    public String apply(ScriptEnv env)
+    {
+        return null; // TODO
+    }
+
+    public static JsFile getInstance()
 	{
 		return new JsFile();
 	}
