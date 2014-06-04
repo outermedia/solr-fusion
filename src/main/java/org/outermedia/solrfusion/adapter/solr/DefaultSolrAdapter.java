@@ -4,6 +4,8 @@ import lombok.ToString;
 
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.response.ClosableIterator;
+import org.outermedia.solrfusion.response.parser.Document;
 
 /**
  * This class is able to send requests to a solr server and to receive answers.
@@ -21,7 +23,13 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
 	private DefaultSolrAdapter()
 	{}
 
-	public static class Factory
+    @Override
+    public ClosableIterator<Document> sendQuery(String searchServerQueryStr)
+    {
+        return null; // TODO
+    }
+
+    public static class Factory
 	{
 		public static DefaultSolrAdapter getInstance()
 		{
