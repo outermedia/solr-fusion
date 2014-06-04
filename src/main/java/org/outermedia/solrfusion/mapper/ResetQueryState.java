@@ -1,33 +1,20 @@
 package org.outermedia.solrfusion.mapper;
 
-import org.outermedia.solrfusion.configuration.FieldMapping;
-import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
-
-import java.util.List;
 
 /**
  * Map a fusion query to a solr request.
  * <p/>
  * Created by ballmann on 03.06.14.
  */
-public class QueryMapper implements QueryVisitor
+public class ResetQueryState implements QueryVisitor
 {
-    private SearchServerConfig serverConfig;
 
-    /**
-     * Map a query to a certain search server (serverConfig).
-     *
-     * @param serverConfig the currently used server's configuration
-     * @param query        the query to map to process
-     * @param env          the environment needed by the scripts which transform values
-     */
-    public void mapQuery(SearchServerConfig serverConfig, Query query, ScriptEnv env)
+    public void reset(Query query)
     {
-        this.serverConfig = serverConfig;
-        query.accept(this, env);
+        query.accept(this, null);
     }
 
     // ---- Visitor methods --------------------------------------------------------------------------------------------
@@ -35,16 +22,7 @@ public class QueryMapper implements QueryVisitor
     @Override
     public void visitQuery(TermQuery t, ScriptEnv env)
     {
-        String fusionFieldName = t.getFusionFieldName();
-        List<FieldMapping> mappings = serverConfig.findAllMappingsForFusionField(fusionFieldName);
-        if (mappings.isEmpty())
-        {
-            throw new MissingFusionFieldMapping("Found no mapping for fusion field '" + fusionFieldName + "'");
-        }
-        for (FieldMapping m : mappings)
-        {
-            m.applyQueryMappings(t.getTerm(), env);
-        }
+        t.getTerm().resetQuery();
     }
 
     @Override

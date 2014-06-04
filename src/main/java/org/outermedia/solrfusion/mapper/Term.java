@@ -81,4 +81,21 @@ public class Term
         }
         newTerms.add(new TermQuery(newFusionTerm(fusionFieldName, fusionFieldValue)));
     }
+
+    public void resetQuery()
+    {
+        searchServerFieldName = null;
+        searchServerFieldValue = null;
+        removed = false;
+        wasMapped = false;
+    }
+
+    public void resetSearchServerField()
+    {
+        fusionFieldName = null;
+        fusionFieldValue = null;
+        fusionField = null;
+        removed = false;
+        wasMapped = false;
+    }
 }

@@ -1,7 +1,6 @@
 package org.outermedia.solrfusion.query.parser;
 
 import lombok.ToString;
-import org.outermedia.solrfusion.mapper.QueryMapper;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
@@ -30,11 +29,11 @@ public class BooleanQuery extends Query
         visitor.visitQuery(this, env);
     }
 
-    public void visitQueryClauses(QueryMapper queryMapper, ScriptEnv env)
+    public void visitQueryClauses(QueryVisitor queryVisitor, ScriptEnv env)
     {
         for (BooleanClause c : clauses)
         {
-            c.getQuery().accept(queryMapper, env);
+            c.getQuery().accept(queryVisitor, env);
         }
     }
 }

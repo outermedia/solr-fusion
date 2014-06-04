@@ -2,6 +2,8 @@ package org.outermedia.solrfusion.adapter;
 
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.response.ClosableIterator;
+import org.outermedia.solrfusion.response.parser.Document;
 
 /**
  * Allows to send and receive data from a search server.
@@ -12,6 +14,5 @@ import org.outermedia.solrfusion.configuration.SearchServerConfig;
 
 public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
 {
-
-	// TODO defined required methods e.g. send, receive
+    public ClosableIterator<Document> sendQuery(String searchServerQueryStr);
 }

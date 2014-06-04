@@ -22,10 +22,10 @@ public class ResponseMapper implements FieldVisitor
     /**
      * Map a response of a certain search server (serverConfig) to the fusion fields.
      *
-     * @param config the whole configuration
+     * @param config       the whole configuration
      * @param serverConfig the currently used server's configuration
-     * @param doc one response document to process
-     * @param env the environment needed by the scripts which transform values
+     * @param doc          one response document to process
+     * @param env          the environment needed by the scripts which transform values
      */
     public void mapResponse(Configuration config, SearchServerConfig serverConfig, Document doc, ScriptEnv env)
     {
@@ -41,13 +41,18 @@ public class ResponseMapper implements FieldVisitor
     public boolean visitField(SolrField sf, ScriptEnv env)
     {
         Term t = sf.getTerm();
-        List<FieldMapping> mappings = serverConfig.findAllMappingsForSearchServerField(sf.getFieldName());
+        String searchServerFieldName = sf.getFieldName();
+        List<FieldMapping> mappings = serverConfig.findAllMappingsForSearchServerField(searchServerFieldName);
+        if (mappings.isEmpty())
+        {
+            throw new MissingSearchServerFieldMapping("\"Found no mapping for fusion field '\" + searchServerFieldName + \"'\"");
+        }
         for (FieldMapping m : mappings)
         {
             FusionField fusionField = env.getConfiguration().findFieldByName(m.getFusionName());
-            if(fusionField == null)
+            if (fusionField == null)
             {
-                throw new UndeclaredFusionField("Didn't find field '"+m.getFusionName()+"' in fusion schema. Please define it their.");
+                throw new UndeclaredFusionField("Didn't find field '" + m.getFusionName() + "' in fusion schema. Please define it their.");
             }
             t.setFusionField(fusionField);
             m.applyResponseMappings(t, env);
