@@ -1,6 +1,7 @@
 package org.outermedia.solrfusion.query.parser;
 
 import lombok.ToString;
+import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
 

@@ -1,6 +1,7 @@
 package org.outermedia.solrfusion.types;
 
 import lombok.ToString;
+import org.outermedia.solrfusion.configuration.Configuration;
 
 import javax.script.Bindings;
 import java.util.HashMap;
@@ -17,11 +18,12 @@ public class ScriptEnv
     private Map<String, Object> bindings;
     private ScriptEnv parentBindings;
 
-    public final static String ENV_FUSION_FIELD = "fusionField";
-    public final static String ENV_FUSION_VALUE = "fusionValue";
-    public final static String ENV_SEARCH_SERVER_FIELD = "searchServerField";
-    public final static String ENV_SEARCH_SERVER_VALUE = "searchServerValue";
-    public final static String ENV_FUSION_FIELD_DECLARATION = "fusionFieldDeclaration";
+    public final static String ENV_FUSION_FIELD = "fusionField"; // a String
+    public final static String ENV_FUSION_VALUE = "fusionValue"; // a String
+    public final static String ENV_SEARCH_SERVER_FIELD = "searchServerField"; // a String
+    public final static String ENV_SEARCH_SERVER_VALUE = "searchServerValue"; // a String
+    public final static String ENV_FUSION_FIELD_DECLARATION = "fusionFieldDeclaration"; // a FusionField
+    public final static String ENV_FUSION_SCHEMA = "fusionSchema"; // a Configuration
 
     public ScriptEnv()
     {
@@ -62,5 +64,15 @@ public class ScriptEnv
     {
         Object result = getBinding(name);
         return (String) result;
+    }
+
+    public void setConfiguration(Configuration cfg)
+    {
+        setBinding(ENV_FUSION_SCHEMA, cfg);
+    }
+
+    public Configuration getConfiguration()
+    {
+        return (Configuration) getBinding(ENV_FUSION_SCHEMA);
     }
 }

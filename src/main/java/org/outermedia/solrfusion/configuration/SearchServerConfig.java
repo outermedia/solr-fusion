@@ -66,4 +66,23 @@ public class SearchServerConfig extends
         }
         return result;
     }
+
+    /**
+     * Get all mappings for a given search server field name.
+     *
+     * @param searchServerFieldName is the field for which mappings shall be returned
+     * @return a list with mappings, perhaps empty
+     */
+    public List<FieldMapping> findAllMappingsForSearchServerField(String searchServerFieldName)
+    {
+        List<FieldMapping> result = new ArrayList<>();
+        for (FieldMapping m : fieldMappings)
+        {
+            if (m.applicableToSearchServerField(searchServerFieldName))
+            {
+                result.add(m);
+            }
+        }
+        return result;
+    }
 }

@@ -4,6 +4,7 @@ import lombok.ToString;
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
 
+import javax.script.ScriptEngine;
 import java.util.List;
 
 /**
@@ -20,6 +21,8 @@ public class Js extends AbstractType
 
     // either js, rhino, JavaScript, javascript, ECMAScript or ecmascript
     private String engineName = "js";
+
+    private ScriptEngine engine;
 
 	@Override
 	public void passArguments(List<Element> typeConfig, Util util)

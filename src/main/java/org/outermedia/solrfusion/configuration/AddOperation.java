@@ -3,7 +3,7 @@ package org.outermedia.solrfusion.configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.outermedia.solrfusion.query.parser.Term;
+import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -31,6 +31,13 @@ public class AddOperation extends Operation
     protected void applyOneQueryOperation(Term term, ScriptEnv env, Target t)
     {
         super.applyOneQueryOperation(term, env, t);
-        term.addNewSearchServerQuery(env.getStringBinding(ScriptEnv.ENV_SEARCH_SERVER_FIELD), term.getSearchServerFieldValue());
+        term.addNewSearchServerTerm(env.getStringBinding(ScriptEnv.ENV_SEARCH_SERVER_FIELD), term.getSearchServerFieldValue());
+    }
+
+    @Override
+    protected void applyOneResponseOperation(Term term, ScriptEnv env, Target t)
+    {
+        super.applyOneResponseOperation(term, env, t);
+        term.addNewFusionTerm(env.getStringBinding(ScriptEnv.ENV_FUSION_FIELD), term.getFusionFieldValue());
     }
 }

@@ -3,7 +3,7 @@ package org.outermedia.solrfusion.configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.outermedia.solrfusion.query.parser.Term;
+import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -91,5 +91,23 @@ public abstract class Operation
     {
         String newSearchServerValue = t.apply(newEnv);
         term.setSearchServerFieldValue(newSearchServerValue);
+    }
+
+    public void applyAllResponseOperations(Term term, ScriptEnv env)
+    {
+        ScriptEnv newEnv = new ScriptEnv(env);
+        newEnv.setBinding(ScriptEnv.ENV_FUSION_VALUE, term.getFusionFieldValue());
+        newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_VALUE, term.getSearchServerFieldValue());
+        List<Target> queryTargets = getResponseTargets();
+        for (Target t : queryTargets)
+        {
+            applyOneResponseOperation(term, newEnv, t);
+        }
+    }
+
+    protected void applyOneResponseOperation(Term term, ScriptEnv newEnv, Target t)
+    {
+        String newFusionValue = t.apply(newEnv);
+        term.setFusionFieldValue(newFusionValue);
     }
 }

@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.response.parser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.outermedia.solrfusion.types.ScriptEnv;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -21,9 +22,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class Document
+public class Document implements VisitableDocument
 {
-    @XmlElement (name = "float", required = false)
+    @XmlElement(name = "float", required = false)
     private List<SolrField> solrFloatFields;
 
     @XmlElement(name = "str", required = true)
@@ -35,15 +36,40 @@ public class Document
      * @param name solrname of the field
      * @return null or an instnace of {@link org.outermedia.solrfusion.response.parser.SolrField}
      */
-    public SolrField findFieldByName(String name)
+    public SolrField findFieldByName(final String name)
     {
-        for (SolrField solrField : solrFloatFields)
+        return accept(new FieldVisitor()
         {
-            if (solrField.getFieldName().equals(name)) return solrField;
+            @Override
+            public boolean visitField(SolrField sf, ScriptEnv env)
+            {
+                return !sf.getFieldName().equals(name);
+            }
+        }, null);
+    }
+
+    @Override
+    public SolrField accept(FieldVisitor visitor, ScriptEnv env)
+    {
+        if (solrFloatFields != null)
+        {
+            for (SolrField solrField : solrFloatFields)
+            {
+                if (!visitor.visitField(solrField, env))
+                {
+                    return solrField;
+                }
+            }
         }
-        for (SolrField solrField : solrStringFields)
+        if (solrStringFields != null)
         {
-            if (solrField.getFieldName().equals(name)) return solrField;
+            for (SolrField solrField : solrStringFields)
+            {
+                if (!visitor.visitField(solrField, env))
+                {
+                    return solrField;
+                }
+            }
         }
         return null;
     }

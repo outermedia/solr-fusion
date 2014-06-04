@@ -18,6 +18,13 @@ public class QueryMapper implements QueryVisitor
     private SearchServerConfig serverConfig;
     private Query query;
 
+    /**
+     * Map a query to a certain search server (serverConfig).
+     *
+     * @param serverConfig the currently used server's configuration
+     * @param query the query to map to process
+     * @param env the environment needed by the scripts which transform values
+     */
     public void mapQuery(SearchServerConfig serverConfig, Query query, ScriptEnv env)
     {
         this.serverConfig = serverConfig;
