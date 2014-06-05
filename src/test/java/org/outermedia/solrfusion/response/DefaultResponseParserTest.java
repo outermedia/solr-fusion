@@ -40,4 +40,19 @@ public class DefaultResponseParserTest {
         Assert.assertEquals("Expected 1 float element", 1, documents.get(3).getSolrFloatFields().size());
         Assert.assertEquals("Expected 12 string element", 11, documents.get(3).getSolrStringFields().size());
     }
+    @Test
+    public void testReadResponse9003() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        DefaultResponseParser parser = xmlUtil.unmarshal(DefaultResponseParser.class, "test-xml-response-9003.xml", null);
+
+        List<Document> documents = parser.getResult().getDocuments();
+
+        Assert.assertEquals("Got less result documents than expected", 2,  documents.size());
+        Assert.assertEquals("Got different numFound than expected", 2,  parser.getResult().getNumFound());
+        Assert.assertEquals("Got attribut value for name@result than expected", "response", parser.getResult().getResultName());
+        Assert.assertEquals("Got different sourceid in document1 than expected", "beuth_pn_DE18954967", documents.get(0).findFieldByName("sourceid").getValue());
+        Assert.assertEquals("Expected 1 float element", 1, documents.get(1).getSolrFloatFields().size());
+        Assert.assertEquals("Expected 12 string element", 10, documents.get(1).getSolrStringFields().size());
+    }
 }

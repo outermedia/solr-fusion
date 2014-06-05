@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+<lst name="responseHeader"><int name="status">0</int><int name="QTime">5</int><lst name="params"><str name="q">shakespeare</str></lst></lst><result name="response" numFound="54" start="0" maxScore="7.0906496"><doc><float name="score">7.0906496</float><str name="dbName">DBIS</str><str name="dbodid">dbis</str><str name="deeplink">http://rzblx10.uni-regensburg.de/dbinfo/detail.php?titel_id=883</str><str name="description">Die CD-ROM macht das Gesamtwerk auf vier verschiedenen Ebenen zugänglich: Sie enthält eine moderne, wissenschaftlichen Kriterien genügende Edition seiner Dramen und Gedichte in der Originalsprache (Riverside Shakespeare, Hrsg. G. B. Evans 1974) sowie die bis heute am weitesten verbreitete Übersetzung in deutscher Sprache von A. W. Schlegel, D. Tieck, L. Tieck und W. Baudissin. Speziellen Interessen dienen das vollständige elektronische Faksimile der "First Folio"-Ausgabe von 1623 sowie deren komplette Transkription. Alle vier Fassungen der jeweiligen Werke sind szenenweise miteinander verknüpft, so dass unkomplizierte Textvergleiche möglich werden.
+(Digitale Bibliothek ; Band 61)</str><str name="id">50416</str><str name="keywords">Shakespeare, William, Folios</str><str name="permission">ub_ba, bbaw, sbb, ubhub, ubbie, vlb, ub_ei, uberf, ub_en, phbfr, ubfre, ubg, ub_grw, ulb_hal, ubhe, ubi, hsbka, usb_k, ubko, ubman, htwm, ulbms, ubos, ub_pb, ub_p, sulb_sb, ubtue, haab, hab, ub_wue, dbod</str><str name="publisher">DBIS</str><str name="sourceid">dbis883</str><str name="titleVT_de">Shakespeare, Complete Works</str></doc><doc><float name="score">7.0585403</float><str name="dbName">Datenbank(en) der Direct Media Reihe</str><str name="dbodid">digbib</str><str name="deeplink">http://www.dbod.de/db/start.php?database=digbib_shakespecw</str><str name="description">Die CD-ROM macht das Gesamtwerk auf vier verschiedenen Ebenen zugänglich: Sie enthält eine moderne, wissenschaftlichen Kriterien genügende Edition seiner Dramen und Gedichte in der Originalsprache (Riverside Shakespeare, Hrsg. G. B. Evans 1974) sowie die bis heute am weitesten verbreitete Übersetzung in deutscher Sprache von A. W. Schlegel, D. Tieck, L. Tieck und W. Baudissin. Speziellen Interessen dienen das vollständige elektronische Faksimile der "First Folio"-Ausgabe von 1623 sowie deren komplette Transkription. Alle vier Fassungen der jeweiligen Werke sind szenenweise miteinander verknüpft, so dass unkomplizierte Textvergleiche möglich werden.
+(Digitale Bibliothek ; Band 61)</str><str name="id">45456</str><str name="keywords">Shakespeare, William, Folios</str><str name="permission">dbod, htwm</str><str name="publisher">Digitale Bibliothek</str><str name="sourceid">digbib_shakespecw</str><str name="titleVT_de">DB Band 61: Shakespeare: Complete Works</str></doc><doc><float name="score">0.6056548</float><str name="dbName">DBIS</str><str name="dbodid">dbis</str><str name="deeplink">http://rzblx10.uni-regensburg.de/dbinfo/detail.php?titel_id=633</str><str name="description">Angefangen vom ersten Buch, das jemals in englischer Sprache 
+veröffentlicht wurde, bis hin zu Spenser und Shakespeare 
+umfasst diese umfangreiche E-Book-Sammlung 125.000 der in 
+den Kurztitelkatalogen von Pollard &amp; Redgrave (1475-1640) 
+und Wing (1641-1700) gelisteten Bücher im Volltext. 
+Hinzukommen die Titel der Thomason Tracts Sammlung 
+(1640-1661) und das Early English Books Tract Supplement.
+Mit mehr als 22.500.000 Images und 500.000 erschlossenen 
+Illustrationen.</str><str name="id">50900</str><str name="keywords">England, Altes Buch, Geschichte &lt;1475-1700&gt;, Englisch, Literatur, Elektronisches Buch</str><str name="permission">bthac, ub_a, ub_ba, ub_bt, bbaw, fhw, smb, sbb, ubhub, tubb, ubbie, rubo, fes, ulbb, tubs, tuche, ubcl, lbco, fhda, tuda, lld, htwdd, slub, ulbd, ughe, ub_ei, fhoow, fhef, uberf, ub_en, hbes, hdfl, khifi, dipf, fhf, phbfr, ubfre, thhfr, fhfd, ubgie, bag, subgo, ub_grw, ulb_hal, sub_hh, ubw_hh, tuhh, fhh, gwlb, mhh, ubtib, phhd, ubhe, hawk, eff, ubil, fhj, thulb, ub_kl, blb, fbhka, fzk, hsbka, kit, ub_ka, ubkas, ubk, bibko, zbmed, kumuk, usb_k, hsb, ubko, hmtl, htwk, ubl, phlb, ubhl, ublue, ubmd, ub_mz, sbm, ids, ubman, dla, ubma, htwm, bsb, dmm, ipmpg, hmtm, ub_m, zikg, ubwm, ulbms, sbnb, fhb_n, lbol, ubol, ubos, ub_pb, ub_pa, fhpo, ub_p, stabi, ub_r, fhrt, hertz, ub_hro, sulb_sb, ubsb, phsg, hdm, ubhoh, lkzbs, ub_s, wlb, bps, ubtr, mhtro, ubtue, ubu, ubve, fhwei, ubbuw, haab, fhwi, hlb, fhwoe, hshwi, hab, fhwo, ub_wue, thzw, zigr, dbod</str><str name="publisher">DBIS</str><str name="sourceid">dbis633</str><str name="titleVT_de">Early English Books Online</str></doc><doc><float name="score">0.6056548</float><str name="dbName">DBIS</str><str name="dbodid">dbis</str><str name="deeplink">http://rzblx10.uni-regensburg.de/dbinfo/detail.php?titel_id=4055</str><str name="description">Zweisprachige Ausgabe ausgewählter Texte von Edgar Allan Poe mit Übersetzungen ins Deutsche von Theodor Etzel, Hedwig Lachmann und Hedda Moeller-Bruck aus dem Jahre 1922. Die Originaltexte sind nicht identisch mit der Auswahl in der Anthologie English and American literature from Shakespeare to Mark Twain; während jene Ausgabe die Erstdrucke bietet, wird hier auf zwei Gesamtausgaben aus dem ausgehenden 19. und dem frühen 20. Jh. zurückgegriffen.
+(Digitale Bibliothek ; Band 91)</str><str name="id">50526</str><str name="keywords">Poe, Edgar Allan, Anthologie</str><str name="permission">ub_ba, phbfr, ubfre, ubhe, usb_k, ubko, ubmd, ub_p, haab, ub_wue, dbod</str><str name="publisher">DBIS</str><str name="sourceid">dbis4055</str><str name="titleVT_de">Edgar Allan Poe, Werke</str></doc><doc><float name="score">0.6056548</float><str name="dbName">Datenbank(en) der Direct Media Reihe</str><str name="dbodid">digbib</str><str name="deeplink">http://www.dbod.de/db/start.php?database=digbib_eepoew</str><str name="description">Zweisprachige Ausgabe ausgewählter Texte von Edgar Allan Poe mit Übersetzungen ins Deutsche von Theodor Etzel, Hedwig Lachmann und Hedda Moeller-Bruck aus dem Jahre 1922. Die Originaltexte sind nicht identisch mit der Auswahl in der Anthologie English and American literature from Shakespeare to Mark Twain; während jene Ausgabe die Erstdrucke bietet, wird hier auf zwei Gesamtausgaben aus dem ausgehenden 19. und dem frühen 20. Jh. zurückgegriffen.
+(Digitale Bibliothek ; Band 91)</str><str name="id">45260</str><str name="keywords">Poe, Edgar Allan, Anthologie</str><str name="permission">dbod, htwm</str><str name="publisher">Digitale Bibliothek</str><str name="sourceid">digbib_eepoew</str><str name="titleVT_de">DB Band 91: Edgar Allan Poe: Werke</str></doc><doc><float name="score">0.34729195</float><str name="dbName">Datenbank(en) der Direct Media Reihe</str><str name="dbodid">digbib</str><str name="deeplink">http://www.dbod.de/db/start.php?database=digbib_goethewe</str><str name="description">Diese CD-ROM »Johann Wolfgang Goethe: Werke« enthält:
+
+Gedichte: Gedichte. Ausgabe letzter Hand - Nachlese zu 
+  den Gedichten - Xenien und Votivtafeln - West-östlicher Divan
+Versepen: Der ewige Jude - Reineke Fuchs - Hermann und 
+  Dorothea
+Dramen: Die Laune des Verliebten - Die Mitschuldigen - 
+  Götz von Berlichingen - Prometheus - Götter, Helden, Wieland - Urfaust - Clavigo - Stella - Proserpina - Egmont - Iphigenie auf Tauris - Torquato Tasso - Der Bürgergeneral - Die Aufgeregten - Die natürliche Tochter - Pandora - Faust. Eine Tragödie u.v.a.
+Romane und Novellen: Die Leiden des jungen Werther - 
+  Unterhaltungen deutscher Ausgewanderten - Wilhelm Meisters Lehrjahre - Die Wahlverwandtschaften - Wilhelm Meisters Wanderjahre - Novelle u.a.
+Aufzeichnungen und Aphorismen: Maximen und Reflexionen
+Ästhetische Schriften: Zum Schäkespears Tag - Von deutscher Baukunst - Einfache Nachahmung der Natur, Manier, Stil - Literarischer Sansculottismus - Der Sammler und die Seinigen - Regeln für Schauspieler - Winckelmann - Shakespeare und kein Ende - Rezensionen u.v.a.
+Naturwissenschaftliche Schriften: Die Metamorphose der 
+Pflanzen - Farbenlehre. Didaktischer Teil, Historischer Teil - Über den Granit u.a.
+Autobiographische Prosa: Aus meinem Leben. Dichtung 
+und Wahrheit - Italienische Reise - Sankt-Rochus-Fest zu Bingen - Campagne in Frankreich 1792 - Belagerung von Mainz - Tag- und Jahreshefte
+
+(Digitale Bibliothek Band 4)</str><str name="id">45342</str><str name="keywords">Goethe, Johann Wolfgang ¬von¬</str><str name="permission">dbod, htwm, ubl</str><str name="publisher">Digitale Bibliothek</str><str name="sourceid">digbib_goethewe</str><str name="titleVT_de">DB Band 4: Goethe: Werke</str></doc><doc><float name="score">0.34719393</float><str name="dbName">Datenbank(en) der Direct Media Reihe</str><str name="dbodid">digbib</str><str name="deeplink">http://www.dbod.de/db/start.php?database=digbib_kraus</str><str name="description">Diese Edition enthält sämtliche Werke von Karl Kraus, die er selbst zu Lebzeiten als Buch veröffentlicht hat, ergänzt um eine umfangreiche Auswahl aus der Zeitschrift »Die Fackel«.
+Die Ausgabe basiert auf den im Sigelverzeichnis aufgeführten Buchausgaben, die im Suhrkamp Verlag erschienen sind.
+[Einführung: Zu dieser Ausgabe. Karl Kraus: Schriften, S. 3]:
+Karl Kraus, Schriften. Hrsg. von Christian Wagenknecht. 20 Bände, Frankfurt am Main: Suhrkamp, 1986-1994:
+Bd. 01: Sittlichkeit und Kriminalität, 1987
+Bd. 02: Die chinesische Mauer, 1987
+Bd. 03: Literatur und Lüge, 1987
+Bd. 04: Untergang der Welt durch schwarze Magie, 1989
+Bd. 05: Weltgericht I, 1988
+Bd. 06: Weltgericht II, 1988
+Bd. 07: Die Sprache, 1987
+Bd. 08: Aphorismen, 1986
+Bd. 09: Gedichte, 1989
+Bd. 10: Die letzten Tage der Menschheit, 1986
+Bd. 11: Dramen, 1989
+Bd. 12: Dritte Walpurgisnacht, 1989
+Bd. 13: Theater der Dichtung: Jacques Offenbach, 1994
+Bd. 14: Theater der Dichtung: Nestroy/Zeitstrophen, 1992
+Bd. 15: Theater der Dichtung: William Shakespeare, 1994
+Bd. 16: Brot und Lüge: Aufsätze 1919-1924, 1991
+Bd. 17: Die Stunde des Gerichts: Aufsätze 1925-1928, 1992
+Bd. 18: Hüben und Drüben: Aufsätze 1929-1936, 1993
+Bd. 19: Die Katastrophe der Phrasen: Glossen 1910 - 1918, 1994
+Bd. 20: Kanonade auf Spatzen: Glossen 1920 - 1936, 1994
+( Digitale Bibliothek Band 156 )</str><str name="id">45398</str><str name="keywords">Kraus, Karl, Werke</str><str name="permission">dbod, htwm</str><str name="publisher">Digitale Bibliothek</str><str name="sourceid">digbib_kraus</str><str name="titleVT_de">DB Band 156: Karl Kraus: Schriften</str></doc><doc><float name="score">0.34608844</float><str name="dbName">DBIS</str><str name="dbodid">dbis</str><str name="deeplink">http://rzblx10.uni-regensburg.de/dbinfo/detail.php?titel_id=1949</str><str name="description">Diese CD-ROM »Johann Wolfgang Goethe: Werke« enthält:
+
+Gedichte: Gedichte. Ausgabe letzter Hand - Nachlese zu 
+  den Gedichten - Xenien und Votivtafeln - West-östlicher Divan
+Versepen: Der ewige Jude - Reineke Fuchs - Hermann und 
+  Dorothea
+Dramen: Die Laune des Verliebten - Die Mitschuldigen - 
+  Götz von Berlichingen - Prometheus - Götter, Helden, Wieland - Urfaust - Clavigo - Stella - Proserpina - Egmont - Iphigenie auf Tauris - Torquato Tasso - Der Bürgergeneral - Die Aufgeregten - Die natürliche Tochter - Pandora - Faust. Eine Tragödie u.v.a.
+Romane und Novellen: Die Leiden des jungen Werther - 
+  Unterhaltungen deutscher Ausgewanderten - Wilhelm Meisters Lehrjahre - Die Wahlverwandtschaften - Wilhelm Meisters Wanderjahre - Novelle u.a.
+Aufzeichnungen und Aphorismen: Maximen und Reflexionen
+Ästhetische Schriften: Zum Schäkespears Tag - Von deutscher Baukunst - Einfache Nachahmung der Natur, Manier, Stil - Literarischer Sansculottismus - Der Sammler und die Seinigen - Regeln für Schauspieler - Winckelmann - Shakespeare und kein Ende - Rezensionen u.v.a.
+Naturwissenschaftliche Schriften: Die Metamorphose der 
+Pflanzen - Farbenlehre. Didaktischer Teil, Historischer Teil - Über den Granit u.a.
+Autobiographische Prosa: Aus meinem Leben. Dichtung 
+und Wahrheit - Italienische Reise - Sankt-Rochus-Fest zu Bingen - Campagne in Frankreich 1792 - Belagerung von Mainz - Tag- und Jahreshefte
+
+(Digitale Bibliothek Band 4)</str><str name="id">50382</str><str name="keywords">Goethe, Johann Wolfgang ¬von¬</str><str name="permission">ub_ba, bbaw, ub_en, phbfr, ub_grw, phhd, fzk, ub_ka, usb_k, ubmd, htwm, ub_pb, ub_p, ub_hro, sulb_sb, ubtue, haab, dbod</str><str name="publisher">DBIS</str><str name="sourceid">dbis1949</str><str name="titleVT_de">Goethe, Johann Wolfgang von: Werke</str></doc><doc><float name="score">0.34608844</float><str name="dbName">DBIS</str><str name="dbodid">dbis</str><str name="deeplink">http://rzblx10.uni-regensburg.de/dbinfo/detail.php?titel_id=7216</str><str name="description">Diese Edition enthält sämtliche Werke von Karl Kraus, die er selbst zu Lebzeiten als Buch veröffentlicht hat, ergänzt um eine umfangreiche Auswahl aus der Zeitschrift »Die Fackel«.
+Die Ausgabe basiert auf den im Sigelverzeichnis aufgeführten Buchausgaben, die im Suhrkamp Verlag erschienen sind.
+[Einführung: Zu dieser Ausgabe. Karl Kraus: Schriften, S. 3]:
+Karl Kraus, Schriften. Hrsg. von Christian Wagenknecht. 20 Bände, Frankfurt am Main: Suhrkamp, 1986-1994:
+Bd. 01: Sittlichkeit und Kriminalität, 1987
+Bd. 02: Die chinesische Mauer, 1987
+Bd. 03: Literatur und Lüge, 1987
+Bd. 04: Untergang der Welt durch schwarze Magie, 1989
+Bd. 05: Weltgericht I, 1988
+Bd. 06: Weltgericht II, 1988
+Bd. 07: Die Sprache, 1987
+Bd. 08: Aphorismen, 1986
+Bd. 09: Gedichte, 1989
+Bd. 10: Die letzten Tage der Menschheit, 1986
+Bd. 11: Dramen, 1989
+Bd. 12: Dritte Walpurgisnacht, 1989
+Bd. 13: Theater der Dichtung: Jacques Offenbach, 1994
+Bd. 14: Theater der Dichtung: Nestroy/Zeitstrophen, 1992
+Bd. 15: Theater der Dichtung: William Shakespeare, 1994
+Bd. 16: Brot und Lüge: Aufsätze 1919-1924, 1991
+Bd. 17: Die Stunde des Gerichts: Aufsätze 1925-1928, 1992
+Bd. 18: Hüben und Drüben: Aufsätze 1929-1936, 1993
+Bd. 19: Die Katastrophe der Phrasen: Glossen 1910 - 1918, 1994
+Bd. 20: Kanonade auf Spatzen: Glossen 1920 - 1936, 1994
+( Digitale Bibliothek Band 156 )</str><str name="id">50447</str><str name="keywords">Kraus, Karl, Werke</str><str name="permission">ub_a, ub_ba, sbb, ulbb, ughe, ub_en, ubfre, ub_grw, fzk, ub_ka, usb_k, ubmd, dla, htwm, ubos, ubsb, ub_wue, dbod</str><str name="publisher">DBIS</str><str name="sourceid">dbis7216</str><str name="titleVT_de">Kraus, Karl : Schriften</str></doc><doc><float name="score">0.2106128</float><str name="dbName">Canadiana-Bibliographie 1900-2000</str><str name="dbodid">zks_canadiana</str><str name="deeplink">http://www.dbod.de/db/start.php?database=zks_canadiana&amp;param=73</str><str name="description">kanadische Nationalbibliographie CD 1 enthält Amtsdruckschriften, Periodika, Musikalien, Karten, Retrospective National Bibliography (Bestand der National Library of Canada bis 1901), Early Canadiana (Mikroformen) und andere Canadiana vor 1950. CD 2 enthält sämtliche anderen Canadiana nach 1949.</str><str name="id">48397</str><str name="keywords">Kanada,, Bibliographie</str><str name="permission">dbod</str><str name="publisher">Zentrum für Kanada-Studien an der Universität Trier</str><str name="sourceid">zks_canadiana73</str><str name="titleVT_de">Canadiana-Bibliographie 1900-2000; Seite 73</str></doc></result>
+</response>
