@@ -16,7 +16,7 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
 {
     private List<ClosableIterator<Document>> responseStreams;
 
-    public ResponseConsolidator()
+    private ResponseConsolidator()
     {
         responseStreams = new ArrayList<>();
     }

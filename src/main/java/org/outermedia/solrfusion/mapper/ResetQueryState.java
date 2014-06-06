@@ -22,7 +22,13 @@ public class ResetQueryState implements QueryVisitor
     @Override
     public void visitQuery(TermQuery t, ScriptEnv env)
     {
-        t.getTerm().resetQuery();
+        t.visitTerm(this, env);
+    }
+
+    @Override
+    public void visitQuery(Term t, ScriptEnv env)
+    {
+        t.resetQuery();
     }
 
     @Override
@@ -75,6 +81,12 @@ public class ResetQueryState implements QueryVisitor
     {
         // TODO
 
+    }
+
+    @Override
+    public void visitQuery(BooleanClause booleanClause, ScriptEnv env)
+    {
+        booleanClause.accept(this, env);
     }
 
 }

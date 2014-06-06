@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.response;
 
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
+import org.outermedia.solrfusion.response.parser.Document;
 
 /**
  * Transforms a search result into a transport format.
@@ -12,5 +13,5 @@ import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 
 public interface ResponseRendererIfc extends Initiable<ResponseRendererFactory>
 {
-	// TODO define required methods e.g. createResponse
+	public String getResponseString(ClosableIterator<Document> docStream);
 }

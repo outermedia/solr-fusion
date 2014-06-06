@@ -31,6 +31,11 @@ public class TermQuery extends Query
         visitor.visitQuery(this, env);
     }
 
+    public void visitTerm(QueryVisitor visitor, ScriptEnv env)
+    {
+        visitor.visitQuery(term, env);
+    }
+
     public String getFusionFieldName()
     {
         return term.getFusionFieldName();

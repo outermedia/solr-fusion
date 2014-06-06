@@ -6,9 +6,11 @@ import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.QueryMapper;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
+import org.outermedia.solrfusion.mapper.SearchServerQueryBuilder;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.ClosableIterator;
+import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
@@ -32,13 +34,15 @@ public class FusionController
 
     public void process(FusionRequest fusionRequest, FusionResponse fusionResponse)
     {
-        Map<String, Float> boosts = fusionRequest.getBoosts();
-        queryResetter = new ResetQueryState();
-        queryMapper = new QueryMapper();
-        Query query = parseQuery(fusionResponse, boosts, fusionRequest.getQuery());
-        ScriptEnv env = new ScriptEnv();
+        queryResetter = getNewResetQueryState();
+        queryMapper = getNewQueryMapper();
 
-        if (query != null)
+        Query query = parseQuery(fusionRequest);
+        if (query == null)
+        {
+            fusionResponse.setResponseForQueryParseError();
+        }
+        else
         {
             List<SearchServerConfig> configuredSearchServers = configuration.getSearchServerConfigs().getSearchServerConfigs();
             if (configuredSearchServers.isEmpty())
@@ -47,32 +51,62 @@ public class FusionController
             }
             else
             {
-                ResponseConsolidatorIfc consolidator = configuration.getResponseConsolidatorFactory().getImplementation();
-                for (SearchServerConfig searchServerConfig : configuredSearchServers)
-                {
-                    if (mapQuery(query, env, searchServerConfig))
-                    {
-                        sendAndReceive(consolidator, searchServerConfig);
-                    }
-                }
+                ResponseConsolidatorIfc consolidator = configuration.getResponseConsolidator();
+                requestAllSearchServers(query, configuredSearchServers, consolidator);
                 if (consolidator.numberOfResponseStreams() < configuration.getDisasterLimit())
                 {
                     fusionResponse.setResponseForTooLessServerAnsweredError(configuration.getDisasterMessage());
-                    consolidator.reset();
                 }
                 else
                 {
-                    ClosableIterator<Document> response = consolidator.getResponseStream();
-                    // TODO get response renderer and attach it to fusionResponse?
+                    ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(fusionRequest.getResponseType());
+                    if (responseRenderer == null)
+                    {
+                        fusionResponse.setResponseForMissingResponseRendererError(fusionRequest.getResponseType().toString());
+                    }
+                    else
+                    {
+                        ClosableIterator<Document> response = consolidator.getResponseStream();
+                        fusionResponse.setOkResponse(responseRenderer.getResponseString(response));
+                    }
                 }
+                consolidator.reset();
             }
         }
     }
 
-    private void sendAndReceive(ResponseConsolidatorIfc consolidator, SearchServerConfig searchServerConfig)
+    protected void requestAllSearchServers(Query query, List<SearchServerConfig> configuredSearchServers, ResponseConsolidatorIfc consolidator)
     {
+        ScriptEnv env = getNewScriptEnv();
+        for (SearchServerConfig searchServerConfig : configuredSearchServers)
+        {
+            if (mapQuery(query, env, searchServerConfig))
+            {
+                sendAndReceive(query, consolidator, searchServerConfig);
+            }
+        }
+    }
+
+    protected ScriptEnv getNewScriptEnv()
+    {
+        return new ScriptEnv();
+    }
+
+    protected QueryMapper getNewQueryMapper()
+    {
+        return new QueryMapper();
+    }
+
+    protected ResetQueryState getNewResetQueryState()
+    {
+        return new ResetQueryState();
+    }
+
+    protected void sendAndReceive(Query query, ResponseConsolidatorIfc consolidator, SearchServerConfig searchServerConfig)
+    {
+        SearchServerQueryBuilder queryBuilder = getNewSearchServerQueryBuilder();
         SearchServerAdapterIfc adapter = searchServerConfig.getImplementation();
-        String searchServerQueryStr = ""; // TODO = query.createSearchServerQueryString();
+        String searchServerQueryStr = queryBuilder.buildQueryString(query);
         try
         {
             ClosableIterator<Document> docIterator = adapter.sendQuery(searchServerQueryStr);
@@ -87,7 +121,12 @@ public class FusionController
         }
     }
 
-    private boolean mapQuery(Query query, ScriptEnv env, SearchServerConfig searchServerConfig)
+    protected SearchServerQueryBuilder getNewSearchServerQueryBuilder()
+    {
+        return new SearchServerQueryBuilder();
+    }
+
+    protected boolean mapQuery(Query query, ScriptEnv env, SearchServerConfig searchServerConfig)
     {
         boolean result = true;
         try
@@ -103,11 +142,14 @@ public class FusionController
         {
             queryResetter.reset(query);
         }
+
         return result;
     }
 
-    protected Query parseQuery(FusionResponse fusionResponse, Map<String, Float> boosts, String query)
+    protected Query parseQuery(FusionRequest fusionRequest)
     {
+        Map<String, Float> boosts = fusionRequest.getBoosts();
+        String query = fusionRequest.getQuery();
         QueryParserIfc queryParser = configuration.getQueryParser();
         Query queryObj = null;
         try
@@ -118,10 +160,7 @@ public class FusionController
         {
             log.error("Parsing of query {} failed.", query, e);
         }
-        if (queryObj == null)
-        {
-            fusionResponse.setResponseForQueryParseError();
-        }
+
         return queryObj;
     }
 }

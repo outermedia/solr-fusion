@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.response;
 import lombok.ToString;
 
 import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
+import org.outermedia.solrfusion.response.parser.Document;
 
 /**
  * Transforms a search result into json.
@@ -20,7 +21,13 @@ public class DefaultJsonResponseRenderer implements ResponseRendererIfc
 	private DefaultJsonResponseRenderer()
 	{}
 
-	public static class Factory
+    @Override
+    public String getResponseString(ClosableIterator<Document> docStream)
+    {
+        return null; // TODO
+    }
+
+    public static class Factory
 	{
 		public static DefaultJsonResponseRenderer getInstance()
 		{

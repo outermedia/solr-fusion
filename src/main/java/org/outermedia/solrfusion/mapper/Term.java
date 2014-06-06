@@ -5,8 +5,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 import org.outermedia.solrfusion.configuration.FusionField;
+import org.outermedia.solrfusion.query.QueryVisitor;
+import org.outermedia.solrfusion.query.VisitableQuery;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.query.parser.TermQuery;
+import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,7 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
-public class Term
+public class Term implements VisitableQuery
 {
     private String fusionFieldName;
     private String fusionFieldValue;
@@ -97,5 +100,11 @@ public class Term
         fusionField = null;
         removed = false;
         wasMapped = false;
+    }
+
+    @Override
+    public void accept(QueryVisitor visitor, ScriptEnv env)
+    {
+        visitor.visitQuery(this,env);
     }
 }

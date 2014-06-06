@@ -25,6 +25,7 @@ public class RoundRobinClosableIterator<T> implements ClosableIterator<T>
         {
             it.close();
         }
+        iterators.clear();
     }
 
     @Override

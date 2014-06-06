@@ -3,11 +3,14 @@ package org.outermedia.solrfusion.query.parser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.outermedia.solrfusion.query.QueryVisitor;
+import org.outermedia.solrfusion.query.VisitableQuery;
+import org.outermedia.solrfusion.types.ScriptEnv;
 
 @Getter
 @Setter
 @ToString
-public class BooleanClause
+public class BooleanClause implements VisitableQuery
 {
     public enum Occur
     {
@@ -28,6 +31,12 @@ public class BooleanClause
     {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    @Override
+    public void accept(QueryVisitor visitor, ScriptEnv env)
+    {
+        query.accept(visitor, env);
     }
 
 }

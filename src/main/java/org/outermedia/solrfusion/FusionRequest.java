@@ -2,6 +2,7 @@ package org.outermedia.solrfusion;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.outermedia.solrfusion.configuration.ResponseRendererType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,13 @@ import java.util.Map;
 public class FusionRequest
 {
     private String query;
+
+    private ResponseRendererType responseType;
+
+    public FusionRequest()
+    {
+        responseType = ResponseRendererType.XML;
+    }
 
     public Map<String, Float> getBoosts()
     {

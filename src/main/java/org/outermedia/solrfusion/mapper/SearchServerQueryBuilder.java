@@ -1,11 +1,10 @@
 package org.outermedia.solrfusion.mapper;
 
-import org.outermedia.solrfusion.configuration.FieldMapping;
-import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,21 +12,22 @@ import java.util.List;
  * <p/>
  * Created by ballmann on 03.06.14.
  */
-public class QueryMapper implements QueryVisitor
+public class SearchServerQueryBuilder implements QueryVisitor
 {
-    private SearchServerConfig serverConfig;
+    protected List<Query> newQueries;
+    protected StringBuilder queryBuilder;
 
     /**
-     * Map a query to a certain search server (serverConfig).
+     * Build the query string for a search server.
      *
-     * @param serverConfig the currently used server's configuration
-     * @param query        the query to map to process
-     * @param env          the environment needed by the scripts which transform values
+     * @param query the query to map to process
      */
-    public void mapQuery(SearchServerConfig serverConfig, Query query, ScriptEnv env)
+    public String buildQueryString(Query query)
     {
-        this.serverConfig = serverConfig;
-        query.accept(this, env);
+        newQueries = new ArrayList<>();
+        queryBuilder = new StringBuilder();
+        query.accept(this, null);
+        return queryBuilder.toString();
     }
 
     // ---- Visitor methods --------------------------------------------------------------------------------------------
@@ -39,17 +39,28 @@ public class QueryMapper implements QueryVisitor
     }
 
     @Override
-    public void visitQuery(Term t, ScriptEnv env)
+    public void visitQuery(Term term, ScriptEnv env)
     {
-        String fusionFieldName = t.getFusionFieldName();
-        List<FieldMapping> mappings = serverConfig.findAllMappingsForFusionField(fusionFieldName);
-        if (mappings.isEmpty())
+        buildSearchServerTermQuery(term, false);
+        List<Query> l = term.getNewTerms();
+        if (l != null)
         {
-            throw new MissingFusionFieldMapping("Found no mapping for fusion field '" + fusionFieldName + "'");
+            newQueries.addAll(l);
         }
-        for (FieldMapping m : mappings)
+    }
+
+    protected void buildSearchServerTermQuery(Term term, boolean quoted)
+    {
+        queryBuilder.append(term.getSearchServerFieldName());
+        queryBuilder.append(":");
+        if (quoted)
         {
-            m.applyQueryMappings(t, env);
+            queryBuilder.append('"');
+        }
+        queryBuilder.append(term.getSearchServerFieldValue());
+        if (quoted)
+        {
+            queryBuilder.append('"');
         }
     }
 
@@ -68,7 +79,7 @@ public class QueryMapper implements QueryVisitor
     @Override
     public void visitQuery(MatchAllDocsQuery t, ScriptEnv env)
     {
-        // TODO expand * to all fields in order to apply add/remove operations?!
+        queryBuilder.append("*:*");
     }
 
     @Override
@@ -108,6 +119,18 @@ public class QueryMapper implements QueryVisitor
     @Override
     public void visitQuery(BooleanClause booleanClause, ScriptEnv env)
     {
+        queryBuilder.append(" ");
+        switch (booleanClause.getOccur())
+        {
+            case OCCUR_MUST:
+                queryBuilder.append("+");
+                break;
+            case OCCUR_MUST_NOT:
+                queryBuilder.append("-");
+                break;
+            default:
+                // NOP
+        }
         booleanClause.accept(this, env);
     }
 

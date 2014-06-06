@@ -33,7 +33,7 @@ public class BooleanQuery extends Query
     {
         for (BooleanClause c : clauses)
         {
-            c.getQuery().accept(queryVisitor, env);
+            queryVisitor.visitQuery(c, env);
         }
     }
 }
