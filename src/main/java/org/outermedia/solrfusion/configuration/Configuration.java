@@ -1,23 +1,16 @@
 package org.outermedia.solrfusion.configuration;
 
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import org.outermedia.solrfusion.MergeStrategyIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
+
+import javax.xml.bind.annotation.*;
+import java.util.List;
 
 /**
  * Data holder class keeping the fusion configuration.
@@ -30,7 +23,7 @@ import org.outermedia.solrfusion.response.ResponseRendererIfc;
 @XmlType(name = "", propOrder =
 {
 	"fusionFields", "scriptTypes", "defaultSearchField", "defaultOperator",
-	"idGeneratorFactory", "searchServerConfigs"
+	"idGeneratorFactory", "responseConsolidatorFactory", "searchServerConfigs"
 })
 @XmlRootElement(name = "core", namespace = "http://solrfusion.outermedia.org/configuration/")
 @ToString
@@ -59,6 +52,11 @@ public class Configuration
 	@Getter
 	@Setter
 	private IdGeneratorFactory idGeneratorFactory;
+
+    @XmlElement(name = "response-consolidator", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @Getter
+    @Setter
+    private ResponseConsolidatorFactory responseConsolidatorFactory;
 
 	@XmlElement(name = "solr-servers", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
 	@Getter

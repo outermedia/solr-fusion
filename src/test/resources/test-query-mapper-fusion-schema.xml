@@ -19,6 +19,8 @@
     <om:id-generator fusion-name="id"
         class="org.outermedia.solrfusion.DefaultIdGenerator$Factory" />
 
+    <om:response-consolidator class="org.outermedia.solrfusion.ResponseConsolidator$Factory"/>
+
     <om:solr-servers>
         <om:timeout>4000</om:timeout>
         <om:disaster-limit>3</om:disaster-limit>

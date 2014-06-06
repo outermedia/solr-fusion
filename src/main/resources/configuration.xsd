@@ -15,6 +15,7 @@
         <xs:element name="default-search-field" type="xs:string"/>
         <xs:element name="default-operator" type="xs:string"/>
         <xs:element name="id-generator" type="tns:idGenerator"/>
+        <xs:element name="response-consolidator" type="tns:response-consolidator"/>
         <xs:element name="solr-servers" type="tns:globalSearchServerConfig"/>
       </xs:sequence>
     </xs:complexType>
@@ -37,6 +38,11 @@
     <xs:sequence/>
     <xs:attribute name="class" type="xs:string" use="required"/>
     <xs:attribute name="fusion-name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="response-consolidator">
+    <xs:sequence/>
+    <xs:attribute name="class" type="xs:string" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="globalSearchServerConfig">

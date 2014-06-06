@@ -47,7 +47,7 @@ public class FusionController
             }
             else
             {
-                ResponseConsolidator consolidator = new ResponseConsolidator();
+                ResponseConsolidatorIfc consolidator = configuration.getResponseConsolidatorFactory().getImplementation();
                 for (SearchServerConfig searchServerConfig : configuredSearchServers)
                 {
                     if (mapQuery(query, env, searchServerConfig))
@@ -69,7 +69,7 @@ public class FusionController
         }
     }
 
-    private void sendAndReceive(ResponseConsolidator consolidator, SearchServerConfig searchServerConfig)
+    private void sendAndReceive(ResponseConsolidatorIfc consolidator, SearchServerConfig searchServerConfig)
     {
         SearchServerAdapterIfc adapter = searchServerConfig.getImplementation();
         String searchServerQueryStr = ""; // TODO = query.createSearchServerQueryString();

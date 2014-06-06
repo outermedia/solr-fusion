@@ -1,5 +1,7 @@
 package org.outermedia.solrfusion;
 
+import lombok.ToString;
+import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.parser.Document;
 
@@ -9,7 +11,8 @@ import java.util.List;
 /**
  * Created by ballmann on 04.06.14.
  */
-public class ResponseConsolidator
+@ToString
+public class ResponseConsolidator implements ResponseConsolidatorIfc
 {
     private List<ClosableIterator<Document>> responseStreams;
 
@@ -42,5 +45,17 @@ public class ResponseConsolidator
         return new RoundRobinClosableIterator<Document>(responseStreams);
     }
 
-    // TODO should be a factory!
+    public static class Factory
+    {
+        public static ResponseConsolidator getInstance()
+        {
+            return new ResponseConsolidator();
+        }
+    }
+
+    @Override
+    public void init(ResponseConsolidatorFactory config)
+    {
+        // NOP
+    }
 }
