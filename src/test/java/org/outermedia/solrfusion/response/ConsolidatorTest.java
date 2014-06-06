@@ -6,7 +6,6 @@ import org.outermedia.solrfusion.RoundRobinClosableIterator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -14,41 +13,6 @@ import java.util.List;
  */
 public class ConsolidatorTest
 {
-    static class TestClosableStringIterator implements ClosableIterator<String>
-    {
-        boolean calledClose = false;
-        Iterator<String> it;
-
-        TestClosableStringIterator(List<String> elements)
-        {
-            this.it = elements.iterator();
-        }
-
-        @Override
-        public void close()
-        {
-            it = null;
-            calledClose = true;
-        }
-
-        @Override
-        public boolean hasNext()
-        {
-            return it.hasNext();
-        }
-
-        @Override
-        public String next()
-        {
-            return it.next();
-        }
-
-        @Override
-        public void remove()
-        {
-            it.remove();
-        }
-    }
 
     @Test
     public void simpleMergeTest()
