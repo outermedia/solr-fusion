@@ -149,7 +149,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.solr</groupId>
-            <artifactId>solr</artifactId>
+            <artifactId>solr-core</artifactId>
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
