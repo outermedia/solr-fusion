@@ -1,22 +1,20 @@
 package org.outermedia.solrfusion.configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import org.outermedia.solrfusion.MergeStrategyIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Data holder class keeping the global search server configuration and all
@@ -76,7 +74,7 @@ public class GlobalSearchServerConfig
 		{
 			for (ResponseRendererFactory rr : responseRendererFactories)
 			{
-				if (type.equals(rr.getType()))
+				if (rr.getType().equals(type))
 				{
 					result = rr.getImplementation();
 				}

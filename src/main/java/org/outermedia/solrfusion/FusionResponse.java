@@ -3,6 +3,7 @@ package org.outermedia.solrfusion;
 import lombok.Getter;
 import lombok.Setter;
 import org.outermedia.solrfusion.configuration.Message;
+import org.outermedia.solrfusion.configuration.ResponseRendererType;
 
 /**
  * Created by ballmann on 04.06.14.
@@ -69,7 +70,10 @@ public class FusionResponse
      */
     public String getResponseAsString()
     {
-        if(!ok) return null;
+        if (!ok)
+        {
+            return null;
+        }
         return responseBody;
     }
 
@@ -78,9 +82,14 @@ public class FusionResponse
      *
      * @param requestedType is the requested, but unknown type
      */
-    public void setResponseForMissingResponseRendererError(String requestedType)
+    public void setResponseForMissingResponseRendererError(ResponseRendererType requestedType)
     {
-        setError("Found no configuration for response renderer: " + requestedType);
+        String type = "<unknown>";
+        if (requestedType != null)
+        {
+            type = requestedType.toString();
+        }
+        setError("Found no configuration for response renderer: " + type);
     }
 
     public void setOkResponse(String responseBody)

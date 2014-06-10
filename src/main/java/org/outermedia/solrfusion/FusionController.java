@@ -44,8 +44,8 @@ public class FusionController
         }
         else
         {
-            List<SearchServerConfig> configuredSearchServers = configuration.getSearchServerConfigs().getSearchServerConfigs();
-            if (configuredSearchServers.isEmpty())
+            List<SearchServerConfig> configuredSearchServers = configuration.getConfigurationOfSearchServers();
+            if (configuredSearchServers == null || configuredSearchServers.isEmpty())
             {
                 fusionResponse.setResponseForNoSearchServerConfiguredError();
             }
@@ -62,7 +62,7 @@ public class FusionController
                     ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(fusionRequest.getResponseType());
                     if (responseRenderer == null)
                     {
-                        fusionResponse.setResponseForMissingResponseRendererError(fusionRequest.getResponseType().toString());
+                        fusionResponse.setResponseForMissingResponseRendererError(fusionRequest.getResponseType());
                     }
                     else
                     {

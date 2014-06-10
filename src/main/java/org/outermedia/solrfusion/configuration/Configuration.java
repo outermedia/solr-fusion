@@ -162,6 +162,16 @@ public class Configuration
         return searchServerConfigs.getSearchServers();
     }
 
+    /**
+     * Get the configuration of all configured search servers.
+     *
+     * @return a list of SearchServerConfig
+     */
+    public List<SearchServerConfig> getConfigurationOfSearchServers()
+    {
+        return searchServerConfigs.getSearchServerConfigs();
+    }
+
     public FusionField findFieldByName(String name)
     {
         for (FusionField ff : fusionFields)
