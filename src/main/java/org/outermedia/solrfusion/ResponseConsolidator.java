@@ -42,7 +42,7 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
 
     public ClosableIterator<Document> getResponseStream()
     {
-        return new RoundRobinClosableIterator<Document>(responseStreams);
+        return new RoundRobinClosableIterator<>(responseStreams);
     }
 
     public static class Factory

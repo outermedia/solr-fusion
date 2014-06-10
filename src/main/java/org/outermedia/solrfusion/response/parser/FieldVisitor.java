@@ -10,9 +10,18 @@ public interface FieldVisitor
     /**
      * Visit a solr field in a response document.
      *
-     * @param sf one solr field
+     * @param sf one single value solr field
      * @param env contains values which are needed when the field is mapped
      * @return false to stop visiting otherwise true
      */
-    public boolean visitField(SolrField sf, ScriptEnv env);
+    public boolean visitField(SolrSingleValuedField sf, ScriptEnv env);
+
+    /**
+     * Visit a solr field in a response document.
+     *
+     * @param msf one multi value solr field
+     * @param env contains values which are needed when the field is mapped
+     * @return false to stop visiting otherwise true
+     */
+    public boolean visitField(SolrMultiValuedField msf, ScriptEnv env);
 }

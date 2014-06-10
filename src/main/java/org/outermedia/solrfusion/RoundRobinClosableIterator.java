@@ -9,10 +9,10 @@ import java.util.List;
  */
 public class RoundRobinClosableIterator<T> implements ClosableIterator<T>
 {
-    private final List<ClosableIterator<T>> iterators;
+    private final List<? extends ClosableIterator<T>> iterators;
     private int at;
 
-    public RoundRobinClosableIterator(List<ClosableIterator<T>> iterators)
+    public RoundRobinClosableIterator(List<? extends ClosableIterator<T>> iterators)
     {
         this.iterators = iterators;
         at = 0;
@@ -49,6 +49,11 @@ public class RoundRobinClosableIterator<T> implements ClosableIterator<T>
             while (!result && iterators.size() > 0);
         }
         return result;
+    }
+
+    public ClosableIterator<T> getCurrentIterator()
+    {
+        return iterators.get(at);
     }
 
     @Override

@@ -72,8 +72,17 @@ public class FieldMapping
         return searchServerFieldName.equals(this.searchServersName);
     }
 
-    public void applyResponseMappings(Term term, ScriptEnv env)
+    public void applyResponseMappings(List<Term> terms, ScriptEnv env, FusionField fusionField)
     {
+        for (Term t : terms)
+        {
+            applyResponseMappings(t, env, fusionField);
+        }
+    }
+
+    public void applyResponseMappings(Term term, ScriptEnv env, FusionField fusionField)
+    {
+        term.setFusionField(fusionField);
         ScriptEnv newEnv = new ScriptEnv(env);
         newEnv.setBinding(ScriptEnv.ENV_FUSION_FIELD, fusionName);
         newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_FIELD, searchServersName);

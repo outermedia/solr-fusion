@@ -2,7 +2,6 @@ package org.outermedia.solrfusion.response.parser;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.outermedia.solrfusion.mapper.Term;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
@@ -22,11 +21,7 @@ public abstract class SolrField {
     @Setter
     protected String fieldName;
 
-    @XmlTransient
-    @Getter
-    public List<String> values;
+    public abstract String getFirstSearchServerFieldValue();
 
-    @XmlTransient
-    @Getter
-    public List<Term> terms;
+    public abstract List<String> getAllSearchServerFieldValue();
 }

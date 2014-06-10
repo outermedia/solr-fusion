@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.response.parser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import javax.xml.bind.annotation.*;
@@ -44,7 +45,13 @@ public class Document implements VisitableDocument
         return accept(new FieldVisitor()
         {
             @Override
-            public boolean visitField(SolrField sf, ScriptEnv env)
+            public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
+            {
+                return !sf.getFieldName().equals(name);
+            }
+
+            @Override
+            public boolean visitField(SolrMultiValuedField sf, ScriptEnv env)
             {
                 return !sf.getFieldName().equals(name);
             }
@@ -56,7 +63,7 @@ public class Document implements VisitableDocument
     {
         if (solrSingleValuedFields != null)
         {
-            for (SolrField solrField : solrSingleValuedFields)
+            for (SolrSingleValuedField solrField : solrSingleValuedFields)
             {
                 if (!visitor.visitField(solrField, env))
                 {
@@ -66,7 +73,7 @@ public class Document implements VisitableDocument
         }
         if (solrMultiValuedFields != null)
         {
-            for (SolrField solrField : solrMultiValuedFields)
+            for (SolrMultiValuedField solrField : solrMultiValuedFields)
             {
                 if (!visitor.visitField(solrField, env))
                 {
@@ -76,4 +83,40 @@ public class Document implements VisitableDocument
         }
         return null;
     }
+
+    /**
+     * Get a document's field value by name. Is the field a multi value field, only the first value is returned.
+     * Note: An instance of class Term contains the original and mapped value.
+     *
+     * @param fieldName the field's name for which to return the value
+     * @return null if field was not found or the value of the field
+     */
+    public Term getFieldTermByName(String fieldName)
+    {
+        Term result = null;
+        SolrField sf = findFieldByName(fieldName);
+        if (sf != null)
+        {
+            if (sf instanceof SolrSingleValuedField)
+            {
+                result = ((SolrSingleValuedField) sf).getTerm();
+            }
+            else if (sf instanceof SolrMultiValuedField)
+            {
+                // or throw an exception?
+                List<Term> values = ((SolrMultiValuedField) sf).getTerms();
+                if (values != null && !values.isEmpty())
+                {
+                    result = values.get(0);
+                }
+            }
+            else
+            {
+                throw new RuntimeException("Can't handle fields of class " + sf.getClass().getName()
+                        + ". Only SolrSingleValuedField and SolrMultiValuedField are supported.");
+            }
+        }
+        return result;
+    }
+
 }

@@ -14,6 +14,12 @@ import org.outermedia.solrfusion.response.parser.Document;
 
 public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
 {
+    /**
+     *  Send the provided query to a search server and return the retrieved documents.
+     *
+     * @param searchServerQueryStr a query suitable for this search server.
+     * @return null for error or a document stream
+     */
     public ClosableIterator<Document> sendQuery(String searchServerQueryStr);
 
     public void init(SearchServerConfig config);

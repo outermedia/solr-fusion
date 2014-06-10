@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.outermedia.solrfusion.IdGeneratorIfc;
 import org.outermedia.solrfusion.MergeStrategyIfc;
 import org.outermedia.solrfusion.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
@@ -182,5 +183,15 @@ public class Configuration
             }
         }
         return null;
+    }
+
+    /**
+     * Get the configured id generator.
+     *
+     * @return a non null instance of IdGeneratorIfc
+     */
+    public IdGeneratorIfc getIdGenerator()
+    {
+        return idGeneratorFactory.getImplementation();
     }
 }

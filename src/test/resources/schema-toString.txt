@@ -31,7 +31,7 @@ Configuration(fusionFields=[
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()),
  name=extract-depth),
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()),
- name=merge-measure-units)], defaultSearchField=title, defaultOperator=AND, idGeneratorFactory=IdGeneratorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultIdGenerator$Factory, implementation=DefaultIdGenerator()),
+ name=merge-measure-units)], defaultSearchField=title, defaultOperator=AND, idGeneratorFactory=IdGeneratorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultIdGenerator$Factory, implementation=DefaultIdGenerator(fusionIdField=id)),
  fusionFieldName=id),
  responseConsolidatorFactory=ResponseConsolidatorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.ResponseConsolidator$Factory, implementation=ResponseConsolidator(responseStreams=[
  ]))),
@@ -52,7 +52,7 @@ Configuration(fusionFields=[
  MergeTarget(prio=2, targetName=Bibliothek B)]),
  searchServerConfigs=[
  SearchServerConfig(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory, implementation=DefaultSolrAdapter()),
- searchServerName=Bibliothek A, searchServerVersion=3.6, url=http://host:port/solr/xyz, scoreFactory=ScoreFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultScore$Factory, implementation=DefaultScore()),
+ searchServerName=Bibliothek A, searchServerVersion=3.6, url=http://host:port/solr/xyz, scoreFactory=ScoreFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultScore$Factory, implementation=DefaultScore(factor=1.2)),
  factor=1.2),
  responseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.SpecialResponseParser$Factory, implementation=SpecialResponseParser())),
  idFieldName=id, fieldMappings=[

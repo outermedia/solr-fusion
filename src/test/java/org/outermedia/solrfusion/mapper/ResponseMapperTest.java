@@ -46,6 +46,11 @@ public class ResponseMapperTest
         sfAuthor.setValue("Willi Schiller");
         sfAuthor.setTerm(Term.newSearchServerTerm(sfAuthor.getFieldName(), sfAuthor.getValue()));
         strFields.add(sfAuthor);
+        SolrSingleValuedField sfId = new SolrSingleValuedField();
+        sfId.setFieldName("id");
+        sfId.setValue("132");
+        sfId.setTerm(Term.newSearchServerTerm(sfId.getFieldName(), sfId.getValue()));
+        strFields.add(sfId);
         doc.setSolrSingleValuedFields(strFields);
         ScriptEnv env = new ScriptEnv();
         rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env);

@@ -25,26 +25,10 @@ public class SolrSingleValuedField extends SolrField
 {
 
     @XmlValue
-    public String value;
+    private String value;
 
     @XmlTransient
     private Term term;
-
-    @Override
-    public List<Term> getTerms ()
-    {
-        List<Term> termList = new ArrayList<>();
-        termList.add(this.term);
-        return termList;
-    }
-
-    @Override
-    public List<String> getValues ()
-    {
-        List<String> l = new ArrayList<>();
-        l.add(this.value);
-        return l;
-    }
 
     /**
      * Hook up unmarshalling in order to create an instance of
@@ -56,5 +40,19 @@ public class SolrSingleValuedField extends SolrField
     protected void afterUnmarshal(Unmarshaller u, Object parent)
     {
         term = Term.newSearchServerTerm(fieldName, value);
+    }
+
+    @Override
+    public String getFirstSearchServerFieldValue()
+    {
+        return value;
+    }
+
+    @Override
+    public List<String> getAllSearchServerFieldValue()
+    {
+        List<String> result = new ArrayList<>(1);
+        result.add(value);
+        return result;
     }
 }

@@ -13,5 +13,5 @@ import org.outermedia.solrfusion.configuration.ScoreFactory;
 
 public interface ScoreCorrectorIfc extends Initiable<ScoreFactory>
 {
-	// TODO define required methods e.g. applyCorrection
+    public double applyCorrection(double score);
 }

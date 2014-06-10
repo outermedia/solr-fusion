@@ -85,4 +85,9 @@ public class SearchServerConfig extends
         }
         return result;
     }
+
+    public org.outermedia.solrfusion.ScoreCorrectorIfc getScoreCorrector()
+    {
+        return getScoreFactory().getImplementation();
+    }
 }

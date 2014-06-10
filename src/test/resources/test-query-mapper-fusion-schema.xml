@@ -7,6 +7,7 @@
         <om:field name="id" />
         <om:field name="author" />
         <om:field name="title" />
+        <om:field name="score" type="double" />
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js" />
@@ -51,6 +52,7 @@
 
             <om:unique-key>id</om:unique-key>
 
+            <om:field name="id" fusion-name="id" />
             <om:field name="Titel" fusion-name="title" />
             <om:field name="Autor" fusion-name="author" />
 

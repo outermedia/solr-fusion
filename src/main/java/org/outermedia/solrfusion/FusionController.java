@@ -75,7 +75,8 @@ public class FusionController
         }
     }
 
-    protected void requestAllSearchServers(Query query, List<SearchServerConfig> configuredSearchServers, ResponseConsolidatorIfc consolidator)
+    protected void requestAllSearchServers(Query query, List<SearchServerConfig> configuredSearchServers,
+                                           ResponseConsolidatorIfc consolidator)
     {
         ScriptEnv env = getNewScriptEnv();
         for (SearchServerConfig searchServerConfig : configuredSearchServers)
