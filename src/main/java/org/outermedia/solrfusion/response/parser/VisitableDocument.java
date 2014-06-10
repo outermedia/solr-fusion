@@ -12,7 +12,7 @@ public interface VisitableDocument
      *
      * @param visitor the implementing instance visits every field of a response document.
      * @param env contains values which are needed when the field is mapped
-     * @return null or an SolrField instance where visiting stopped
+     * @return null or an SolrSingleValuedField instance where visiting stopped
      */
     public SolrField accept(FieldVisitor visitor, ScriptEnv env);
 }

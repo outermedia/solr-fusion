@@ -5,10 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.util.List;
 
 /**
@@ -24,17 +21,23 @@ import java.util.List;
 @ToString
 public class Document implements VisitableDocument
 {
-    @XmlElement(name = "float", required = false)
-    private List<SolrField> solrFloatFields;
+    @XmlElements(value =
+            {
+                    @XmlElement(name = "str"),
+                    @XmlElement(name = "date"),
+                    @XmlElement(name = "float"),
+                    @XmlElement(name = "long"),
+            })
+    private List<SolrSingleValuedField> solrSingleValuedFields;
 
-    @XmlElement(name = "str", required = true)
-    private List<SolrField> solrStringFields;
+    @XmlElement(name = "arr", required = true)
+    private List<SolrMultiValuedField> solrMultiValuedFields;
 
     /**
      * Find a field of any type by name.
      *
      * @param name solrname of the field
-     * @return null or an instnace of {@link org.outermedia.solrfusion.response.parser.SolrField}
+     * @return null or an instnace of {@link SolrSingleValuedField}
      */
     public SolrField findFieldByName(final String name)
     {
@@ -51,9 +54,9 @@ public class Document implements VisitableDocument
     @Override
     public SolrField accept(FieldVisitor visitor, ScriptEnv env)
     {
-        if (solrFloatFields != null)
+        if (solrSingleValuedFields != null)
         {
-            for (SolrField solrField : solrFloatFields)
+            for (SolrField solrField : solrSingleValuedFields)
             {
                 if (!visitor.visitField(solrField, env))
                 {
@@ -61,9 +64,9 @@ public class Document implements VisitableDocument
                 }
             }
         }
-        if (solrStringFields != null)
+        if (solrMultiValuedFields != null)
         {
-            for (SolrField solrField : solrStringFields)
+            for (SolrField solrField : solrMultiValuedFields)
             {
                 if (!visitor.visitField(solrField, env))
                 {

@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.SolrField;
+import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
 import org.outermedia.solrfusion.types.ScriptEnv;
 import org.xml.sax.SAXException;
 
@@ -35,18 +35,18 @@ public class ResponseMapperTest
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
         ResponseMapper rm = new ResponseMapper();
         Document doc = new Document();
-        List<SolrField> strFields = new ArrayList<>();
-        SolrField sfTitle = new SolrField();
+        List<SolrSingleValuedField> strFields = new ArrayList<>();
+        SolrSingleValuedField sfTitle = new SolrSingleValuedField();
         sfTitle.setFieldName("Titel");
         sfTitle.setValue("Ein kurzer Weg");
         sfTitle.setTerm(Term.newSearchServerTerm(sfTitle.getFieldName(), sfTitle.getValue()));
         strFields.add(sfTitle);
-        SolrField sfAuthor = new SolrField();
+        SolrSingleValuedField sfAuthor = new SolrSingleValuedField();
         sfAuthor.setFieldName("Autor");
         sfAuthor.setValue("Willi Schiller");
         sfAuthor.setTerm(Term.newSearchServerTerm(sfAuthor.getFieldName(), sfAuthor.getValue()));
         strFields.add(sfAuthor);
-        doc.setSolrStringFields(strFields);
+        doc.setSolrSingleValuedFields(strFields);
         ScriptEnv env = new ScriptEnv();
         rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env);
 

@@ -40,13 +40,14 @@ public class ResponseMapper implements FieldVisitor
     @Override
     public boolean visitField(SolrField sf, ScriptEnv env)
     {
-        Term t = sf.getTerm();
+        List<Term> ts = sf.getTerms();
         String searchServerFieldName = sf.getFieldName();
         List<FieldMapping> mappings = serverConfig.findAllMappingsForSearchServerField(searchServerFieldName);
         if (mappings.isEmpty())
         {
             throw new MissingSearchServerFieldMapping("\"Found no mapping for fusion field '\" + searchServerFieldName + \"'\"");
         }
+
         for (FieldMapping m : mappings)
         {
             FusionField fusionField = env.getConfiguration().findFieldByName(m.getFusionName());
@@ -54,8 +55,11 @@ public class ResponseMapper implements FieldVisitor
             {
                 throw new UndeclaredFusionField("Didn't find field '" + m.getFusionName() + "' in fusion schema. Please define it their.");
             }
-            t.setFusionField(fusionField);
-            m.applyResponseMappings(t, env);
+            for (Term t : ts)
+            {
+                t.setFusionField(fusionField);
+                m.applyResponseMappings(t, env);
+            }
         }
 
         // always continue visiting
