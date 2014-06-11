@@ -34,9 +34,16 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <!-- in a Solr query the operator is explicitly set to rewrite the default -->
     <om:default-operator>AND</om:default-operator>
 
-    <!-- "id" is one name of <fusion-fields> -->
+    <!-- "id" is one name of <fusion-field> which is set with a unique document id -->
     <om:id-generator fusion-name="id"
         class="org.outermedia.solrfusion.DefaultIdGenerator$Factory" />
+
+    <!-- The consolidator merges the document responses of all configured search servers -->
+    <om:response-consolidator class="org.outermedia.solrfusion.response.ResponseConsolidator$Factory"/>
+
+    <!-- This component transforms a search server's document into a fusion document, -->
+    <!-- i.e. all search server's fields are mapped to fusion fields. -->
+    <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory" />
 
     <om:solr-servers>
         <!-- global settings -->
