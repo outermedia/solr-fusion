@@ -9,7 +9,6 @@ import org.outermedia.solrfusion.types.AbstractType;
 import org.outermedia.solrfusion.types.ScriptEnv;
 import org.w3c.dom.Element;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlIDREF;
@@ -19,9 +18,8 @@ import java.util.List;
 /**
  * Abstract data holder class to store the configuration of common attributes of
  * a &lt;query&gt;, &lt;response&gt; or &lt;query-response&gt;.
- * 
+ *
  * @author ballmann
- * 
  */
 
 @XmlTransient
@@ -31,65 +29,48 @@ import java.util.List;
 @Slf4j
 public abstract class Target
 {
-	@XmlIDREF
-	@XmlAttribute(name = "type", required = false)
-	private ScriptType type;
+    @XmlIDREF
+    @XmlAttribute(name = "type", required = false)
+    private ScriptType type;
 
-	@XmlAttribute(name = "name", required = false)
-	private String name;
+    @XmlAttribute(name = "name", required = false)
+    private String name;
 
-	@XmlAttribute(name = "fusion-name", required = false)
-	private String fusionName;
+    @XmlAttribute(name = "fusion-name", required = false)
+    private String fusionName;
 
-	@XmlAnyElement
-	private List<Element> typeConfig;
+    @XmlAnyElement
+    private List<Element> typeConfig;
 
-	@XmlTransient
+    @XmlTransient
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-	private Util util;
+    private Util util;
 
-	public Target()
-	{
-		util = new Util();
-	}
-
-	/**
-	 * Instance of the declared {@link Target#type}
-	 */
-	@XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-	private AbstractType typeImpl;
-
-	/**
-	 * Hook up unmarshalling in order to create an instance of
-	 * {@link Target#typeImpl}.
-	 * 
-	 * @param u is the unmarshaller
-	 * @param parent the parent object
-	 */
-	protected void afterUnmarshal(Unmarshaller u, Object parent)
-	{
-		if (typeConfig != null)
-		{
-			try
-			{
-				typeImpl = (AbstractType) type.getImplementation();
-				if (typeImpl != null) typeImpl.passArguments(typeConfig, util);
-			}
-			catch (Exception e)
-			{
-				log.error(
-					"Caught exception while creating <script-type> {} with config {}",
-					(type != null) ? type.getClassFactory() : "<undefined>",
-					typeConfig, e);
-			}
-		}
-	}
+    public Target()
+    {
+        util = new Util();
+    }
 
     public String apply(ScriptEnv env)
     {
-        return typeImpl.apply(env);
+        String result = null;
+        if (type != null)
+        {
+            try
+            {
+                AbstractType typeImpl = (AbstractType) type.getInstance();
+                if (typeImpl != null)
+                {
+                    typeImpl.passArguments(typeConfig, util);
+                    result = typeImpl.apply(env);
+                }
+            }
+            catch (Exception e)
+            {
+                log.error("Caught exception while applying " + type + " to " + this, e);
+            }
+        }
+        return result;
     }
 }

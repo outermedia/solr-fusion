@@ -3,9 +3,11 @@ package org.outermedia.solrfusion.configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.outermedia.solrfusion.ScoreCorrectorIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 
 import javax.xml.bind.annotation.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,8 +88,8 @@ public class SearchServerConfig extends
         return result;
     }
 
-    public org.outermedia.solrfusion.ScoreCorrectorIfc getScoreCorrector()
+    public ScoreCorrectorIfc getScoreCorrector() throws InvocationTargetException, IllegalAccessException
     {
-        return getScoreFactory().getImplementation();
+        return getScoreFactory().getInstance();
     }
 }

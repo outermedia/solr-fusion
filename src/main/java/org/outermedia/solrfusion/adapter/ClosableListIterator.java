@@ -11,16 +11,24 @@ import java.util.List;
 public class ClosableListIterator<T> implements ClosableIterator<T>
 {
     private Iterator<T> listIt;
+    private int size;
 
     public ClosableListIterator(List<T> list)
     {
         this.listIt = list.iterator();
+        size = list.size();
     }
 
     @Override
     public void close()
     {
         listIt = null;
+    }
+
+    @Override
+    public int size()
+    {
+        return size;
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 
 import javax.xml.bind.annotation.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -77,7 +78,7 @@ public class Configuration
      * @return null for an error or an instance of {@link ResponseRendererIfc}
      */
     public ResponseRendererIfc getResponseRendererByType(
-            ResponseRendererType type)
+            ResponseRendererType type) throws InvocationTargetException, IllegalAccessException
     {
         return searchServerConfigs.getResponseRendererByType(type);
     }
@@ -120,7 +121,7 @@ public class Configuration
      *
      * @return an instance of QueryParserIfc
      */
-    public QueryParserIfc getQueryParser()
+    public QueryParserIfc getQueryParser() throws InvocationTargetException, IllegalAccessException
     {
         return searchServerConfigs.getQueryParser();
     }
@@ -131,7 +132,7 @@ public class Configuration
      *
      * @return an instance of ResponseParserIfc.
      */
-    public ResponseParserIfc getDefaultResponseParser()
+    public ResponseParserIfc getDefaultResponseParser() throws InvocationTargetException, IllegalAccessException
     {
         return searchServerConfigs.getDefaultResponseParser();
     }
@@ -141,7 +142,7 @@ public class Configuration
      *
      * @return an instance of MergeStrategyIfc
      */
-    public MergeStrategyIfc getMerger()
+    public MergeStrategyIfc getMerger() throws InvocationTargetException, IllegalAccessException
     {
         return searchServerConfigs.getMerger();
     }
@@ -152,9 +153,9 @@ public class Configuration
      *
      * @return an instance of ResponseConsolidatorIfc
      */
-    public ResponseConsolidatorIfc getResponseConsolidator()
+    public ResponseConsolidatorIfc getResponseConsolidator() throws InvocationTargetException, IllegalAccessException
     {
-        return getResponseConsolidatorFactory().getImplementation();
+        return getResponseConsolidatorFactory().getInstance();
     }
 
     /**
@@ -164,7 +165,7 @@ public class Configuration
      *
      * @return a list of SearchServerAdapterIfc
      */
-    public List<SearchServerAdapterIfc> getSearchServers()
+    public List<SearchServerAdapterIfc> getSearchServers() throws InvocationTargetException, IllegalAccessException
     {
         return searchServerConfigs.getSearchServers();
     }
@@ -196,9 +197,9 @@ public class Configuration
      *
      * @return a non null instance of IdGeneratorIfc
      */
-    public IdGeneratorIfc getIdGenerator()
+    public IdGeneratorIfc getIdGenerator() throws InvocationTargetException, IllegalAccessException
     {
-        return idGeneratorFactory.getImplementation();
+        return idGeneratorFactory.getInstance();
     }
 
     /**
@@ -206,8 +207,8 @@ public class Configuration
      *
      * @return a non null instance of IdGeneratorIfc
      */
-    public ResponseMapperIfc getResponseMapper()
+    public ResponseMapperIfc getResponseMapper() throws InvocationTargetException, IllegalAccessException
     {
-        return responseMapperFactory.getImplementation();
+        return responseMapperFactory.getInstance();
     }
 }

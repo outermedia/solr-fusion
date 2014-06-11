@@ -9,11 +9,17 @@ public class RoundRobinClosableIterator<T> implements ClosableIterator<T>
 {
     private final List<? extends ClosableIterator<T>> iterators;
     private int at;
+    private int size;
 
     public RoundRobinClosableIterator(List<? extends ClosableIterator<T>> iterators)
     {
         this.iterators = iterators;
         at = 0;
+        size = 0;
+        for (ClosableIterator<T> it : iterators)
+        {
+            size += it.size();
+        }
     }
 
     @Override
@@ -24,6 +30,12 @@ public class RoundRobinClosableIterator<T> implements ClosableIterator<T>
             it.close();
         }
         iterators.clear();
+    }
+
+    @Override
+    public int size()
+    {
+        return size;
     }
 
     @Override

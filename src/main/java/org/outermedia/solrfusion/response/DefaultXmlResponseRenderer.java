@@ -22,7 +22,7 @@ public class DefaultXmlResponseRenderer implements ResponseRendererIfc
 	{}
 
     @Override
-    public String getResponseString(ClosableIterator<Document> docStream)
+    public String getResponseString(ClosableIterator<Document> docStream, String query)
     {
         return null; // TODO
     }

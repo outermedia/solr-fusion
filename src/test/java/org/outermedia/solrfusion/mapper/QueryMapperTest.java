@@ -94,13 +94,13 @@ public class QueryMapperTest
 
         ResetQueryState resetter = new ResetQueryState();
         resetter.reset(bq);
-        Assert.assertNull("Expected empty fusion field name after reset", q.getSearchServerFieldName());
-        Assert.assertNull("Expected empty fusion field value after reset", q.getSearchServerFieldValue());
-        Assert.assertFalse("Expected false for removed after reset", q.getTerm().isRemoved());
-        Assert.assertFalse("Expected false for wasMapped after reset", q.getTerm().isWasMapped());
-        Assert.assertNull("Expected empty fusion field name after reset", q2.getSearchServerFieldName());
-        Assert.assertNull("Expected empty fusion field value after reset", q2.getSearchServerFieldValue());
-        Assert.assertFalse("Expected false for removed after reset", q2.getTerm().isRemoved());
-        Assert.assertFalse("Expected false for wasMapped after reset", q2.getTerm().isWasMapped());
+        Assert.assertNull("Expected empty fusion field name after clear", q.getSearchServerFieldName());
+        Assert.assertNull("Expected empty fusion field value after clear", q.getSearchServerFieldValue());
+        Assert.assertFalse("Expected false for removed after clear", q.getTerm().isRemoved());
+        Assert.assertFalse("Expected false for wasMapped after clear", q.getTerm().isWasMapped());
+        Assert.assertNull("Expected empty fusion field name after clear", q2.getSearchServerFieldName());
+        Assert.assertNull("Expected empty fusion field value after clear", q2.getSearchServerFieldValue());
+        Assert.assertFalse("Expected false for removed after clear", q2.getTerm().isRemoved());
+        Assert.assertFalse("Expected false for wasMapped after clear", q2.getTerm().isWasMapped());
     }
 }

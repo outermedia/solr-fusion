@@ -13,4 +13,6 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 public interface ResponseMapperIfc extends Initiable<ResponseMapperFactory>
 {
     public void mapResponse(Configuration config, SearchServerConfig serverConfig, Document doc, ScriptEnv env);
+
+    public void ignoreMissingMappings();
 }

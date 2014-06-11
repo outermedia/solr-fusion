@@ -1,17 +1,16 @@
 package org.outermedia.solrfusion.configuration;
 
-import java.io.FileNotFoundException;
-
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.xml.sax.SAXException;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 
 public class ResponseRendererTest
 {
@@ -26,8 +25,8 @@ public class ResponseRendererTest
 
 	@Test
 	public void findCertainRenderer() throws FileNotFoundException,
-		JAXBException, SAXException, ParserConfigurationException
-	{
+            JAXBException, SAXException, ParserConfigurationException, InvocationTargetException, IllegalAccessException
+    {
 		Configuration cfg = helper
 			.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 

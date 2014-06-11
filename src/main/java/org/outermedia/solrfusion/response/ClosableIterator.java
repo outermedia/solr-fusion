@@ -9,4 +9,6 @@ public interface ClosableIterator<T> extends Iterator<T>
 {
     // forget waiting results
     public void close();
+
+    public int size();
 }

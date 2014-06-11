@@ -4,16 +4,18 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
-* Created by ballmann on 6/6/14.
-*/
+ * Created by ballmann on 6/6/14.
+ */
 public class TestClosableStringIterator implements ClosableIterator<String>
 {
     boolean calledClose = false;
     Iterator<String> it;
+    int size;
 
     TestClosableStringIterator(List<String> elements)
     {
         this.it = elements.iterator();
+        size = elements.size();
     }
 
     @Override
@@ -21,6 +23,12 @@ public class TestClosableStringIterator implements ClosableIterator<String>
     {
         it = null;
         calledClose = true;
+    }
+
+    @Override
+    public int size()
+    {
+        return size;
     }
 
     @Override

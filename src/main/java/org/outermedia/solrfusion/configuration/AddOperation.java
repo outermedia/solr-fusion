@@ -31,7 +31,7 @@ public class AddOperation extends Operation
     protected void applyOneQueryOperation(Term term, ScriptEnv env, Target t)
     {
         super.applyOneQueryOperation(term, env, t);
-        term.addNewSearchServerTerm(env.getStringBinding(ScriptEnv.ENV_SEARCH_SERVER_FIELD), term.getSearchServerFieldValue());
+        term.addNewSearchServerTerm(term.getSearchServerFieldValue(), env.getStringBinding(ScriptEnv.ENV_SEARCH_SERVER_FIELD));
     }
 
     @Override

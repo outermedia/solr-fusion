@@ -17,7 +17,7 @@ public interface ResponseConsolidatorIfc extends Initiable<ResponseConsolidatorF
 
     public int numberOfResponseStreams();
 
-    public void reset();
+    public void clear();
 
     public ClosableIterator<Document> getResponseIterator();
 

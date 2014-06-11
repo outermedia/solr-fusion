@@ -20,15 +20,20 @@ import java.util.List;
 @ToString(exclude = {"serverConfig", "doc"})
 public class ResponseMapper implements FieldVisitor, ResponseMapperIfc
 {
+    protected static final boolean MISSING_MAPPING_POLICY_IGNORE = true;
+    protected static final boolean MISSING_MAPPING_POLICY_THROW_EXCEPTION = false;
+
     protected static final String DOC_FIELD_NAME_SCORE = "score";
     private SearchServerConfig serverConfig;
     private Document doc;
+    private boolean missingMappingPolicy;
 
     /**
      * Factory creates instances only.
      */
     private ResponseMapper()
     {
+        missingMappingPolicy = MISSING_MAPPING_POLICY_THROW_EXCEPTION;
     }
 
     public static class Factory
@@ -62,23 +67,30 @@ public class ResponseMapper implements FieldVisitor, ResponseMapperIfc
         Term scoreTerm = doc.getFieldTermByName(DOC_FIELD_NAME_SCORE);
         if (scoreTerm != null)
         {
-            ScoreCorrectorIfc scoreCorrector = serverConfig.getScoreCorrector();
-            // if mapped use this value instead of search server's value
-            String searchServerScoreStr = scoreTerm.getFusionFieldValue();
-            if (searchServerScoreStr == null)
-            {
-                searchServerScoreStr = scoreTerm.getSearchServerFieldValue();
-            }
             try
             {
-                double searchServerScore = Double.parseDouble(searchServerScoreStr);
-                double newScore = scoreCorrector.applyCorrection(searchServerScore);
-                scoreTerm.setFusionFieldName(DOC_FIELD_NAME_SCORE);
-                scoreTerm.setFusionFieldValue(String.valueOf(newScore));
+                ScoreCorrectorIfc scoreCorrector = serverConfig.getScoreCorrector();
+                // if mapped use this value instead of search server's value
+                String searchServerScoreStr = scoreTerm.getFusionFieldValue();
+                if (searchServerScoreStr == null)
+                {
+                    searchServerScoreStr = scoreTerm.getSearchServerFieldValue();
+                }
+                try
+                {
+                    double searchServerScore = Double.parseDouble(searchServerScoreStr);
+                    double newScore = scoreCorrector.applyCorrection(searchServerScore);
+                    scoreTerm.setFusionFieldName(DOC_FIELD_NAME_SCORE);
+                    scoreTerm.setFusionFieldValue(String.valueOf(newScore));
+                }
+                catch (Exception e)
+                {
+                    log.warn("Can't parse double value '{}'. score is not corrected and not set.", searchServerScoreStr, e);
+                }
             }
             catch (Exception e)
             {
-                log.warn("Can't parse double value '{}'. score is not corrected and not set.", searchServerScoreStr, e);
+                log.error("Caught exception while correcting score", e);
             }
         }
         else
@@ -92,8 +104,16 @@ public class ResponseMapper implements FieldVisitor, ResponseMapperIfc
         List<FieldMapping> mappings = serverConfig.findAllMappingsForSearchServerField(searchServerFieldName);
         if (mappings.isEmpty())
         {
-            throw new MissingSearchServerFieldMapping("\"Found no mapping for fusion field '\" " +
-                    "+ searchServerFieldName + \"'\"");
+            if (missingMappingPolicy == MISSING_MAPPING_POLICY_THROW_EXCEPTION)
+            {
+                String message = "Found no mapping for fusion field '"
+                        + searchServerFieldName + "'";
+                throw new MissingSearchServerFieldMapping(message);
+            }
+            else
+            {
+                log.warn("Found no mapping for field '{}'", searchServerFieldName);
+            }
         }
         return mappings;
     }
@@ -111,22 +131,34 @@ public class ResponseMapper implements FieldVisitor, ResponseMapperIfc
 
     protected void setFusionDocId(Configuration config, Document doc)
     {
-        IdGeneratorIfc idGenerator = config.getIdGenerator();
-        Term idTerm = doc.getFieldTermByName(serverConfig.getIdFieldName());
-        if (idTerm == null || idTerm.getSearchServerFieldValue() == null)
+        try
         {
-            throw new RuntimeException("Found no id (" + serverConfig.getIdFieldName() + ") in response of server '"
-                    + serverConfig.getSearchServerName() + "'");
+            IdGeneratorIfc idGenerator = config.getIdGenerator();
+            Term idTerm = doc.getFieldTermByName(serverConfig.getIdFieldName());
+            if (idTerm == null || idTerm.getSearchServerFieldValue() == null)
+            {
+                throw new RuntimeException("Found no id (" + serverConfig.getIdFieldName() + ") in response of server '"
+                        + serverConfig.getSearchServerName() + "'");
+            }
+            String id = idGenerator.computeId(serverConfig.getSearchServerName(), idTerm.getSearchServerFieldValue());
+            idTerm.setFusionFieldName(idGenerator.getFusionIdField());
+            idTerm.setFusionFieldValue(id);
         }
-        String id = idGenerator.computeId(serverConfig.getSearchServerName(), idTerm.getSearchServerFieldValue());
-        idTerm.setFusionFieldName(idGenerator.getFusionIdField());
-        idTerm.setFusionFieldValue(id);
+        catch (Exception e)
+        {
+            log.error("Caught exception while setting fusion doc id", e);
+        }
     }
 
     @Override
     public void init(ResponseMapperFactory config)
     {
         // NOP
+    }
+
+    public void ignoreMissingMappings()
+    {
+        missingMappingPolicy = MISSING_MAPPING_POLICY_IGNORE;
     }
 
     // ---- Visitor methods --------------------------------------------------------------------------------------------

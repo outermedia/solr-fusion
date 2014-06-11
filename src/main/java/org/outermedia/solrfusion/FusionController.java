@@ -27,6 +27,7 @@ public class FusionController
     private Configuration configuration;
     private ResetQueryState queryResetter;
     private QueryMapper queryMapper;
+    private String query;
 
     public FusionController(Configuration configuration)
     {
@@ -52,27 +53,55 @@ public class FusionController
             }
             else
             {
-                ResponseConsolidatorIfc consolidator = configuration.getResponseConsolidator();
-                requestAllSearchServers(query, configuredSearchServers, consolidator);
-                if (consolidator.numberOfResponseStreams() < configuration.getDisasterLimit())
+                ResponseConsolidatorIfc consolidator = getNewResponseConsolidator();
+                if (consolidator != null)
                 {
-                    fusionResponse.setResponseForTooLessServerAnsweredError(configuration.getDisasterMessage());
-                }
-                else
-                {
-                    ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(fusionRequest.getResponseType());
-                    if (responseRenderer == null)
+                    requestAllSearchServers(query, configuredSearchServers, consolidator);
+                    if (consolidator.numberOfResponseStreams() < configuration.getDisasterLimit())
                     {
-                        fusionResponse.setResponseForMissingResponseRendererError(fusionRequest.getResponseType());
+                        fusionResponse.setResponseForTooLessServerAnsweredError(configuration.getDisasterMessage());
                     }
                     else
                     {
-                        ClosableIterator<Document> response = consolidator.getResponseIterator();
-                        fusionResponse.setOkResponse(responseRenderer.getResponseString(response));
+                        processResponses(fusionRequest, fusionResponse, consolidator);
                     }
+                    consolidator.clear();
                 }
-                consolidator.reset();
             }
+        }
+    }
+
+    protected ResponseConsolidatorIfc getNewResponseConsolidator()
+    {
+        try
+        {
+            return configuration.getResponseConsolidator();
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    protected void processResponses(FusionRequest fusionRequest, FusionResponse fusionResponse, ResponseConsolidatorIfc consolidator)
+    {
+        try
+        {
+            ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(fusionRequest.getResponseType());
+            if (responseRenderer == null)
+            {
+                fusionResponse.setResponseForMissingResponseRendererError(fusionRequest.getResponseType());
+            }
+            else
+            {
+                ClosableIterator<Document> response = consolidator.getResponseIterator();
+                // TODO better to pass in a Writer in order to avoid building of very big String
+                fusionResponse.setOkResponse(responseRenderer.getResponseString(response, query));
+            }
+        }
+        catch (Exception e)
+        {
+            log.error("Caught exception while processing search server's responses", e);
         }
     }
 
@@ -107,10 +136,10 @@ public class FusionController
     protected void sendAndReceive(Query query, ResponseConsolidatorIfc consolidator, SearchServerConfig searchServerConfig)
     {
         SearchServerQueryBuilder queryBuilder = getNewSearchServerQueryBuilder();
-        SearchServerAdapterIfc adapter = searchServerConfig.getImplementation();
-        String searchServerQueryStr = queryBuilder.buildQueryString(query);
         try
         {
+            SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
+            String searchServerQueryStr = queryBuilder.buildQueryString(query);
             ClosableIterator<Document> docIterator = adapter.sendQuery(searchServerQueryStr);
             if (docIterator != null)
             {
@@ -151,18 +180,24 @@ public class FusionController
     protected Query parseQuery(FusionRequest fusionRequest)
     {
         Map<String, Float> boosts = fusionRequest.getBoosts();
-        String query = fusionRequest.getQuery();
-        QueryParserIfc queryParser = configuration.getQueryParser();
+        query = fusionRequest.getQuery();
         Query queryObj = null;
         try
         {
-            queryObj = queryParser.parse(configuration, boosts, query);
+            QueryParserIfc queryParser = configuration.getQueryParser();
+            try
+            {
+                queryObj = queryParser.parse(configuration, boosts, query);
+            }
+            catch (Exception e)
+            {
+                log.error("Parsing of query {} failed.", query, e);
+            }
         }
         catch (Exception e)
         {
-            log.error("Parsing of query {} failed.", query, e);
+            log.error("Caught exception while parsing query: {}", query, e);
         }
-
         return queryObj;
     }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * Created by ballmann on 6/6/14.
  */
+@SuppressWarnings("unchecked")
 public class ConsolidatorTest
 {
 

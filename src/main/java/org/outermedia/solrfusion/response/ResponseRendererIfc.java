@@ -13,5 +13,5 @@ import org.outermedia.solrfusion.response.parser.Document;
 
 public interface ResponseRendererIfc extends Initiable<ResponseRendererFactory>
 {
-	public String getResponseString(ClosableIterator<Document> docStream);
+	public String getResponseString(ClosableIterator<Document> docStream, String query);
 }
