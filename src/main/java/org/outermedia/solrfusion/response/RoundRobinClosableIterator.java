@@ -1,6 +1,4 @@
-package org.outermedia.solrfusion;
-
-import org.outermedia.solrfusion.response.ClosableIterator;
+package org.outermedia.solrfusion.response;
 
 import java.util.List;
 

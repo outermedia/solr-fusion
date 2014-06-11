@@ -10,6 +10,7 @@ import org.outermedia.solrfusion.mapper.SearchServerQueryBuilder;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.ClosableIterator;
+import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.types.ScriptEnv;

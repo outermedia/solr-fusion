@@ -33,7 +33,7 @@ Configuration(fusionFields=[
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, implementation=DummyType()),
  name=merge-measure-units)], defaultSearchField=title, defaultOperator=AND, idGeneratorFactory=IdGeneratorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultIdGenerator$Factory, implementation=DefaultIdGenerator(fusionIdField=id)),
  fusionFieldName=id),
- responseConsolidatorFactory=ResponseConsolidatorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.ResponseConsolidator$Factory, implementation=ResponseConsolidator(responseStreams=[
+ responseConsolidatorFactory=ResponseConsolidatorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.ResponseConsolidator$Factory, implementation=ResponseConsolidator(responseStreams=[
  ]))),
  searchServerConfigs=GlobalSearchServerConfig(timeout=4000, disasterLimit=3, disasterMessage=Message(key=disaster-limit, text=Ihre Anfrage konnte nicht von ausreichend
  vielen Systemen beantwortet werden.

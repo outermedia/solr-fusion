@@ -1,8 +1,7 @@
-package org.outermedia.solrfusion;
+package org.outermedia.solrfusion.response;
 
 import lombok.ToString;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
-import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.parser.Document;
 
 import java.util.ArrayList;

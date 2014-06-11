@@ -44,7 +44,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <om:id-generator fusion-name="id"
         class="org.outermedia.solrfusion.DefaultIdGenerator$Factory" />
 
-    <om:response-consolidator class="org.outermedia.solrfusion.ResponseConsolidator$Factory"/>
+    <om:response-consolidator class="org.outermedia.solrfusion.response.ResponseConsolidator$Factory"/>
 
     <om:solr-servers>
         <!-- global settings -->

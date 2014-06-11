@@ -3,7 +3,7 @@ package org.outermedia.solrfusion.configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.outermedia.solrfusion.ResponseConsolidatorIfc;
+import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

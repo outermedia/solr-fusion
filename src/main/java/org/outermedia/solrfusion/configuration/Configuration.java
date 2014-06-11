@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.outermedia.solrfusion.IdGeneratorIfc;
 import org.outermedia.solrfusion.MergeStrategyIfc;
-import org.outermedia.solrfusion.ResponseConsolidatorIfc;
+import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
