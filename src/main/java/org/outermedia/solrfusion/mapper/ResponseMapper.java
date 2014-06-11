@@ -1,12 +1,10 @@
 package org.outermedia.solrfusion.mapper;
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.IdGeneratorIfc;
 import org.outermedia.solrfusion.ScoreCorrectorIfc;
-import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.FieldMapping;
-import org.outermedia.solrfusion.configuration.FusionField;
-import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.response.parser.FieldVisitor;
 import org.outermedia.solrfusion.response.parser.SolrMultiValuedField;
@@ -19,11 +17,27 @@ import java.util.List;
  * Created by ballmann on 04.06.14.
  */
 @Slf4j
-public class ResponseMapper implements FieldVisitor
+@ToString(exclude = {"serverConfig", "doc"})
+public class ResponseMapper implements FieldVisitor, ResponseMapperIfc
 {
     protected static final String DOC_FIELD_NAME_SCORE = "score";
     private SearchServerConfig serverConfig;
     private Document doc;
+
+    /**
+     * Factory creates instances only.
+     */
+    private ResponseMapper()
+    {
+    }
+
+    public static class Factory
+    {
+        public static ResponseMapper getInstance()
+        {
+            return new ResponseMapper();
+        }
+    }
 
     /**
      * Map a response of a certain search server (serverConfig) to the fusion fields.
@@ -107,6 +121,12 @@ public class ResponseMapper implements FieldVisitor
         String id = idGenerator.computeId(serverConfig.getSearchServerName(), idTerm.getSearchServerFieldValue());
         idTerm.setFusionFieldName(idGenerator.getFusionIdField());
         idTerm.setFusionFieldValue(id);
+    }
+
+    @Override
+    public void init(ResponseMapperFactory config)
+    {
+        // NOP
     }
 
     // ---- Visitor methods --------------------------------------------------------------------------------------------

@@ -21,6 +21,8 @@
 
     <om:response-consolidator class="org.outermedia.solrfusion.response.ResponseConsolidator$Factory"/>
 
+    <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory" />
+
     <om:solr-servers>
         <om:timeout>4000</om:timeout>
         <om:disaster-limit>1</om:disaster-limit>

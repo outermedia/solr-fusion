@@ -1,7 +1,9 @@
 package org.outermedia.solrfusion.response;
 
 import lombok.ToString;
+import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
+import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.parser.Document;
 
 import java.util.ArrayList;
@@ -15,14 +17,24 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
 {
     private List<ClosableIterator<Document>> responseStreams;
 
+    /**
+     * Factory creates instances only.
+     */
     private ResponseConsolidator()
     {
         responseStreams = new ArrayList<>();
     }
 
-    public void addResultStream(ClosableIterator<Document> docIterator)
+    @Override
+    public void addResultStream(Configuration config, SearchServerConfig searchServerConfig, ClosableIterator<Document> docIterator)
     {
-        responseStreams.add(docIterator);
+        responseStreams.add(getNewMappingClosableIterator(config, searchServerConfig, docIterator));
+    }
+
+    protected MappingClosableIterator getNewMappingClosableIterator(Configuration config,
+            SearchServerConfig searchServerConfig, ClosableIterator<Document> docIterator)
+    {
+        return new MappingClosableIterator(docIterator, config, searchServerConfig);
     }
 
     public int numberOfResponseStreams()
@@ -39,7 +51,8 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
         responseStreams.clear();
     }
 
-    public ClosableIterator<Document> getResponseStream()
+    @Override
+    public ClosableIterator<Document> getResponseIterator()
     {
         return new RoundRobinClosableIterator<>(responseStreams);
     }
@@ -57,4 +70,6 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
     {
         // NOP
     }
+
+
 }

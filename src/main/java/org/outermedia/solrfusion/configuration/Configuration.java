@@ -5,9 +5,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.outermedia.solrfusion.IdGeneratorIfc;
 import org.outermedia.solrfusion.MergeStrategyIfc;
-import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.query.QueryParserIfc;
+import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 
@@ -24,7 +25,7 @@ import java.util.List;
 @XmlType(name = "", propOrder =
         {
                 "fusionFields", "scriptTypes", "defaultSearchField", "defaultOperator",
-                "idGeneratorFactory", "responseConsolidatorFactory", "searchServerConfigs"
+                "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory", "searchServerConfigs"
         })
 @XmlRootElement(name = "core", namespace = "http://solrfusion.outermedia.org/configuration/")
 @ToString
@@ -58,6 +59,11 @@ public class Configuration
     @Getter
     @Setter
     private ResponseConsolidatorFactory responseConsolidatorFactory;
+
+    @XmlElement(name = "response-mapper", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @Getter
+    @Setter
+    private ResponseMapperFactory responseMapperFactory;
 
     @XmlElement(name = "solr-servers", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     @Getter
@@ -193,5 +199,15 @@ public class Configuration
     public IdGeneratorIfc getIdGenerator()
     {
         return idGeneratorFactory.getImplementation();
+    }
+
+    /**
+     * Get the configured response mapper.
+     *
+     * @return a non null instance of IdGeneratorIfc
+     */
+    public ResponseMapperIfc getResponseMapper()
+    {
+        return responseMapperFactory.getImplementation();
     }
 }

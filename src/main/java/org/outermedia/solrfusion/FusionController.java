@@ -67,7 +67,7 @@ public class FusionController
                     }
                     else
                     {
-                        ClosableIterator<Document> response = consolidator.getResponseStream();
+                        ClosableIterator<Document> response = consolidator.getResponseIterator();
                         fusionResponse.setOkResponse(responseRenderer.getResponseString(response));
                     }
                 }
@@ -77,7 +77,7 @@ public class FusionController
     }
 
     protected void requestAllSearchServers(Query query, List<SearchServerConfig> configuredSearchServers,
-                                           ResponseConsolidatorIfc consolidator)
+            ResponseConsolidatorIfc consolidator)
     {
         ScriptEnv env = getNewScriptEnv();
         for (SearchServerConfig searchServerConfig : configuredSearchServers)
@@ -114,7 +114,7 @@ public class FusionController
             ClosableIterator<Document> docIterator = adapter.sendQuery(searchServerQueryStr);
             if (docIterator != null)
             {
-                consolidator.addResultStream(docIterator);
+                consolidator.addResultStream(configuration, searchServerConfig, docIterator);
             }
         }
         catch (Exception e)

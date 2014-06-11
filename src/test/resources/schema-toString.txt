@@ -35,6 +35,7 @@ Configuration(fusionFields=[
  fusionFieldName=id),
  responseConsolidatorFactory=ResponseConsolidatorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.ResponseConsolidator$Factory, implementation=ResponseConsolidator(responseStreams=[
  ]))),
+ responseMapperFactory=ResponseMapperFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.ResponseMapper$Factory, implementation=ResponseMapper())),
  searchServerConfigs=GlobalSearchServerConfig(timeout=4000, disasterLimit=3, disasterMessage=Message(key=disaster-limit, text=Ihre Anfrage konnte nicht von ausreichend
  vielen Systemen beantwortet werden.
  ),
