@@ -1,10 +1,12 @@
 package org.outermedia.solrfusion;
 
 import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.QueryMapper;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
 import org.outermedia.solrfusion.mapper.SearchServerQueryBuilder;
@@ -14,8 +16,12 @@ import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.response.parser.XMLResponse;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
@@ -141,7 +147,13 @@ public class FusionController
         {
             SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
             String searchServerQueryStr = queryBuilder.buildQueryString(query);
-            ClosableIterator<Document,SearchServerResponseInfo> docIterator = adapter.sendQuery(searchServerQueryStr);
+            InputStream is = adapter.sendQuery(searchServerQueryStr);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            XMLResponse xmlResponse = (new Util()).unmarshal(XMLResponse.class, "", br, null);
+
+            ClosableIterator<Document,SearchServerResponseInfo> docIterator = new ClosableListIterator<>(xmlResponse.getResult().getDocuments());
+
             if (docIterator != null)
             {
                 consolidator.addResultStream(configuration, searchServerConfig, docIterator);

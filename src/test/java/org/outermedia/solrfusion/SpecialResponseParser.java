@@ -1,9 +1,15 @@
 package org.outermedia.solrfusion;
 
 import lombok.ToString;
-
-import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ResponseParserFactory;
+import org.outermedia.solrfusion.response.ResponseParserIfc;
+import org.outermedia.solrfusion.response.parser.XMLResponse;
+import org.xml.sax.SAXException;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * Dummy implementation for unit test.
@@ -13,12 +19,17 @@ import org.outermedia.solrfusion.configuration.ResponseParserFactory;
  */
 
 @ToString
-public class SpecialResponseParser implements Initiable<ResponseParserFactory>
+public class SpecialResponseParser implements ResponseParserIfc
 {
 	private SpecialResponseParser()
 	{}
 
-	public static class Factory
+    @Override
+    public XMLResponse parse(InputStream input) throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException {
+        return null;
+    }
+
+    public static class Factory
 	{
 		public static Object getInstance()
 		{
@@ -31,5 +42,6 @@ public class SpecialResponseParser implements Initiable<ResponseParserFactory>
 	{
 		// NOP
 	}
+
 
 }
