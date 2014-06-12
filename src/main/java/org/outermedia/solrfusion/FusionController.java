@@ -16,6 +16,7 @@ import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.response.parser.Result;
 import org.outermedia.solrfusion.response.parser.XMLResponse;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
@@ -35,10 +36,12 @@ public class FusionController
     private ResetQueryState queryResetter;
     private QueryMapper queryMapper;
     private String query;
+    private Util util;
 
     public FusionController(Configuration configuration)
     {
         this.configuration = configuration;
+        util = new Util();
     }
 
     public void process(FusionRequest fusionRequest, FusionResponse fusionResponse)
@@ -101,7 +104,7 @@ public class FusionController
             }
             else
             {
-                ClosableIterator<Document,SearchServerResponseInfo> response = consolidator.getResponseIterator();
+                ClosableIterator<Document, SearchServerResponseInfo> response = consolidator.getResponseIterator();
                 // TODO better to pass in a Writer in order to avoid building of very big String
                 fusionResponse.setOkResponse(responseRenderer.getResponseString(response, query));
             }
@@ -148,16 +151,12 @@ public class FusionController
             SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
             String searchServerQueryStr = queryBuilder.buildQueryString(query);
             InputStream is = adapter.sendQuery(searchServerQueryStr);
-
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            XMLResponse xmlResponse = (new Util()).unmarshal(XMLResponse.class, "", br, null);
-
-            ClosableIterator<Document,SearchServerResponseInfo> docIterator = new ClosableListIterator<>(xmlResponse.getResult().getDocuments());
-
-            if (docIterator != null)
-            {
-                consolidator.addResultStream(configuration, searchServerConfig, docIterator);
-            }
+            XMLResponse xmlResponse = util.unmarshal(XMLResponse.class, "", br, null);
+            Result result = xmlResponse.getResult();
+            SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound());
+            ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(result.getDocuments(), info);
+            consolidator.addResultStream(configuration, searchServerConfig, docIterator);
         }
         catch (Exception e)
         {

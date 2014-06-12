@@ -8,16 +8,22 @@ import java.util.List;
 /**
  * Created by ballmann on 6/11/14.
  */
-public class ClosableListIterator<T,S> implements ClosableIterator<T,S>
+public class ClosableListIterator<T, S> implements ClosableIterator<T, S>
 {
     private Iterator<T> listIt;
     private int size;
     private S info;
 
-    public ClosableListIterator(List<T> list)
+    public ClosableListIterator(List<T> list, S info)
     {
-        this.listIt = list.iterator();
-        size = list.size();
+        this.listIt = null;
+        size = 0;
+        if (list != null)
+        {
+            listIt = list.iterator();
+            size = list.size();
+        }
+        this.info = info;
     }
 
     @Override
@@ -47,7 +53,7 @@ public class ClosableListIterator<T,S> implements ClosableIterator<T,S>
     @Override
     public boolean hasNext()
     {
-        return listIt.hasNext();
+        return listIt != null && listIt.hasNext();
     }
 
     @Override

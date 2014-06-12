@@ -4,6 +4,7 @@ import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 
 /**
@@ -21,10 +22,9 @@ public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
      * ClosableIterator.
      *
      * @param searchServerQueryStr a query suitable for this search server.
-     * @return null for error or a document stream where
-     * {@link org.outermedia.solrfusion.response.ClosableIterator#setExtraInfo(Object)} has been called.
+     * @return null for error or a document stream
      */
-    public java.io.InputStream sendQuery(String searchServerQueryStr) throws URISyntaxException, IOException;
+    public InputStream sendQuery(String searchServerQueryStr) throws URISyntaxException, IOException;
 
     public void init(SearchServerConfig config);
 }

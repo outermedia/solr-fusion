@@ -48,8 +48,8 @@ public class ReadConfigurationTest
 
 		expected = addNewlines(expected);
 
-//		Assert.assertEquals("Found different configuration", expected,
-//			config2Out);
+		Assert.assertEquals("Found different configuration", expected,
+			config2Out);
     }
 
 	protected String addNewlines(String s)

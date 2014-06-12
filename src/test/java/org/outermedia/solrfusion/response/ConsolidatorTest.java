@@ -19,7 +19,7 @@ public class ConsolidatorTest
     {
         List<String> elements = new ArrayList(Arrays.asList("a", "b", "c"));
         TestClosableStringIterator t1 = new TestClosableStringIterator(elements);
-        RoundRobinClosableIterator rr = new RoundRobinClosableIterator(new ArrayList(Arrays.asList(t1)));
+        RoundRobinClosableIterator rr = new RoundRobinClosableIterator(new ArrayList(Arrays.asList(t1)), null);
         expectedList(elements, rr);
         Assert.assertTrue("close() not called for first iterator", t1.calledClose);
     }
@@ -45,7 +45,7 @@ public class ConsolidatorTest
         List<String> elements2 = new ArrayList(Arrays.asList("A", "B"));
         TestClosableStringIterator t2 = new TestClosableStringIterator(elements2);
 
-        RoundRobinClosableIterator rr = new RoundRobinClosableIterator(new ArrayList(Arrays.asList(t1, t2)));
+        RoundRobinClosableIterator rr = new RoundRobinClosableIterator(new ArrayList(Arrays.asList(t1, t2)), null);
         List<String> expected = Arrays.asList("a", "A", "b", "B", "c");
         expectedList(expected, rr);
         Assert.assertTrue("close() not called for first iterator", t1.calledClose);
@@ -53,7 +53,7 @@ public class ConsolidatorTest
 
         t1 = new TestClosableStringIterator(elements1);
         t2 = new TestClosableStringIterator(elements2);
-        rr = new RoundRobinClosableIterator(new ArrayList(Arrays.asList(t2, t1)));
+        rr = new RoundRobinClosableIterator(new ArrayList(Arrays.asList(t2, t1)), null);
         expected = Arrays.asList("A", "a", "B", "b", "c");
         expectedList(expected, rr);
         Assert.assertTrue("close() not called for first iterator", t1.calledClose);
@@ -65,7 +65,7 @@ public class ConsolidatorTest
     {
         List<String> elements = new ArrayList(Arrays.asList("a", "b", "c"));
         TestClosableStringIterator t1 = new TestClosableStringIterator(elements);
-        RoundRobinClosableIterator rr = new RoundRobinClosableIterator(new ArrayList(Arrays.asList(t1)));
+        RoundRobinClosableIterator rr = new RoundRobinClosableIterator(new ArrayList(Arrays.asList(t1)), null);
         rr.close();
         Assert.assertFalse("Expected no element after close()", rr.hasNext());
         Assert.assertTrue("close() not called for second iterator", t1.calledClose);

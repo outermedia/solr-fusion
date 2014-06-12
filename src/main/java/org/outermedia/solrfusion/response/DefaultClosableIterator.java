@@ -12,14 +12,12 @@ public class DefaultClosableIterator extends RoundRobinClosableIterator<Document
 {
     public DefaultClosableIterator(List<? extends ClosableIterator<Document, SearchServerResponseInfo>> closableIterators)
     {
-        super(closableIterators);
-        SearchServerResponseInfo info = new SearchServerResponseInfo();
+        super(closableIterators, null);
         int totalHits = 0;
         for(ClosableIterator<Document,SearchServerResponseInfo> ci : closableIterators){
             totalHits += ci.getExtraInfo().getTotalNumberOfHits();
         }
-        info.setTotalNumberOfHits(totalHits);
-        setExtraInfo(info);
+        setExtraInfo(new SearchServerResponseInfo(totalHits));
     }
 
 }

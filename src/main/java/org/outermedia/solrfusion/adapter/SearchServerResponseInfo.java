@@ -13,4 +13,9 @@ import lombok.ToString;
 public class SearchServerResponseInfo
 {
     private int totalNumberOfHits;
+
+    public SearchServerResponseInfo(int totalNumber)
+    {
+        totalNumberOfHits = totalNumber;
+    }
 }
