@@ -2,6 +2,7 @@ package org.outermedia.solrfusion;
 
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.QueryMapper;
@@ -94,7 +95,7 @@ public class FusionController
             }
             else
             {
-                ClosableIterator<Document> response = consolidator.getResponseIterator();
+                ClosableIterator<Document,SearchServerResponseInfo> response = consolidator.getResponseIterator();
                 // TODO better to pass in a Writer in order to avoid building of very big String
                 fusionResponse.setOkResponse(responseRenderer.getResponseString(response, query));
             }
@@ -140,7 +141,7 @@ public class FusionController
         {
             SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
             String searchServerQueryStr = queryBuilder.buildQueryString(query);
-            ClosableIterator<Document> docIterator = adapter.sendQuery(searchServerQueryStr);
+            ClosableIterator<Document,SearchServerResponseInfo> docIterator = adapter.sendQuery(searchServerQueryStr);
             if (docIterator != null)
             {
                 consolidator.addResultStream(configuration, searchServerConfig, docIterator);

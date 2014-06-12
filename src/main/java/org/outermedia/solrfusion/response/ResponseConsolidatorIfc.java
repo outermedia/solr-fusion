@@ -1,5 +1,6 @@
 package org.outermedia.solrfusion.response;
 
+import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
@@ -13,12 +14,12 @@ public interface ResponseConsolidatorIfc extends Initiable<ResponseConsolidatorF
 {
 
     public void addResultStream(Configuration config, SearchServerConfig searchServerConfig,
-                                ClosableIterator<Document> docIterator);
+                                ClosableIterator<Document,SearchServerResponseInfo> docIterator);
 
     public int numberOfResponseStreams();
 
     public void clear();
 
-    public ClosableIterator<Document> getResponseIterator();
+    public ClosableIterator<Document,SearchServerResponseInfo> getResponseIterator();
 
 }

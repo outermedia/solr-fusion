@@ -8,10 +8,11 @@ import java.util.List;
 /**
  * Created by ballmann on 6/11/14.
  */
-public class ClosableListIterator<T> implements ClosableIterator<T>
+public class ClosableListIterator<T,S> implements ClosableIterator<T,S>
 {
     private Iterator<T> listIt;
     private int size;
+    private S info;
 
     public ClosableListIterator(List<T> list)
     {
@@ -29,6 +30,18 @@ public class ClosableListIterator<T> implements ClosableIterator<T>
     public int size()
     {
         return size;
+    }
+
+    @Override
+    public S getExtraInfo()
+    {
+        return info;
+    }
+
+    @Override
+    public void setExtraInfo(S info)
+    {
+        this.info = info;
     }
 
     @Override

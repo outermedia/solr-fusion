@@ -6,11 +6,12 @@ import java.util.List;
 /**
  * Created by ballmann on 6/6/14.
  */
-public class TestClosableStringIterator implements ClosableIterator<String>
+public class TestClosableStringIterator implements ClosableIterator<String, Void>
 {
     boolean calledClose = false;
     Iterator<String> it;
     int size;
+
 
     TestClosableStringIterator(List<String> elements)
     {
@@ -29,6 +30,18 @@ public class TestClosableStringIterator implements ClosableIterator<String>
     public int size()
     {
         return size;
+    }
+
+    @Override
+    public Void getExtraInfo()
+    {
+        return null;
+    }
+
+    @Override
+    public void setExtraInfo(Void info)
+    {
+        // NOP
     }
 
     @Override

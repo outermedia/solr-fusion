@@ -1,6 +1,7 @@
 package org.outermedia.solrfusion.response;
 
 import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
@@ -13,17 +14,17 @@ import java.lang.reflect.InvocationTargetException;
  * Created by ballmann on 6/11/14.
  */
 @Slf4j
-public class MappingClosableIterator implements ClosableIterator<Document>
+public class MappingClosableIterator implements ClosableIterator<Document,SearchServerResponseInfo>
 {
     private Configuration config;
     private SearchServerConfig searchServerConfig;
     private ResponseMapperIfc responseMapper;
-    private ClosableIterator<Document> documents;
+    private ClosableIterator<Document,SearchServerResponseInfo> documents;
 
     private boolean ignoreUnmappedFields = true;
     private Document nextDoc;
 
-    public MappingClosableIterator(ClosableIterator<Document> documents, Configuration config,
+    public MappingClosableIterator(ClosableIterator<Document,SearchServerResponseInfo> documents, Configuration config,
             SearchServerConfig searchServerConfig) throws InvocationTargetException, IllegalAccessException
     {
         responseMapper = config.getResponseMapper();
@@ -82,5 +83,17 @@ public class MappingClosableIterator implements ClosableIterator<Document>
     public int size()
     {
         return documents.size();
+    }
+
+    @Override
+    public SearchServerResponseInfo getExtraInfo()
+    {
+        return documents.getExtraInfo();
+    }
+
+    @Override
+    public void setExtraInfo(SearchServerResponseInfo info)
+    {
+        documents.setExtraInfo(info);
     }
 }

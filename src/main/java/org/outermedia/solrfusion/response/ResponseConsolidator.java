@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.response;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
@@ -18,7 +19,7 @@ import java.util.List;
 @Slf4j
 public class ResponseConsolidator implements ResponseConsolidatorIfc
 {
-    private List<ClosableIterator<Document>> responseStreams;
+    private List<ClosableIterator<Document, SearchServerResponseInfo>> responseStreams;
 
     /**
      * Factory creates instances only.
@@ -29,7 +30,7 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
     }
 
     @Override
-    public void addResultStream(Configuration config, SearchServerConfig searchServerConfig, ClosableIterator<Document> docIterator)
+    public void addResultStream(Configuration config, SearchServerConfig searchServerConfig, ClosableIterator<Document, SearchServerResponseInfo> docIterator)
     {
         try
         {
@@ -42,7 +43,7 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
     }
 
     protected MappingClosableIterator getNewMappingClosableIterator(Configuration config,
-            SearchServerConfig searchServerConfig, ClosableIterator<Document> docIterator)
+            SearchServerConfig searchServerConfig, ClosableIterator<Document,SearchServerResponseInfo> docIterator)
             throws InvocationTargetException, IllegalAccessException
     {
         return new MappingClosableIterator(docIterator, config, searchServerConfig);
@@ -55,7 +56,7 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
 
     public void clear()
     {
-        for (ClosableIterator<Document> docIterator : responseStreams)
+        for (ClosableIterator<Document,SearchServerResponseInfo> docIterator : responseStreams)
         {
             docIterator.close();
         }
@@ -63,9 +64,9 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
     }
 
     @Override
-    public ClosableIterator<Document> getResponseIterator()
+    public ClosableIterator<Document,SearchServerResponseInfo> getResponseIterator()
     {
-        return new RoundRobinClosableIterator<>(responseStreams);
+        return new DefaultClosableIterator(responseStreams);
     }
 
     public static class Factory

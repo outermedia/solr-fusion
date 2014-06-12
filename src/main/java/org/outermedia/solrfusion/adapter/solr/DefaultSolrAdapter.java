@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.adapter.solr;
 import lombok.ToString;
 
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.parser.Document;
@@ -24,7 +25,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
 	{}
 
     @Override
-    public ClosableIterator<Document> sendQuery(String searchServerQueryStr)
+    public ClosableIterator<Document,SearchServerResponseInfo> sendQuery(String searchServerQueryStr)
     {
         return null; // TODO
     }

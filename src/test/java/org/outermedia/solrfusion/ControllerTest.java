@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
@@ -45,7 +46,7 @@ public class ControllerTest
     ResponseRendererIfc testRenderer;
 
     @Mock
-    ClosableIterator<Document> testResponse;
+    ClosableIterator<Document,SearchServerResponseInfo> testResponse;
 
     @Mock
     SearchServerAdapterIfc testAdapter;
@@ -59,7 +60,7 @@ public class ControllerTest
     {
 
         @Override
-        public String getResponseString(ClosableIterator<Document> docStream, String query)
+        public String getResponseString(ClosableIterator<Document,SearchServerResponseInfo> docStream, String query)
         {
             final StringBuilder sb = new StringBuilder();
             sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -75,7 +76,7 @@ public class ControllerTest
             sb.append("    <str name=\"rows\">" + docStream.size() + "</str>\n");
             sb.append("  </lst>\n");
             sb.append("</lst>\n");
-            int totalHitNumber = -1; // TODO get real total hit number
+            int totalHitNumber = docStream.getExtraInfo().getTotalNumberOfHits();
             sb.append("<result name=\"response\" numFound=\"" + totalHitNumber + "\" start=\"0\">\n");
             Document d;
             FieldVisitor xmlVistor = new FieldVisitor()
@@ -201,6 +202,7 @@ public class ControllerTest
             searchServerConfigs.clear();
             searchServerConfigs.add(searchServerConfig);
             when(searchServerConfig.getInstance()).thenReturn(testAdapter);
+            when(testResponse.getExtraInfo()).thenReturn(new SearchServerResponseInfo());
             when(testAdapter.sendQuery(Mockito.anyString())).thenReturn(testResponse);
         }
         return new FusionController(cfg);
@@ -292,7 +294,8 @@ public class ControllerTest
     {
         DefaultResponseParser parser = helper.getXmlUtil().unmarshal(DefaultResponseParser.class, "test-xml-response-9000.xml", null);
         List<Document> documents = parser.getResult().getDocuments();
-        ClosableListIterator<Document> documentsIt = new ClosableListIterator<>(documents);
+        ClosableListIterator<Document,SearchServerResponseInfo> documentsIt = new ClosableListIterator<>(documents);
+        documentsIt.setExtraInfo(new SearchServerResponseInfo());
         cfg = helper
                 .readFusionSchemaWithoutValidation("test-fusion-schema-9000.xml");
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();

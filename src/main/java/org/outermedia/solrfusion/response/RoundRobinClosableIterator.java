@@ -5,18 +5,19 @@ import java.util.List;
 /**
  * Created by ballmann on 04.06.14.
  */
-public class RoundRobinClosableIterator<T> implements ClosableIterator<T>
+public class RoundRobinClosableIterator<T,S> implements ClosableIterator<T,S>
 {
-    private final List<? extends ClosableIterator<T>> iterators;
+    private final List<? extends ClosableIterator<T,S>> iterators;
     private int at;
     private int size;
+    private S info;
 
-    public RoundRobinClosableIterator(List<? extends ClosableIterator<T>> iterators)
+    public RoundRobinClosableIterator(List<? extends ClosableIterator<T,S>> iterators)
     {
         this.iterators = iterators;
         at = 0;
         size = 0;
-        for (ClosableIterator<T> it : iterators)
+        for (ClosableIterator<T,S> it : iterators)
         {
             size += it.size();
         }
@@ -25,7 +26,7 @@ public class RoundRobinClosableIterator<T> implements ClosableIterator<T>
     @Override
     public void close()
     {
-        for (ClosableIterator<T> it : iterators)
+        for (ClosableIterator<T,S> it : iterators)
         {
             it.close();
         }
@@ -36,6 +37,18 @@ public class RoundRobinClosableIterator<T> implements ClosableIterator<T>
     public int size()
     {
         return size;
+    }
+
+    @Override
+    public S getExtraInfo()
+    {
+        return info;
+    }
+
+    @Override
+    public void setExtraInfo(S info)
+    {
+        this.info = info;
     }
 
     @Override
@@ -61,7 +74,7 @@ public class RoundRobinClosableIterator<T> implements ClosableIterator<T>
         return result;
     }
 
-    public ClosableIterator<T> getCurrentIterator()
+    public ClosableIterator<T,S> getCurrentIterator()
     {
         return iterators.get(at);
     }
