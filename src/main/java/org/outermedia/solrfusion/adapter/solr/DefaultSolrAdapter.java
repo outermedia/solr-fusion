@@ -4,13 +4,13 @@ import lombok.ToString;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
@@ -24,6 +24,8 @@ import java.net.URISyntaxException;
 public class DefaultSolrAdapter implements SearchServerAdapterIfc
 {
 
+    private final String QUERY_PARAMETER = "q";
+
     private String url;
 
     /**
@@ -33,12 +35,13 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
 	{}
 
     @Override
-    public InputStream sendQuery(String searchServerQueryStr) throws URISyntaxException, IOException {
-
-        URI uri = new URI(url);
+    public InputStream sendQuery(String searchServerQueryStr) throws URISyntaxException, IOException
+    {
+        URIBuilder ub = new URIBuilder(url);
+        ub.setParameter(QUERY_PARAMETER, searchServerQueryStr);
 
         HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(uri);
+        HttpGet request = new HttpGet(ub.build());
         HttpResponse response = client.execute(request);
 
         return response.getEntity().getContent();
