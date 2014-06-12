@@ -92,4 +92,5 @@ public class SearchServerConfig extends
     {
         return getScoreFactory().getInstance();
     }
+
 }

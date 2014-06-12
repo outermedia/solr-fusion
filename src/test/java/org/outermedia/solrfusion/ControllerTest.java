@@ -10,19 +10,26 @@ import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
+import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.DefaultResponseParser;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.response.parser.FieldVisitor;
+import org.outermedia.solrfusion.response.parser.SolrMultiValuedField;
+import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
+import org.outermedia.solrfusion.types.ScriptEnv;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
@@ -55,7 +62,6 @@ public class ControllerTest
 
     @Mock
     private SearchServerConfig testSearchConfig;
-
 
     @Before
     public void setup()
@@ -229,6 +235,6 @@ public class ControllerTest
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
-        // System.out.println("RESPONSE " + fusionResponse.getResponseAsString());
+        System.out.println("RESPONSE " + fusionResponse.getResponseAsString());
     }
 }

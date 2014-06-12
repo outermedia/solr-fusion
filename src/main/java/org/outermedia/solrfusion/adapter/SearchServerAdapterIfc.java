@@ -2,13 +2,15 @@ package org.outermedia.solrfusion.adapter;
 
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
-import org.outermedia.solrfusion.response.ClosableIterator;
-import org.outermedia.solrfusion.response.parser.Document;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 /**
  * Allows to send and receive data from a search server.
- *
+ * 
  * @author ballmann
+ * 
  */
 
 public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
@@ -22,7 +24,7 @@ public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
      * @return null for error or a document stream where
      * {@link org.outermedia.solrfusion.response.ClosableIterator#setExtraInfo(Object)} has been called.
      */
-    public ClosableIterator<Document, SearchServerResponseInfo> sendQuery(String searchServerQueryStr);
+    public java.io.InputStream sendQuery(String searchServerQueryStr) throws URISyntaxException, IOException;
 
     public void init(SearchServerConfig config);
 }
