@@ -47,7 +47,7 @@
         <om:solr-server name="Bibliothek A" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
-            <om:url>http://host:port/solr/xyz</om:url>
+            <om:url>http://141.39.229.20:9000/solr/biblio/select</om:url>
 
             <om:score factor="1.2"
                 class="org.outermedia.solrfusion.DefaultScore$Factory" />
@@ -58,8 +58,38 @@
             <om:field name="Titel" fusion-name="title" />
             <om:field name="Autor" fusion-name="author" />
 
-        </om:solr-server>        
-            
+        </om:solr-server>
+        <om:solr-server name="Bibliothek A" version="3.6"
+                        class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+
+            <om:url>http://141.39.229.20:9002/te/select</om:url>
+
+            <om:score factor="1.2"
+                      class="org.outermedia.solrfusion.DefaultScore$Factory" />
+
+            <om:unique-key>id</om:unique-key>
+
+            <om:field name="id" fusion-name="id" />
+            <om:field name="Titel" fusion-name="title" />
+            <om:field name="Autor" fusion-name="author" />
+
+        </om:solr-server>
+        <om:solr-server name="Bibliothek A" version="3.6"
+                        class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+
+            <om:url>http://141.39.229.20:9003/solr/select</om:url>
+
+            <om:score factor="1.2"
+                      class="org.outermedia.solrfusion.DefaultScore$Factory" />
+
+            <om:unique-key>id</om:unique-key>
+
+            <om:field name="id" fusion-name="id" />
+            <om:field name="Titel" fusion-name="title" />
+            <om:field name="Autor" fusion-name="author" />
+
+        </om:solr-server>
+
         <!-- more solr servers definitions ... -->
 
     </om:solr-servers>

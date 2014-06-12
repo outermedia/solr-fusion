@@ -3,7 +3,7 @@ package org.outermedia.solrfusion.response;
 import lombok.ToString;
 import org.outermedia.solrfusion.configuration.ResponseParserFactory;
 import org.outermedia.solrfusion.configuration.Util;
-import org.outermedia.solrfusion.response.parser.XMLResponse;
+import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
@@ -29,13 +29,15 @@ public class DefaultResponseParser implements ResponseParserIfc
 	 * Factory creates instances only.
 	 */
 	private DefaultResponseParser()
-	{}
+	{
+        xmlUtil = new Util();
+    }
 
     @Override
-    public XMLResponse parse(InputStream input) throws ParserConfigurationException, FileNotFoundException, JAXBException, SAXException {
+    public XmlResponse parse(InputStream input) throws ParserConfigurationException, FileNotFoundException, JAXBException, SAXException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(input));
-        XMLResponse response = xmlUtil.unmarshal(XMLResponse.class, "", br, null);
+        XmlResponse response = xmlUtil.unmarshal(XmlResponse.class, "", br, null);
         return response;
     }
 
@@ -50,7 +52,6 @@ public class DefaultResponseParser implements ResponseParserIfc
 	@Override
 	public void init(ResponseParserFactory config)
 	{
-        xmlUtil = new Util();
 	}
 
 }

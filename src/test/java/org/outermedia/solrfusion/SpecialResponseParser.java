@@ -3,7 +3,7 @@ package org.outermedia.solrfusion;
 import lombok.ToString;
 import org.outermedia.solrfusion.configuration.ResponseParserFactory;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
-import org.outermedia.solrfusion.response.parser.XMLResponse;
+import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
@@ -25,7 +25,7 @@ public class SpecialResponseParser implements ResponseParserIfc
 	{}
 
     @Override
-    public XMLResponse parse(InputStream input) throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException {
+    public XmlResponse parse(InputStream input) throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException {
         return null;
     }
 

@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.XMLResponse;
+import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
@@ -30,7 +30,7 @@ public class DefaultResponseParserTest {
     public void testReadResponse() throws FileNotFoundException, JAXBException,
             SAXException, ParserConfigurationException
     {
-        XMLResponse response = xmlUtil.unmarshal(XMLResponse.class, "test-xml-response-1.xml", null);
+        XmlResponse response = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-1.xml", null);
 
         List<Document> documents = response.getResult().getDocuments();
 
@@ -44,7 +44,7 @@ public class DefaultResponseParserTest {
     public void testReadResponse9000() throws FileNotFoundException, JAXBException,
             SAXException, ParserConfigurationException
     {
-        XMLResponse response = xmlUtil.unmarshal(XMLResponse.class, "test-xml-response-9000.xml", null);
+        XmlResponse response = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9000.xml", null);
 
         List<Document> documents = response.getResult().getDocuments();
 
@@ -60,7 +60,7 @@ public class DefaultResponseParserTest {
     public void testReadResponse9003() throws FileNotFoundException, JAXBException,
             SAXException, ParserConfigurationException
     {
-        XMLResponse response = xmlUtil.unmarshal(XMLResponse.class, "test-xml-response-9003.xml", null);
+        XmlResponse response = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9003.xml", null);
 
         List<Document> documents = response.getResult().getDocuments();
 

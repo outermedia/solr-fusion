@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.*;
 @XmlType(name="")
 @XmlRootElement(name = "response")
 @ToString
-public class XMLResponse
+public class XmlResponse
 {
 
     @XmlElement(name = "result", required = true)

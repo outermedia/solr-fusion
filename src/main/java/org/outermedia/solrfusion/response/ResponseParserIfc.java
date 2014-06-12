@@ -2,7 +2,7 @@ package org.outermedia.solrfusion.response;
 
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ResponseParserFactory;
-import org.outermedia.solrfusion.response.parser.XMLResponse;
+import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
@@ -19,5 +19,5 @@ import java.io.InputStream;
 public interface ResponseParserIfc extends Initiable<ResponseParserFactory>
 {
     // TODO: it may make sense to define a ResponseIfc for return Value
-    public abstract XMLResponse parse(InputStream input) throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException;
+    public abstract XmlResponse parse(InputStream input) throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException;
 }
