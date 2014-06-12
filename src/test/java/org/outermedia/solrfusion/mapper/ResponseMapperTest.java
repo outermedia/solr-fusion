@@ -55,10 +55,10 @@ public class ResponseMapperTest
         ScriptEnv env = new ScriptEnv();
         rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env);
 
-        String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=Willi Schiller, fusionField=FusionField(fieldName=author, type=string, format=null), searchServerFieldName=Autor, searchServerFieldValue=Willi Schiller, removed=false, wasMapped=true, newTerms=null)";
+        String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=Willi Schiller, fusionField=FusionField(fieldName=author, type=text, format=null), searchServerFieldName=Autor, searchServerFieldValue=Willi Schiller, removed=false, wasMapped=true, newTerms=null)";
         Assert.assertEquals("Mapping of author returned different result.", expectedAuthor, sfAuthor.getTerm().toString());
 
-        String expectedTitle = "Term(fusionFieldName=title, fusionFieldValue=Ein kurzer Weg, fusionField=FusionField(fieldName=title, type=string, format=null), searchServerFieldName=Titel, searchServerFieldValue=Ein kurzer Weg, removed=false, wasMapped=true, newTerms=null)";
+        String expectedTitle = "Term(fusionFieldName=title, fusionFieldValue=Ein kurzer Weg, fusionField=FusionField(fieldName=title, type=text, format=null), searchServerFieldName=Titel, searchServerFieldValue=Ein kurzer Weg, removed=false, wasMapped=true, newTerms=null)";
         Assert.assertEquals("Mapping of title returned different result.", expectedTitle, sfTitle.getTerm().toString());
     }
 }

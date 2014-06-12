@@ -10,19 +10,13 @@ import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
-import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.DefaultResponseParser;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.FieldVisitor;
-import org.outermedia.solrfusion.response.parser.SolrMultiValuedField;
-import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
-import org.outermedia.solrfusion.types.ScriptEnv;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
@@ -51,119 +45,17 @@ public class ControllerTest
     @Mock
     SearchServerAdapterIfc testAdapter;
 
+    @Mock
+    SearchServerAdapterIfc testAdapter9000;
+
+    @Mock
+    SearchServerAdapterIfc testAdapter9002;
+
     Configuration cfg;
 
     @Mock
     private SearchServerConfig testSearchConfig;
 
-    public static class TestRenderer implements ResponseRendererIfc
-    {
-
-        @Override
-        public String getResponseString(ClosableIterator<Document,SearchServerResponseInfo> docStream, String query)
-        {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-            sb.append("<response>\n");
-            sb.append("<lst name=\"responseHeader\">\n");
-            sb.append("  <int name=\"status\">0</int>\n");
-            sb.append("  <int name=\"QTime\">0</int>\n");
-            sb.append("  <lst name=\"params\">\n");
-            sb.append("    <str name=\"indent\">on</str>\n");
-            sb.append("    <str name=\"start\">0</str>\n");
-            sb.append("    <str name=\"q\"><![CDATA[" + query + "]]></str>\n");
-            sb.append("    <str name=\"version\">2.2</str>\n");
-            sb.append("    <str name=\"rows\">" + docStream.size() + "</str>\n");
-            sb.append("  </lst>\n");
-            sb.append("</lst>\n");
-            int totalHitNumber = docStream.getExtraInfo().getTotalNumberOfHits();
-            sb.append("<result name=\"response\" numFound=\"" + totalHitNumber + "\" start=\"0\">\n");
-            Document d;
-            FieldVisitor xmlVistor = new FieldVisitor()
-            {
-                @Override
-                public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
-                {
-                    Term t = sf.getTerm();
-                    writeTerm("    ", t.isWasMapped(), t.isRemoved(), t.getFusionFieldName(), t.getFusionFieldValue());
-                    return true;
-                }
-
-                private void writeTerm(String indent, boolean wasMapped, boolean wasRemoved, String fusionFieldName, String fusionValue)
-                {
-                    if (wasMapped && !wasRemoved)
-                    {
-                        String typeTag = "str"; // TODO get from fusion schema!
-                        sb.append(indent);
-                        sb.append("<");
-                        sb.append(typeTag);
-                        if (fusionFieldName != null)
-                        {
-                            sb.append(" name=\"");
-                            sb.append(fusionFieldName);
-                            sb.append("\"");
-                        }
-                        sb.append("><![CDATA[");
-                        sb.append("]]>");
-                        sb.append("</");
-                        sb.append(typeTag);
-                        sb.append(">\n");
-                    }
-                    // TODO sf.getTerm().getNewTerms();
-                }
-
-                @Override
-                public boolean visitField(SolrMultiValuedField msf, ScriptEnv env)
-                {
-                    List<Term> terms = msf.getTerms();
-                    if (terms != null && !terms.isEmpty())
-                    {
-                        boolean printNone = true;
-                        for (Term t : terms)
-                        {
-                            if (t.isWasMapped() && !t.isRemoved())
-                            {
-                                printNone = false;
-                                break;
-                            }
-                        }
-                        if (!printNone)
-                        {
-                            String fusionFieldName = terms.get(0).getFusionFieldName();
-                            sb.append("    <arr name=\"" + fusionFieldName + "\">\n");
-                            for (Term t : terms)
-                            {
-                                writeTerm("      ", t.isWasMapped(), t.isRemoved(), null, t.getFusionFieldValue());
-                            }
-                            sb.append("    </arr>\n");
-                        }
-                    }
-                    return true;
-                }
-            };
-
-            while (docStream.hasNext())
-            {
-                sb.append("  <doc>\n");
-                d = docStream.next();
-                d.accept(xmlVistor, null);
-                sb.append("  </doc>\n");
-            }
-            sb.append("</response>\n");
-            return sb + "\n";
-        }
-
-        @Override
-        public void init(ResponseRendererFactory config)
-        {
-            // NOP
-        }
-
-        public static TestRenderer getInstance()
-        {
-            return new TestRenderer();
-        }
-    }
 
     @Before
     public void setup()
@@ -292,24 +184,44 @@ public class ControllerTest
             throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
             InvocationTargetException, IllegalAccessException
     {
-        DefaultResponseParser parser = helper.getXmlUtil().unmarshal(DefaultResponseParser.class, "test-xml-response-9000.xml", null);
-        List<Document> documents = parser.getResult().getDocuments();
-        ClosableListIterator<Document,SearchServerResponseInfo> documentsIt = new ClosableListIterator<>(documents);
-        documentsIt.setExtraInfo(new SearchServerResponseInfo());
+        DefaultResponseParser parser9000 = helper.getXmlUtil().unmarshal(DefaultResponseParser.class, "test-xml-response-9000.xml", null);
+        List<Document> documents9000 = parser9000.getResult().getDocuments();
+        ClosableListIterator<Document,SearchServerResponseInfo> documentsIt9000 = new ClosableListIterator<>(documents9000);
+        SearchServerResponseInfo info = new SearchServerResponseInfo();
+        info.setTotalNumberOfHits(parser9000.getResult().getNumFound());
+        documentsIt9000.setExtraInfo(info);
+
+        DefaultResponseParser parser9002 = helper.getXmlUtil().unmarshal(DefaultResponseParser.class, "test-xml-response-9002.xml", null);
+        List<Document> documents9002 = parser9002.getResult().getDocuments();
+        ClosableListIterator<Document,SearchServerResponseInfo> documentsIt9002 = new ClosableListIterator<>(documents9002);
+        info = new SearchServerResponseInfo();
+        info.setTotalNumberOfHits(parser9002.getResult().getNumFound());
+        documentsIt9002.setExtraInfo(info);
+
         cfg = helper
-                .readFusionSchemaWithoutValidation("test-fusion-schema-9000.xml");
+                .readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
         // the mapping is very incomplete, so ignore all unmapped fields
         testResponseMapper.ignoreMissingMappings();
         Configuration spyCfg = spy(cfg);
         when(spyCfg.getResponseMapper()).thenReturn(testResponseMapper);
         List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
-        SearchServerConfig searchServerConfig = spy(searchServerConfigs.get(0));
+
+        SearchServerConfig searchServerConfig9000 = spy(searchServerConfigs.get(0));
+        SearchServerConfig searchServerConfig9002 = spy(searchServerConfigs.get(1));
+
         searchServerConfigs.clear();
-        searchServerConfigs.add(searchServerConfig);
-        SearchServerAdapterIfc testAdapter = spy(searchServerConfig.getInstance());
-        when(searchServerConfig.getInstance()).thenReturn(testAdapter);
-        when(testAdapter.sendQuery(Mockito.anyString())).thenReturn(documentsIt);
+
+        searchServerConfigs.add(searchServerConfig9000);
+        SearchServerAdapterIfc testAdapter9000 = spy(searchServerConfig9000.getInstance());
+        when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
+        when(testAdapter9000.sendQuery(Mockito.anyString())).thenReturn(documentsIt9000);
+
+        searchServerConfigs.add(searchServerConfig9002);
+        SearchServerAdapterIfc testAdapter9002 = spy(searchServerConfig9002.getInstance());
+        when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
+        when(testAdapter9002.sendQuery(Mockito.anyString())).thenReturn(documentsIt9002);
+
         FusionController fc = new FusionController(spyCfg);
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("title:abc");
@@ -317,6 +229,6 @@ public class ControllerTest
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
-        System.out.println("RESPONSE " + fusionResponse.getResponseAsString());
+        // System.out.println("RESPONSE " + fusionResponse.getResponseAsString());
     }
 }

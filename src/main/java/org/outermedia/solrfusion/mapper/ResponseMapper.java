@@ -27,6 +27,7 @@ public class ResponseMapper implements FieldVisitor, ResponseMapperIfc
     private SearchServerConfig serverConfig;
     private Document doc;
     private boolean missingMappingPolicy;
+    private Configuration config;
 
     /**
      * Factory creates instances only.
@@ -56,6 +57,7 @@ public class ResponseMapper implements FieldVisitor, ResponseMapperIfc
     {
         this.serverConfig = serverConfig;
         this.doc = doc;
+        this.config = config;
         env.setConfiguration(config);
         doc.accept(this, env);
         setFusionDocId(config, doc);
@@ -82,6 +84,8 @@ public class ResponseMapper implements FieldVisitor, ResponseMapperIfc
                     double newScore = scoreCorrector.applyCorrection(searchServerScore);
                     scoreTerm.setFusionFieldName(DOC_FIELD_NAME_SCORE);
                     scoreTerm.setFusionFieldValue(String.valueOf(newScore));
+                    scoreTerm.setWasMapped(true);
+                    scoreTerm.setFusionField(config.findFieldByName(DOC_FIELD_NAME_SCORE));
                 }
                 catch (Exception e)
                 {

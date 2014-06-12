@@ -1,10 +1,10 @@
 Configuration(fusionFields=[
- FusionField(fieldName=id, type=string, format=null),
- FusionField(fieldName=city, type=string, format=null),
- FusionField(fieldName=title, type=string, format=null),
+ FusionField(fieldName=id, type=text, format=null),
+ FusionField(fieldName=city, type=text, format=null),
+ FusionField(fieldName=title, type=text, format=null),
  FusionField(fieldName=numberExample, type=int, format=null),
- FusionField(fieldName=mappingExample, type=string, format=null),
- FusionField(fieldName=computingExample, type=string, format=null),
+ FusionField(fieldName=mappingExample, type=text, format=null),
+ FusionField(fieldName=computingExample, type=text, format=null),
  FusionField(fieldName=publicationDate, type=date, format=dd.MM.yyyy)], scriptTypes=[
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.JsFile, typeClassFactory=class org.outermedia.solrfusion.types.JsFile),
  name=javascript-file),
@@ -40,11 +40,11 @@ Configuration(fusionFields=[
  defaultResponseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultResponseParser$Factory, typeClassFactory=class org.outermedia.solrfusion.response.DefaultResponseParser$Factory)),
  responseRendererFactories=[
  ResponseRendererFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory, typeClassFactory=class org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory),
- type=XML),
+ type=XML, factoryConfig=null),
  ResponseRendererFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultJsonResponseRenderer$Factory, typeClassFactory=class org.outermedia.solrfusion.response.DefaultJsonResponseRenderer$Factory),
- type=JSON),
+ type=JSON, factoryConfig=null),
  ResponseRendererFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory, typeClassFactory=class org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory),
- type=PHP)], merge=Merge(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultMergeStrategy$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultMergeStrategy$Factory),
+ type=PHP, factoryConfig=null)], merge=Merge(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultMergeStrategy$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultMergeStrategy$Factory),
  fusionName=ISBN, targets=[
  MergeTarget(prio=1, targetName=Bibliothek A),
  MergeTarget(prio=2, targetName=Bibliothek B)]),

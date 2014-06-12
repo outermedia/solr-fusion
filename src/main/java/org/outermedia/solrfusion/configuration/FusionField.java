@@ -1,13 +1,13 @@
 package org.outermedia.solrfusion.configuration;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Data holder class keeping the fusion schema field configurations.
@@ -28,7 +28,7 @@ public class FusionField
 	private String fieldName;
 
 	@XmlAttribute(name = "type", required = false)
-	private String type = "string";
+	private String type = "text";
 
 	@XmlAttribute(name = "format", required = false)
 	private String format;

@@ -373,7 +373,7 @@ public class QueryParser {
     FusionField fusionField = configuration.findFieldByName(field);
     if(fusionField == null)
     {
-      throw new ParseException("Didn't find field '"+field+"' in fusion schema. Please define it their.");
+      throw new ParseException("Didn't find field '"+field+"' in fusion schema. Please define it there.");
     }
     Term t = Term.newFusionTerm(field,value);
     t.setFusionField(fusionField);

@@ -19,7 +19,8 @@ public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
      * ClosableIterator.
      *
      * @param searchServerQueryStr a query suitable for this search server.
-     * @return null for error or a document stream
+     * @return null for error or a document stream where
+     * {@link org.outermedia.solrfusion.response.ClosableIterator#setExtraInfo(Object)} has been called.
      */
     public ClosableIterator<Document, SearchServerResponseInfo> sendQuery(String searchServerQueryStr);
 

@@ -7,7 +7,7 @@
         <om:field name="id" />
         <om:field name="language" />
         <om:field name="title" />
-        <om:field name="score" type="double" />
+        <om:field name="score" type="float" />
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js" />
@@ -36,7 +36,16 @@
             class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory" />
 
         <om:response-renderer type="xml"
-            class="org.outermedia.solrfusion.ControllerTest$TestRenderer" />
+            class="org.outermedia.solrfusion.response.SimpleXmlResponseRenderer" >
+            <map-type fusion-type="float" key="float"/>
+            <map-type fusion-type="double" key="float"/>
+            <map-type fusion-type="int" key="int"/>
+            <map-type fusion-type="long" key="int"/>
+            <map-type fusion-type="boolean" key="bool"/>
+            <map-type fusion-type="date" key="date"/>
+            <map-type fusion-type="text" key="str"/>
+            <map-multi-value-type key="arr"/>
+        </om:response-renderer>
 
         <om:response-renderer type="json"
             class="org.outermedia.solrfusion.response.DefaultJsonResponseRenderer$Factory" />
@@ -44,7 +53,7 @@
         <om:response-renderer type="php"
             class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory" />
 
-        <om:solr-server name="Bibliothek A" version="3.6"
+        <om:solr-server name="Bibliothek 9000" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
             <om:url>http://host:port/solr/xyz</om:url>
@@ -56,6 +65,23 @@
 
             <om:field name="id" fusion-name="id" />
             <om:field name="title" fusion-name="title" />
+            <om:field name="language" fusion-name="language" />
+
+        </om:solr-server>
+
+        <om:solr-server name="Bibliothek 9002" version="3.6"
+                        class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+
+            <om:url>http://host:port/solr/xyz</om:url>
+
+            <om:score factor="2.2"
+                      class="org.outermedia.solrfusion.DefaultScore$Factory" />
+
+            <om:unique-key>id</om:unique-key>
+
+            <om:field name="id" fusion-name="id" />
+            <om:field name="titleVT_de" fusion-name="title" />
+            <om:field name="titleVT_eng" fusion-name="title" />
             <om:field name="language" fusion-name="language" />
 
         </om:solr-server>

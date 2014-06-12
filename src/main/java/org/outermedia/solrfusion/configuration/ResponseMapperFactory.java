@@ -11,9 +11,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Data holder class to store the response parser factory's class configuration.
- * 
+ *
  * @author ballmann
- * 
+ *
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

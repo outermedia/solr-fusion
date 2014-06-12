@@ -1,13 +1,12 @@
 package org.outermedia.solrfusion.configuration;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -18,19 +17,15 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import javax.xml.xpath.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Helper class which simplifies the reading of XML files.
@@ -170,7 +165,7 @@ public class Util
 		throws XPathExpressionException
 	{
 		String result = null;
-		List<Element> nl = xpath(xpathStr, typeConfig);
+		List<Node> nl = xpath(xpathStr, typeConfig);
 		if (nl.size() > 0)
 		{
 			result = nl.get(0).getTextContent();
@@ -188,10 +183,10 @@ public class Util
 	 * @return a list of w3c org elements (perhaps empty)
 	 * @throws XPathExpressionException
 	 */
-	public List<Element> xpath(String xpathStr, List<Element> typeConfig)
+	public List<Node> xpath(String xpathStr, List<Element> typeConfig)
 		throws XPathExpressionException
 	{
-		List<Element> result = new ArrayList<>();
+		List<Node> result = new ArrayList<>();
 		XPathFactory xPathfactory = XPathFactory.newInstance();
 		XPath xpath = xPathfactory.newXPath();
 		xpath.setNamespaceContext(new NamespaceContext()
@@ -221,7 +216,7 @@ public class Util
 			{
 				for (int i = 0; i < nl.getLength(); i++)
 				{
-					result.add((Element) nl.item(0));
+					result.add(nl.item(0));
 				}
 			}
 		}
