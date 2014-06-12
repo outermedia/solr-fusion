@@ -205,10 +205,11 @@ public class Configuration
     /**
      * Get the configured response mapper.
      *
-     * @return a non null instance of IdGeneratorIfc
+     * @return a non null instance of ResponseMapperIfc
      */
     public ResponseMapperIfc getResponseMapper() throws InvocationTargetException, IllegalAccessException
     {
         return responseMapperFactory.getInstance();
     }
+
 }

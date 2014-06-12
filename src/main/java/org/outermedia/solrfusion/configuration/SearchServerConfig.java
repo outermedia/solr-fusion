@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.outermedia.solrfusion.ScoreCorrectorIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.response.ResponseParserIfc;
 
 import javax.xml.bind.annotation.*;
 import java.lang.reflect.InvocationTargetException;
@@ -93,4 +94,14 @@ public class SearchServerConfig extends
         return getScoreFactory().getInstance();
     }
 
+    public ResponseParserIfc getResponseParser(ResponseParserIfc defaultResponseParser)
+            throws InvocationTargetException, IllegalAccessException
+    {
+        ResponseParserIfc result = defaultResponseParser;
+        if (responseParserFactory != null)
+        {
+            result = responseParserFactory.getInstance();
+        }
+        return result;
+    }
 }

@@ -50,7 +50,6 @@ public class DefaultResponseParser implements ResponseParserIfc
 	@Override
 	public void init(ResponseParserFactory config)
 	{
-		// TODO Auto-generated method stub
         xmlUtil = new Util();
 	}
 

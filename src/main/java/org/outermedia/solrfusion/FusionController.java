@@ -14,15 +14,13 @@ import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
+import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.response.parser.Result;
-import org.outermedia.solrfusion.response.parser.XMLResponse;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
@@ -151,9 +149,8 @@ public class FusionController
             SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
             String searchServerQueryStr = queryBuilder.buildQueryString(query);
             InputStream is = adapter.sendQuery(searchServerQueryStr);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            XMLResponse xmlResponse = util.unmarshal(XMLResponse.class, "", br, null);
-            Result result = xmlResponse.getResult();
+            ResponseParserIfc responseParser = searchServerConfig.getResponseParser(configuration.getDefaultResponseParser());
+            Result result = responseParser.parse(is).getResult();
             SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound());
             ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(result.getDocuments(), info);
             consolidator.addResultStream(configuration, searchServerConfig, docIterator);
