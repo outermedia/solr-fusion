@@ -26,6 +26,26 @@ public class QueryTest
 		helper = new TestHelper();
 	}
 
+    @Test
+    public void parseWordQuery() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        Configuration cfg = helper
+                .readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+
+        String query = "Schiller";
+        EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
+        p.init(new QueryParserFactory());
+        Map<String, Float> boosts = new HashMap<String, Float>();
+        Query o = p.parse(cfg, boosts, query);
+        Assert.assertNotNull(
+                "Expected query object, but couldn't parse query string '" + query
+                        + "'", o);
+        String expected = "TermQuery(super=Query(), term=Term(fusionFieldName=title, fusionFieldValue=Schiller, fusionField=FusionField(fieldName=title, type=text, format=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, newTerms=null))";
+        Assert.assertEquals("Got different query object than expected",
+                expected, o.toString());
+    }
+
 	@Test
 	public void parseTermQuery() throws FileNotFoundException, JAXBException,
 		SAXException, ParserConfigurationException
