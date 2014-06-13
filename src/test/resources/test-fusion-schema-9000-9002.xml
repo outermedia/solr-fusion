@@ -26,7 +26,7 @@
 
     <om:solr-servers>
         <om:timeout>4000</om:timeout>
-        <om:disaster-limit>1</om:disaster-limit>
+        <om:disaster-limit>2</om:disaster-limit>
         <om:error key="disaster-limit">Please try later again.</om:error>
         
         <om:query-parser

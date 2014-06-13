@@ -193,6 +193,8 @@ public class ControllerTest
             InvocationTargetException, IllegalAccessException, URISyntaxException
     {
         testMultipleServers("target/test-classes/test-xml-response-9000.xml", "target/test-classes/test-xml-response-9002.xml");
+        verify(testAdapter9000,times(1)).sendQuery("title:abc");
+        verify(testAdapter9002,times(1)).sendQuery("titleVT_eng:abc");
     }
 
     @Test
@@ -218,6 +220,8 @@ public class ControllerTest
                 "</result>\n" +
                 "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
+        verify(testAdapter9000,times(1)).sendQuery("title:abc");
+        verify(testAdapter9002,times(1)).sendQuery("titleVT_eng:abc");
     }
 
     protected String testMultipleServers(String responseServer1, String responseServer2)
@@ -243,12 +247,12 @@ public class ControllerTest
         searchServerConfigs.clear();
 
         searchServerConfigs.add(searchServerConfig9000);
-        SearchServerAdapterIfc testAdapter9000 = spy(searchServerConfig9000.getInstance());
+        testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
         doReturn(documents9000Stream).when(testAdapter9000).sendQuery(Mockito.anyString());
 
         searchServerConfigs.add(searchServerConfig9002);
-        SearchServerAdapterIfc testAdapter9002 = spy(searchServerConfig9002.getInstance());
+        testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
         doReturn(documents9002Stream).when(testAdapter9002).sendQuery(Mockito.anyString());
 

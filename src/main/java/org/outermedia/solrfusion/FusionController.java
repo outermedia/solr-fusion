@@ -123,6 +123,7 @@ public class FusionController
             {
                 sendAndReceive(query, consolidator, searchServerConfig);
             }
+            queryResetter.reset(query);
         }
     }
 
@@ -177,10 +178,6 @@ public class FusionController
         {
             log.error("Caught exception while mapping fusion query to server {}", searchServerConfig.getSearchServerName(), e);
             result = false;
-        }
-        finally
-        {
-            queryResetter.reset(query);
         }
 
         return result;
