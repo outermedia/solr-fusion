@@ -63,7 +63,6 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
 
 	@Override
 	public void init(SearchServerConfig config) {
-		// TODO Auto-generated method stub
         url = config.getUrl();
     }
 

@@ -20,22 +20,19 @@ public class SolrServerDualTestBase {
     {
         System.setProperty("om.solr.lib", "");
         System.setProperty("om.solr.validation.lib", "");
-
         System.setProperty("om.solr.lib", "lib");
-
 
         firstTestServer = new SolrTestServer("src/test/resources/solr/solr-home-1");
         firstServer = firstTestServer.getServer();
 
         secondTestServer = new SolrTestServer("src/test/resources/solr/solr-home-2");
         secondServer = secondTestServer.getServer();
-
     }
 
     @After
-    public void shutdown()
-    {
-        firstServer.shutdown();
+    public void shutdown() throws Exception {
+        firstTestServer.finish();
+        secondTestServer.finish();
     }
 
 }

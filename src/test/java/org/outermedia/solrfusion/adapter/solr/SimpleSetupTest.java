@@ -1,19 +1,15 @@
 package org.outermedia.solrfusion.adapter.solr;
 
 import junit.framework.Assert;
-import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.params.SolrParams;
-import org.apache.solr.request.LocalSolrQueryRequest;
-import org.apache.solr.response.SolrQueryResponse;
-import org.apache.solr.response.XMLResponseWriter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.outermedia.solrfusion.SolrServerDualTestBase;
+import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.response.DefaultResponseParser;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.parser.XmlResponse;
@@ -21,13 +17,14 @@ import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by stephan on 03.06.14.
  */
 public class SimpleSetupTest extends SolrServerDualTestBase {
-
 
     @Before
     public void fillSolr() throws IOException, SolrServerException {
@@ -44,22 +41,6 @@ public class SimpleSetupTest extends SolrServerDualTestBase {
         firstServer.deleteByQuery("*:*");
     }
 
-    private InputStream embeddedQueryToXmlInputStream(SolrParams request, QueryResponse response) {
-        XMLResponseWriter xmlWriter = new XMLResponseWriter();
-        Writer w = new StringWriter();
-        SolrQueryResponse sResponse = new SolrQueryResponse();
-        sResponse.setAllValues(response.getResponse());
-        try {
-            xmlWriter.write(w, new LocalSolrQueryRequest(null, request), sResponse);
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to convert Solr response into XML", e);
-        }
-        StringReader stringReader = new StringReader(w.toString());
-
-        ReaderInputStream readerInputStream = new ReaderInputStream(stringReader);
-        return readerInputStream;
-    }
-
     @Test
     public void testMockAdapter() throws SolrServerException, SAXException, JAXBException, ParserConfigurationException, FileNotFoundException {
         SolrQuery query = new SolrQuery("*:*");
@@ -68,7 +49,7 @@ public class SimpleSetupTest extends SolrServerDualTestBase {
         query.addField("author");
         query.addField("id");
         QueryResponse response = firstServer.query(query);
-        InputStream inputStream = embeddedQueryToXmlInputStream(query, response);
+        InputStream inputStream = TestHelper.embeddedQueryToXmlInputStream(query, response);
 
         ResponseParserIfc responseParser = DefaultResponseParser.Factory.getInstance();
         XmlResponse xmlResponse = responseParser.parse(inputStream);
