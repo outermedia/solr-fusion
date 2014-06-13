@@ -1,6 +1,7 @@
 package org.outermedia.solrfusion.adapter.solr;
 
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -21,6 +22,7 @@ import java.net.URISyntaxException;
  */
 
 @ToString
+@Slf4j
 public class DefaultSolrAdapter implements SearchServerAdapterIfc
 {
 
@@ -40,9 +42,13 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         URIBuilder ub = new URIBuilder(url);
         ub.setParameter(QUERY_PARAMETER, searchServerQueryStr);
 
+        log.debug("Sending query to host {}: {}", url, searchServerQueryStr);
+
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(ub.build());
         HttpResponse response = client.execute(request);
+
+        log.debug("Received response from host {}: {}", url, response.getStatusLine().toString());
 
         return response.getEntity().getContent();
     }

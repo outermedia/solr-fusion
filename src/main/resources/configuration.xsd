@@ -49,6 +49,7 @@
   <xs:complexType name="responseMapper">
     <xs:sequence/>
     <xs:attribute name="class" type="xs:string" use="required"/>
+    <xs:attribute name="ignore-missing-mappings" type="xs:boolean"/>
   </xs:complexType>
 
   <xs:complexType name="globalSearchServerConfig">

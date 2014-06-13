@@ -157,7 +157,10 @@ public class ResponseMapper implements FieldVisitor, ResponseMapperIfc
     @Override
     public void init(ResponseMapperFactory config)
     {
-        // NOP
+        Boolean ignoreMissingMappings = config.getIgnoreMissingMappings();
+        missingMappingPolicy =
+                (ignoreMissingMappings != null && ignoreMissingMappings.booleanValue()) ? MISSING_MAPPING_POLICY_IGNORE
+                        : MISSING_MAPPING_POLICY_THROW_EXCEPTION;
     }
 
     public void ignoreMissingMappings()

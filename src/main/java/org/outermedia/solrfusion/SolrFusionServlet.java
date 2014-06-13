@@ -51,6 +51,9 @@ public class SolrFusionServlet extends HttpServlet
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException
     {
+        // set encoding/content type BEFORE getWriter() is called!
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/xml;charset=UTF-8");
         PrintWriter pw = response.getWriter();
         FusionRequest fusionRequest = buildFusionRequest(request.getParameterMap());
         FusionResponse fusionResponse = getNewFusionResponse();

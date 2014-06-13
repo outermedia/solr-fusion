@@ -32,7 +32,8 @@ Configuration(fusionFields=[
  name=merge-measure-units)], defaultSearchField=title, defaultOperator=AND, idGeneratorFactory=IdGeneratorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultIdGenerator$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultIdGenerator$Factory),
  fusionFieldName=id),
  responseConsolidatorFactory=ResponseConsolidatorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.ResponseConsolidator$Factory, typeClassFactory=class org.outermedia.solrfusion.response.ResponseConsolidator$Factory)),
- responseMapperFactory=ResponseMapperFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.ResponseMapper$Factory, typeClassFactory=class org.outermedia.solrfusion.mapper.ResponseMapper$Factory)),
+ responseMapperFactory=ResponseMapperFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.ResponseMapper$Factory, typeClassFactory=class org.outermedia.solrfusion.mapper.ResponseMapper$Factory),
+ ignoreMissingMappings=false),
  searchServerConfigs=GlobalSearchServerConfig(timeout=4000, disasterLimit=3, disasterMessage=Message(key=disaster-limit, text=Ihre Anfrage konnte nicht von ausreichend
  vielen Systemen beantwortet werden.
  ),

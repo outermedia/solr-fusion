@@ -141,7 +141,9 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
         }
         sb.append("</result>\n");
         sb.append("</response>\n");
-        return sb + "\n";
+        String result = sb + "\n";
+        log.trace("Created response:\n{}", result);
+        return result;
     }
 
     @Override
