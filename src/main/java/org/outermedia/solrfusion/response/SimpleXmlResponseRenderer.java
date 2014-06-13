@@ -139,6 +139,7 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
             d.accept(xmlVisitor, null);
             sb.append("  </doc>\n");
         }
+        sb.append("</result>\n");
         sb.append("</response>\n");
         return sb + "\n";
     }

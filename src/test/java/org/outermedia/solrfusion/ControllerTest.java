@@ -188,12 +188,44 @@ public class ControllerTest
     }
 
     @Test
-    public void testQueryWithMultipleResponseDocuments()
+    public void testQueryWithMultipleServersAndResponseDocuments()
             throws IOException, ParserConfigurationException, SAXException, JAXBException,
             InvocationTargetException, IllegalAccessException, URISyntaxException
     {
-        byte[] documents9000 = Files.toByteArray(new File("target/test-classes/test-xml-response-9000.xml"));
-        byte[] documents9002 = Files.toByteArray(new File("target/test-classes/test-xml-response-9002.xml"));
+        testMultipleServers("target/test-classes/test-xml-response-9000.xml", "target/test-classes/test-xml-response-9002.xml");
+    }
+
+    @Test
+    public void testQueryWithMultipleServersButNoResponseDocuments()
+            throws IOException, ParserConfigurationException, SAXException, JAXBException,
+            InvocationTargetException, IllegalAccessException, URISyntaxException
+    {
+        String xml = testMultipleServers("target/test-classes/test-empty-xml-response.xml", "target/test-classes/test-empty-xml-response.xml");
+        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<response>\n" +
+                "<lst name=\"responseHeader\">\n" +
+                "  <int name=\"status\">0</int>\n" +
+                "  <int name=\"QTime\">0</int>\n" +
+                "  <lst name=\"params\">\n" +
+                "    <str name=\"indent\">on</str>\n" +
+                "    <str name=\"start\">0</str>\n" +
+                "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
+                "    <str name=\"version\">2.2</str>\n" +
+                "    <str name=\"rows\">0</str>\n" +
+                "  </lst>\n" +
+                "</lst>\n" +
+                "<result name=\"response\" numFound=\"0\" start=\"0\">\n" +
+                "</result>\n" +
+                "</response>";
+        Assert.assertEquals("Found different xml response", expected, xml.trim());
+    }
+
+    protected String testMultipleServers(String responseServer1, String responseServer2)
+            throws IOException, ParserConfigurationException, SAXException, JAXBException,
+            InvocationTargetException, IllegalAccessException, URISyntaxException
+    {
+        byte[] documents9000 = Files.toByteArray(new File(responseServer1));
+        byte[] documents9002 = Files.toByteArray(new File(responseServer2));
         ByteArrayInputStream documents9000Stream = new ByteArrayInputStream(documents9000);
         ByteArrayInputStream documents9002Stream = new ByteArrayInputStream(documents9002);
 
@@ -227,6 +259,10 @@ public class ControllerTest
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
-        // System.out.println("RESPONSE " + fusionResponse.getResponseAsString());
+
+        String result = fusionResponse.getResponseAsString();
+        Assert.assertNotNull("Expected XML result, but got nothing", result);
+        // System.out.println("RESPONSE " + result);
+        return result;
     }
 }
