@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app id="WebApp_ID" version="2.5" 
-	xmlns="http://java.sun.com/xml/ns/javaee" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+<web-app id="WebApp_ID" version="2.5"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-	<servlet>
-		<servlet-name>SolrFusionServlet</servlet-name>
-		<servlet-class>org.outermedia.solrfusion.SolrFusionServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>SolrFusionServlet</servlet-name>
-		<url-pattern>/search</url-pattern>
-	</servlet-mapping>
+    <servlet>
+        <servlet-name>SolrFusionServlet</servlet-name>
+        <servlet-class>org.outermedia.solrfusion.SolrFusionServlet</servlet-class>
+        <init-param>
+            <param-name>fusion-schema</param-name>
+            <param-value>fusion-schema-uni-leipzig.xml</param-value>
+        </init-param>
+        <init-param>
+            <param-name>fusion-schema-xsd</param-name>
+            <param-value>configuration.xsd</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SolrFusionServlet</servlet-name>
+        <url-pattern>/search</url-pattern>
+    </servlet-mapping>
 
 </web-app>

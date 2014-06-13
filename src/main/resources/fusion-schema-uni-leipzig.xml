@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<om:core xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:om="http://solrfusion.outermedia.org/configuration/"
+         xmlns="http://solrfusion.outermedia.org/configuration/type/"
+         xsi:schemaLocation="http://solrfusion.outermedia.org/configuration/ ../../main/resources/configuration.xsd ">
+
+    <om:fusion-schema-fields>
+        <om:field name="id"/>
+        <om:field name="language"/>
+        <om:field name="title"/>
+        <om:field name="score" type="float"/>
+    </om:fusion-schema-fields>
+
+    <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js"/>
+    <om:script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh"/>
+
+    <om:default-search-field>title</om:default-search-field>
+
+    <om:default-operator>AND</om:default-operator>
+
+    <om:id-generator fusion-name="id"
+                     class="org.outermedia.solrfusion.DefaultIdGenerator$Factory"/>
+
+    <om:response-consolidator class="org.outermedia.solrfusion.response.ResponseConsolidator$Factory"/>
+
+    <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory"/>
+
+    <om:solr-servers>
+        <om:timeout>4000</om:timeout>
+        <om:disaster-limit>2</om:disaster-limit>
+        <om:error key="disaster-limit">Please try later again.</om:error>
+
+        <om:query-parser
+                class="org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory"/>
+
+        <om:response-parser
+                class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory"/>
+
+        <om:response-renderer type="xml"
+                              class="org.outermedia.solrfusion.response.SimpleXmlResponseRenderer">
+            <map-type fusion-type="float" key="float"/>
+            <map-type fusion-type="double" key="float"/>
+            <map-type fusion-type="int" key="int"/>
+            <map-type fusion-type="long" key="int"/>
+            <map-type fusion-type="boolean" key="bool"/>
+            <map-type fusion-type="date" key="date"/>
+            <map-type fusion-type="text" key="str"/>
+            <map-multi-value-type key="arr"/>
+        </om:response-renderer>
+
+        <om:response-renderer type="json"
+                              class="org.outermedia.solrfusion.response.DefaultJsonResponseRenderer$Factory"/>
+
+        <om:response-renderer type="php"
+                              class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory"/>
+
+        <om:solr-server name="UBL" version="3.5"
+                        class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+
+            <om:url>http://findex.gbv.de:9000/solr/biblio/select/</om:url>
+
+            <om:score factor="1.0"
+                      class="org.outermedia.solrfusion.DefaultScore$Factory"/>
+
+            <om:unique-key>id</om:unique-key>
+
+            <om:field name="id" fusion-name="id"/>
+            <om:field name="title" fusion-name="title"/>
+            <om:field name="language" fusion-name="language"/>
+
+        </om:solr-server>
+
+        <om:solr-server name="DBoD" version="3.6"
+                        class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+
+            <om:url>http://141.39.229.20:9002/te/select</om:url>
+
+            <om:score factor="1.0"
+                      class="org.outermedia.solrfusion.DefaultScore$Factory"/>
+
+            <om:unique-key>id</om:unique-key>
+
+            <om:field name="id" fusion-name="id"/>
+            <om:field name="titleVT_de" fusion-name="title"/>
+            <om:field name="titleVT_eng" fusion-name="title"/>
+            <om:field name="language" fusion-name="language"/>
+
+        </om:solr-server>
+
+    </om:solr-servers>
+</om:core>
