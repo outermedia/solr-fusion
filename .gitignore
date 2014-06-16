@@ -5,3 +5,5 @@
 solrfusion.iml
 log4j.log
 .idea
+src/test/resources/solr/solr-home-1/core/data/
+src/test/resources/solr/solr-home-2/core/data/
