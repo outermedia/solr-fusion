@@ -28,6 +28,14 @@
         <developerConnection>scm:git:ssh://git@github.com/outermedia/solr-fusion.git</developerConnection>
     </scm>
 
+    <distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <name>Temporary Staging Repository</name>
+            <url>file://${project.build.directory}/mvn-repo</url>
+        </repository>
+    </distributionManagement>
+
     <developers>
         <developer>
             <id>andreas-koch</id>
