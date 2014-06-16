@@ -24,8 +24,8 @@
 
     <scm>
         <url>https://github.com/outermedia/solr-fusion</url>
-        <connection>scm:git:git://github.com/outermedia/solr-fusion.git</connection>
-        <developerConnection>scm:git:git@github.com/outermedia/solr-fusion.git</developerConnection>
+        <connection>scm:git:ssh://github.com/outermedia/solr-fusion.git</connection>
+        <developerConnection>scm:git:ssh://github.com/outermedia/solr-fusion.git</developerConnection>
     </scm>
 
     <developers>
