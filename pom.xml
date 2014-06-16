@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.outermedia.solr</groupId>
     <artifactId>solrfusion</artifactId>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>GitHub Solr Fusion</name>
     <description>A solr proxy to connect solr servers running different solr versions and schemas.</description>
