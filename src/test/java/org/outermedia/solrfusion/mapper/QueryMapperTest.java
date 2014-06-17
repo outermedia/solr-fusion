@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by ballmann on 04.06.14.
@@ -29,10 +30,12 @@ public class QueryMapperTest
     }
 
     @Test
-    public void testSimpleQueryMapping() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+    public void testSimpleQueryMapping()
+            throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+            InvocationTargetException, IllegalAccessException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
-        QueryMapper qm = new QueryMapper();
+        QueryMapperIfc qm = cfg.getQueryMapper();
         TermQuery q = new TermQuery(Term.newFusionTerm("author", "Schiller"));
         ScriptEnv env = new ScriptEnv();
         qm.mapQuery(cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), q, env);
@@ -46,10 +49,12 @@ public class QueryMapperTest
     }
 
     @Test
-    public void testQueryConjunctionMapping() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+    public void testQueryConjunctionMapping()
+            throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+            InvocationTargetException, IllegalAccessException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
-        QueryMapper qm = new QueryMapper();
+        QueryMapperIfc qm = cfg.getQueryMapper();
         TermQuery q = new TermQuery(Term.newFusionTerm("author", "Schiller"));
         ScriptEnv env = new ScriptEnv();
         BooleanQuery bq = new BooleanQuery(false);
@@ -70,10 +75,12 @@ public class QueryMapperTest
     }
 
     @Test
-    public void testQueryDisjunctionMapping() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+    public void testQueryDisjunctionMapping()
+            throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+            InvocationTargetException, IllegalAccessException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
-        QueryMapper qm = new QueryMapper();
+        QueryMapperIfc qm = cfg.getQueryMapper();
         TermQuery q = new TermQuery(Term.newFusionTerm("author", "Schiller"));
         ScriptEnv env = new ScriptEnv();
         BooleanQuery bq = new BooleanQuery(false);

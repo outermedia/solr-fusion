@@ -7,7 +7,7 @@ import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.configuration.Util;
-import org.outermedia.solrfusion.mapper.QueryMapper;
+import org.outermedia.solrfusion.mapper.QueryMapperIfc;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
 import org.outermedia.solrfusion.mapper.SearchServerQueryBuilder;
 import org.outermedia.solrfusion.query.QueryParserIfc;
@@ -21,6 +21,7 @@ import org.outermedia.solrfusion.response.parser.Result;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class FusionController
 {
     private Configuration configuration;
     private ResetQueryState queryResetter;
-    private QueryMapper queryMapper;
+    private QueryMapperIfc queryMapper;
     private String query;
     private Util util;
 
@@ -43,9 +44,10 @@ public class FusionController
     }
 
     public void process(FusionRequest fusionRequest, FusionResponse fusionResponse)
+            throws InvocationTargetException, IllegalAccessException
     {
         queryResetter = getNewResetQueryState();
-        queryMapper = getNewQueryMapper();
+        queryMapper = configuration.getQueryMapper();
 
         Query query = parseQuery(fusionRequest);
         if (query == null)
@@ -130,11 +132,6 @@ public class FusionController
     protected ScriptEnv getNewScriptEnv()
     {
         return new ScriptEnv();
-    }
-
-    protected QueryMapper getNewQueryMapper()
-    {
-        return new QueryMapper();
     }
 
     protected ResetQueryState getNewResetQueryState()

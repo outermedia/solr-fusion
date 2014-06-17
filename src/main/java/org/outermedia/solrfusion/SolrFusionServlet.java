@@ -136,7 +136,15 @@ public class SolrFusionServlet extends HttpServlet
     protected String process(FusionRequest fusionRequest, FusionResponse fusionResponse)
     {
         FusionController fc = new FusionController(cfg);
-        fc.process(fusionRequest, fusionResponse);
+        try
+        {
+            fc.process(fusionRequest, fusionResponse);
+        }
+        catch (Exception e)
+        {
+            log.error("Caught exception while processing request: " + fusionRequest, e);
+            fusionResponse.setError(e.getMessage());
+        }
         return fusionResponse.getResponseAsString();
     }
 }

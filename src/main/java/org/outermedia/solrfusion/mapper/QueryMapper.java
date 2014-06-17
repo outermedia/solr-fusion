@@ -1,11 +1,13 @@
 package org.outermedia.solrfusion.mapper;
 
 import org.outermedia.solrfusion.configuration.FieldMapping;
+import org.outermedia.solrfusion.configuration.QueryMapperFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -13,9 +15,14 @@ import java.util.List;
  * <p/>
  * Created by ballmann on 03.06.14.
  */
-public class QueryMapper implements QueryVisitor
+public class QueryMapper implements QueryVisitor, QueryMapperIfc
 {
     private SearchServerConfig serverConfig;
+
+    /**
+     * Only factory creates instances.
+     */
+    private QueryMapper() {}
 
     /**
      * Map a query to a certain search server (serverConfig).
@@ -28,6 +35,20 @@ public class QueryMapper implements QueryVisitor
     {
         this.serverConfig = serverConfig;
         query.accept(this, env);
+    }
+
+    @Override
+    public void init(QueryMapperFactory config) throws InvocationTargetException, IllegalAccessException
+    {
+        // NOP
+    }
+
+    public static class Factory
+    {
+        public static QueryMapperIfc getInstance()
+        {
+            return new QueryMapper();
+        }
     }
 
     // ---- Visitor methods --------------------------------------------------------------------------------------------
@@ -110,5 +131,6 @@ public class QueryMapper implements QueryVisitor
     {
         booleanClause.accept(this, env);
     }
+
 
 }
