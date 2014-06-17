@@ -18,6 +18,7 @@
         <xs:element name="response-consolidator" type="tns:response-consolidator"/>
         <xs:element name="response-mapper" type="tns:responseMapper"/>
         <xs:element name="query-mapper" type="tns:queryMapper"/>
+        <xs:element name="search-server-query-builder" type="tns:searchServerQueryBuilder"/>
         <xs:element name="solr-servers" type="tns:globalSearchServerConfig"/>
       </xs:sequence>
     </xs:complexType>
@@ -54,6 +55,11 @@
   </xs:complexType>
 
   <xs:complexType name="queryMapper">
+    <xs:sequence/>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="searchServerQueryBuilder">
     <xs:sequence/>
     <xs:attribute name="class" type="xs:string" use="required"/>
   </xs:complexType>

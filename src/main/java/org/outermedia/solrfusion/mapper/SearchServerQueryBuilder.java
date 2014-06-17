@@ -1,9 +1,10 @@
 package org.outermedia.solrfusion.mapper;
 
-import org.outermedia.solrfusion.query.QueryVisitor;
+import org.outermedia.solrfusion.configuration.SearchServerQueryBuilderFactory;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * <p/>
  * Created by ballmann on 03.06.14.
  */
-public class SearchServerQueryBuilder implements QueryVisitor
+public class SearchServerQueryBuilder implements SearchServerQueryBuilderIfc
 {
     protected List<Query> newQueries;
     protected StringBuilder queryBuilder;
@@ -22,12 +23,34 @@ public class SearchServerQueryBuilder implements QueryVisitor
      *
      * @param query the query to map to process
      */
+    @Override
     public String buildQueryString(Query query)
     {
         newQueries = new ArrayList<>();
         queryBuilder = new StringBuilder();
         query.accept(this, null);
         return queryBuilder.toString();
+    }
+
+    @Override
+    public void init(SearchServerQueryBuilderFactory config) throws InvocationTargetException, IllegalAccessException
+    {
+        // NOP
+    }
+
+    /**
+     * Factory creates instances only.
+     */
+    private SearchServerQueryBuilder()
+    {
+    }
+
+    public static class Factory
+    {
+        public static SearchServerQueryBuilderIfc getInstance()
+        {
+            return new SearchServerQueryBuilder();
+        }
     }
 
     // ---- Visitor methods --------------------------------------------------------------------------------------------

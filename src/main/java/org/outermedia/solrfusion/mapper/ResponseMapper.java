@@ -6,7 +6,6 @@ import org.outermedia.solrfusion.IdGeneratorIfc;
 import org.outermedia.solrfusion.ScoreCorrectorIfc;
 import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.FieldVisitor;
 import org.outermedia.solrfusion.response.parser.SolrMultiValuedField;
 import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -18,7 +17,7 @@ import java.util.List;
  */
 @Slf4j
 @ToString(exclude = {"serverConfig", "doc"})
-public class ResponseMapper implements FieldVisitor, ResponseMapperIfc
+public class ResponseMapper implements ResponseMapperIfc
 {
     protected static final boolean MISSING_MAPPING_POLICY_IGNORE = true;
     protected static final boolean MISSING_MAPPING_POLICY_THROW_EXCEPTION = false;

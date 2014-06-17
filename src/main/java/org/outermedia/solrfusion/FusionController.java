@@ -9,7 +9,7 @@ import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.QueryMapperIfc;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
-import org.outermedia.solrfusion.mapper.SearchServerQueryBuilder;
+import org.outermedia.solrfusion.mapper.SearchServerQueryBuilderIfc;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.ClosableIterator;
@@ -141,9 +141,9 @@ public class FusionController
 
     protected void sendAndReceive(Query query, ResponseConsolidatorIfc consolidator, SearchServerConfig searchServerConfig)
     {
-        SearchServerQueryBuilder queryBuilder = getNewSearchServerQueryBuilder();
         try
         {
+            SearchServerQueryBuilderIfc queryBuilder = configuration.getSearchServerQueryBuilder();
             SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
             String searchServerQueryStr = queryBuilder.buildQueryString(query);
             InputStream is = adapter.sendQuery(searchServerQueryStr);
@@ -157,11 +157,6 @@ public class FusionController
         {
             log.error("Caught exception while communicating with server {}", searchServerConfig.getSearchServerName(), e);
         }
-    }
-
-    protected SearchServerQueryBuilder getNewSearchServerQueryBuilder()
-    {
-        return new SearchServerQueryBuilder();
     }
 
     protected boolean mapQuery(Query query, ScriptEnv env, SearchServerConfig searchServerConfig)

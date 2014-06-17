@@ -26,6 +26,8 @@
 
     <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory" />
 
+    <om:search-server-query-builder class="org.outermedia.solrfusion.mapper.SearchServerQueryBuilder$Factory" />
+
     <om:solr-servers>
         <om:timeout>4000</om:timeout>
         <om:disaster-limit>2</om:disaster-limit>
