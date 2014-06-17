@@ -5,6 +5,7 @@ import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.ControllerFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.QueryMapperIfc;
@@ -29,7 +30,7 @@ import java.util.Map;
  * Created by ballmann on 04.06.14.
  */
 @Slf4j
-public class FusionController
+public class FusionController implements FusionControllerIfc
 {
     private Configuration configuration;
     private ResetQueryState queryResetter;
@@ -37,15 +38,27 @@ public class FusionController
     private String query;
     private Util util;
 
-    public FusionController(Configuration configuration)
+    /**
+     * Only factory creates instances.
+     */
+    private FusionController()
     {
-        this.configuration = configuration;
         util = new Util();
     }
 
-    public void process(FusionRequest fusionRequest, FusionResponse fusionResponse)
+    public static class Factory
+    {
+        public static FusionControllerIfc getInstance()
+        {
+            return new FusionController();
+        }
+    }
+
+    @Override
+    public void process(Configuration configuration, FusionRequest fusionRequest, FusionResponse fusionResponse)
             throws InvocationTargetException, IllegalAccessException
     {
+        this.configuration = configuration;
         queryResetter = getNewResetQueryState();
         queryMapper = configuration.getQueryMapper();
 
@@ -197,5 +210,11 @@ public class FusionController
             log.error("Caught exception while parsing query: {}", query, e);
         }
         return queryObj;
+    }
+
+    @Override
+    public void init(ControllerFactory config) throws InvocationTargetException, IllegalAccessException
+    {
+        // NOP
     }
 }

@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.outermedia.solrfusion.FusionControllerIfc;
 import org.outermedia.solrfusion.IdGeneratorIfc;
 import org.outermedia.solrfusion.MergeStrategyIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
@@ -29,7 +30,8 @@ import java.util.List;
         {
                 "fusionFields", "scriptTypes", "defaultSearchField", "defaultOperator",
                 "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory",
-                "queryMapperFactory", "searchServerQueryBuilderFactory", "searchServerConfigs"
+                "queryMapperFactory", "searchServerQueryBuilderFactory", "controllerFactory",
+                "searchServerConfigs"
         })
 @XmlRootElement(name = "core", namespace = "http://solrfusion.outermedia.org/configuration/")
 @ToString
@@ -78,6 +80,11 @@ public class Configuration
     @Getter
     @Setter
     private SearchServerQueryBuilderFactory searchServerQueryBuilderFactory;
+
+    @XmlElement(name = "controller", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @Getter
+    @Setter
+    private ControllerFactory controllerFactory;
 
     @XmlElement(name = "solr-servers", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     @Getter
@@ -243,5 +250,15 @@ public class Configuration
     public SearchServerQueryBuilderIfc getSearchServerQueryBuilder() throws InvocationTargetException, IllegalAccessException
     {
         return searchServerQueryBuilderFactory.getInstance();
+    }
+
+    /**
+     * Get the configured controller.
+     *
+     * @return a non null instance of FusionControllerIfc
+     */
+    public FusionControllerIfc getController() throws InvocationTargetException, IllegalAccessException
+    {
+        return controllerFactory.getInstance();
     }
 }

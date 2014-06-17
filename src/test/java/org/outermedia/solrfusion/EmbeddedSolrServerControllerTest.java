@@ -158,12 +158,12 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
         testAdapter9002.setTestServer(secondTestServer);
 
-        FusionController fc = new FusionController(spyCfg);
+        FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("title:abc");
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
-        fc.process(fusionRequest, fusionResponse);
+        fc.process(spyCfg, fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
 
         String result = fusionResponse.getResponseAsString();

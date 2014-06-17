@@ -51,6 +51,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <!-- A search server specific search String is created from an already mapped query -->
     <om:search-server-query-builder class="org.outermedia.solrfusion.mapper.SearchServerQueryBuilder$Factory" />
 
+    <!-- This component controls the whole processing. -->
+    <om:controller class="org.outermedia.solrfusion.FusionController$Factory" />
+
     <om:solr-servers>
         <!-- global settings -->
         <om:timeout>4000</om:timeout>

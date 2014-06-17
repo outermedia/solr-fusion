@@ -36,6 +36,7 @@ Configuration(fusionFields=[
  ignoreMissingMappings=false),
  queryMapperFactory=QueryMapperFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.QueryMapper$Factory, typeClassFactory=class org.outermedia.solrfusion.mapper.QueryMapper$Factory)),
  searchServerQueryBuilderFactory=SearchServerQueryBuilderFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.SearchServerQueryBuilder$Factory, typeClassFactory=class org.outermedia.solrfusion.mapper.SearchServerQueryBuilder$Factory)),
+ controllerFactory=ControllerFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.FusionController$Factory, typeClassFactory=class org.outermedia.solrfusion.FusionController$Factory)),
  searchServerConfigs=GlobalSearchServerConfig(timeout=4000, disasterLimit=3, disasterMessage=Message(key=disaster-limit, text=Ihre Anfrage konnte nicht von ausreichend
  vielen Systemen beantwortet werden.
  ),
