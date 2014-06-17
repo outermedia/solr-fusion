@@ -151,6 +151,10 @@
         <xs:element name="change" type="tns:changeOperation"/>
       </xs:choice>
     </xs:sequence>
+    <xs:attribute name="fusion-name-pattern" type="xs:string"/>
+    <xs:attribute name="name-replacement" type="xs:string"/>
+    <xs:attribute name="fusion-name-replacement" type="xs:string"/>
+    <xs:attribute name="name-pattern" type="xs:string"/>
     <xs:attribute name="fusion-name" type="xs:string"/>
     <xs:attribute name="name" type="xs:string"/>
   </xs:complexType>

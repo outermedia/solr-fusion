@@ -71,7 +71,8 @@ public class QueryMapperTest
 
         SearchServerQueryBuilderIfc qb = cfg.getSearchServerQueryBuilder();
         String s = qb.buildQueryString(bq);
-        Assert.assertEquals("Found wrong search server bool query mapping", "+Autor:Schiller +Titel:Ein_langer_Weg", s.trim());
+        Assert.assertEquals("Found wrong search server bool query mapping", "+Autor:Schiller +Titel:Ein_langer_Weg",
+                s.trim());
     }
 
     @Test
@@ -97,7 +98,8 @@ public class QueryMapperTest
 
         SearchServerQueryBuilderIfc qb = cfg.getSearchServerQueryBuilder();
         String s = qb.buildQueryString(bq);
-        Assert.assertEquals("Found wrong search server bool query mapping", "-Autor:Schiller -Titel:Ein_langer_Weg", s.trim());
+        Assert.assertEquals("Found wrong search server bool query mapping", "-Autor:Schiller -Titel:Ein_langer_Weg",
+                s.trim());
 
         ResetQueryState resetter = new ResetQueryState();
         resetter.reset(bq);
@@ -109,5 +111,23 @@ public class QueryMapperTest
         Assert.assertNull("Expected empty fusion field value after clear", q2.getSearchServerFieldValue());
         Assert.assertFalse("Expected false for removed after clear", q2.getTerm().isRemoved());
         Assert.assertFalse("Expected false for wasMapped after clear", q2.getTerm().isWasMapped());
+    }
+
+    @Test
+    public void testRegExpr() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+            InvocationTargetException, IllegalAccessException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
+        QueryMapperIfc qm = cfg.getQueryMapper();
+        TermQuery q = new TermQuery(Term.newFusionTerm("valueFrom7", "Schiller"));
+        ScriptEnv env = new ScriptEnv();
+        qm.mapQuery(cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), q, env);
+        Term term = q.getTerm();
+        String searchServerFieldName = term.getSearchServerFieldName();
+        Assert.assertEquals("RegExp mapping returned different search server field than expected", "val7Start",
+                searchServerFieldName);
+        String searchServerFieldValue = term.getSearchServerFieldValue();
+        Assert.assertEquals("RegExp mapping returned different search server field value than expected", "Schiller",
+                searchServerFieldValue);
     }
 }

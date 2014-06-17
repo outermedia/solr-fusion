@@ -59,17 +59,17 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  factor=1.2),
  responseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.SpecialResponseParser$Factory, typeClassFactory=class org.outermedia.solrfusion.SpecialResponseParser$Factory)),
  idFieldName=id, fieldMappings=[
- FieldMapping(searchServersName=start, fusionName=city, operations=null),
- FieldMapping(searchServersName=*_text, fusionName=*_t, operations=null),
- FieldMapping(searchServersName=int_*, fusionName=i_*, operations=null),
- FieldMapping(searchServersName=u, fusionName=user, operations=[
+ FieldMapping(searchServersName=start, fusionName=city, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, matchType=LITERAL, specificFusionName=null, specificSearchServerName=null, operations=null),
+ FieldMapping(searchServersName=*_text, fusionName=*_t, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, matchType=LITERAL, specificFusionName=null, specificSearchServerName=null, operations=null),
+ FieldMapping(searchServersName=int_*, fusionName=i_*, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, matchType=LITERAL, specificFusionName=null, specificSearchServerName=null, operations=null),
+ FieldMapping(searchServersName=u, fusionName=user, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, matchType=LITERAL, specificFusionName=null, specificSearchServerName=null, operations=[
  ChangeOperation(super=Operation(targets=[
  QueryResponse(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.TableFile, typeClassFactory=class org.outermedia.solrfusion.types.TableFile),
  name=static-table-file),
  name=null, fusionName=null, typeConfig=[
  [
  file: null]]))]))]),
- FieldMapping(searchServersName=u, fusionName=user, operations=[
+ FieldMapping(searchServersName=u, fusionName=user, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, matchType=LITERAL, specificFusionName=null, specificSearchServerName=null, operations=[
  ChangeOperation(super=Operation(targets=[
  QueryResponse(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.Table, typeClassFactory=class org.outermedia.solrfusion.types.Table),
  name=static-table),
@@ -77,7 +77,7 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  [
  entry: null], [
  entry: null]]))]))]),
- FieldMapping(searchServersName=start, fusionName=city, operations=[
+ FieldMapping(searchServersName=start, fusionName=city, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, matchType=LITERAL, specificFusionName=null, specificSearchServerName=null, operations=[
  ChangeOperation(super=Operation(targets=[
  Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.JsFile, typeClassFactory=class org.outermedia.solrfusion.types.JsFile),
  name=javascript-file),
@@ -105,17 +105,17 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  [
  pattern: null], [
  replacement: null]]))]))]),
- FieldMapping(searchServersName=ende52, fusionName=null, operations=[
+ FieldMapping(searchServersName=ende52, fusionName=null, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, matchType=LITERAL, specificFusionName=null, specificSearchServerName=null, operations=[
  DropOperation(super=Operation(targets=[
  Response(super=Target(type=null, name=null, fusionName=null, typeConfig=null))]))]),
- FieldMapping(searchServersName=null, fusionName=ende52, operations=[
+ FieldMapping(searchServersName=null, fusionName=ende52, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, matchType=LITERAL, specificFusionName=null, specificSearchServerName=null, operations=[
  DropOperation(super=Operation(targets=[
  Query(super=Target(type=null, name=null, fusionName=null, typeConfig=null))]))]),
- FieldMapping(searchServersName=ende52, fusionName=ende, operations=[
+ FieldMapping(searchServersName=ende52, fusionName=ende, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, matchType=LITERAL, specificFusionName=null, specificSearchServerName=null, operations=[
  DropOperation(super=Operation(targets=[
  Response(super=Target(type=null, name=null, fusionName=null, typeConfig=null)),
  Query(super=Target(type=null, name=null, fusionName=null, typeConfig=null))]))]),
- FieldMapping(searchServersName=ende51, fusionName=ende, operations=[
+ FieldMapping(searchServersName=ende51, fusionName=ende, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, matchType=LITERAL, specificFusionName=null, specificSearchServerName=null, operations=[
  DropOperation(super=Operation(targets=[
  Query(super=Target(type=null, name=null, fusionName=null, typeConfig=null))])),
  AddOperation(super=Operation(targets=[
@@ -124,7 +124,7 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  name=null, fusionName=null, typeConfig=[
  [
  file: null]]))]))]),
- FieldMapping(searchServersName=w,h,d, fusionName=measure, operations=[
+ FieldMapping(searchServersName=w,h,d, fusionName=measure, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, matchType=LITERAL, specificFusionName=null, specificSearchServerName=null, operations=[
  ChangeOperation(super=Operation(targets=[
  Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
  name=extract-width),
@@ -142,7 +142,7 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  width-field: null], [
  height-field: null], [
  depth-field: null]]))]))]),
- FieldMapping(searchServersName=measure, fusionName=w,h,d, operations=[
+ FieldMapping(searchServersName=measure, fusionName=w,h,d, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, matchType=LITERAL, specificFusionName=null, specificSearchServerName=null, operations=[
  ChangeOperation(super=Operation(targets=[
  Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
  name=extract-width),
@@ -159,4 +159,9 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  [
  width-field: null], [
  height-field: null], [
- depth-field: null]]))]))])])]))
+ depth-field: null]]))]))]),
+ FieldMapping(searchServersName=null, fusionName=null, searchServersNamePattern=val([
+ 0-9]+)Start, fusionNameReplacement=valueFrom(\1),
+ searchServersNameReplacement=val(\1)Start, fusionNamePattern=valueFrom([
+ 0-9]+),
+ matchType=REG_EXP, specificFusionName=null, specificSearchServerName=null, operations=null)])]))

@@ -210,7 +210,17 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                     <om:response type="beanshell-file"><file>Pfad.bsh</file></om:response>
                 </om:add>
             </om:field>
-                    
+
+            <!-- Regular expressions are supported for field name matching. -->
+            <!-- Because a field rule is used when mapping the fusion query and the search server -->
+            <!-- response, both directions have to be declared. One direction consists of one -->
+            <!-- *-pattern="" and one *-replacement="". -->
+            <!-- Internally Java's java.util.regex.Pattern/Matcher and Matcher.replaceAll(String) are used. -->
+            <om:field
+                name-pattern="val([0-9]+)Start" fusion-name-replacement="valueFrom$1"
+                name-replacement="val$1Start" fusion-name-pattern="valueFrom([0-9]+)"
+            />
+
             <!-- split "B x H x T" into 3 fields -->
             <!-- it is not possible to join the response -->
             <!-- if three <field> rules were used -->

@@ -47,6 +47,7 @@ public class ReadConfigurationTest
 				Charset.forName("UTF-8"));
 
 		expected = addNewlines(expected);
+        // System.out.println(config2Out);
 
 		Assert.assertEquals("Found different configuration", expected,
 			config2Out);

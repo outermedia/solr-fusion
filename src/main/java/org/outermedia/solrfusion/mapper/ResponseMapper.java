@@ -123,7 +123,7 @@ public class ResponseMapper implements ResponseMapperIfc
 
     protected FusionField getFusionField(ScriptEnv env, FieldMapping m)
     {
-        FusionField fusionField = env.getConfiguration().findFieldByName(m.getFusionName());
+        FusionField fusionField = env.getConfiguration().findFieldByName(m.getSpecificFusionName());
         if (fusionField == null)
         {
             throw new UndeclaredFusionField("Didn't find field '" + m.getFusionName()
