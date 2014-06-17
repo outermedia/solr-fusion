@@ -75,16 +75,16 @@ public class ControllerTest
             throws IOException, ParserConfigurationException, SAXException, JAXBException,
             InvocationTargetException, IllegalAccessException, URISyntaxException
     {
-        FusionController fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
+        FusionControllerIfc fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:Schiller -title:morgen");
         FusionResponse fusionResponse = new FusionResponse();
-        fc.process(fusionRequest, fusionResponse);
+        fc.process(cfg, fusionRequest, fusionResponse);
         // System.out.println("ERROR " + fusionResponse.getErrorMessage());
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
     }
 
-    protected FusionController createTestFusionController(String fusionSchema)
+    protected FusionControllerIfc createTestFusionController(String fusionSchema)
             throws IOException, JAXBException, SAXException, ParserConfigurationException,
             InvocationTargetException, IllegalAccessException, URISyntaxException
     {
@@ -101,7 +101,7 @@ public class ControllerTest
             when(searchServerConfig.getInstance()).thenReturn(testAdapter);
             when(testAdapter.sendQuery(Mockito.anyString())).thenReturn(testResponse);
         }
-        return new FusionController(cfg);
+        return cfg.getController();
     }
 
     @Test
@@ -118,13 +118,13 @@ public class ControllerTest
         searchServerConfigs.add(configuredSearchServer);
         when(configuredSearchServer.getInstance()).thenReturn(testAdapter);
         when(testAdapter.sendQuery(Mockito.anyString())).thenReturn(testResponse);
-        FusionController fc = new FusionController(cfg);
+        FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:Schiller -title:morgen");
         // response format not set
         fusionRequest.setResponseType(null);
         FusionResponse fusionResponse = new FusionResponse();
-        fc.process(fusionRequest, fusionResponse);
+        fc.process(cfg, fusionRequest, fusionResponse);
         Assert.assertFalse("Expected processing error for not specified response type", fusionResponse.isOk());
         Assert.assertEquals("Found different error message than expected", "Found no configuration for response renderer: <unknown>", fusionResponse.getErrorMessage());
 
@@ -134,7 +134,7 @@ public class ControllerTest
         // renderer specified, but not configured
         cfg.getSearchServerConfigs().getResponseRendererFactories().clear();
         fusionRequest.setResponseType(ResponseRendererType.JSON);
-        fc.process(fusionRequest, fusionResponse);
+        fc.process(cfg, fusionRequest, fusionResponse);
         Assert.assertFalse("Expected processing error for unknown response type", fusionResponse.isOk());
         Assert.assertEquals("Found different error message than expected", "Found no configuration for response renderer: JSON", fusionResponse.getErrorMessage());
     }
@@ -144,13 +144,13 @@ public class ControllerTest
             throws IOException, ParserConfigurationException, SAXException, JAXBException,
             InvocationTargetException, IllegalAccessException, URISyntaxException
     {
-        FusionController fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
+        FusionControllerIfc fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:Schiller -title:morgen");
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
-        fc.process(fusionRequest, fusionResponse);
+        fc.process(cfg, fusionRequest, fusionResponse);
         Assert.assertFalse("Expected processing error for too less server responses", fusionResponse.isOk());
         Assert.assertEquals("Found different error message than expected", cfg.getDisasterMessage().getText(), fusionResponse.getErrorMessage());
     }
@@ -160,13 +160,13 @@ public class ControllerTest
             throws IOException, ParserConfigurationException, SAXException, JAXBException,
             InvocationTargetException, IllegalAccessException, URISyntaxException
     {
-        FusionController fc = createTestFusionController("test-empty-fusion-schema.xml");
+        FusionControllerIfc fc = createTestFusionController("test-empty-fusion-schema.xml");
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:Schiller -title:morgen");
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
-        fc.process(fusionRequest, fusionResponse);
+        fc.process(cfg, fusionRequest, fusionResponse);
         Assert.assertFalse("Expected processing error for no servers configured", fusionResponse.isOk());
         Assert.assertEquals("Found different error message than expected", "No search server configured at all.", fusionResponse.getErrorMessage());
     }
@@ -176,13 +176,13 @@ public class ControllerTest
             throws IOException, ParserConfigurationException, SAXException, JAXBException,
             InvocationTargetException, IllegalAccessException, URISyntaxException
     {
-        FusionController fc = createTestFusionController("test-empty-fusion-schema.xml");
+        FusionControllerIfc fc = createTestFusionController("test-empty-fusion-schema.xml");
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:*:Schiller");
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
-        fc.process(fusionRequest, fusionResponse);
+        fc.process(cfg, fusionRequest, fusionResponse);
         Assert.assertFalse("Expected processing error for bad query", fusionResponse.isOk());
         Assert.assertEquals("Found different error message than expected", "Query parsing failed.", fusionResponse.getErrorMessage());
     }
@@ -256,12 +256,12 @@ public class ControllerTest
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
         doReturn(documents9002Stream).when(testAdapter9002).sendQuery(Mockito.anyString());
 
-        FusionController fc = new FusionController(spyCfg);
+        FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("title:abc");
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
-        fc.process(fusionRequest, fusionResponse);
+        fc.process(spyCfg, fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
 
         String result = fusionResponse.getResponseAsString();

@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by ballmann on 04.06.14.
@@ -29,10 +30,12 @@ public class QueryMapperTest
     }
 
     @Test
-    public void testSimpleQueryMapping() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+    public void testSimpleQueryMapping()
+            throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+            InvocationTargetException, IllegalAccessException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
-        QueryMapper qm = new QueryMapper();
+        QueryMapperIfc qm = cfg.getQueryMapper();
         TermQuery q = new TermQuery(Term.newFusionTerm("author", "Schiller"));
         ScriptEnv env = new ScriptEnv();
         qm.mapQuery(cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), q, env);
@@ -40,16 +43,18 @@ public class QueryMapperTest
         String expected = "Term(fusionFieldName=author, fusionFieldValue=Schiller, fusionField=null, searchServerFieldName=Autor, searchServerFieldValue=Schiller, removed=false, wasMapped=true, newTerms=null)";
         Assert.assertEquals("Got different mapping than expected", expected, q.getTerm().toString());
 
-        SearchServerQueryBuilder qb = new SearchServerQueryBuilder();
+        SearchServerQueryBuilderIfc qb = cfg.getSearchServerQueryBuilder();
         String s = qb.buildQueryString(q);
         Assert.assertEquals("Found wrong search server term query mapping", "Autor:Schiller", s);
     }
 
     @Test
-    public void testQueryConjunctionMapping() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+    public void testQueryConjunctionMapping()
+            throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+            InvocationTargetException, IllegalAccessException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
-        QueryMapper qm = new QueryMapper();
+        QueryMapperIfc qm = cfg.getQueryMapper();
         TermQuery q = new TermQuery(Term.newFusionTerm("author", "Schiller"));
         ScriptEnv env = new ScriptEnv();
         BooleanQuery bq = new BooleanQuery(false);
@@ -64,16 +69,19 @@ public class QueryMapperTest
         String expectedTitle = "Term(fusionFieldName=title, fusionFieldValue=Ein_langer_Weg, fusionField=null, searchServerFieldName=Titel, searchServerFieldValue=Ein_langer_Weg, removed=false, wasMapped=true, newTerms=null)";
         Assert.assertEquals("Didn't find mapped title.", expectedTitle, q2.getTerm().toString());
 
-        SearchServerQueryBuilder qb = new SearchServerQueryBuilder();
+        SearchServerQueryBuilderIfc qb = cfg.getSearchServerQueryBuilder();
         String s = qb.buildQueryString(bq);
-        Assert.assertEquals("Found wrong search server bool query mapping", "+Autor:Schiller +Titel:Ein_langer_Weg", s.trim());
+        Assert.assertEquals("Found wrong search server bool query mapping", "+Autor:Schiller +Titel:Ein_langer_Weg",
+                s.trim());
     }
 
     @Test
-    public void testQueryDisjunctionMapping() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+    public void testQueryDisjunctionMapping()
+            throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+            InvocationTargetException, IllegalAccessException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
-        QueryMapper qm = new QueryMapper();
+        QueryMapperIfc qm = cfg.getQueryMapper();
         TermQuery q = new TermQuery(Term.newFusionTerm("author", "Schiller"));
         ScriptEnv env = new ScriptEnv();
         BooleanQuery bq = new BooleanQuery(false);
@@ -88,9 +96,10 @@ public class QueryMapperTest
         String expectedTitle = "Term(fusionFieldName=title, fusionFieldValue=Ein_langer_Weg, fusionField=null, searchServerFieldName=Titel, searchServerFieldValue=Ein_langer_Weg, removed=false, wasMapped=true, newTerms=null)";
         Assert.assertEquals("Didn't find mapped title.", expectedTitle, q2.getTerm().toString());
 
-        SearchServerQueryBuilder qb = new SearchServerQueryBuilder();
+        SearchServerQueryBuilderIfc qb = cfg.getSearchServerQueryBuilder();
         String s = qb.buildQueryString(bq);
-        Assert.assertEquals("Found wrong search server bool query mapping", "-Autor:Schiller -Titel:Ein_langer_Weg", s.trim());
+        Assert.assertEquals("Found wrong search server bool query mapping", "-Autor:Schiller -Titel:Ein_langer_Weg",
+                s.trim());
 
         ResetQueryState resetter = new ResetQueryState();
         resetter.reset(bq);
@@ -102,5 +111,23 @@ public class QueryMapperTest
         Assert.assertNull("Expected empty fusion field value after clear", q2.getSearchServerFieldValue());
         Assert.assertFalse("Expected false for removed after clear", q2.getTerm().isRemoved());
         Assert.assertFalse("Expected false for wasMapped after clear", q2.getTerm().isWasMapped());
+    }
+
+    @Test
+    public void testRegExpr() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+            InvocationTargetException, IllegalAccessException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
+        QueryMapperIfc qm = cfg.getQueryMapper();
+        TermQuery q = new TermQuery(Term.newFusionTerm("valueFrom7", "Schiller"));
+        ScriptEnv env = new ScriptEnv();
+        qm.mapQuery(cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), q, env);
+        Term term = q.getTerm();
+        String searchServerFieldName = term.getSearchServerFieldName();
+        Assert.assertEquals("RegExp mapping returned different search server field than expected", "val7Start",
+                searchServerFieldName);
+        String searchServerFieldValue = term.getSearchServerFieldValue();
+        Assert.assertEquals("RegExp mapping returned different search server field value than expected", "Schiller",
+                searchServerFieldValue);
     }
 }

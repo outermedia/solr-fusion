@@ -4,23 +4,27 @@
   <xs:element name="core">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="fusion-schema-fields">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="field" type="tns:fieldType" maxOccurs="unbounded"/>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
+        <xs:element name="fusion-schema-fields" type="tns:fusionSchemaFields"/>
         <xs:element name="script-type" type="tns:scriptType" maxOccurs="unbounded"/>
         <xs:element name="default-search-field" type="xs:string"/>
         <xs:element name="default-operator" type="xs:string"/>
         <xs:element name="id-generator" type="tns:idGenerator"/>
         <xs:element name="response-consolidator" type="tns:response-consolidator"/>
         <xs:element name="response-mapper" type="tns:responseMapper"/>
+        <xs:element name="query-mapper" type="tns:queryMapper"/>
+        <xs:element name="search-server-query-builder" type="tns:searchServerQueryBuilder"/>
+        <xs:element name="controller" type="tns:controller"/>
         <xs:element name="solr-servers" type="tns:globalSearchServerConfig"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+
+  <xs:complexType name="fusionSchemaFields">
+    <xs:sequence>
+      <xs:element name="field" type="tns:fieldType" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="default-type" type="xs:string" use="required"/>
+  </xs:complexType>
 
   <xs:complexType name="fieldType">
     <xs:sequence/>
@@ -50,6 +54,21 @@
     <xs:sequence/>
     <xs:attribute name="class" type="xs:string" use="required"/>
     <xs:attribute name="ignore-missing-mappings" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="queryMapper">
+    <xs:sequence/>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="searchServerQueryBuilder">
+    <xs:sequence/>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="controller">
+    <xs:sequence/>
+    <xs:attribute name="class" type="xs:string" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="globalSearchServerConfig">
@@ -132,6 +151,10 @@
         <xs:element name="change" type="tns:changeOperation"/>
       </xs:choice>
     </xs:sequence>
+    <xs:attribute name="fusion-name-pattern" type="xs:string"/>
+    <xs:attribute name="name-replacement" type="xs:string"/>
+    <xs:attribute name="fusion-name-replacement" type="xs:string"/>
+    <xs:attribute name="name-pattern" type="xs:string"/>
     <xs:attribute name="fusion-name" type="xs:string"/>
     <xs:attribute name="name" type="xs:string"/>
   </xs:complexType>

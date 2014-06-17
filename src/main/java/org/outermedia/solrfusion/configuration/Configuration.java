@@ -3,10 +3,13 @@ package org.outermedia.solrfusion.configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.outermedia.solrfusion.FusionControllerIfc;
 import org.outermedia.solrfusion.IdGeneratorIfc;
 import org.outermedia.solrfusion.MergeStrategyIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.mapper.QueryMapperIfc;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
+import org.outermedia.solrfusion.mapper.SearchServerQueryBuilderIfc;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
@@ -26,15 +29,16 @@ import java.util.List;
 @XmlType(name = "", propOrder =
         {
                 "fusionFields", "scriptTypes", "defaultSearchField", "defaultOperator",
-                "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory", "searchServerConfigs"
+                "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory",
+                "queryMapperFactory", "searchServerQueryBuilderFactory", "controllerFactory",
+                "searchServerConfigs"
         })
 @XmlRootElement(name = "core", namespace = "http://solrfusion.outermedia.org/configuration/")
 @ToString
 public class Configuration
 {
-    @XmlElementWrapper(name = "fusion-schema-fields", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @XmlElement(name = "field", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    private List<FusionField> fusionFields;
+    @XmlElement(name = "fusion-schema-fields", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    private FusionFieldList fusionFields;
 
     @XmlElement(name = "script-type", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     @Getter
@@ -65,6 +69,21 @@ public class Configuration
     @Getter
     @Setter
     private ResponseMapperFactory responseMapperFactory;
+
+    @XmlElement(name = "query-mapper", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @Getter
+    @Setter
+    private QueryMapperFactory queryMapperFactory;
+
+    @XmlElement(name = "search-server-query-builder", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @Getter
+    @Setter
+    private SearchServerQueryBuilderFactory searchServerQueryBuilderFactory;
+
+    @XmlElement(name = "controller", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @Getter
+    @Setter
+    private ControllerFactory controllerFactory;
 
     @XmlElement(name = "solr-servers", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     @Getter
@@ -182,7 +201,7 @@ public class Configuration
 
     public FusionField findFieldByName(String name)
     {
-        for (FusionField ff : fusionFields)
+        for (FusionField ff : fusionFields.getFusionFields())
         {
             if (ff.getFieldName().equals(name))
             {
@@ -212,4 +231,33 @@ public class Configuration
         return responseMapperFactory.getInstance();
     }
 
+    /**
+     * Get the configured query mapper.
+     *
+     * @return a non null instance of QueryMapperIfc
+     */
+    public QueryMapperIfc getQueryMapper() throws InvocationTargetException, IllegalAccessException
+    {
+        return queryMapperFactory.getInstance();
+    }
+
+    /**
+     * Get the configured query builder.
+     *
+     * @return a non null instance of SearchServerQueryBuilderIfc
+     */
+    public SearchServerQueryBuilderIfc getSearchServerQueryBuilder() throws InvocationTargetException, IllegalAccessException
+    {
+        return searchServerQueryBuilderFactory.getInstance();
+    }
+
+    /**
+     * Get the configured controller.
+     *
+     * @return a non null instance of FusionControllerIfc
+     */
+    public FusionControllerIfc getController() throws InvocationTargetException, IllegalAccessException
+    {
+        return controllerFactory.getInstance();
+    }
 }

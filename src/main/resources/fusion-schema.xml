@@ -7,9 +7,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 >
     <!-- the fields of the fusion schema -->
     <!-- supported types: text, int, long, float, double, boolean, date -->
-    <!-- default type is "text" -->
     <!-- mappings in <fields> below use the following field names: -->
-    <om:fusion-schema-fields>
+    <om:fusion-schema-fields default-type="text">
         <om:field name="id" />
         <om:field name="city" />
         <om:field name="title" />
@@ -44,6 +43,15 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <!-- This component transforms a search server's document into a fusion document, -->
     <!-- i.e. all search server's fields are mapped to fusion fields. -->
     <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory" />
+
+    <!-- The fusion query is transformed into a specific search server query -->
+    <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory" />
+
+    <!-- A search server specific search String is created from an already mapped query -->
+    <om:search-server-query-builder class="org.outermedia.solrfusion.mapper.SearchServerQueryBuilder$Factory" />
+
+    <!-- This component controls the whole processing. -->
+    <om:controller class="org.outermedia.solrfusion.FusionController$Factory" />
 
     <om:solr-servers>
         <!-- global settings -->
@@ -202,7 +210,17 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                     <om:response type="beanshell-file"><file>Pfad.bsh</file></om:response>
                 </om:add>
             </om:field>
-                    
+
+            <!-- Regular expressions are supported for field name matching. -->
+            <!-- Because a field rule is used when mapping the fusion query and the search server -->
+            <!-- response, both directions have to be declared. One direction consists of one -->
+            <!-- *-pattern="" and one *-replacement="". -->
+            <!-- Internally Java's java.util.regex.Pattern/Matcher and Matcher.replaceAll(String) are used. -->
+            <om:field
+                name-pattern="val([0-9]+)Start" fusion-name-replacement="valueFrom$1"
+                name-replacement="val$1Start" fusion-name-pattern="valueFrom([0-9]+)"
+            />
+
             <!-- split "B x H x T" into 3 fields -->
             <!-- it is not possible to join the response -->
             <!-- if three <field> rules were used -->

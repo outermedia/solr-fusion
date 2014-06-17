@@ -5,11 +5,12 @@ import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.ControllerFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.configuration.Util;
-import org.outermedia.solrfusion.mapper.QueryMapper;
+import org.outermedia.solrfusion.mapper.QueryMapperIfc;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
-import org.outermedia.solrfusion.mapper.SearchServerQueryBuilder;
+import org.outermedia.solrfusion.mapper.SearchServerQueryBuilderIfc;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.ClosableIterator;
@@ -21,6 +22,7 @@ import org.outermedia.solrfusion.response.parser.Result;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -28,24 +30,37 @@ import java.util.Map;
  * Created by ballmann on 04.06.14.
  */
 @Slf4j
-public class FusionController
+public class FusionController implements FusionControllerIfc
 {
     private Configuration configuration;
     private ResetQueryState queryResetter;
-    private QueryMapper queryMapper;
+    private QueryMapperIfc queryMapper;
     private String query;
     private Util util;
 
-    public FusionController(Configuration configuration)
+    /**
+     * Only factory creates instances.
+     */
+    private FusionController()
     {
-        this.configuration = configuration;
         util = new Util();
     }
 
-    public void process(FusionRequest fusionRequest, FusionResponse fusionResponse)
+    public static class Factory
     {
+        public static FusionControllerIfc getInstance()
+        {
+            return new FusionController();
+        }
+    }
+
+    @Override
+    public void process(Configuration configuration, FusionRequest fusionRequest, FusionResponse fusionResponse)
+            throws InvocationTargetException, IllegalAccessException
+    {
+        this.configuration = configuration;
         queryResetter = getNewResetQueryState();
-        queryMapper = getNewQueryMapper();
+        queryMapper = configuration.getQueryMapper();
 
         Query query = parseQuery(fusionRequest);
         if (query == null)
@@ -132,11 +147,6 @@ public class FusionController
         return new ScriptEnv();
     }
 
-    protected QueryMapper getNewQueryMapper()
-    {
-        return new QueryMapper();
-    }
-
     protected ResetQueryState getNewResetQueryState()
     {
         return new ResetQueryState();
@@ -144,9 +154,9 @@ public class FusionController
 
     protected void sendAndReceive(Query query, ResponseConsolidatorIfc consolidator, SearchServerConfig searchServerConfig)
     {
-        SearchServerQueryBuilder queryBuilder = getNewSearchServerQueryBuilder();
         try
         {
+            SearchServerQueryBuilderIfc queryBuilder = configuration.getSearchServerQueryBuilder();
             SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
             String searchServerQueryStr = queryBuilder.buildQueryString(query);
             InputStream is = adapter.sendQuery(searchServerQueryStr);
@@ -160,11 +170,6 @@ public class FusionController
         {
             log.error("Caught exception while communicating with server {}", searchServerConfig.getSearchServerName(), e);
         }
-    }
-
-    protected SearchServerQueryBuilder getNewSearchServerQueryBuilder()
-    {
-        return new SearchServerQueryBuilder();
     }
 
     protected boolean mapQuery(Query query, ScriptEnv env, SearchServerConfig searchServerConfig)
@@ -205,5 +210,11 @@ public class FusionController
             log.error("Caught exception while parsing query: {}", query, e);
         }
         return queryObj;
+    }
+
+    @Override
+    public void init(ControllerFactory config) throws InvocationTargetException, IllegalAccessException
+    {
+        // NOP
     }
 }

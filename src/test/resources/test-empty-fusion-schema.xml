@@ -3,7 +3,7 @@
     xmlns="http://solrfusion.outermedia.org/configuration/type/"
     xsi:schemaLocation="http://solrfusion.outermedia.org/configuration/ ../../main/resources/configuration.xsd ">
 
-    <om:fusion-schema-fields>
+    <om:fusion-schema-fields default-type="text">
         <om:field name="id" />
         <om:field name="author" />
         <om:field name="title" />
@@ -22,6 +22,12 @@
     <om:response-consolidator class="org.outermedia.solrfusion.response.ResponseConsolidator$Factory"/>
 
     <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory" />
+
+    <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory" />
+
+    <om:search-server-query-builder class="org.outermedia.solrfusion.mapper.SearchServerQueryBuilder$Factory" />
+
+    <om:controller class="org.outermedia.solrfusion.FusionController$Factory" />
 
     <om:solr-servers>
         <om:timeout>4000</om:timeout>

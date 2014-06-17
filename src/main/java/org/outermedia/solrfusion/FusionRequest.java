@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 
+import javax.servlet.ServletException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,5 +27,21 @@ public class FusionRequest
     public Map<String, Float> getBoosts()
     {
         return new HashMap<>(); // TODO from request params
+    }
+
+    public void setResponseTypeFromString(String responseTypeStr) throws ServletException
+    {
+        if (responseTypeStr != null)
+        {
+            String trimmedResponseTypeStr = responseTypeStr.trim().toUpperCase();
+            try
+            {
+                responseType = ResponseRendererType.valueOf(trimmedResponseTypeStr);
+            }
+            catch (Exception e)
+            {
+                throw new ServletException("Found no renderer for given type '" + trimmedResponseTypeStr + "'", e);
+            }
+        }
     }
 }

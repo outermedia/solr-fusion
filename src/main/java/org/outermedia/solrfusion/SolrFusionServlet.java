@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.Util;
 
 import javax.servlet.ServletConfig;
@@ -35,14 +34,14 @@ public class SolrFusionServlet extends HttpServlet
     public static String INIT_PARAM_FUSION_SCHEMA_XSD = "fusion-schema-xsd";
 
     public static final String SEARCH_PARAM_QUERY = "q";
+    public static final String SEARCH_PARAM_WT = "wt";
 
     private Configuration cfg;
 
 
     /**
-     * Main distribution servlet. Queries are prepared for configured solr
-     * instances and their responses are collected and transformed according to
-     * the defined logical schema.
+     * Main distribution servlet. Queries are prepared for configured solr instances and their responses are collected
+     * and transformed according to the defined logical schema.
      *
      * @param request  the received http get request which contains a solr query
      * @param response the answer is a typical solr response.
@@ -85,7 +84,8 @@ public class SolrFusionServlet extends HttpServlet
         String fusionXsdFileName = config.getInitParameter(INIT_PARAM_FUSION_SCHEMA_XSD);
         if (fusionXsdFileName == null)
         {
-            log.warn("Found no servlet init parameter for '{}'. Can't validate fusion schema.", INIT_PARAM_FUSION_SCHEMA_XSD);
+            log.warn("Found no servlet init parameter for '{}'. Can't validate fusion schema.",
+                    INIT_PARAM_FUSION_SCHEMA_XSD);
         }
         Util xmlUtil = new Util();
         try
@@ -108,18 +108,45 @@ public class SolrFusionServlet extends HttpServlet
     protected FusionRequest buildFusionRequest(Map<String, String[]> requestParams) throws ServletException
     {
         FusionRequest fusionRequest = getNewFusionRequest();
-        fusionRequest.setResponseType(ResponseRendererType.XML);
-        String[] qs = requestParams.get(SEARCH_PARAM_QUERY);
+        fusionRequest.setQuery(getRequiredSingleSearchParamValue(requestParams, SEARCH_PARAM_QUERY));
+        fusionRequest.setResponseTypeFromString(getOptionalSingleSearchParamValue(requestParams, SEARCH_PARAM_WT));
+        return fusionRequest;
+    }
+
+    protected String getRequiredSingleSearchParamValue(Map<String, String[]> requestParams, String searchParamName)
+            throws ServletException
+    {
+        String[] qs = requestParams.get(searchParamName);
         if (qs == null || qs.length == 0)
         {
-            throw new ServletException(buildErrorMessage(ERROR_MSG_FOUND_NO_QUERY_PARAMETER, SEARCH_PARAM_QUERY));
+            throw new ServletException(buildErrorMessage(ERROR_MSG_FOUND_NO_QUERY_PARAMETER, searchParamName));
         }
         if (qs.length > 1)
         {
-            throw new ServletException(buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, SEARCH_PARAM_QUERY, qs.length));
+            throw new ServletException(
+                    buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, searchParamName, qs.length));
         }
-        fusionRequest.setQuery(qs[0]);
-        return fusionRequest;
+        return qs[0];
+    }
+
+    protected String getOptionalSingleSearchParamValue(Map<String, String[]> requestParams, String searchParamName)
+            throws ServletException
+    {
+        String s = null;
+        String[] qs = requestParams.get(searchParamName);
+        if(qs != null)
+        {
+            if (qs.length == 1)
+            {
+                s = qs[0];
+            }
+            else if (qs.length > 1)
+            {
+                throw new ServletException(
+                        buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, searchParamName, qs.length));
+            }
+        }
+        return s;
     }
 
     protected String buildErrorMessage(String format, Object... args)
@@ -135,8 +162,16 @@ public class SolrFusionServlet extends HttpServlet
 
     protected String process(FusionRequest fusionRequest, FusionResponse fusionResponse)
     {
-        FusionController fc = new FusionController(cfg);
-        fc.process(fusionRequest, fusionResponse);
+        try
+        {
+            FusionControllerIfc fc = cfg.getController();
+            fc.process(cfg, fusionRequest, fusionResponse);
+        }
+        catch (Exception e)
+        {
+            log.error("Caught exception while processing request: " + fusionRequest, e);
+            fusionResponse.setError(e.getMessage());
+        }
         return fusionResponse.getResponseAsString();
     }
 }

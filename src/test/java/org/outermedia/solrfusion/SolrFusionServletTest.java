@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.outermedia.solrfusion.configuration.ResponseRendererType;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -30,8 +31,10 @@ public class SolrFusionServletTest
     public void testInit()
     {
         SolrFusionServlet servlet = new SolrFusionServlet();
-        doReturn("test-fusion-schema-9000-9002.xml").when(servletConfig).getInitParameter(SolrFusionServlet.INIT_PARAM_FUSION_SCHEMA);
-        doReturn("configuration.xsd").when(servletConfig).getInitParameter(SolrFusionServlet.INIT_PARAM_FUSION_SCHEMA_XSD);
+        doReturn("test-fusion-schema-9000-9002.xml").when(servletConfig).getInitParameter(
+                SolrFusionServlet.INIT_PARAM_FUSION_SCHEMA);
+        doReturn("configuration.xsd").when(servletConfig).getInitParameter(
+                SolrFusionServlet.INIT_PARAM_FUSION_SCHEMA_XSD);
         try
         {
             servlet.init(servletConfig);
@@ -46,7 +49,8 @@ public class SolrFusionServletTest
     public void testInitNoXsd()
     {
         SolrFusionServlet servlet = new SolrFusionServlet();
-        doReturn("test-fusion-schema-9000-9002.xml").when(servletConfig).getInitParameter(SolrFusionServlet.INIT_PARAM_FUSION_SCHEMA);
+        doReturn("test-fusion-schema-9000-9002.xml").when(servletConfig).getInitParameter(
+                SolrFusionServlet.INIT_PARAM_FUSION_SCHEMA);
         doReturn(null).when(servletConfig).getInitParameter(SolrFusionServlet.INIT_PARAM_FUSION_SCHEMA_XSD);
         try
         {
@@ -87,6 +91,8 @@ public class SolrFusionServletTest
             FusionRequest req = servlet.buildFusionRequest(requestParams);
             Assert.assertNotNull("Expected request object", req);
             Assert.assertEquals("Got different different", q, req.getQuery());
+            Assert.assertEquals("Got different renderer type than expected", ResponseRendererType.XML,
+                    req.getResponseType());
         }
         catch (ServletException e)
         {
@@ -106,7 +112,8 @@ public class SolrFusionServletTest
         }
         catch (ServletException e)
         {
-            match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_NO_QUERY_PARAMETER, SolrFusionServlet.SEARCH_PARAM_QUERY);
+            match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_NO_QUERY_PARAMETER,
+                    SolrFusionServlet.SEARCH_PARAM_QUERY);
         }
     }
 
@@ -123,7 +130,74 @@ public class SolrFusionServletTest
         }
         catch (ServletException e)
         {
-            match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, SolrFusionServlet.SEARCH_PARAM_QUERY, "2");
+            match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
+                    SolrFusionServlet.SEARCH_PARAM_QUERY, "2");
+        }
+    }
+
+    @Test
+    public void testBuildFusionRequestWithTooManyWt()
+    {
+        SolrFusionServlet servlet = new SolrFusionServlet();
+        Map<String, String[]> requestParams = new HashMap<>();
+        requestParams.put(SolrFusionServlet.SEARCH_PARAM_QUERY, new String[]{"schiller"});
+        requestParams.put(SolrFusionServlet.SEARCH_PARAM_WT, new String[]{"xml", "json"});
+        try
+        {
+            FusionRequest req = servlet.buildFusionRequest(requestParams);
+            Assert.fail("Expected exception, but got none");
+        }
+        catch (ServletException e)
+        {
+            match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
+                    SolrFusionServlet.SEARCH_PARAM_WT, "2");
+        }
+    }
+
+    @Test
+    public void testBuildFusionRequestWithKnownRenderer()
+    {
+        SolrFusionServlet servlet = new SolrFusionServlet();
+        Map<String, String[]> requestParams = new HashMap<>();
+        String q = "title:schiller";
+        requestParams.put(SolrFusionServlet.SEARCH_PARAM_QUERY, new String[]{q});
+        String formats[] = {"json", "xml", "php"};
+        for (String f : formats)
+        {
+            requestParams.put(SolrFusionServlet.SEARCH_PARAM_WT, new String[]{f});
+            try
+            {
+                FusionRequest req = servlet.buildFusionRequest(requestParams);
+                Assert.assertNotNull("Expected request object", req);
+                Assert.assertEquals("Got different different", q, req.getQuery());
+                Assert.assertEquals("Got different renderer type than expected",
+                        ResponseRendererType.valueOf(f.toUpperCase()),
+                        req.getResponseType());
+            }
+            catch (ServletException e)
+            {
+                Assert.fail("Expected no exception, but got " + e);
+            }
+        }
+    }
+
+    @Test
+    public void testBuildFusionRequestWithUnknownRenderer()
+    {
+        SolrFusionServlet servlet = new SolrFusionServlet();
+        Map<String, String[]> requestParams = new HashMap<>();
+        String q = "title:schiller";
+        requestParams.put(SolrFusionServlet.SEARCH_PARAM_QUERY, new String[]{q});
+        requestParams.put(SolrFusionServlet.SEARCH_PARAM_WT, new String[]{"xyz"});
+        try
+        {
+            FusionRequest req = servlet.buildFusionRequest(requestParams);
+            Assert.fail("Expected exception, but got none");
+        }
+        catch (ServletException e)
+        {
+            Assert.assertEquals("Found different error message than expected", "Found no renderer for given type 'XYZ'",
+                    e.getMessage());
         }
     }
 
