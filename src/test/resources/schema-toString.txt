@@ -1,11 +1,12 @@
-Configuration(fusionFields=[
+Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  FusionField(fieldName=id, type=text, format=null),
  FusionField(fieldName=city, type=text, format=null),
  FusionField(fieldName=title, type=text, format=null),
  FusionField(fieldName=numberExample, type=int, format=null),
  FusionField(fieldName=mappingExample, type=text, format=null),
  FusionField(fieldName=computingExample, type=text, format=null),
- FusionField(fieldName=publicationDate, type=date, format=dd.MM.yyyy)], scriptTypes=[
+ FusionField(fieldName=publicationDate, type=date, format=dd.MM.yyyy)]),
+ scriptTypes=[
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.JsFile, typeClassFactory=class org.outermedia.solrfusion.types.JsFile),
  name=javascript-file),
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.BshFile, typeClassFactory=class org.outermedia.solrfusion.types.BshFile),

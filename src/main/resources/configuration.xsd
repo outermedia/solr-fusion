@@ -4,13 +4,7 @@
   <xs:element name="core">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="fusion-schema-fields">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="field" type="tns:fieldType" maxOccurs="unbounded"/>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
+        <xs:element name="fusion-schema-fields" type="tns:fusionSchemaFields"/>
         <xs:element name="script-type" type="tns:scriptType" maxOccurs="unbounded"/>
         <xs:element name="default-search-field" type="xs:string"/>
         <xs:element name="default-operator" type="xs:string"/>
@@ -24,6 +18,13 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+
+  <xs:complexType name="fusionSchemaFields">
+    <xs:sequence>
+      <xs:element name="field" type="tns:fieldType" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="default-type" type="xs:string" use="required"/>
+  </xs:complexType>
 
   <xs:complexType name="fieldType">
     <xs:sequence/>

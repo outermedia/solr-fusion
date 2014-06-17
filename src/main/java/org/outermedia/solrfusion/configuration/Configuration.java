@@ -37,9 +37,8 @@ import java.util.List;
 @ToString
 public class Configuration
 {
-    @XmlElementWrapper(name = "fusion-schema-fields", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @XmlElement(name = "field", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    private List<FusionField> fusionFields;
+    @XmlElement(name = "fusion-schema-fields", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    private FusionFieldList fusionFields;
 
     @XmlElement(name = "script-type", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     @Getter
@@ -202,7 +201,7 @@ public class Configuration
 
     public FusionField findFieldByName(String name)
     {
-        for (FusionField ff : fusionFields)
+        for (FusionField ff : fusionFields.getFusionFields())
         {
             if (ff.getFieldName().equals(name))
             {

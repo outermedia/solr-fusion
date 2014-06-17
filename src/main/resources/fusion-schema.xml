@@ -7,9 +7,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 >
     <!-- the fields of the fusion schema -->
     <!-- supported types: text, int, long, float, double, boolean, date -->
-    <!-- default type is "text" -->
     <!-- mappings in <fields> below use the following field names: -->
-    <om:fusion-schema-fields>
+    <om:fusion-schema-fields default-type="text">
         <om:field name="id" />
         <om:field name="city" />
         <om:field name="title" />
