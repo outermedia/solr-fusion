@@ -10,6 +10,7 @@ import org.outermedia.solrfusion.response.parser.SolrMultiValuedField;
 import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,17 +73,19 @@ public class ResponseMapper implements ResponseMapperIfc
             {
                 ScoreCorrectorIfc scoreCorrector = serverConfig.getScoreCorrector();
                 // if mapped use this value instead of search server's value
-                String searchServerScoreStr = scoreTerm.getFusionFieldValue();
-                if (searchServerScoreStr == null)
+                List<String> searchServerScoreStr = scoreTerm.getFusionFieldValue();
+                if (searchServerScoreStr == null || searchServerScoreStr.isEmpty())
                 {
                     searchServerScoreStr = scoreTerm.getSearchServerFieldValue();
                 }
                 try
                 {
-                    double searchServerScore = Double.parseDouble(searchServerScoreStr);
+                    double searchServerScore = Double.parseDouble(searchServerScoreStr.get(0));
                     double newScore = scoreCorrector.applyCorrection(searchServerScore);
                     scoreTerm.setFusionFieldName(DOC_FIELD_NAME_SCORE);
-                    scoreTerm.setFusionFieldValue(String.valueOf(newScore));
+                    List<String> newScoreVal = new ArrayList<>();
+                    newScoreVal.add(String.valueOf(newScore));
+                    scoreTerm.setFusionFieldValue(newScoreVal);
                     scoreTerm.setWasMapped(true);
                     scoreTerm.setFusionField(config.findFieldByName(DOC_FIELD_NAME_SCORE));
                 }
@@ -143,9 +146,11 @@ public class ResponseMapper implements ResponseMapperIfc
                 throw new RuntimeException("Found no id (" + serverConfig.getIdFieldName() + ") in response of server '"
                         + serverConfig.getSearchServerName() + "'");
             }
-            String id = idGenerator.computeId(serverConfig.getSearchServerName(), idTerm.getSearchServerFieldValue());
+            String id = idGenerator.computeId(serverConfig.getSearchServerName(), idTerm.getSearchServerFieldValue().get(0));
             idTerm.setFusionFieldName(idGenerator.getFusionIdField());
-            idTerm.setFusionFieldValue(id);
+            List<String> newId = new ArrayList<>();
+            newId.add(id);
+            idTerm.setFusionFieldValue(newId);
         }
         catch (Exception e)
         {

@@ -52,9 +52,9 @@ public abstract class Target
         util = new Util();
     }
 
-    public String apply(ScriptEnv env)
+    public List<String> apply(ScriptEnv env)
     {
-        String result = null;
+        List<String> result = null;
         if (type != null)
         {
             try

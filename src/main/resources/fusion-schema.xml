@@ -27,6 +27,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <om:script-type name="regexp" class="org.outermedia.solrfusion.types.RegularExpression" />
     <om:script-type name="static-table-file" class="org.outermedia.solrfusion.types.TableFile"/>
     <om:script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/>
+    <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
 
     <om:default-search-field>title</om:default-search-field>
     
@@ -111,6 +112,23 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             <!-- both fields have to use a wildcard! -->
             <om:field name="*_text" fusion-name="*_t" />
             <om:field name="int_*" fusion-name="i_*" />
+
+            <om:field name="Stadt">
+                <om:add>
+                    <om:response type="static-value">
+                        <value>Berlin</value>
+                    </om:response>
+                </om:add>
+            </om:field>
+            <om:field name="Tags">
+                <om:add>
+                    <om:response type="static-value">
+                        <value>article</value>
+                        <value>news</value>
+                        <value>daily</value>
+                    </om:response>
+                </om:add>
+            </om:field>
 
             <!-- mapping is defined in a table, which is stored in a file -->
             <om:field name="u" fusion-name="user">

@@ -8,11 +8,11 @@ import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
 
 import javax.script.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A Bean Shell interpreter which evaluates expressions contained in the xml to
- * process a field conversion.
+ * A Bean Shell interpreter which evaluates expressions contained in the xml to process a field conversion.
  *
  * @author ballmann
  */
@@ -54,22 +54,41 @@ public class Bsh extends AbstractType
         }
     }
 
+    /**
+     * Returns either null or a String of the evaluated expression's result.
+     *
+     * @param env
+     * @return
+     */
     @Override
-    public String apply(ScriptEnv env)
+    public List<String> apply(ScriptEnv env)
     {
         Bindings bindings = engine.createBindings();
         bindings.putAll(engine.getBindings(ScriptContext.GLOBAL_SCOPE));
         env.flatten(bindings);
-        Object result = null;
+        Object evaluated = null;
         try
         {
-            result = engine.eval(code, bindings);
+            evaluated = engine.eval(code, bindings);
         }
         catch (ScriptException e)
         {
             log.error("Caught exception while evaluating bsh code: {}", code, e);
         }
-        return (result == null) ? "" : result.toString();
+        List<String> result = null;
+        if (evaluated != null)
+        {
+            result = new ArrayList<>();
+            if (evaluated instanceof List)
+            {
+                result.addAll((java.util.Collection<? extends String>) evaluated);
+            }
+            else
+            {
+                result.add(evaluated.toString());
+            }
+        }
+        return result;
     }
 
     public static Bsh getInstance()

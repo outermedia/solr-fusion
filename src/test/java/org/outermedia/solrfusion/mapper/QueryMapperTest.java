@@ -15,6 +15,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by ballmann on 04.06.14.
@@ -40,7 +42,7 @@ public class QueryMapperTest
         ScriptEnv env = new ScriptEnv();
         qm.mapQuery(cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), q, env);
 
-        String expected = "Term(fusionFieldName=author, fusionFieldValue=Schiller, fusionField=null, searchServerFieldName=Autor, searchServerFieldValue=Schiller, removed=false, wasMapped=true, newTerms=null)";
+        String expected = "Term(fusionFieldName=author, fusionFieldValue=[Schiller], fusionField=null, searchServerFieldName=Autor, searchServerFieldValue=[Schiller], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Got different mapping than expected", expected, q.getTerm().toString());
 
         SearchServerQueryBuilderIfc qb = cfg.getSearchServerQueryBuilder();
@@ -63,10 +65,10 @@ public class QueryMapperTest
         bq.add(new BooleanClause(q2, BooleanClause.Occur.OCCUR_MUST));
         qm.mapQuery(cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), bq, env);
 
-        String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=Schiller, fusionField=null, searchServerFieldName=Autor, searchServerFieldValue=Schiller, removed=false, wasMapped=true, newTerms=null)";
+        String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=[Schiller], fusionField=null, searchServerFieldName=Autor, searchServerFieldValue=[Schiller], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Didn't find mapped author.", expectedAuthor, q.getTerm().toString());
 
-        String expectedTitle = "Term(fusionFieldName=title, fusionFieldValue=Ein_langer_Weg, fusionField=null, searchServerFieldName=Titel, searchServerFieldValue=Ein_langer_Weg, removed=false, wasMapped=true, newTerms=null)";
+        String expectedTitle = "Term(fusionFieldName=title, fusionFieldValue=[Ein_langer_Weg], fusionField=null, searchServerFieldName=Titel, searchServerFieldValue=[Ein_langer_Weg], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Didn't find mapped title.", expectedTitle, q2.getTerm().toString());
 
         SearchServerQueryBuilderIfc qb = cfg.getSearchServerQueryBuilder();
@@ -90,10 +92,10 @@ public class QueryMapperTest
         bq.add(new BooleanClause(q2, BooleanClause.Occur.OCCUR_MUST_NOT));
         qm.mapQuery(cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), bq, env);
 
-        String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=Schiller, fusionField=null, searchServerFieldName=Autor, searchServerFieldValue=Schiller, removed=false, wasMapped=true, newTerms=null)";
+        String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=[Schiller], fusionField=null, searchServerFieldName=Autor, searchServerFieldValue=[Schiller], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Didn't find mapped author.", expectedAuthor, q.getTerm().toString());
 
-        String expectedTitle = "Term(fusionFieldName=title, fusionFieldValue=Ein_langer_Weg, fusionField=null, searchServerFieldName=Titel, searchServerFieldValue=Ein_langer_Weg, removed=false, wasMapped=true, newTerms=null)";
+        String expectedTitle = "Term(fusionFieldName=title, fusionFieldValue=[Ein_langer_Weg], fusionField=null, searchServerFieldName=Titel, searchServerFieldValue=[Ein_langer_Weg], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Didn't find mapped title.", expectedTitle, q2.getTerm().toString());
 
         SearchServerQueryBuilderIfc qb = cfg.getSearchServerQueryBuilder();
@@ -126,8 +128,8 @@ public class QueryMapperTest
         String searchServerFieldName = term.getSearchServerFieldName();
         Assert.assertEquals("RegExp mapping returned different search server field than expected", "val7Start",
                 searchServerFieldName);
-        String searchServerFieldValue = term.getSearchServerFieldValue();
-        Assert.assertEquals("RegExp mapping returned different search server field value than expected", "Schiller",
-                searchServerFieldValue);
+        List<String> searchServerFieldValue = term.getSearchServerFieldValue();
+        Assert.assertEquals("RegExp mapping returned different search server field value than expected", Arrays.asList(
+                "Schiller"), searchServerFieldValue);
     }
 }

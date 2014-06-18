@@ -15,6 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -57,11 +58,11 @@ public class ResponseMapperTest
         ScriptEnv env = new ScriptEnv();
         rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env);
 
-        String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=Willi Schiller, fusionField=FusionField(fieldName=author, type=text, format=null), searchServerFieldName=Autor, searchServerFieldValue=Willi Schiller, removed=false, wasMapped=true, newTerms=null)";
+        String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=[Willi Schiller], fusionField=FusionField(fieldName=author, type=text, format=null), searchServerFieldName=Autor, searchServerFieldValue=[Willi Schiller], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Mapping of author returned different result.", expectedAuthor,
                 sfAuthor.getTerm().toString());
 
-        String expectedTitle = "Term(fusionFieldName=title, fusionFieldValue=Ein kurzer Weg, fusionField=FusionField(fieldName=title, type=text, format=null), searchServerFieldName=Titel, searchServerFieldValue=Ein kurzer Weg, removed=false, wasMapped=true, newTerms=null)";
+        String expectedTitle = "Term(fusionFieldName=title, fusionFieldValue=[Ein kurzer Weg], fusionField=FusionField(fieldName=title, type=text, format=null), searchServerFieldName=Titel, searchServerFieldValue=[Ein kurzer Weg], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Mapping of title returned different result.", expectedTitle, sfTitle.getTerm().toString());
     }
 
@@ -92,9 +93,8 @@ public class ResponseMapperTest
         // ensure that "valueFrom7" is declared as <om:fusion-schema-fields><om:field>!
         Assert.assertEquals("RegExp mapping returned different fusion field than expected", "valueFrom7",
                 fusionFieldName);
-        String fusionFieldValue = term.getFusionFieldValue();
+        List<String> fusionFieldValue = term.getFusionFieldValue();
         Assert.assertEquals("RegExp mapping returned different search server field value than expected",
-                "Ein kurzer Weg",
-                fusionFieldValue);
+                Arrays.asList("Ein kurzer Weg"), fusionFieldValue);
     }
 }

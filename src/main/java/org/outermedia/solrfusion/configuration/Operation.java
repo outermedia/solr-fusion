@@ -89,7 +89,7 @@ public abstract class Operation
 
     protected void applyOneQueryOperation(Term term, ScriptEnv newEnv, Target t)
     {
-        String newSearchServerValue = t.apply(newEnv);
+        List<String> newSearchServerValue = t.apply(newEnv);
         term.setSearchServerFieldValue(newSearchServerValue);
     }
 
@@ -107,7 +107,7 @@ public abstract class Operation
 
     protected void applyOneResponseOperation(Term term, ScriptEnv newEnv, Target t)
     {
-        String newFusionValue = t.apply(newEnv);
+        List<String> newFusionValue = t.apply(newEnv);
         term.setFusionFieldValue(newFusionValue);
     }
 }

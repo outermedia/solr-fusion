@@ -65,7 +65,7 @@ public class SearchServerQueryBuilder implements SearchServerQueryBuilderIfc
     public void visitQuery(Term term, ScriptEnv env)
     {
         buildSearchServerTermQuery(term, false);
-        List<Query> l = term.getNewTerms();
+        List<Query> l = term.getNewQueryTerms();
         if (l != null)
         {
             newQueries.addAll(l);
@@ -80,7 +80,7 @@ public class SearchServerQueryBuilder implements SearchServerQueryBuilderIfc
         {
             queryBuilder.append('"');
         }
-        queryBuilder.append(term.getSearchServerFieldValue());
+        queryBuilder.append(term.getSearchServerFieldValue().get(0));
         if (quoted)
         {
             queryBuilder.append('"');

@@ -17,9 +17,9 @@ public class DummyType extends AbstractType
 	}
 
     @Override
-    public String apply(ScriptEnv env)
+    public List<String> apply(ScriptEnv env)
     {
-        return "";
+        return null;
     }
 
     public static DummyType getInstance()

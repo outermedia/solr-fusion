@@ -7,6 +7,8 @@ import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+import java.util.List;
+
 /**
  * This class represents a simple term query aka "&lt;field&gt;:&lt;value&gt;".
  *
@@ -41,7 +43,7 @@ public class TermQuery extends Query
         return term.getFusionFieldName();
     }
 
-    public String getFusionFieldValue()
+    public List<String> getFusionFieldValue()
     {
         return term.getFusionFieldValue();
     }
@@ -51,7 +53,7 @@ public class TermQuery extends Query
         return term.getSearchServerFieldName();
     }
 
-    public String getSearchServerFieldValue()
+    public List<String> getSearchServerFieldValue()
     {
         return term.getSearchServerFieldValue();
     }

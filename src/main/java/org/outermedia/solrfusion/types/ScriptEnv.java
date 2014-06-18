@@ -11,6 +11,16 @@ import java.util.Map;
  * Environment which is passed to script types. E.g. the current fusion field is contained.
  * <p/>
  * Created by ballmann on 03.06.14.
+ *
+ * The following env entries are available:
+ * <ul>
+ *     <li>{@value #ENV_FUSION_FIELD} - a String</li>
+ *     <li>{@value #ENV_FUSION_VALUE} - a List of String</li>
+ *     <li>{@value #ENV_SEARCH_SERVER_FIELD} - a String</li>
+ *     <li>{@value #ENV_SEARCH_SERVER_VALUE} - a List of String</li>
+ *     <li>{@value #ENV_FUSION_FIELD_DECLARATION} - a FusionField instance</li>
+ *     <li>{@value #ENV_FUSION_SCHEMA} - a Configuration instance</li>
+ * </ul>
  */
 @ToString
 public class ScriptEnv

@@ -26,7 +26,7 @@ public class RegularExpression extends AbstractType
 	}
 
     @Override
-    public String apply(ScriptEnv env)
+    public List<String> apply(ScriptEnv env)
     {
         return null; // TODO
     }

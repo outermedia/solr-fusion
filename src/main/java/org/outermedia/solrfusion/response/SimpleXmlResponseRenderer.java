@@ -68,7 +68,7 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
             }
 
             private void writeTerm(String indent, boolean wasMapped, boolean wasRemoved, String fusionFieldName,
-                    String fusionValue, FusionField fusionField)
+                    List<String> fusionValue, FusionField fusionField)
             {
                 if (wasMapped && !wasRemoved)
                 {
@@ -89,13 +89,13 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
                         sb.append("\"");
                     }
                     sb.append("><![CDATA[");
-                    sb.append(fusionValue);
+                    sb.append(fusionValue.get(0));
                     sb.append("]]>");
                     sb.append("</");
                     sb.append(typeTag);
                     sb.append(">\n");
                 }
-                // TODO sf.getTerm().getNewTerms();
+                // TODO sf.getTerm().getNewResponseValues();
             }
 
             @Override
