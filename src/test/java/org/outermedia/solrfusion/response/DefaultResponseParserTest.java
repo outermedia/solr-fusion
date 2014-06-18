@@ -57,6 +57,37 @@ public class DefaultResponseParserTest {
 
     }
     @Test
+    public void testReadResponse9001() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        XmlResponse response = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9001.xml", null);
+
+        List<Document> documents = response.getResult().getDocuments();
+
+        Assert.assertEquals("Got less result documents than expected", 10,  documents.size());
+        Assert.assertEquals("Got different numFound than expected", 91373, response.getResult().getNumFound());
+        Assert.assertEquals("Got attribut value for name@result than expected", "response", response.getResult().getResultName());
+        Assert.assertEquals("Expected 22 singlevalued fields", 16, documents.get(0).getSolrSingleValuedFields().size());
+        Assert.assertEquals("Expected 41 multivalued fields", 32, documents.get(0).getSolrMultiValuedFields().size());
+        Assert.assertEquals("Got a different multivalued field than unexpected ", "[findex.gbv.de]", documents.get(0).findFieldByName("institution").getAllSearchServerFieldValue().toString());
+
+    }
+    @Test
+    public void testReadResponse9002() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        XmlResponse response = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9002.xml", null);
+
+        List<Document> documents = response.getResult().getDocuments();
+
+        Assert.assertEquals("Got less result documents than expected", 10,  documents.size());
+        Assert.assertEquals("Got different numFound than expected", 54, response.getResult().getNumFound());
+        Assert.assertEquals("Got attribut value for name@result than expected", "response", response.getResult().getResultName());
+        Assert.assertEquals("Expected 22 singlevalued fields", 11, documents.get(0).getSolrSingleValuedFields().size());
+        Assert.assertNull("Expected MultiValuedFields to be null", documents.get(0).getSolrMultiValuedFields());
+
+    }
+    @Test
     public void testReadResponse9003() throws FileNotFoundException, JAXBException,
             SAXException, ParserConfigurationException
     {
@@ -69,6 +100,7 @@ public class DefaultResponseParserTest {
         Assert.assertEquals("Got attribut value for name@result than expected", "response", response.getResult().getResultName());
         Assert.assertEquals("Got different sourceid in document1 than expected", "beuth_pn_DE18954967", documents.get(0).findFieldByName("sourceid").getFirstSearchServerFieldValue());
         Assert.assertEquals("Expected 11  singlevalued fields", 11, documents.get(1).getSolrSingleValuedFields().size());
+        Assert.assertNull("Expected MultiValuedFields to be null", documents.get(0).getSolrMultiValuedFields());
     }
 
 }
