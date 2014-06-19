@@ -46,6 +46,10 @@ public class Value extends AbstractType
             log.error("Caught exception while parsing configuration: "
                     + typeConfig, e);
         }
+        if (values.isEmpty())
+        {
+            values = null;
+        }
     }
 
     @Override

@@ -27,14 +27,26 @@ public class Bsh extends AbstractType
     private String code;
 
     // either beanshell or bsh
-    private String engineName = "bsh";
+    private String engineName = "beanshell";
 
-    private final ScriptEngine engine;
+    private ScriptEngine engine;
 
     public Bsh()
     {
         ScriptEngineManager manager = new ScriptEngineManager();
         engine = manager.getEngineByName(engineName);
+        if (engine == null)
+        {
+            ScriptEngineManager sem = new ScriptEngineManager();
+            List<ScriptEngineFactory> factories = sem.getEngineFactories();
+            List<String> knownEngineNames = new ArrayList<>();
+            for (javax.script.ScriptEngineFactory f : factories)
+            {
+                knownEngineNames.add(f.getNames().toString());
+            }
+
+            log.error("Didn't find engine for '" + engineName + "'. Known are: " + knownEngineNames);
+        }
     }
 
     @Override

@@ -68,7 +68,7 @@ public class ValueTest extends AbstractTypeTest
         valueType.passArguments(util.filterElements(elem.getChildNodes()), util);
 
         List<String> values = valueType.getValues();
-        Assert.assertEquals("Found different parsed value than expected", Arrays.asList(), values);
+        Assert.assertEquals("Found different parsed value than expected", null, values);
 
         values = valueType.apply(null);
         Assert.assertEquals("Found different values than expected", null, values);

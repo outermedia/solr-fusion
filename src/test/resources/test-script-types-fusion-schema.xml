@@ -9,15 +9,17 @@
         <om:field name="author"/>
         <om:field name="title"/>
         <om:field name="score" type="double"/>
-        <om:field name="source" />
+        <om:field name="source"/>
+        <om:field name="today"/>
+        <om:field name="today2"/>
     </om:fusion-schema-fields>
 
-    <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile" />
-    <om:script-type name="beanshell-file" class="org.outermedia.solrfusion.types.BshFile" />
-    <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js" />
-    <om:script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh" />
-    <om:script-type name="java-class" class="org.outermedia.solrfusion.types.Java" />
-    <om:script-type name="regexp" class="org.outermedia.solrfusion.types.RegularExpression" />
+    <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile"/>
+    <om:script-type name="beanshell-file" class="org.outermedia.solrfusion.types.BshFile"/>
+    <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js"/>
+    <om:script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh"/>
+    <om:script-type name="java-class" class="org.outermedia.solrfusion.types.Java"/>
+    <om:script-type name="regexp" class="org.outermedia.solrfusion.types.RegularExpression"/>
     <om:script-type name="static-table-file" class="org.outermedia.solrfusion.types.TableFile"/>
     <om:script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/>
     <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
@@ -77,6 +79,34 @@
                 <om:change>
                     <om:response type="static-value">
                         <value>BIB-A</value>
+                    </om:response>
+                </om:change>
+            </om:field>
+
+            <om:field name="f1" fusion-name="today">
+                <om:change>
+                    <om:response type="beanshell">
+                        <script><![CDATA[
+                            import java.text.SimpleDateFormat;
+                            GregorianCalendar now = new GregorianCalendar(2014, 6, 19);
+                            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+                            // predefined variables: see ScriptEnv.ENV_*
+                            print("Search Server Field: "+searchServerField);
+                            print("Search Server Value: "+searchServerValue);
+                            print("Fusion Field       : "+fusionField);
+                            print("Fusion Value       : "+fusionValue);
+                            print("Fusion Field       : "+fusionFieldDeclaration);
+                            print("Fusion Schema      : "+fusionSchema);
+                            return searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
+                        ]]></script>
+                    </om:response>
+                </om:change>
+            </om:field>
+
+            <om:field name="f2" fusion-name="today2">
+                <om:change>
+                    <om:response type="beanshell-file">
+                        <file>target/test-classes/test-bsh-file.bsh</file>
                     </om:response>
                 </om:change>
             </om:field>
