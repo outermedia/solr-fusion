@@ -8,37 +8,42 @@ import org.outermedia.solrfusion.response.parser.Document;
 /**
  * Transforms a search result into json.
  * 
- * @author ballmann
+ * @author stephan
  * 
  */
 
 @ToString
 public class DefaultJsonResponseRenderer implements ResponseRendererIfc
 {
-	/**
-	 * Factory creates instances only.
-	 */
-	private DefaultJsonResponseRenderer()
-	{}
+    private FreemarkerResponseRenderer freemarkerResponseRenderer;
+
+    /**
+     * Factory creates instances only.
+     */
+    private DefaultJsonResponseRenderer()
+    {
+        freemarkerResponseRenderer = new FreemarkerResponseRenderer();
+    }
 
     @Override
     public String getResponseString(ClosableIterator<Document,SearchServerResponseInfo> docStream, String query)
     {
-        return null; // TODO
+        return freemarkerResponseRenderer.getResponseString(docStream, query);
     }
 
     public static class Factory
-	{
-		public static DefaultJsonResponseRenderer getInstance()
-		{
-			return new DefaultJsonResponseRenderer();
-		}
-	}
+    {
+        public static DefaultJsonResponseRenderer getInstance()
+        {
+            return new DefaultJsonResponseRenderer();
+        }
+    }
 
-	@Override
-	public void init(ResponseRendererFactory config)
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void init(ResponseRendererFactory config)
+    {
+        freemarkerResponseRenderer.init(config);
+        freemarkerResponseRenderer.setTemplateFile(freemarkerResponseRenderer.JSONTEMPLATEFILE);
+    }
 
-	}
 }

@@ -18,17 +18,15 @@ import java.net.URISyntaxException;
 /**
  * This class is able to send requests to a solr server and to receive answers.
  *
- * @author ballmann
+ * @author stephan
  *
  */
 @ToString
 public class EmbeddedSolrAdapter implements SearchServerAdapterIfc {
 
-//    private final String QUERY_PARAMETER = "q";
-//
     @Setter @Getter private SolrTestServer testServer;
-    String corePath;
 
+    String corePath;
 
     /**
      * Factory creates instances only.
@@ -38,12 +36,10 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc {
 
     @Override
     public InputStream sendQuery(String searchServerQueryStr) throws URISyntaxException, IOException  {
-
         SolrQuery query = new SolrQuery(searchServerQueryStr);
-
 //        query.setRows(10);
 //        query.addField("id");
-//        query.addField("*");
+//        query.addField("author");
 //        query.addField("score");
         QueryResponse response = null;
         try {

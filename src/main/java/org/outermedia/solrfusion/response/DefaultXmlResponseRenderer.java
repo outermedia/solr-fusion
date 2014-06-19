@@ -1,7 +1,6 @@
 package org.outermedia.solrfusion.response;
 
 import lombok.ToString;
-
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 import org.outermedia.solrfusion.response.parser.Document;
@@ -9,23 +8,28 @@ import org.outermedia.solrfusion.response.parser.Document;
 /**
  * Transforms a search result into xml.
  * 
- * @author ballmann
+ * @author stephan
  * 
  */
 
 @ToString
 public class DefaultXmlResponseRenderer implements ResponseRendererIfc
 {
+
+    private FreemarkerResponseRenderer freemarkerResponseRenderer;
+
 	/**
 	 * Factory creates instances only.
 	 */
 	private DefaultXmlResponseRenderer()
-	{}
+	{
+        freemarkerResponseRenderer = new FreemarkerResponseRenderer();
+    }
 
     @Override
     public String getResponseString(ClosableIterator<Document,SearchServerResponseInfo> docStream, String query)
     {
-        return null; // TODO
+        return freemarkerResponseRenderer.getResponseString(docStream, query);
     }
 
     public static class Factory
@@ -39,7 +43,7 @@ public class DefaultXmlResponseRenderer implements ResponseRendererIfc
 	@Override
 	public void init(ResponseRendererFactory config)
 	{
-		// TODO Auto-generated method stub
-
-	}
+        freemarkerResponseRenderer.init(config);
+        freemarkerResponseRenderer.setTemplateFile(freemarkerResponseRenderer.XMLTEMPLATEFILE);
+    }
 }
