@@ -43,10 +43,11 @@ public abstract class AbstractType implements Initiable<ScriptType>
      * This method applies 'this' script type to a given value (contained in 'env'). Available env entries described in
      * {@link org.outermedia.solrfusion.types.ScriptEnv}
      *
+     * @param values
      * @param env
      * @return perhaps null
      */
-    public abstract List<String> apply(ScriptEnv env);
+    public abstract List<String> apply(List<String> values, ScriptEnv env);
 
     public ScriptEngine getScriptEngine(String engineName)
     {
@@ -67,11 +68,13 @@ public abstract class AbstractType implements Initiable<ScriptType>
         return engine;
     }
 
-    public List<String> applyScriptEngineCode(ScriptEngine engine, String code, ScriptEnv env)
+    public List<String> applyScriptEngineCode(ScriptEngine engine, String code, List<String> values, ScriptEnv env)
     {
         Bindings bindings = engine.createBindings();
         bindings.putAll(engine.getBindings(ScriptContext.GLOBAL_SCOPE));
-        env.flatten(bindings);
+        ScriptEnv newEnv = new ScriptEnv(env);
+        newEnv.setBinding(ScriptEnv.ENV_VALUES, values);
+        newEnv.flatten(bindings);
         Object evaluated = null;
         try
         {

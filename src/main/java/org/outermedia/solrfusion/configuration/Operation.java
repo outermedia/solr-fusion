@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstract data holder class to store target configurations (&lt;query&gt;,
- * &lt;response&gt;, &lt;query-response&gt;).
+ * Abstract data holder class to store target configurations (&lt;query&gt;, &lt;response&gt;, &lt;query-response&gt;).
  *
  * @author ballmann
  */
@@ -27,9 +26,12 @@ public abstract class Operation
 {
     @XmlElements(value =
             {
-                    @XmlElement(name = "query", type = Query.class, namespace = "http://solrfusion.outermedia.org/configuration/"),
-                    @XmlElement(name = "response", type = Response.class, namespace = "http://solrfusion.outermedia.org/configuration/"),
-                    @XmlElement(name = "query-response", type = QueryResponse.class, namespace = "http://solrfusion.outermedia.org/configuration/")
+                    @XmlElement(name = "query", type = Query.class,
+                            namespace = "http://solrfusion.outermedia.org/configuration/"),
+                    @XmlElement(name = "response", type = Response.class,
+                            namespace = "http://solrfusion.outermedia.org/configuration/"),
+                    @XmlElement(name = "query-response", type = QueryResponse.class,
+                            namespace = "http://solrfusion.outermedia.org/configuration/")
             })
     private List<Target> targets;
 
@@ -89,7 +91,10 @@ public abstract class Operation
 
     protected void applyOneQueryOperation(Term term, ScriptEnv newEnv, Target t)
     {
-        List<String> newSearchServerValue = t.apply(newEnv);
+        // the searchServerFieldValue is initialized with the fusionFieldValue
+        // because it is possible to apply several mappings in sequence the searchServerFieldValue
+        // has to be used
+        List<String> newSearchServerValue = t.apply(term.getSearchServerFieldValue(), newEnv);
         term.setSearchServerFieldValue(newSearchServerValue);
     }
 
@@ -107,7 +112,10 @@ public abstract class Operation
 
     protected void applyOneResponseOperation(Term term, ScriptEnv newEnv, Target t)
     {
-        List<String> newFusionValue = t.apply(newEnv);
+        // the fusionFieldValue is initialized with the searchServerFieldValue
+        // because it is possible to apply several mappings in sequence the fusionFieldValue
+        // has to be used
+        List<String> newFusionValue = t.apply(term.getFusionFieldValue(), newEnv);
         term.setFusionFieldValue(newFusionValue);
     }
 }

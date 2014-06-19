@@ -52,7 +52,7 @@ public abstract class Target
         util = new Util();
     }
 
-    public List<String> apply(ScriptEnv env)
+    public List<String> apply(List<String> values, ScriptEnv env)
     {
         List<String> result = null;
         if (type != null)
@@ -63,7 +63,7 @@ public abstract class Target
                 if (typeImpl != null)
                 {
                     typeImpl.passArguments(typeConfig, util);
-                    result = typeImpl.apply(env);
+                    result = typeImpl.apply(values, env);
                 }
             }
             catch (Exception e)

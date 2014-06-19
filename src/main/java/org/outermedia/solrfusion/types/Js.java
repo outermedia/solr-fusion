@@ -54,9 +54,9 @@ public class Js extends AbstractType
 	}
 
     @Override
-    public List<String> apply(ScriptEnv env)
+    public List<String> apply(List<String> values, ScriptEnv env)
     {
-        return applyScriptEngineCode(engine, code, env);
+        return applyScriptEngineCode(engine, code, values, env);
     }
 
     public static Js getInstance()

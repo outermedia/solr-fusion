@@ -55,13 +55,15 @@ public class Bsh extends AbstractType
     /**
      * Returns either null or a String of the evaluated expression's result.
      *
+     *
+     * @param values
      * @param env
      * @return
      */
     @Override
-    public List<String> apply(ScriptEnv env)
+    public List<String> apply(List<String> values, ScriptEnv env)
     {
-        return applyScriptEngineCode(engine, code, env);
+        return applyScriptEngineCode(engine, code, values, env);
     }
 
     public static Bsh getInstance()

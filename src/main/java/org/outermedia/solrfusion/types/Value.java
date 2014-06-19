@@ -53,9 +53,9 @@ public class Value extends AbstractType
     }
 
     @Override
-    public List<String> apply(ScriptEnv env)
+    public List<String> apply(List<String> values, ScriptEnv env)
     {
-        return values;
+        return this.values;
     }
 
     public static Value getInstance()

@@ -14,6 +14,7 @@
         <om:field name="today2"/>
         <om:field name="today3"/>
         <om:field name="today4"/>
+        <om:field name="text1"/>
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile"/>
@@ -93,6 +94,7 @@
                             GregorianCalendar now = new GregorianCalendar(2014, 6, 19);
                             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
                             // predefined variables: see ScriptEnv.ENV_*
+                            print("Values             : "+values);
                             print("Search Server Field: "+searchServerField);
                             print("Search Server Value: "+searchServerValue);
                             print("Fusion Field       : "+fusionField);
@@ -122,6 +124,7 @@
                             var now = new GregorianCalendar(2014, 6, 19);
                             var fmt = new SimpleDateFormat("yyyy-MM-dd");
                             // predefined variables: see ScriptEnv.ENV_*
+                            print("Values             : "+values+"\n");
                             print("Search Server Field: "+searchServerField+"\n");
                             print("Search Server Value: "+searchServerValue+"\n");
                             print("Fusion Field       : "+fusionField+"\n");
@@ -139,6 +142,15 @@
                 <om:change>
                     <om:response type="javascript-file">
                         <file>target/test-classes/test-js-file.js</file>
+                    </om:response>
+                </om:change>
+            </om:field>
+
+            <om:field name="f5" fusion-name="text1">
+                <om:change>
+                    <om:response type="regexp">
+                        <pattern>([^,]+),\s*(.+)</pattern>
+                        <replacement>$2 $1</replacement>
                     </om:response>
                 </om:change>
             </om:field>

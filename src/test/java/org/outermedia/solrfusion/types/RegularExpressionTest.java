@@ -19,20 +19,22 @@ import java.util.Arrays;
 /**
  * Created by ballmann on 6/19/14.
  */
-public class BshTest extends AbstractTypeTest
+public class RegularExpressionTest extends AbstractTypeTest
 {
     @Test
     public void testConfigParsing() throws IOException, SAXException, ParserConfigurationException
     {
-        String xml = docOpen + "<script>return 42;</script>" + docClose;
+        String xml = docOpen + "<pattern>([^,]+),\\s*(.+)</pattern><replacement>$2 $1</replacement>" + docClose;
 
         Util util = new Util();
         Element elem = util.parseXml(xml);
-        Bsh bshType = new Bsh();
-        bshType.passArguments(util.filterElements(elem.getChildNodes()), util);
+        RegularExpression rxType = new RegularExpression();
+        rxType.passArguments(util.filterElements(elem.getChildNodes()), util);
 
-        String code = bshType.getCode();
-        Assert.assertEquals("Parsing of configuration failed.", "return 42;", code);
+        String pattern = rxType.getPattern().pattern();
+        String replacement = rxType.getReplacement();
+        Assert.assertEquals("Parsing of pattern failed.", "([^,]+),\\s*(.+)", pattern);
+        Assert.assertEquals("Parsing of replacement failed.", "$2 $1", replacement);
     }
 
     @Test
@@ -45,13 +47,13 @@ public class BshTest extends AbstractTypeTest
         buildResponseField(doc, "Titel", "Ein kurzer Weg");
         buildResponseField(doc, "Autor", "Willi Schiller");
         buildResponseField(doc, "id", "132");
-        Term sourceField = buildResponseField(doc, "f1", "something", "other");
+        Term sourceField = buildResponseField(doc, "f5", "Müller, Thomas", "Lahm, Philipp");
 
         ScriptEnv env = new ScriptEnv();
         rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env);
         // System.out.println(sourceField.toString());
-        org.junit.Assert.assertEquals("Found wrong field name mapping", "today", sourceField.getFusionFieldName());
-        org.junit.Assert.assertEquals("Found wrong field value mapping", Arrays.asList("something at 2014-07-19"),
+        org.junit.Assert.assertEquals("Found wrong field name mapping", "text1", sourceField.getFusionFieldName());
+        org.junit.Assert.assertEquals("Found wrong field value mapping", Arrays.asList("Thomas Müller", "Philipp Lahm"),
                 sourceField.getFusionFieldValue());
     }
 }
