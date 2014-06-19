@@ -12,6 +12,8 @@
         <om:field name="source"/>
         <om:field name="today"/>
         <om:field name="today2"/>
+        <om:field name="today3"/>
+        <om:field name="today4"/>
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile"/>
@@ -107,6 +109,36 @@
                 <om:change>
                     <om:response type="beanshell-file">
                         <file>target/test-classes/test-bsh-file.bsh</file>
+                    </om:response>
+                </om:change>
+            </om:field>
+
+            <om:field name="f3" fusion-name="today3">
+                <om:change>
+                    <om:response type="javascript">
+                        <script><![CDATA[
+                            importClass(java.text.SimpleDateFormat);
+                            importClass(java.util.GregorianCalendar);
+                            var now = new GregorianCalendar(2014, 6, 19);
+                            var fmt = new SimpleDateFormat("yyyy-MM-dd");
+                            // predefined variables: see ScriptEnv.ENV_*
+                            print("Search Server Field: "+searchServerField+"\n");
+                            print("Search Server Value: "+searchServerValue+"\n");
+                            print("Fusion Field       : "+fusionField+"\n");
+                            print("Fusion Value       : "+fusionValue+"\n");
+                            print("Fusion Field       : "+fusionFieldDeclaration+"\n");
+                            print("Fusion Schema      : "+fusionSchema+"\n");
+                            // last value is the return value
+                            searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
+                        ]]></script>
+                    </om:response>
+                </om:change>
+            </om:field>
+
+            <om:field name="f4" fusion-name="today4">
+                <om:change>
+                    <om:response type="javascript-file">
+                        <file>target/test-classes/test-js-file.js</file>
                     </om:response>
                 </om:change>
             </om:field>

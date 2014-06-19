@@ -7,8 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
 
-import javax.script.*;
-import java.util.ArrayList;
+import javax.script.ScriptEngine;
 import java.util.List;
 
 /**
@@ -31,22 +30,9 @@ public class Bsh extends AbstractType
 
     private ScriptEngine engine;
 
-    public Bsh()
+    protected Bsh()
     {
-        ScriptEngineManager manager = new ScriptEngineManager();
-        engine = manager.getEngineByName(engineName);
-        if (engine == null)
-        {
-            ScriptEngineManager sem = new ScriptEngineManager();
-            List<ScriptEngineFactory> factories = sem.getEngineFactories();
-            List<String> knownEngineNames = new ArrayList<>();
-            for (javax.script.ScriptEngineFactory f : factories)
-            {
-                knownEngineNames.add(f.getNames().toString());
-            }
-
-            log.error("Didn't find engine for '" + engineName + "'. Known are: " + knownEngineNames);
-        }
+        engine = getScriptEngine(engineName);
     }
 
     @Override
@@ -75,32 +61,7 @@ public class Bsh extends AbstractType
     @Override
     public List<String> apply(ScriptEnv env)
     {
-        Bindings bindings = engine.createBindings();
-        bindings.putAll(engine.getBindings(ScriptContext.GLOBAL_SCOPE));
-        env.flatten(bindings);
-        Object evaluated = null;
-        try
-        {
-            evaluated = engine.eval(code, bindings);
-        }
-        catch (ScriptException e)
-        {
-            log.error("Caught exception while evaluating bsh code: {}", code, e);
-        }
-        List<String> result = null;
-        if (evaluated != null)
-        {
-            result = new ArrayList<>();
-            if (evaluated instanceof List)
-            {
-                result.addAll((java.util.Collection<? extends String>) evaluated);
-            }
-            else
-            {
-                result.add(evaluated.toString());
-            }
-        }
-        return result;
+        return applyScriptEngineCode(engine, code, env);
     }
 
     public static Bsh getInstance()
