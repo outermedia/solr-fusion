@@ -85,11 +85,11 @@ public class Document implements VisitableDocument
     }
 
     /**
-     * Get a document's field value by name. Is the field a multi value field, only the first value is returned.
-     * Note: An instance of class Term contains the original and mapped value.
+     * Get a document's field value by name. For multi value fields, all values are returned. Note: An instance of class
+     * Term contains the original and mapped value.
      *
      * @param fieldName the field's name for which to return the value
-     * @return null if field was not found or the value of the field
+     * @return null if field was not found or the Term of the field
      */
     public Term getFieldTermByName(String fieldName)
     {
@@ -97,24 +97,7 @@ public class Document implements VisitableDocument
         SolrField sf = findFieldByName(fieldName);
         if (sf != null)
         {
-            if (sf instanceof SolrSingleValuedField)
-            {
-                result = ((SolrSingleValuedField) sf).getTerm();
-            }
-            else if (sf instanceof SolrMultiValuedField)
-            {
-                // or throw an exception?
-                List<Term> values = ((SolrMultiValuedField) sf).getTerms();
-                if (values != null && !values.isEmpty())
-                {
-                    result = values.get(0);
-                }
-            }
-            else
-            {
-                throw new RuntimeException("Can't handle fields of class " + sf.getClass().getName()
-                        + ". Only SolrSingleValuedField and SolrMultiValuedField are supported.");
-            }
+            result = sf.getTerm();
         }
         return result;
     }

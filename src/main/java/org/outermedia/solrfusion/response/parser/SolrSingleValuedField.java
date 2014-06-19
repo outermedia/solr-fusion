@@ -27,8 +27,7 @@ public class SolrSingleValuedField extends SolrField
     @XmlValue
     private String value;
 
-    @XmlTransient
-    private Term term;
+
 
     /**
      * Hook up unmarshalling in order to create an instance of
@@ -39,7 +38,7 @@ public class SolrSingleValuedField extends SolrField
      */
     protected void afterUnmarshal(Unmarshaller u, Object parent)
     {
-        term = Term.newSearchServerTerm(fieldName, value);
+        setTerm(Term.newSearchServerTerm(fieldName, value));
     }
 
     @Override

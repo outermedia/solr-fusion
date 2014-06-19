@@ -191,10 +191,10 @@ public class ResponseMapper implements ResponseMapperIfc
     public boolean visitField(SolrMultiValuedField sf, ScriptEnv env)
     {
         List<FieldMapping> mappings = getFieldMappings(sf.getFieldName());
-        List<Term> terms = sf.getTerms();
+        Term t = sf.getTerm();
         for (FieldMapping m : mappings)
         {
-            m.applyResponseMappings(terms, env, getFusionField(env, m));
+            m.applyResponseMappings(t, env, getFusionField(env, m));
         }
         // always continue visiting
         return true;

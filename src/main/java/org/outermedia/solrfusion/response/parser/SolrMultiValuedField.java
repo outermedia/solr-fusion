@@ -6,8 +6,10 @@ import lombok.ToString;
 import org.outermedia.solrfusion.mapper.Term;
 
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import java.util.List;
 
 /**
@@ -32,9 +34,6 @@ public class SolrMultiValuedField extends SolrField
             })
     private List<String> values;
 
-    @XmlTransient
-    private List<Term> terms;
-
     /**
      * Hook up unmarshalling in order to create an instance of
      * {@link org.outermedia.solrfusion.mapper.Term}.
@@ -44,15 +43,8 @@ public class SolrMultiValuedField extends SolrField
      */
     protected void afterUnmarshal(Unmarshaller u, Object parent)
     {
-        terms = new ArrayList<>();
-
-        for (String value : this.getValues())
-        {
-            if (!value.isEmpty())
-            {
-                terms.add(Term.newSearchServerTerm(fieldName, value));
-            }
-        }
+        Term t = Term.newSearchServerTerm(fieldName, values);
+        setTerm(t);
     }
 
     @Override

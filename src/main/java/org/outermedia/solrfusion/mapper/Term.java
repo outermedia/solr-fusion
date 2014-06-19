@@ -111,6 +111,7 @@ public class Term implements VisitableQuery
         searchServerFieldValue = null;
         removed = false;
         wasMapped = false;
+        newQueryTerms = null;
     }
 
     public void resetSearchServerField()
@@ -120,6 +121,7 @@ public class Term implements VisitableQuery
         fusionField = null;
         removed = false;
         wasMapped = false;
+        newResponseValues = null;
     }
 
     @Override

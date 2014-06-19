@@ -62,13 +62,18 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
             public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
             {
                 Term t = sf.getTerm();
-                writeTerm("    ", t.isWasMapped(), t.isRemoved(), t.getFusionFieldName(), t.getFusionFieldValue(),
-                        t.getFusionField());
+                String v = null;
+                List<String> fusionFieldValues = t.getFusionFieldValue();
+                if (fusionFieldValues != null && !fusionFieldValues.isEmpty())
+                {
+                    v = fusionFieldValues.get(0);
+                }
+                writeTerm("    ", t.isWasMapped(), t.isRemoved(), t.getFusionFieldName(), v, t.getFusionField());
                 return true;
             }
 
             private void writeTerm(String indent, boolean wasMapped, boolean wasRemoved, String fusionFieldName,
-                    List<String> fusionValue, FusionField fusionField)
+                    String fusionValue, FusionField fusionField)
             {
                 if (wasMapped && !wasRemoved)
                 {
@@ -76,7 +81,8 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
                     if (typeTag == null)
                     {
                         typeTag = "str";
-                        log.error("Please define a response key for fusion type '{}' (fusion field: {}) in the configuration of {}.",
+                        log.error(
+                                "Please define a response key for fusion type '{}' (fusion field: {}) in the configuration of {}.",
                                 fusionField.getType(), fusionField.getFieldName(), getClass().getName());
                     }
                     sb.append(indent);
@@ -89,7 +95,7 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
                         sb.append("\"");
                     }
                     sb.append("><![CDATA[");
-                    sb.append(fusionValue.get(0));
+                    sb.append(fusionValue);
                     sb.append("]]>");
                     sb.append("</");
                     sb.append(typeTag);
@@ -101,27 +107,23 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
             @Override
             public boolean visitField(SolrMultiValuedField msf, ScriptEnv env)
             {
-                List<Term> terms = msf.getTerms();
-                if (terms != null && !terms.isEmpty())
+                Term t = msf.getTerm();
+                if (t != null)
                 {
                     boolean printNone = true;
-                    for (Term t : terms)
+                    if (t.isWasMapped() && !t.isRemoved())
                     {
-                        if (t.isWasMapped() && !t.isRemoved())
-                        {
-                            printNone = false;
-                            break;
-                        }
+                        printNone = false;
                     }
                     if (!printNone)
                     {
-                        String fusionFieldName = terms.get(0).getFusionFieldName();
+                        String fusionFieldName = t.getFusionFieldName();
                         sb.append("    <");
                         sb.append(multiValueKey);
                         sb.append(" name=\"" + fusionFieldName + "\">\n");
-                        for (Term t : terms)
+                        for (String v : t.getFusionFieldValue())
                         {
-                            writeTerm("      ", t.isWasMapped(), t.isRemoved(), null, t.getFusionFieldValue(), t.getFusionField());
+                            writeTerm("      ", t.isWasMapped(), t.isRemoved(), null, v, t.getFusionField());
                         }
                         sb.append("    </");
                         sb.append(multiValueKey);
@@ -164,7 +166,8 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
                 }
                 else
                 {
-                    log.error("{}: Please specify a fusion-type ({}) and a key ({})", getClass().getName(), fusionType, key);
+                    log.error("{}: Please specify a fusion-type ({}) and a key ({})", getClass().getName(), fusionType,
+                            key);
                 }
             }
         }
