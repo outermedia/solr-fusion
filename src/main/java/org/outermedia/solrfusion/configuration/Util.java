@@ -17,7 +17,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.xpath.*;
@@ -268,4 +271,13 @@ public class Util
         return doc.getDocumentElement();
     }
 
+    public String xmlToString(Node n) throws TransformerException
+    {
+        TransformerFactory transFactory = TransformerFactory.newInstance();
+        Transformer transformer = transFactory.newTransformer();
+        StringWriter buffer = new StringWriter();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        transformer.transform(new DOMSource(n), new StreamResult(buffer));
+        return buffer.toString();
+    }
 }

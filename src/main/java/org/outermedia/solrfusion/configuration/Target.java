@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.types.AbstractType;
+import org.outermedia.solrfusion.types.ConversionDirection;
 import org.outermedia.solrfusion.types.ScriptEnv;
 import org.w3c.dom.Element;
 
@@ -52,7 +53,7 @@ public abstract class Target
         util = new Util();
     }
 
-    public List<String> apply(List<String> values, ScriptEnv env)
+    public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
     {
         List<String> result = null;
         if (type != null)
@@ -63,7 +64,7 @@ public abstract class Target
                 if (typeImpl != null)
                 {
                     typeImpl.passArguments(typeConfig, util);
-                    result = typeImpl.apply(values, env);
+                    result = typeImpl.apply(values, env, dir);
                 }
             }
             catch (Exception e)

@@ -54,7 +54,7 @@ public class Js extends AbstractType
 	}
 
     @Override
-    public List<String> apply(List<String> values, ScriptEnv env)
+    public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
     {
         return applyScriptEngineCode(engine, code, values, env);
     }

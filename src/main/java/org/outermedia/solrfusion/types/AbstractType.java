@@ -45,9 +45,10 @@ public abstract class AbstractType implements Initiable<ScriptType>
      *
      * @param values
      * @param env
+     * @param dir
      * @return perhaps null
      */
-    public abstract List<String> apply(List<String> values, ScriptEnv env);
+    public abstract List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir);
 
     public ScriptEngine getScriptEngine(String engineName)
     {

@@ -21,6 +21,7 @@ import java.util.Map;
  *     <li>{@value #ENV_FUSION_FIELD_DECLARATION} - a FusionField instance</li>
  *     <li>{@value #ENV_FUSION_SCHEMA} - a Configuration instance</li>
  *     <li>{@value #ENV_VALUES} - a List of String</li>
+ *     <li>{@value #ENV_CONVERSION} - a ConversionDirection</li>
  * </ul>
  */
 @ToString
@@ -36,6 +37,7 @@ public class ScriptEnv
     public final static String ENV_FUSION_FIELD_DECLARATION = "fusionFieldDeclaration"; // a FusionField
     public final static String ENV_FUSION_SCHEMA = "fusionSchema"; // a Configuration
     public final static String ENV_VALUES = "values"; // a List of String
+    public final static String ENV_CONVERSION = "conversion"; // a ConversionDirection
 
     public ScriptEnv()
     {

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.outermedia.solrfusion.mapper.Term;
+import org.outermedia.solrfusion.types.ConversionDirection;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -82,6 +83,7 @@ public abstract class Operation
         ScriptEnv newEnv = new ScriptEnv(env);
         newEnv.setBinding(ScriptEnv.ENV_FUSION_VALUE, term.getFusionFieldValue());
         newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_VALUE, term.getSearchServerFieldValue());
+        newEnv.setBinding(ScriptEnv.ENV_CONVERSION, ConversionDirection.FUSION_TO_SEARCH);
         List<Target> queryTargets = getQueryTargets();
         for (Target t : queryTargets)
         {
@@ -94,7 +96,8 @@ public abstract class Operation
         // the searchServerFieldValue is initialized with the fusionFieldValue
         // because it is possible to apply several mappings in sequence the searchServerFieldValue
         // has to be used
-        List<String> newSearchServerValue = t.apply(term.getSearchServerFieldValue(), newEnv);
+        List<String> newSearchServerValue = t.apply(term.getSearchServerFieldValue(), newEnv,
+                ConversionDirection.FUSION_TO_SEARCH);
         term.setSearchServerFieldValue(newSearchServerValue);
     }
 
@@ -103,6 +106,7 @@ public abstract class Operation
         ScriptEnv newEnv = new ScriptEnv(env);
         newEnv.setBinding(ScriptEnv.ENV_FUSION_VALUE, term.getFusionFieldValue());
         newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_VALUE, term.getSearchServerFieldValue());
+        newEnv.setBinding(ScriptEnv.ENV_CONVERSION, ConversionDirection.SEARCH_TO_FUSION);
         List<Target> queryTargets = getResponseTargets();
         for (Target t : queryTargets)
         {
@@ -115,7 +119,7 @@ public abstract class Operation
         // the fusionFieldValue is initialized with the searchServerFieldValue
         // because it is possible to apply several mappings in sequence the fusionFieldValue
         // has to be used
-        List<String> newFusionValue = t.apply(term.getFusionFieldValue(), newEnv);
+        List<String> newFusionValue = t.apply(term.getFusionFieldValue(), newEnv, ConversionDirection.SEARCH_TO_FUSION);
         term.setFusionFieldValue(newFusionValue);
     }
 }

@@ -58,10 +58,11 @@ public class Bsh extends AbstractType
      *
      * @param values
      * @param env
+     * @param dir
      * @return
      */
     @Override
-    public List<String> apply(List<String> values, ScriptEnv env)
+    public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
     {
         return applyScriptEngineCode(engine, code, values, env);
     }

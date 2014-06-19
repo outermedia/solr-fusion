@@ -36,7 +36,7 @@ public class ValueTest extends AbstractTypeTest
         List<String> values = valueType.getValues();
         Assert.assertEquals("Found different parsed value than expected", Arrays.asList("abc123"), values);
 
-        values = valueType.apply(null, null);
+        values = valueType.apply(null, null, ConversionDirection.SEARCH_TO_FUSION);
         Assert.assertEquals("Found different values than expected", Arrays.asList("abc123"), values);
     }
 
@@ -53,7 +53,7 @@ public class ValueTest extends AbstractTypeTest
         List<String> values = valueType.getValues();
         Assert.assertEquals("Found different parsed value than expected", Arrays.asList("a", "b", "c"), values);
 
-        values = valueType.apply(null, null);
+        values = valueType.apply(null, null, ConversionDirection.SEARCH_TO_FUSION);
         Assert.assertEquals("Found different values than expected", Arrays.asList("a", "b", "c"), values);
     }
 
@@ -70,7 +70,7 @@ public class ValueTest extends AbstractTypeTest
         List<String> values = valueType.getValues();
         Assert.assertEquals("Found different parsed value than expected", null, values);
 
-        values = valueType.apply(null, null);
+        values = valueType.apply(null, null, ConversionDirection.SEARCH_TO_FUSION);
         Assert.assertEquals("Found different values than expected", null, values);
     }
 

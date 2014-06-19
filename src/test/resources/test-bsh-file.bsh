@@ -2,6 +2,7 @@ import java.text.SimpleDateFormat;
 GregorianCalendar now = new GregorianCalendar(2014, 6, 19);
 SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 // predefined variables: see ScriptEnv.ENV_*
+print("Conversion         : "+conversion);
 print("Values             : "+values);
 print("Search Server Field: "+searchServerField);
 print("Search Server Value: "+searchServerValue);

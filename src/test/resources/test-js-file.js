@@ -3,6 +3,7 @@ importClass(java.util.GregorianCalendar);
 var now = new GregorianCalendar(2014, 6, 19);
 var fmt = new SimpleDateFormat("yyyy-MM-dd");
 // predefined variables: see ScriptEnv.ENV_*
+print("Conversion         : "+conversion+"\n");
 print("Values             : "+values+"\n");
 print("Search Server Field: "+searchServerField+"\n");
 print("Search Server Value: "+searchServerValue+"\n");

@@ -53,7 +53,7 @@ public class Value extends AbstractType
     }
 
     @Override
-    public List<String> apply(List<String> values, ScriptEnv env)
+    public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
     {
         return this.values;
     }
