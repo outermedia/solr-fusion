@@ -7,6 +7,8 @@ import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -102,4 +104,48 @@ public class Document implements VisitableDocument
         return result;
     }
 
+    /**
+     * Convenient method to build easier build responses. Especially useful in unit tests.
+     *
+     * @param name
+     * @param value
+     * @return
+     */
+    public SolrField addField(String name, String... value)
+    {
+        SolrField result = null;
+        if (value.length == 1)
+        {
+            SolrSingleValuedField f = new SolrSingleValuedField();
+            f.setFieldName(name);
+            f.setValue(value[0]);
+            f.setTerm(Term.newSearchServerTerm(f.getFieldName(), f.getValue()));
+            if (solrSingleValuedFields == null)
+            {
+                solrSingleValuedFields = new ArrayList<>();
+            }
+            solrSingleValuedFields.add(f);
+            result = f;
+        }
+        else if (value.length > 1)
+        {
+            SolrMultiValuedField f = new SolrMultiValuedField();
+            f.setFieldName(name);
+            List<String> vals = new ArrayList<>();
+            vals.addAll(Arrays.asList(value));
+            f.setValues(vals);
+            f.setTerm(Term.newSearchServerTerm(f.getFieldName(), f.getValues()));
+            if (solrMultiValuedFields == null)
+            {
+                solrMultiValuedFields = new ArrayList<>();
+            }
+            solrMultiValuedFields.add(f);
+            result = f;
+        }
+        else
+        {
+            throw new RuntimeException("No value given for field: '" + name + "'");
+        }
+        return result;
+    }
 }

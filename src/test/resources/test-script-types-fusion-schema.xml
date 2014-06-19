@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<om:core xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:om="http://solrfusion.outermedia.org/configuration/"
+    xmlns="http://solrfusion.outermedia.org/configuration/type/"
+    xsi:schemaLocation="http://solrfusion.outermedia.org/configuration/ ../../main/resources/configuration.xsd ">
+
+    <om:fusion-schema-fields default-type="text">
+        <om:field name="id"/>
+        <om:field name="author"/>
+        <om:field name="title"/>
+        <om:field name="score" type="double"/>
+        <om:field name="source" />
+    </om:fusion-schema-fields>
+
+    <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile" />
+    <om:script-type name="beanshell-file" class="org.outermedia.solrfusion.types.BshFile" />
+    <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js" />
+    <om:script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh" />
+    <om:script-type name="java-class" class="org.outermedia.solrfusion.types.Java" />
+    <om:script-type name="regexp" class="org.outermedia.solrfusion.types.RegularExpression" />
+    <om:script-type name="static-table-file" class="org.outermedia.solrfusion.types.TableFile"/>
+    <om:script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/>
+    <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
+
+    <om:default-search-field>title</om:default-search-field>
+
+    <om:default-operator>AND</om:default-operator>
+
+    <om:id-generator fusion-name="id"
+        class="org.outermedia.solrfusion.DefaultIdGenerator$Factory"/>
+
+    <om:response-consolidator class="org.outermedia.solrfusion.response.ResponseConsolidator$Factory"/>
+
+    <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory"/>
+
+    <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory"/>
+
+    <om:search-server-query-builder class="org.outermedia.solrfusion.mapper.SearchServerQueryBuilder$Factory"/>
+
+    <om:controller class="org.outermedia.solrfusion.FusionController$Factory"/>
+
+    <om:solr-servers>
+        <om:timeout>4000</om:timeout>
+        <om:disaster-limit>1</om:disaster-limit>
+        <om:error key="disaster-limit">Please try later again.</om:error>
+
+        <om:query-parser
+            class="org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory"/>
+
+        <om:response-parser
+            class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory"/>
+
+        <om:response-renderer type="xml"
+            class="org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory"/>
+
+        <om:response-renderer type="json"
+            class="org.outermedia.solrfusion.response.DefaultJsonResponseRenderer$Factory"/>
+
+        <om:response-renderer type="php"
+            class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory"/>
+
+        <om:solr-server name="Bibliothek A" version="3.6"
+            class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+
+            <om:url>http://host:port/solr/xyz</om:url>
+
+            <om:score factor="1.2"
+                class="org.outermedia.solrfusion.DefaultScore$Factory"/>
+
+            <om:unique-key>id</om:unique-key>
+
+            <om:field name="id" fusion-name="id"/>
+            <om:field name="Titel" fusion-name="title"/>
+            <om:field name="Autor" fusion-name="author"/>
+
+            <om:field name="bibName" fusion-name="source">
+                <om:change>
+                    <om:response type="static-value">
+                        <value>BIB-A</value>
+                    </om:response>
+                </om:change>
+            </om:field>
+
+        </om:solr-server>
+
+    </om:solr-servers>
+</om:core>

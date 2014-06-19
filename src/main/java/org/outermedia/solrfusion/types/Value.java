@@ -51,19 +51,7 @@ public class Value extends AbstractType
     @Override
     public List<String> apply(ScriptEnv env)
     {
-        List<String> result = null;
-        if (values != null)
-        {
-            if (values.size() > 1)
-            {
-                log.warn("Multi values are currently not supported. Using first value only: " + this);
-            }
-            if (!values.isEmpty())
-            {
-                result = values;
-            }
-        }
-        return result;
+        return values;
     }
 
     public static Value getInstance()

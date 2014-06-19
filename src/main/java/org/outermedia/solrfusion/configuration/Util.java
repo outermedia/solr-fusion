@@ -1,6 +1,7 @@
 package org.outermedia.solrfusion.configuration;
 
 import lombok.extern.slf4j.Slf4j;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -12,20 +13,17 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.NamespaceContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.xpath.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Helper class which simplifies the reading of XML files.
@@ -206,6 +204,7 @@ public class Util
             }
         });
         XPathExpression expr = xpath.compile(xpathStr);
+        Map<Node, Boolean> alreadyFound = new HashMap<>();
         for (Element e : typeConfig)
         {
             Object r = expr.evaluate(e, XPathConstants.NODESET);
@@ -214,7 +213,13 @@ public class Util
             {
                 for (int i = 0; i < nl.getLength(); i++)
                 {
-                    result.add(nl.item(0));
+                    // if the typeConfig elements are siblings, then evaluate() returns the siblings too!
+                    // so it is necessary to check whether a node was already added or not
+                    if (!alreadyFound.containsKey(nl.item(i)))
+                    {
+                        result.add(nl.item(i));
+                        alreadyFound.put(nl.item(i), Boolean.TRUE);
+                    }
                 }
             }
         }
@@ -223,8 +228,13 @@ public class Util
 
     public List<Element> xpathElements(String xpathStr, List<Element> typeConfig) throws XPathExpressionException
     {
-        List<Element> result = new ArrayList<>();
         List<Node> nodes = xpath(xpathStr, typeConfig);
+        return filterElements(nodes);
+    }
+
+    public List<Element> filterElements(List<Node> nodes)
+    {
+        List<Element> result = new ArrayList<>();
         for (Node n : nodes)
         {
             if (n instanceof Element)
@@ -234,4 +244,28 @@ public class Util
         }
         return result;
     }
+
+    public List<Element> filterElements(NodeList nodes)
+    {
+        List<Element> result = new ArrayList<>();
+        for (int i = 0; i < nodes.getLength(); i++)
+        {
+            Node n = nodes.item(i);
+            if (n instanceof Element)
+            {
+                result.add((Element) n);
+            }
+        }
+        return result;
+    }
+
+    public Element parseXml(String xml) throws ParserConfigurationException, IOException, SAXException
+    {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = db.parse(new ByteArrayInputStream(xml.getBytes()));
+        return doc.getDocumentElement();
+    }
+
 }
