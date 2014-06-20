@@ -17,8 +17,8 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 /**
- * Abstract data holder class to store the configuration of common attributes of
- * a &lt;query&gt;, &lt;response&gt; or &lt;query-response&gt;.
+ * Abstract data holder class to store the configuration of common attributes of a &lt;query&gt;, &lt;response&gt; or
+ * &lt;query-response&gt;.
  *
  * @author ballmann
  */
@@ -34,9 +34,15 @@ public abstract class Target
     @XmlAttribute(name = "type", required = false)
     private ScriptType type;
 
+    /**
+     * Only used if a field is split/joined.
+     */
     @XmlAttribute(name = "name", required = false)
     private String name;
 
+    /**
+     * Only used if a field is split/joined.
+     */
     @XmlAttribute(name = "fusion-name", required = false)
     private String fusionName;
 
@@ -65,6 +71,10 @@ public abstract class Target
                 {
                     typeImpl.passArguments(typeConfig, util);
                     result = typeImpl.apply(values, env, dir);
+                }
+                else
+                {
+                    log.error("Can't apply script type {}, because getting instance failed.", type);
                 }
             }
             catch (Exception e)

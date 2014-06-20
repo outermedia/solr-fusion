@@ -20,6 +20,14 @@ import java.util.List;
 public class BshFile extends Bsh
 {
 
+    /**
+     * The expected configuration is:
+     * <pre>
+     * {@code<file>path-to-code.bsh</file>}
+     * </pre>
+     * @param typeConfig a list of XML elements
+     * @param util       helper which simplifies to apply xpaths
+     */
     @Override
     public void passArguments(List<Element> typeConfig, Util util)
     {
@@ -34,8 +42,9 @@ public class BshFile extends Bsh
         catch (Exception e)
         {
             log.error("Caught exception while parsing configuration: "
-                    + typeConfig, e);
+                    + elementListToString(typeConfig), e);
         }
+        logBadConfiguration(getCode() != null, typeConfig);
     }
 
     public static BshFile getInstance()

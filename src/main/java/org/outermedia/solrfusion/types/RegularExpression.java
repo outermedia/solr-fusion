@@ -13,7 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A regular expression which matches a pattern and applies a replacement in order to process a field conversion.
+ * A regular expression which matches a pattern and applies a replacement in order to process a field conversion. All
+ * occurrences are replaced.
  *
  * @author ballmann
  */
@@ -32,6 +33,16 @@ public class RegularExpression extends AbstractType
     {
     }
 
+    /**
+     * The expected configuration is:
+     * <pre>
+     * {@code<pattern>regular.expression</pattern>
+     *  <replacement>text</replacement>
+     * }
+     *  </pre>
+     * @param typeConfig a list of XML elements
+     * @param util       helper which simplifies to apply xpaths
+     */
     @Override
     public void passArguments(List<Element> typeConfig, Util util)
     {
@@ -57,9 +68,9 @@ public class RegularExpression extends AbstractType
         catch (Exception e)
         {
             log.error("Caught exception while parsing configuration: "
-                    + typeConfig, e);
+                    + elementListToString(typeConfig), e);
         }
-
+        logBadConfiguration(pattern != null && replacement != null, typeConfig);
     }
 
     @Override

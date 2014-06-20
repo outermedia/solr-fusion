@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.types;
 import junit.framework.Assert;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.ResponseMapper;
@@ -30,12 +31,28 @@ public class BshFileTest extends AbstractTypeTest
 
         Util util = new Util();
         Element elem = util.parseXml(xml);
-        BshFile bshType = new BshFile();
+        BshFile bshType = Mockito.spy(new BshFile());
         bshType.passArguments(util.filterElements(elem.getChildNodes()), util);
+        Mockito.verify(bshType, Mockito.times(1)).logBadConfiguration(Mockito.eq(true), Mockito.anyList());
 
         String code = bshType.getCode();
         String expected = FileUtils.readFileToString(new File("target/test-classes/test-bsh-file.bsh"));
         Assert.assertEquals("Parsing of configuration failed.", expected, code);
+    }
+
+    @Test
+    public void testMissingConfig() throws IOException, SAXException, ParserConfigurationException
+    {
+        String xml = docOpen + docClose;
+
+        Util util = new Util();
+        Element elem = util.parseXml(xml);
+        BshFile bshType = Mockito.spy(new BshFile());
+        bshType.passArguments(util.filterElements(elem.getChildNodes()), util);
+        Mockito.verify(bshType, Mockito.times(1)).logBadConfiguration(Mockito.eq(false), Mockito.anyList());
+
+        String code = bshType.getCode();
+        Assert.assertNull("Handling of missing configuration failed.", code);
     }
 
     @Test

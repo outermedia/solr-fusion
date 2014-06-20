@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.types;
 
 import junit.framework.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.ResponseMapper;
@@ -15,6 +16,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 /**
  * Created by ballmann on 6/19/14.
@@ -28,13 +30,31 @@ public class RegularExpressionTest extends AbstractTypeTest
 
         Util util = new Util();
         Element elem = util.parseXml(xml);
-        RegularExpression rxType = new RegularExpression();
+        RegularExpression rxType = Mockito.spy(new RegularExpression());
         rxType.passArguments(util.filterElements(elem.getChildNodes()), util);
+        Mockito.verify(rxType, Mockito.times(1)).logBadConfiguration(Mockito.eq(true), Mockito.anyList());
 
         String pattern = rxType.getPattern().pattern();
         String replacement = rxType.getReplacement();
         Assert.assertEquals("Parsing of pattern failed.", "([^,]+),\\s*(.+)", pattern);
         Assert.assertEquals("Parsing of replacement failed.", "$2 $1", replacement);
+    }
+
+    @Test
+    public void testMissingConfig() throws IOException, SAXException, ParserConfigurationException
+    {
+        String xml = docOpen + docClose;
+
+        Util util = new Util();
+        Element elem = util.parseXml(xml);
+        RegularExpression rxType = Mockito.spy(new RegularExpression());
+        rxType.passArguments(util.filterElements(elem.getChildNodes()), util);
+        Mockito.verify(rxType, Mockito.times(1)).logBadConfiguration(Mockito.eq(false), Mockito.anyList());
+
+        Pattern pattern = rxType.getPattern();
+        String replacement = rxType.getReplacement();
+        Assert.assertNull("Handling of missing pattern failed.", pattern);
+        Assert.assertNull("Handling of missing replacement failed.", replacement);
     }
 
     @Test

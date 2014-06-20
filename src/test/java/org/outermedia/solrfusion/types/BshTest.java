@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.types;
 
 import junit.framework.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.ResponseMapper;
@@ -28,11 +29,27 @@ public class BshTest extends AbstractTypeTest
 
         Util util = new Util();
         Element elem = util.parseXml(xml);
-        Bsh bshType = new Bsh();
+        Bsh bshType = Mockito.spy(new Bsh());
         bshType.passArguments(util.filterElements(elem.getChildNodes()), util);
+        Mockito.verify(bshType, Mockito.times(1)).logBadConfiguration(Mockito.eq(true), Mockito.anyList());
 
         String code = bshType.getCode();
         Assert.assertEquals("Parsing of configuration failed.", "return 42;", code);
+    }
+
+    @Test
+    public void testMissingConfig() throws IOException, SAXException, ParserConfigurationException
+    {
+        String xml = docOpen + docClose;
+
+        Util util = new Util();
+        Element elem = util.parseXml(xml);
+        Bsh bshType = Mockito.spy(new Bsh());
+        bshType.passArguments(util.filterElements(elem.getChildNodes()), util);
+        Mockito.verify(bshType, Mockito.times(1)).logBadConfiguration(Mockito.eq(false), Mockito.anyList());
+
+        String code = bshType.getCode();
+        Assert.assertNull("Handling of missing configuration failed.", code);
     }
 
     @Test

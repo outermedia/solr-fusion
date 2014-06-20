@@ -22,6 +22,12 @@ import java.util.List;
 public class JsFile extends Js
 {
 
+    /**
+     * The expected configuration is:
+     * {@code<file>path-to-code.bsh</file>}
+     * @param typeConfig a list of XML elements
+     * @param util       helper which simplifies to apply xpaths
+     */
 	@Override
 	public void passArguments(List<Element> typeConfig, Util util)
 	{
@@ -36,8 +42,9 @@ public class JsFile extends Js
         catch (Exception e)
         {
             log.error("Caught exception while parsing configuration: "
-                    + typeConfig, e);
+                    + elementListToString(typeConfig), e);
         }
+        logBadConfiguration(getCode() != null, typeConfig);
 	}
 
     public static JsFile getInstance()

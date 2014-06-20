@@ -34,6 +34,20 @@ public class Table extends AbstractType
         searchServerToFusion = new HashMap<>();
     }
 
+    /**
+     * The expected configuration is:
+     * <pre>
+     * {@code<entry>
+     *      <value>v1</value>
+     *      <fusion-value>w1</fusion-value>
+     *  </entry>
+     *  ...
+     * }
+     *  </pre>
+     *  At least one entry is expected.
+     * @param typeConfig a list of XML elements
+     * @param util       helper which simplifies to apply xpaths
+     */
     @Override
     public void passArguments(List<Element> typeConfig, Util util)
     {
@@ -69,9 +83,18 @@ public class Table extends AbstractType
                 {
                     // NOP
                 }
-                log.error("Couldn't parse configuration: " + xml);
+                log.error("Couldn't parse configuration: {}", xml);
             }
         }
+        if (fusionToSearchServer.isEmpty())
+        {
+            fusionToSearchServer = null;
+        }
+        if (searchServerToFusion.isEmpty())
+        {
+            searchServerToFusion = null;
+        }
+        logBadConfiguration(fusionToSearchServer != null && searchServerToFusion != null, typeConfig);
     }
 
     @Override

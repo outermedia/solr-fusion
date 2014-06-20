@@ -117,4 +117,61 @@ public abstract class AbstractType implements Initiable<ScriptType>
         }
         return result;
     }
+
+    /**
+     * If configOk is false, then an error is logged.
+     *
+     * @param configOk   whether to log a configuration error or not.
+     * @param typeConfig is the configuration given to {@link #passArguments(java.util.List,
+     *                   org.outermedia.solrfusion.configuration.Util)}
+     */
+    public void logBadConfiguration(boolean configOk, List<Element> typeConfig)
+    {
+        if (!configOk)
+        {
+            log.error("{}: Missing or invalid configuration. Please fix it: {}", getClass().getName(),
+                    elementListToString(typeConfig));
+        }
+    }
+
+    public String elementListToString(List<Element> elems)
+    {
+        StringBuilder sb = new StringBuilder();
+        if (elems == null)
+        {
+            sb.append("null");
+        }
+        else
+        {
+            Util util = new Util();
+            sb.append("[");
+            String se;
+            for (int i = 0; i < elems.size(); i++)
+            {
+                if (i > 0)
+                {
+                    sb.append(", ");
+                }
+                Element n = elems.get(i);
+                if (n == null)
+                {
+                    se = "null";
+                }
+                else
+                {
+                    try
+                    {
+                        se = util.xmlToString(n);
+                    }
+                    catch (Exception e)
+                    {
+                        se = n.toString();
+                    }
+                }
+                sb.append(se);
+            }
+            sb.append("]");
+        }
+        return sb.toString();
+    }
 }

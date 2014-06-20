@@ -25,26 +25,19 @@ import java.util.Arrays;
 /**
  * Created by ballmann on 6/19/14.
  */
-public class TableTest extends AbstractTypeTest
+public class TableFileTest extends AbstractTypeTest
 {
     @Test
     public void testConfigParsing() throws IOException, SAXException, ParserConfigurationException, TransformerException
     {
-        String xml = docOpen + "<entry>\n" +
-                "                   <value>u1</value>\n" +
-                "                   <fusion-value>user1</fusion-value>\n" +
-                "               </entry>\n" +
-                "               <entry>\n" +
-                "                   <value>u2</value>\n" +
-                "                   <fusion-value>user2</fusion-value>\n" +
-                "               </entry>" + docClose;
+        String xml = docOpen + "<file>target/test-classes/test-table-file.xml</file>" + docClose;
 
         Util util = new Util();
         Element elem = util.parseXml(xml);
         // System.out.println(util.xmlToString(elem));
-        Table tableType = Mockito.spy(new Table());
+        TableFile tableType = Mockito.spy(new TableFile());
         tableType.passArguments(util.filterElements(elem.getChildNodes()), util);
-        Mockito.verify(tableType, Mockito.times(1)).logBadConfiguration(Mockito.eq(true), Mockito.anyList());
+        Mockito.verify(tableType, Mockito.times(2)).logBadConfiguration(Mockito.eq(true), Mockito.anyList());
 
         String fusion2search = tableType.getFusionToSearchServer().toString();
         String search2fusion = tableType.getSearchServerToFusion().toString();
@@ -60,7 +53,7 @@ public class TableTest extends AbstractTypeTest
         Util util = new Util();
         Element elem = util.parseXml(xml);
         // System.out.println(util.xmlToString(elem));
-        Table tableType = Mockito.spy(new Table());
+        TableFile tableType = Mockito.spy(new TableFile());
         tableType.passArguments(util.filterElements(elem.getChildNodes()), util);
         Mockito.verify(tableType, Mockito.times(1)).logBadConfiguration(Mockito.eq(false), Mockito.anyList());
 
@@ -81,12 +74,12 @@ public class TableTest extends AbstractTypeTest
         buildResponseField(doc, "Titel", "Ein kurzer Weg");
         buildResponseField(doc, "Autor", "Willi Schiller");
         buildResponseField(doc, "id", "132");
-        Term sourceField = buildResponseField(doc, "f6", "u2", "u1");
+        Term sourceField = buildResponseField(doc, "f7", "u2", "u1");
 
         ScriptEnv env = new ScriptEnv();
         rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env);
         // System.out.println(sourceField.toString());
-        org.junit.Assert.assertEquals("Found wrong field name mapping", "text2", sourceField.getFusionFieldName());
+        org.junit.Assert.assertEquals("Found wrong field name mapping", "text3", sourceField.getFusionFieldName());
         org.junit.Assert.assertEquals("Found wrong field value mapping", Arrays.asList("user2", "user1"),
                 sourceField.getFusionFieldValue());
     }
@@ -97,13 +90,13 @@ public class TableTest extends AbstractTypeTest
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
         QueryMapperIfc qm = QueryMapper.Factory.getInstance();
-        Term term = Term.newFusionTerm("text2", "user1");
+        Term term = Term.newFusionTerm("text3", "user1");
         Query query = new TermQuery(term);
 
         ScriptEnv env = new ScriptEnv();
         qm.mapQuery(cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), query, env);
         // System.out.println(term.toString());
-        org.junit.Assert.assertEquals("Found wrong field name mapping", "f6", term.getSearchServerFieldName());
+        org.junit.Assert.assertEquals("Found wrong field name mapping", "f7", term.getSearchServerFieldName());
         org.junit.Assert.assertEquals("Found wrong field value mapping", Arrays.asList("u1"),
                 term.getSearchServerFieldValue());
     }

@@ -36,6 +36,17 @@ public class Js extends AbstractType
         engine = getScriptEngine(engineName);
     }
 
+    /**
+     * The expected configuration is:
+     * <pre>
+     * {@code<script>
+     *      // ... your code ...
+     *  </script>
+     * }
+     * </pre>
+     * @param typeConfig a list of XML elements
+     * @param util       helper which simplifies to apply xpaths
+     */
 	@Override
 	public void passArguments(List<Element> typeConfig, Util util)
 	{
@@ -49,8 +60,9 @@ public class Js extends AbstractType
         catch (Exception e)
         {
             log.error("Caught exception while parsing configuration: "
-                    + typeConfig, e);
+                    + elementListToString(typeConfig), e);
         }
+        logBadConfiguration(code != null, typeConfig);
 	}
 
     @Override

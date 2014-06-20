@@ -25,6 +25,18 @@ public class Value extends AbstractType
 
     private List<String> values;
 
+    /**
+     * The expected configuration is:
+     * <pre>
+     * {@code<value>val1</value>
+     *  ...
+     *  <value>valn</value>
+     * }
+     *  </pre>
+     *  n is &gt;= 1.
+     * @param typeConfig a list of XML elements
+     * @param util       helper which simplifies to apply xpaths
+     */
     @Override
     public void passArguments(List<Element> typeConfig, Util util)
     {
@@ -44,12 +56,13 @@ public class Value extends AbstractType
         catch (Exception e)
         {
             log.error("Caught exception while parsing configuration: "
-                    + typeConfig, e);
+                    + elementListToString(typeConfig), e);
         }
         if (values.isEmpty())
         {
             values = null;
         }
+        logBadConfiguration(values != null && !values.isEmpty(), typeConfig);
     }
 
     @Override

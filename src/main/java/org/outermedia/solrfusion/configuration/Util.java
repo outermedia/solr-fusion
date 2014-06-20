@@ -248,6 +248,7 @@ public class Util
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     public List<Element> filterElements(NodeList nodes)
     {
         List<Element> result = new ArrayList<>();
@@ -279,5 +280,14 @@ public class Util
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         transformer.transform(new DOMSource(n), new StreamResult(buffer));
         return buffer.toString();
+    }
+
+    public Element parseXmlFromFile(String file) throws ParserConfigurationException, IOException, SAXException
+    {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = db.parse(new File(file));
+        return doc.getDocumentElement();
     }
 }

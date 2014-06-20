@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <mapping>
+    <entry>
+        <value>u1</value>
+        <fusion-value>user1</fusion-value>
+    </entry>
+    <entry>
+        <value>u2</value>
+        <fusion-value>user2</fusion-value>
+    </entry>
+ </mapping>

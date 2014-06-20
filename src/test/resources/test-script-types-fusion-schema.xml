@@ -16,6 +16,7 @@
         <om:field name="today4"/>
         <om:field name="text1"/>
         <om:field name="text2"/>
+        <om:field name="text3"/>
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile"/>
@@ -169,6 +170,14 @@
                             <value>u2</value>
                             <fusion-value>user2</fusion-value>
                         </entry>
+                    </om:query-response>
+                </om:change>
+            </om:field>
+
+            <om:field name="f7" fusion-name="text3">
+                <om:change>
+                    <om:query-response type="static-table-file">
+                        <file>target/test-classes/test-table-file.xml</file>
                     </om:query-response>
                 </om:change>
             </om:field>

@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.types;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.ResponseMapper;
@@ -30,8 +31,9 @@ public class ValueTest extends AbstractTypeTest
 
         Util util = new Util();
         Element elem = util.parseXml(xml);
-        Value valueType = new Value();
+        Value valueType = Mockito.spy(new Value());
         valueType.passArguments(util.filterElements(elem.getChildNodes()), util);
+        Mockito.verify(valueType,Mockito.times(1)).logBadConfiguration(Mockito.eq(true), Mockito.anyList());
 
         List<String> values = valueType.getValues();
         Assert.assertEquals("Found different parsed value than expected", Arrays.asList("abc123"), values);
@@ -47,8 +49,9 @@ public class ValueTest extends AbstractTypeTest
 
         Util util = new Util();
         Element elem = util.parseXml(xml);
-        Value valueType = new Value();
+        Value valueType = Mockito.spy(new Value());
         valueType.passArguments(util.filterElements(elem.getChildNodes()), util);
+        Mockito.verify(valueType,Mockito.times(1)).logBadConfiguration(Mockito.eq(true), Mockito.anyList());
 
         List<String> values = valueType.getValues();
         Assert.assertEquals("Found different parsed value than expected", Arrays.asList("a", "b", "c"), values);
@@ -64,8 +67,9 @@ public class ValueTest extends AbstractTypeTest
 
         Util util = new Util();
         Element elem = util.parseXml(xml);
-        Value valueType = new Value();
+        Value valueType = Mockito.spy(new Value());
         valueType.passArguments(util.filterElements(elem.getChildNodes()), util);
+        Mockito.verify(valueType,Mockito.times(1)).logBadConfiguration(Mockito.eq(false), Mockito.anyList());
 
         List<String> values = valueType.getValues();
         Assert.assertEquals("Found different parsed value than expected", null, values);
