@@ -73,7 +73,7 @@ public class DefaultSolrAdapterTest
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void testDefaultSolrAdapter() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException {
 
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-solr-adapter-fusion-schema.xml");
