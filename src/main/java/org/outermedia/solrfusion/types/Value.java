@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 @Slf4j
-@ToString(callSuper = true, exclude = {"engine", "engineName"})
+@ToString(callSuper = true)
 @Getter
 @Setter
 public class Value extends AbstractType

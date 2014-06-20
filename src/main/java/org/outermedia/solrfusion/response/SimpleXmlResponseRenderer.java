@@ -75,7 +75,7 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
             private void writeTerm(String indent, boolean wasMapped, boolean wasRemoved, String fusionFieldName,
                     String fusionValue, FusionField fusionField)
             {
-                if (wasMapped && !wasRemoved)
+                if (wasMapped && !wasRemoved && fusionValue != null)
                 {
                     String typeTag = fusionTypeToResponseKey.get(fusionField.getType());
                     if (typeTag == null)

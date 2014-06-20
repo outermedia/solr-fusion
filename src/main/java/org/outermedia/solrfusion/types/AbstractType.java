@@ -43,13 +43,19 @@ public abstract class AbstractType implements Initiable<ScriptType>
      * This method applies 'this' script type to a given value (contained in 'env'). Available env entries described in
      * {@link org.outermedia.solrfusion.types.ScriptEnv}
      *
-     * @param values
-     * @param env
-     * @param dir
+     * @param values the values to transform. Not null but berhaps emtpy.
+     * @param env    the environment contains several predefined values (see {@link org.outermedia.solrfusion.types.ScriptEnv}
+     * @param dir    is the conversion direction. Either from fusion schema to search server schema or vice versa.
      * @return perhaps null
      */
     public abstract List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir);
 
+    /**
+     * Utility method to get a script engine by name.
+     *
+     * @param engineName is the name of the engine.
+     * @return null if no engine is bound to the specified name. In this case all known names are logged.
+     */
     public ScriptEngine getScriptEngine(String engineName)
     {
         ScriptEngineManager manager = new ScriptEngineManager();
@@ -69,6 +75,17 @@ public abstract class AbstractType implements Initiable<ScriptType>
         return engine;
     }
 
+    /**
+     * The code processed by a script engine may return either a String object or a List of String objects. The String
+     * is automatically converted into a list with one element.
+     *
+     * @param engine the engine which shall evaluate the given code and values
+     * @param code   the source code to process
+     * @param values the values to transform
+     * @param env    the environment which is passed to the script engine (see {@link org.outermedia.solrfusion.types.ScriptEnv}
+     * @return null in error case
+     */
+    @SuppressWarnings("unchecked")
     public List<String> applyScriptEngineCode(ScriptEngine engine, String code, List<String> values, ScriptEnv env)
     {
         Bindings bindings = engine.createBindings();
