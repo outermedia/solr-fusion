@@ -99,7 +99,7 @@ public class ControllerTest
             searchServerConfigs.clear();
             searchServerConfigs.add(searchServerConfig);
             when(searchServerConfig.getInstance()).thenReturn(testAdapter);
-            when(testAdapter.sendQuery(Mockito.anyString())).thenReturn(testResponse);
+            when(testAdapter.sendQuery(Mockito.anyString(), Mockito.anyInt())).thenReturn(testResponse);
         }
         return cfg.getController();
     }
@@ -117,7 +117,7 @@ public class ControllerTest
         searchServerConfigs.clear();
         searchServerConfigs.add(configuredSearchServer);
         when(configuredSearchServer.getInstance()).thenReturn(testAdapter);
-        when(testAdapter.sendQuery(Mockito.anyString())).thenReturn(testResponse);
+        when(testAdapter.sendQuery(Mockito.anyString(), Mockito.anyInt())).thenReturn(testResponse);
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:Schiller -title:morgen");
@@ -130,7 +130,7 @@ public class ControllerTest
 
         // first fc.process() consumed test response, so re-init it and bind the new object to the testAdapter again
         initTestResponse();
-        when(testAdapter.sendQuery(Mockito.anyString())).thenReturn(testResponse);
+        when(testAdapter.sendQuery(Mockito.anyString(), Mockito.anyInt())).thenReturn(testResponse);
         // renderer specified, but not configured
         cfg.getSearchServerConfigs().getResponseRendererFactories().clear();
         fusionRequest.setResponseType(ResponseRendererType.JSON);
@@ -193,8 +193,8 @@ public class ControllerTest
             InvocationTargetException, IllegalAccessException, URISyntaxException
     {
         testMultipleServers("target/test-classes/test-xml-response-9000.xml", "target/test-classes/test-xml-response-9002.xml");
-        verify(testAdapter9000,times(1)).sendQuery("title:abc");
-        verify(testAdapter9002,times(1)).sendQuery("titleVT_eng:abc");
+        verify(testAdapter9000,times(1)).sendQuery("title:abc", 4000);
+        verify(testAdapter9002,times(1)).sendQuery("titleVT_eng:abc", 4000);
     }
 
     @Test
@@ -220,8 +220,8 @@ public class ControllerTest
                 "</result>\n" +
                 "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000,times(1)).sendQuery("title:abc");
-        verify(testAdapter9002,times(1)).sendQuery("titleVT_eng:abc");
+        verify(testAdapter9000,times(1)).sendQuery("title:abc", 4000);
+        verify(testAdapter9002,times(1)).sendQuery("titleVT_eng:abc", 4000);
     }
 
     protected String testMultipleServers(String responseServer1, String responseServer2)
@@ -249,12 +249,12 @@ public class ControllerTest
         searchServerConfigs.add(searchServerConfig9000);
         testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
-        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(Mockito.anyString());
+        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(Mockito.anyString(), Mockito.anyInt());
 
         searchServerConfigs.add(searchServerConfig9002);
         testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
-        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(Mockito.anyString());
+        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(Mockito.anyString(), Mockito.anyInt());
 
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();

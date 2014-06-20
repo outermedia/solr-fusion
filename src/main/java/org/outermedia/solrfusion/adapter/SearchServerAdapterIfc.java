@@ -22,6 +22,17 @@ public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
      * ClosableIterator.
      *
      * @param searchServerQueryStr a query suitable for this search server.
+     * @param timeout a timeout in milliseconds
+     * @return null for error or a document stream
+     */
+    public InputStream sendQuery(String searchServerQueryStr, int timeout) throws URISyntaxException, IOException;
+
+    /**
+     * Send the provided query to a search server and returns the retrieved documents. The adapter creates an
+     * instance of {@link org.outermedia.solrfusion.adapter.SearchServerResponseInfo} and sets it in the returned
+     * ClosableIterator.
+     *
+     * @param searchServerQueryStr a query suitable for this search server.
      * @return null for error or a document stream
      */
     public InputStream sendQuery(String searchServerQueryStr) throws URISyntaxException, IOException;

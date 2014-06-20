@@ -157,9 +157,10 @@ public class FusionController implements FusionControllerIfc
         try
         {
             SearchServerQueryBuilderIfc queryBuilder = configuration.getSearchServerQueryBuilder();
+            int timeout = configuration.getSearchServerConfigs().getTimeout();
             SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
             String searchServerQueryStr = queryBuilder.buildQueryString(query);
-            InputStream is = adapter.sendQuery(searchServerQueryStr);
+            InputStream is = adapter.sendQuery(searchServerQueryStr, timeout);
             ResponseParserIfc responseParser = searchServerConfig.getResponseParser(configuration.getDefaultResponseParser());
             Result result = responseParser.parse(is).getResult();
             SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound());

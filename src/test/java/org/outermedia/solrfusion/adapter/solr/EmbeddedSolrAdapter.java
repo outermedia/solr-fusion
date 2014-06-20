@@ -36,6 +36,11 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc {
 
     @Override
     public InputStream sendQuery(String searchServerQueryStr) throws URISyntaxException, IOException  {
+        return sendQuery(searchServerQueryStr, 0);
+    }
+
+    @Override
+    public InputStream sendQuery(String searchServerQueryStr, int timeout) throws URISyntaxException, IOException  {
         SolrQuery query = new SolrQuery(searchServerQueryStr);
 //        query.setRows(10);
 //        query.addField("id");

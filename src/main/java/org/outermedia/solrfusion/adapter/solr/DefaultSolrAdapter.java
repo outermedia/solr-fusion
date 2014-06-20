@@ -4,6 +4,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -26,6 +27,7 @@ import java.net.URISyntaxException;
 public class DefaultSolrAdapter implements SearchServerAdapterIfc
 {
 
+    private final int DEFAULT_TIMEOUT = 4000;
     private final String QUERY_PARAMETER = "q";
 
     private String url;
@@ -39,13 +41,27 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     @Override
     public InputStream sendQuery(String searchServerQueryStr) throws URISyntaxException, IOException
     {
+        return sendQuery(searchServerQueryStr, DEFAULT_TIMEOUT);
+    }
+
+    @Override
+    public InputStream sendQuery(String searchServerQueryStr, int timeout) throws URISyntaxException, IOException
+    {
         URIBuilder ub = new URIBuilder(url);
         ub.setParameter(QUERY_PARAMETER, searchServerQueryStr);
 
         log.debug("Sending query to host {}: {}", url, searchServerQueryStr);
 
         HttpClient client = HttpClientBuilder.create().build();
+
         HttpGet request = new HttpGet(ub.build());
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setSocketTimeout(timeout)
+                .setConnectTimeout(timeout)
+                .setConnectionRequestTimeout(timeout)
+                .build();
+
+        request.setConfig(requestConfig);
         HttpResponse response = client.execute(request);
 
         log.debug("Received response from host {}: {}", url, response.getStatusLine().toString());

@@ -73,7 +73,7 @@ public class DefaultSolrAdapterTest
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void testDefaultSolrAdapter() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException {
 
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-solr-adapter-fusion-schema.xml");
@@ -84,7 +84,7 @@ public class DefaultSolrAdapterTest
             try
             {
                 SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
-                InputStream is = adapter.sendQuery("shakespeare");
+                InputStream is = adapter.sendQuery("shakespeare", 10);
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 XmlResponse xmlResponse = (new Util()).unmarshal(XmlResponse.class, "", br, null);

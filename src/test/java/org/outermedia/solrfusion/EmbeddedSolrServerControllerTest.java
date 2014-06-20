@@ -88,8 +88,8 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             InvocationTargetException, IllegalAccessException, URISyntaxException
     {
         testMultipleServers();
-        verify(testAdapter9000,times(1)).sendQuery("title:abc");
-        verify(testAdapter9002,times(1)).sendQuery("titleVT_eng:abc");
+        verify(testAdapter9000,times(1)).sendQuery("title:abc", 4000);
+        verify(testAdapter9002,times(1)).sendQuery("titleVT_eng:abc", 4000);
     }
 
     @Test
@@ -127,8 +127,8 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
                 "</response>";
 
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000,times(1)).sendQuery("title:abc");
-        verify(testAdapter9002,times(1)).sendQuery("titleVT_eng:abc");
+        verify(testAdapter9000,times(1)).sendQuery("title:abc", 4000);
+        verify(testAdapter9002,times(1)).sendQuery("titleVT_eng:abc", 4000);
     }
 
     protected String testMultipleServers()
