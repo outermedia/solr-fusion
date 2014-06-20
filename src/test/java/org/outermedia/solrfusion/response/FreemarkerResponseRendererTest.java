@@ -74,6 +74,8 @@ public class FreemarkerResponseRendererTest
         String xmlResponse = responseRenderer.getResponseString(closableIterator, "steak");
 
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
+
+        System.out.println(xmlResponse);
     }
 
     @Test

@@ -14,23 +14,22 @@
 <result name="response" numFound="${response.totalHitNumber}" start="0">
     <#list response.documents as document>
         <doc>
-            <#list document.fields as field>
-                <#if field.multiValued >
-                    <arr name="${field.name}">
-                        <#list field.subfields as subfield>
-                            <@outputField field=subfield />
-                        </#list>
-                    </arr>
-                <#else>
-                    <@outputField field=field />
-                </#if>
+            <#list document.singleValuedFields as field>
+                <@outputField name=field.name type=field.type value=field.value />
+            </#list>
+            <#list document.multiValuedFields as field>
+                <arr name="${field.name}">
+                    <#list field.values as value>
+                        <@outputField type=field.type value=value />
+                    </#list>
+                </arr>
             </#list>
         </doc>
     </#list>
 </result>
 </response>
-<#macro outputField field>
-    <#switch field.type>
+<#macro outputField type value name="" >
+    <#switch type>
         <#case "float">
         <#case "double">
             <#assign responseKey="float">
@@ -44,10 +43,10 @@
         <#default>
             <#assign responseKey="str">
     </#switch>
-    <#if field.name??>
-        <#assign printName="name=\"${field.name}\"">
+    <#if name??>
+        <#assign printName="name=\"${name}\"">
     <#else>
         <#assign printName="">
     </#if>
-            <${responseKey} ${printName}>${field.value}</${responseKey}>
+            <${responseKey} ${printName}>${value}</${responseKey}>
 </#macro>

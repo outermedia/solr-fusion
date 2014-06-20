@@ -12,34 +12,37 @@
   "response":{"numFound":${response.totalHitNumber},"start":0,"docs":[
   <#list response.documents as document>
   {
-    <#list document.fields as field>
+    <#list document.multiValuedFields as field>
     "${field.name}":<#rt>
-        <#if field.multiValued >
             [<#lt>
-                <#list field.subfields as subfield>
-                    <@outputField field=subfield /><#if subfield_has_next>,</#if>
+                <#list field.values as value>
+                    <@outputField type=field.type value=value /><#if value_has_next>,</#if>
                 </#list>
             ]<#rt>
-        <#else>
-            <@outputField field=field /><#t>
-        </#if>
+        <#if field_has_next>,</#if><#lt>
+    </#list>
+    <#if document.hasMultiValuedFields && document.hasSingleValuedFields >,
+    </#if>
+    <#list document.singleValuedFields as field>
+    "${field.name}":<#rt>
+            <@outputField type=field.type value=field.value /><#t>
         <#if field_has_next>,</#if><#lt>
     </#list>
   }<#if document_has_next>,</#if>
   </#list>
   ]}
 }
-<#macro outputField field>
-    <#switch field.type>
+<#macro outputField type value>
+    <#switch type>
         <#case "float">
         <#case "double">
         <#case "int">
         <#case "long">
-            ${field.value}<#t>
+            ${value}<#t>
         <#case "boolean">
-            ${field.value}<#t>
+            ${value}<#t>
         <#case "date">
         <#case "text">
-            "${field.value}"<#t>
+            "${value}"<#t>
     </#switch>
 </#macro>

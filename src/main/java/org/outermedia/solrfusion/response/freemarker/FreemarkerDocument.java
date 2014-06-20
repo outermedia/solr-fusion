@@ -17,20 +17,26 @@ import java.util.List;
 public class FreemarkerDocument  implements FieldVisitor
 {
 
-    @Getter private List<FreemarkerField> fields;
+    @Getter private List<FreemarkerMultiValuedField> multiValuedFields;
+    @Getter private List<FreemarkerSingleValuedField> singleValuedFields;
+
+    @Getter private boolean hasMultiValuedFields;
+    @Getter private boolean hasSingleValuedFields;
 
     public FreemarkerDocument()
     {
-        this.fields = new ArrayList<>();
+        this.multiValuedFields = new ArrayList<>();
+        this.singleValuedFields = new ArrayList<>();
     }
 
     @Override
     public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
     {
-        FreemarkerField freemarkerField = FreemarkerField.FreemarkerFieldFromSolrSingleValuedField(sf);
+        FreemarkerSingleValuedField freemarkerField = FreemarkerSingleValuedField.fromSolrSingleValuedField(sf);
         if (freemarkerField != null)
         {
-            fields.add(freemarkerField);
+            singleValuedFields.add(freemarkerField);
+            hasSingleValuedFields = true;
         }
         return true;
     }
@@ -38,10 +44,11 @@ public class FreemarkerDocument  implements FieldVisitor
     @Override
     public boolean visitField(SolrMultiValuedField msf, ScriptEnv env)
     {
-        FreemarkerField freemarkerField = FreemarkerField.FreemarkerFieldFromSolrMultiValuedField(msf);
+        FreemarkerMultiValuedField freemarkerField = FreemarkerMultiValuedField.fromSolrMultiValuedField(msf);
         if (freemarkerField != null)
         {
-            fields.add(freemarkerField);
+            multiValuedFields.add(freemarkerField);
+            hasMultiValuedFields = true;
         }
         return true;
     }
