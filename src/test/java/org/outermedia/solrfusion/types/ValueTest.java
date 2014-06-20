@@ -5,8 +5,9 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Util;
-import org.outermedia.solrfusion.mapper.ResponseMapper;
-import org.outermedia.solrfusion.mapper.Term;
+import org.outermedia.solrfusion.mapper.*;
+import org.outermedia.solrfusion.query.parser.Query;
+import org.outermedia.solrfusion.query.parser.TermQuery;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -79,10 +80,10 @@ public class ValueTest extends AbstractTypeTest
     }
 
     @Test
-    public void testMapping() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+    public void testResponseMapping() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
-        ResponseMapper rm = ResponseMapper.Factory.getInstance();
+        ResponseMapperIfc rm = ResponseMapper.Factory.getInstance();
         Document doc = buildResponseDocument();
 
         buildResponseField(doc, "Titel", "Ein kurzer Weg");
@@ -92,10 +93,30 @@ public class ValueTest extends AbstractTypeTest
 
         ScriptEnv env = new ScriptEnv();
         rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env);
+        Assert.assertTrue("Expected that term was mapped", sourceField.isWasMapped());
         // System.out.println(sourceField.toString());
         Assert.assertEquals("Found wrong field name mapping", "source", sourceField.getFusionFieldName());
         Assert.assertEquals("Found wrong field value mapping", Arrays.asList("BIB-A"),
                 sourceField.getFusionFieldValue());
     }
 
+    @Test
+    public void testQueryMapping()
+            throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
+        QueryMapperIfc qm = QueryMapper.Factory.getInstance();
+        Term term = Term.newFusionTerm("source", "BIB-A");
+        // query parser sets the fusionField automatically
+        term.setFusionField(cfg.findFieldByName(term.getFusionFieldName()));
+        Query query = new TermQuery(term);
+
+        ScriptEnv env = new ScriptEnv();
+        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), query, env);
+        Assert.assertTrue("Expected that term was mapped", term.isWasMapped());
+        // System.out.println(term.toString());
+        Assert.assertEquals("Found wrong field name mapping", "bibName", term.getSearchServerFieldName());
+        Assert.assertEquals("Found wrong field value mapping", Arrays.asList("bib1"),
+                term.getSearchServerFieldValue());
+    }
 }

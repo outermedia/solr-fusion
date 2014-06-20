@@ -36,7 +36,7 @@ public class ResponseMapperTest
             throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
-        ResponseMapper rm = ResponseMapper.Factory.getInstance();
+        ResponseMapperIfc rm = ResponseMapper.Factory.getInstance();
         Document doc = new Document();
         List<SolrSingleValuedField> strFields = new ArrayList<>();
         SolrSingleValuedField sfTitle = new SolrSingleValuedField();
@@ -72,7 +72,7 @@ public class ResponseMapperTest
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
         Document doc = new Document();
-        ResponseMapper rm = ResponseMapper.Factory.getInstance();
+        ResponseMapperIfc rm = ResponseMapper.Factory.getInstance();
         List<SolrSingleValuedField> strFields = new ArrayList<>();
         SolrSingleValuedField sfTitle = new SolrSingleValuedField();
         sfTitle.setFieldName("val7Start");

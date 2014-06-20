@@ -74,16 +74,19 @@ public class SearchServerQueryBuilder implements SearchServerQueryBuilderIfc
 
     protected void buildSearchServerTermQuery(Term term, boolean quoted)
     {
-        queryBuilder.append(term.getSearchServerFieldName());
-        queryBuilder.append(":");
-        if (quoted)
+        if (term.isWasMapped() && !term.isRemoved() && term.getSearchServerFieldValue() != null)
         {
-            queryBuilder.append('"');
-        }
-        queryBuilder.append(term.getSearchServerFieldValue().get(0));
-        if (quoted)
-        {
-            queryBuilder.append('"');
+            queryBuilder.append(term.getSearchServerFieldName());
+            queryBuilder.append(":");
+            if (quoted)
+            {
+                queryBuilder.append('"');
+            }
+            queryBuilder.append(term.getSearchServerFieldValue().get(0));
+            if (quoted)
+            {
+                queryBuilder.append('"');
+            }
         }
     }
 

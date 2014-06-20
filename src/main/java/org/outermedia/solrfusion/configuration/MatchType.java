@@ -9,22 +9,27 @@ public enum MatchType
 {
     LITERAL, REG_EXP, WILDCARD;
 
-    protected String applicableToFusionField(String fusionFieldName, FieldMapping fieldMapping)
+    protected ApplicableResult applicableToFusionField(String fusionFieldName, FieldMapping fieldMapping)
     {
-        String result = null;
+        ApplicableResult result = null;
+        String destinationField = null;
         switch (this)
         {
             case LITERAL:
                 if (fusionFieldName.equals(fieldMapping.getFusionName()))
                 {
-                    result = fieldMapping.getSearchServersName();
+                    destinationField = fieldMapping.getSearchServersName();
+                    // even is destination field is empty e.g. for a <drop>, but the field was mapped
+                    result = new ApplicableResult(destinationField);
                 }
                 break;
             case REG_EXP:
                 Matcher matcher = fieldMapping.getFusionNameRegExp().matcher(fusionFieldName);
                 if (matcher.find())
                 {
-                    result = matcher.replaceAll(fieldMapping.getSearchServersNameReplacement());
+                    destinationField = matcher.replaceAll(fieldMapping.getSearchServersNameReplacement());
+                    // even is destination field is empty e.g. for a <drop>, but the field was mapped
+                    result = new ApplicableResult(destinationField);
                 }
                 break;
             case WILDCARD:
@@ -33,22 +38,27 @@ public enum MatchType
         return result;
     }
 
-    protected String applicableToSearchServerField(String searchServerFieldName, FieldMapping fieldMapping)
+    protected ApplicableResult applicableToSearchServerField(String searchServerFieldName, FieldMapping fieldMapping)
     {
-        String result = null;
+        ApplicableResult result = null;
+        String destinationField = null;
         switch (this)
         {
             case LITERAL:
                 if (searchServerFieldName.equals(fieldMapping.getSearchServersName()))
                 {
-                    result = fieldMapping.getFusionName();
+                    destinationField = fieldMapping.getFusionName();
+                    // even is destination field is empty e.g. for a <drop>, but the field was mapped
+                    result = new ApplicableResult(destinationField);
                 }
                 break;
             case REG_EXP:
                 Matcher matcher = fieldMapping.getSearchServersNameRegExp().matcher(searchServerFieldName);
                 if (matcher.find())
                 {
-                    result = matcher.replaceAll(fieldMapping.getFusionNameReplacement());
+                    destinationField = matcher.replaceAll(fieldMapping.getFusionNameReplacement());
+                    // even is destination field is empty e.g. for a <drop>, but the field was mapped
+                    result = new ApplicableResult(destinationField);
                 }
                 break;
             case WILDCARD:

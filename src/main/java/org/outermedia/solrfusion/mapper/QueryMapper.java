@@ -1,5 +1,6 @@
 package org.outermedia.solrfusion.mapper;
 
+import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.FieldMapping;
 import org.outermedia.solrfusion.configuration.QueryMapperFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
@@ -31,9 +32,10 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
      * @param query        the query to map to process
      * @param env          the environment needed by the scripts which transform values
      */
-    public void mapQuery(SearchServerConfig serverConfig, Query query, ScriptEnv env)
+    public void mapQuery(Configuration config, SearchServerConfig serverConfig, Query query, ScriptEnv env)
     {
         this.serverConfig = serverConfig;
+        env.setConfiguration(config);
         query.accept(this, env);
     }
 

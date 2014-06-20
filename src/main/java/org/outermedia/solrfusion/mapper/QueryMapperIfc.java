@@ -1,5 +1,6 @@
 package org.outermedia.solrfusion.mapper;
 
+import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.QueryMapperFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
@@ -17,9 +18,10 @@ public interface QueryMapperIfc extends Initiable<QueryMapperFactory>
     /**
      * Map a query to a certain search server (serverConfig).
      *
+     * @param config       the fusion schema
      * @param serverConfig the currently used server's configuration
      * @param query        the query to map to process
      * @param env          the environment needed by the scripts which transform values
      */
-    public void mapQuery(SearchServerConfig serverConfig, Query query, ScriptEnv env);
+    public void mapQuery(Configuration config, SearchServerConfig serverConfig, Query query, ScriptEnv env);
 }

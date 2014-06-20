@@ -40,7 +40,7 @@ public class QueryMapperTest
         QueryMapperIfc qm = cfg.getQueryMapper();
         TermQuery q = new TermQuery(Term.newFusionTerm("author", "Schiller"));
         ScriptEnv env = new ScriptEnv();
-        qm.mapQuery(cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), q, env);
+        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), q, env);
 
         String expected = "Term(fusionFieldName=author, fusionFieldValue=[Schiller], fusionField=null, searchServerFieldName=Autor, searchServerFieldValue=[Schiller], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Got different mapping than expected", expected, q.getTerm().toString());
@@ -63,7 +63,7 @@ public class QueryMapperTest
         bq.add(new BooleanClause(q, BooleanClause.Occur.OCCUR_MUST));
         TermQuery q2 = new TermQuery(Term.newFusionTerm("title", "Ein_langer_Weg"));
         bq.add(new BooleanClause(q2, BooleanClause.Occur.OCCUR_MUST));
-        qm.mapQuery(cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), bq, env);
+        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), bq, env);
 
         String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=[Schiller], fusionField=null, searchServerFieldName=Autor, searchServerFieldValue=[Schiller], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Didn't find mapped author.", expectedAuthor, q.getTerm().toString());
@@ -90,7 +90,7 @@ public class QueryMapperTest
         bq.add(new BooleanClause(q, BooleanClause.Occur.OCCUR_MUST_NOT));
         TermQuery q2 = new TermQuery(Term.newFusionTerm("title", "Ein_langer_Weg"));
         bq.add(new BooleanClause(q2, BooleanClause.Occur.OCCUR_MUST_NOT));
-        qm.mapQuery(cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), bq, env);
+        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), bq, env);
 
         String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=[Schiller], fusionField=null, searchServerFieldName=Autor, searchServerFieldValue=[Schiller], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Didn't find mapped author.", expectedAuthor, q.getTerm().toString());
@@ -123,7 +123,7 @@ public class QueryMapperTest
         QueryMapperIfc qm = cfg.getQueryMapper();
         TermQuery q = new TermQuery(Term.newFusionTerm("valueFrom7", "Schiller"));
         ScriptEnv env = new ScriptEnv();
-        qm.mapQuery(cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), q, env);
+        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), q, env);
         Term term = q.getTerm();
         String searchServerFieldName = term.getSearchServerFieldName();
         Assert.assertEquals("RegExp mapping returned different search server field than expected", "val7Start",

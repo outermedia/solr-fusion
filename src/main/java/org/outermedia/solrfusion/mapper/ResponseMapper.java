@@ -39,7 +39,7 @@ public class ResponseMapper implements ResponseMapperIfc
 
     public static class Factory
     {
-        public static ResponseMapper getInstance()
+        public static ResponseMapperIfc getInstance()
         {
             return new ResponseMapper();
         }
@@ -127,11 +127,6 @@ public class ResponseMapper implements ResponseMapperIfc
     protected FusionField getFusionField(ScriptEnv env, FieldMapping m)
     {
         FusionField fusionField = env.getConfiguration().findFieldByName(m.getSpecificFusionName());
-        if (fusionField == null)
-        {
-            throw new UndeclaredFusionField("Didn't find field '" + m.getFusionName()
-                    + "' in fusion schema. Please define it their.");
-        }
         return fusionField;
     }
 

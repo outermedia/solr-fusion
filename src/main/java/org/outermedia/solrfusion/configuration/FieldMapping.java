@@ -91,8 +91,12 @@ public class FieldMapping
      */
     public boolean applicableToFusionField(String fusionFieldName)
     {
-        specificSearchServerName = matchType.applicableToFusionField(fusionFieldName, this);
-        return specificSearchServerName != null;
+        ApplicableResult matchResult = matchType.applicableToFusionField(fusionFieldName, this);
+        if (matchResult != null)
+        {
+            specificSearchServerName = matchResult.getDestinationFieldName();
+        }
+        return matchResult != null;
     }
 
     /**
@@ -132,8 +136,12 @@ public class FieldMapping
      */
     public boolean applicableToSearchServerField(String searchServerFieldName)
     {
-        specificFusionName = matchType.applicableToSearchServerField(searchServerFieldName, this);
-        return specificFusionName != null;
+        ApplicableResult matchResult = matchType.applicableToSearchServerField(searchServerFieldName, this);
+        if (matchResult != null)
+        {
+            specificFusionName = matchResult.getDestinationFieldName();
+        }
+        return matchResult != null;
     }
 
     public void applyResponseMappings(List<Term> terms, ScriptEnv env, FusionField fusionField)

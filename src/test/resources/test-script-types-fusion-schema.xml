@@ -17,6 +17,7 @@
         <om:field name="text1"/>
         <om:field name="text2"/>
         <om:field name="text3"/>
+        <om:field name="text4"/>
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile"/>
@@ -58,13 +59,16 @@
             class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory"/>
 
         <om:response-renderer type="xml"
-            class="org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory"/>
-
-        <om:response-renderer type="json"
-            class="org.outermedia.solrfusion.response.DefaultJsonResponseRenderer$Factory"/>
-
-        <om:response-renderer type="php"
-            class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory"/>
+            class="org.outermedia.solrfusion.response.SimpleXmlResponseRenderer" >
+            <map-type fusion-type="float" key="float"/>
+            <map-type fusion-type="double" key="float"/>
+            <map-type fusion-type="int" key="int"/>
+            <map-type fusion-type="long" key="int"/>
+            <map-type fusion-type="boolean" key="bool"/>
+            <map-type fusion-type="date" key="date"/>
+            <map-type fusion-type="text" key="str"/>
+            <map-multi-value-type key="arr"/>
+        </om:response-renderer>
 
         <om:solr-server name="Bibliothek A" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
@@ -85,6 +89,9 @@
                     <om:response type="static-value">
                         <value>BIB-A</value>
                     </om:response>
+                    <om:query type="static-value">
+                        <value>bib1</value>
+                    </om:query>
                 </om:change>
             </om:field>
 
@@ -107,6 +114,23 @@
                             return searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
                         ]]></script>
                     </om:response>
+                    <om:query type="beanshell">
+                        <script><![CDATA[
+                            import java.text.SimpleDateFormat;
+                            GregorianCalendar now = new GregorianCalendar(2014, 6, 19);
+                            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+                            // predefined variables: see ScriptEnv.ENV_*
+                            print("Conversion         : "+conversion);
+                            print("Values             : "+values);
+                            print("Search Server Field: "+searchServerField);
+                            print("Search Server Value: "+searchServerValue);
+                            print("Fusion Field       : "+fusionField);
+                            print("Fusion Value       : "+fusionValue);
+                            print("Fusion Field       : "+fusionFieldDeclaration);
+                            print("Fusion Schema      : "+fusionSchema);
+                            return searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
+                        ]]></script>
+                    </om:query>
                 </om:change>
             </om:field>
 
@@ -115,6 +139,9 @@
                     <om:response type="beanshell-file">
                         <file>target/test-classes/test-bsh-file.bsh</file>
                     </om:response>
+                    <om:query type="beanshell-file">
+                        <file>target/test-classes/test-bsh-file.bsh</file>
+                    </om:query>
                 </om:change>
             </om:field>
 
@@ -139,6 +166,25 @@
                             searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
                         ]]></script>
                     </om:response>
+                    <om:query type="javascript">
+                        <script><![CDATA[
+                            importClass(java.text.SimpleDateFormat);
+                            importClass(java.util.GregorianCalendar);
+                            var now = new GregorianCalendar(2014, 6, 19);
+                            var fmt = new SimpleDateFormat("yyyy-MM-dd");
+                            // predefined variables: see ScriptEnv.ENV_*
+                            print("Conversion         : "+conversion+"\n");
+                            print("Values             : "+values+"\n");
+                            print("Search Server Field: "+searchServerField+"\n");
+                            print("Search Server Value: "+searchServerValue+"\n");
+                            print("Fusion Field       : "+fusionField+"\n");
+                            print("Fusion Value       : "+fusionValue+"\n");
+                            print("Fusion Field       : "+fusionFieldDeclaration+"\n");
+                            print("Fusion Schema      : "+fusionSchema+"\n");
+                            // last value is the return value
+                            searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
+                        ]]></script>
+                    </om:query>
                 </om:change>
             </om:field>
 
@@ -147,6 +193,9 @@
                     <om:response type="javascript-file">
                         <file>target/test-classes/test-js-file.js</file>
                     </om:response>
+                    <om:query type="javascript-file">
+                        <file>target/test-classes/test-js-file.js</file>
+                    </om:query>
                 </om:change>
             </om:field>
 
@@ -156,6 +205,10 @@
                         <pattern>([^,]+),\s*(.+)</pattern>
                         <replacement>$2 $1</replacement>
                     </om:response>
+                    <om:query type="regexp">
+                        <pattern>([^ ]+)\s*(.+)</pattern>
+                        <replacement>$2, $1</replacement>
+                    </om:query>
                 </om:change>
             </om:field>
 
@@ -180,6 +233,18 @@
                         <file>target/test-classes/test-table-file.xml</file>
                     </om:query-response>
                 </om:change>
+            </om:field>
+
+            <om:field name="f8">
+                <om:drop>
+                    <om:response />
+                </om:drop>
+            </om:field>
+
+            <om:field fusion-name="text4">
+                <om:drop>
+                    <om:query />
+                </om:drop>
             </om:field>
 
         </om:solr-server>

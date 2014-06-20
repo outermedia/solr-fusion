@@ -1,5 +1,7 @@
 package org.outermedia.solrfusion.response;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.FusionField;
@@ -23,6 +25,8 @@ import java.util.Map;
  * Created by ballmann on 6/12/14.
  */
 @Slf4j
+@Getter
+@Setter
 public class SimpleXmlResponseRenderer implements ResponseRendererIfc
 {
     private Map<String, String> fusionTypeToResponseKey;

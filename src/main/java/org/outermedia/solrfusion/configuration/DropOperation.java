@@ -12,16 +12,15 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Data holder to store drop operation configurations.
- * 
+ *
  * @author ballmann
- * 
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "dropOperation", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
-{
-	"targets"
-})
+        {
+                "targets"
+        })
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -31,5 +30,13 @@ public class DropOperation extends Operation
     public void applyAllQueryOperations(Term term, ScriptEnv env)
     {
         term.setRemoved(true);
+        term.setSearchServerFieldValue(null);
+    }
+
+    @Override
+    public void applyAllResponseOperations(Term term, ScriptEnv env)
+    {
+        term.setRemoved(true);
+        term.setFusionFieldValue(null);
     }
 }

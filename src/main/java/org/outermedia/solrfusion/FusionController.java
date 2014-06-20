@@ -177,7 +177,7 @@ public class FusionController implements FusionControllerIfc
         boolean result = true;
         try
         {
-            queryMapper.mapQuery(searchServerConfig, query, env);
+            queryMapper.mapQuery(configuration, searchServerConfig, query, env);
         }
         catch (Exception e)
         {
