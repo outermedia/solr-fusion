@@ -29,6 +29,8 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
 
     private final int DEFAULT_TIMEOUT = 4000;
     private final String QUERY_PARAMETER = "q";
+    private final String WRITER_TYPE_PARAMETER = "wt";
+    private final String DEFAULT_WRITER_TYPE_PARAMETER = "xml";
 
     private String url;
 
@@ -49,6 +51,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     {
         URIBuilder ub = new URIBuilder(url);
         ub.setParameter(QUERY_PARAMETER, searchServerQueryStr);
+        ub.setParameter(WRITER_TYPE_PARAMETER, DEFAULT_WRITER_TYPE_PARAMETER);
 
         log.debug("Sending query to host {}: {}", url, searchServerQueryStr);
 
