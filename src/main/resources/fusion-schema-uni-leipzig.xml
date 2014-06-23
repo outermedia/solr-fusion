@@ -4,7 +4,7 @@
          xmlns="http://solrfusion.outermedia.org/configuration/type/"
          xsi:schemaLocation="http://solrfusion.outermedia.org/configuration/ ../../main/resources/configuration.xsd ">
 
-    <om:fusion-schema-fields>
+    <om:fusion-schema-fields default-type="text">
         <om:field name="id"/>
         <om:field name="language"/>
         <om:field name="title"/>
@@ -25,6 +25,15 @@
     <om:response-consolidator class="org.outermedia.solrfusion.response.ResponseConsolidator$Factory"/>
 
     <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory" ignore-missing-mappings="true" />
+
+    <!-- The fusion query is transformed into a specific search server query -->
+    <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory" />
+
+    <!-- A search server specific search String is created from an already mapped query -->
+    <om:search-server-query-builder class="org.outermedia.solrfusion.mapper.SearchServerQueryBuilder$Factory" />
+
+    <!-- This component controls the whole processing. -->
+    <om:controller class="org.outermedia.solrfusion.FusionController$Factory" />
 
     <om:solr-servers>
         <om:timeout>4000</om:timeout>
@@ -88,6 +97,22 @@
             <om:field name="language_de" fusion-name="language"/>
 
         </om:solr-server>
+
+        <!---->
+        <!--<om:solr-server name="DBoD1" version="3.6"-->
+                        <!--class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">-->
+
+            <!--<om:url>http://findex.gbv.de:9002/te/select?q=</om:url>-->
+
+            <!--<om:score factor="1.0"-->
+                      <!--class="org.outermedia.solrfusion.DefaultScore$Factory"/>-->
+
+            <!--<om:unique-key>id</om:unique-key>-->
+
+            <!--<om:field name="dbodid" fusion-name="id"/>-->
+            <!--<om:field name="dbName" fusion-name="title"/>-->
+
+        <!--</om:solr-server>-->
 
     </om:solr-servers>
 </om:core>
