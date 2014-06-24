@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.outermedia.solrfusion.MergeStrategyIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
@@ -28,7 +29,7 @@ import java.util.List;
 @XmlType(name = "globalSearchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
         {
                 "timeout", "disasterLimit", "disasterMessage", "queryParserFactory",
-                "defaultResponseParserFactory", "responseRendererFactories", "merge",
+                "defaultResponseParserFactory", "responseRendererFactories", "queryBuilderFactory", "merge",
                 "searchServerConfigs"
         })
 @Getter
@@ -53,6 +54,9 @@ public class GlobalSearchServerConfig
 
     @XmlElement(name = "response-renderer", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private List<ResponseRendererFactory> responseRendererFactories;
+
+    @XmlElement(name = "query-builder", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    private QueryBuilderFactory queryBuilderFactory;
 
     @XmlElement(name = "merge", namespace = "http://solrfusion.outermedia.org/configuration/", required = false)
     private Merge merge;
@@ -102,6 +106,16 @@ public class GlobalSearchServerConfig
     public ResponseParserIfc getDefaultResponseParser() throws InvocationTargetException, IllegalAccessException
     {
         return defaultResponseParserFactory.getInstance();
+    }
+
+    /**
+     * Get the configured query builder.
+     *
+     * @return a non null instance of QueryBuilderIfc
+     */
+    public QueryBuilderIfc getDefaultQueryBuilder() throws InvocationTargetException, IllegalAccessException
+    {
+        return queryBuilderFactory.getInstance();
     }
 
     /**

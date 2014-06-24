@@ -50,8 +50,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 
     <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory" />
 
-    <om:search-server-query-builder class="org.outermedia.solrfusion.mapper.SearchServerQueryBuilder$Factory" />
-
     <om:controller class="org.outermedia.solrfusion.FusionController$Factory" />
 
     <om:solr-servers>
@@ -75,6 +73,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 
         <om:response-renderer type="php"
             class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory" />
+
+        <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
 
         <!-- merge solr documents of different solrs into one -->
         <!-- "prio" controls which non empty value to use at first -->

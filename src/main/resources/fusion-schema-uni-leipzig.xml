@@ -6,9 +6,9 @@
 
     <om:fusion-schema-fields default-type="text">
         <om:field name="id"/>
-        <om:field name="language"/>
+        <!--<om:field name="language"/>-->
         <om:field name="title"/>
-        <om:field name="author"/>
+        <!--<om:field name="author"/>-->
         <om:field name="score" type="float"/>
     </om:fusion-schema-fields>
 
@@ -28,9 +28,6 @@
 
     <!-- The fusion query is transformed into a specific search server query -->
     <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory" />
-
-    <!-- A search server specific search String is created from an already mapped query -->
-    <om:search-server-query-builder class="org.outermedia.solrfusion.mapper.SearchServerQueryBuilder$Factory" />
 
     <!-- This component controls the whole processing. -->
     <om:controller class="org.outermedia.solrfusion.FusionController$Factory" />
@@ -64,6 +61,8 @@
         <om:response-renderer type="php"
                               class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory"/>
 
+        <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory" />
+
         <om:solr-server name="UBL" version="3.5"
                         class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
@@ -76,8 +75,8 @@
 
             <om:field name="id" fusion-name="id"/>
             <om:field name="title" fusion-name="title"/>
-            <om:field name="author" fusion-name="author"/>
-            <om:field name="language" fusion-name="language"/>
+            <!--<om:field name="author" fusion-name="author"/>-->
+            <!--<om:field name="language" fusion-name="language"/>-->
 
         </om:solr-server>
 
@@ -93,12 +92,12 @@
 
             <om:field name="id" fusion-name="id"/>
             <om:field name="title" fusion-name="title"/>
-            <om:field name="author" fusion-name="author"/>
-            <om:field name="language_de" fusion-name="language"/>
+            <!--<om:field name="author" fusion-name="author"/>-->
+            <!--<om:field name="language_de" fusion-name="language"/>-->
 
         </om:solr-server>
 
-        <!---->
+
         <!--<om:solr-server name="DBoD1" version="3.6"-->
                         <!--class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">-->
 
@@ -109,7 +108,7 @@
 
             <!--<om:unique-key>id</om:unique-key>-->
 
-            <!--<om:field name="dbodid" fusion-name="id"/>-->
+            <!--<om:field name="id" fusion-name="id"/>-->
             <!--<om:field name="dbName" fusion-name="title"/>-->
 
         <!--</om:solr-server>-->

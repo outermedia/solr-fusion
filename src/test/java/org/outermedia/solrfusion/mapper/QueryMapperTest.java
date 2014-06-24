@@ -45,7 +45,7 @@ public class QueryMapperTest
         String expected = "Term(fusionFieldName=author, fusionFieldValue=[Schiller], fusionField=null, searchServerFieldName=Autor, searchServerFieldValue=[Schiller], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Got different mapping than expected", expected, q.getTerm().toString());
 
-        SearchServerQueryBuilderIfc qb = cfg.getSearchServerQueryBuilder();
+        QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
         String s = qb.buildQueryString(q);
         Assert.assertEquals("Found wrong search server term query mapping", "Autor:Schiller", s);
     }
@@ -71,7 +71,7 @@ public class QueryMapperTest
         String expectedTitle = "Term(fusionFieldName=title, fusionFieldValue=[Ein_langer_Weg], fusionField=null, searchServerFieldName=Titel, searchServerFieldValue=[Ein_langer_Weg], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Didn't find mapped title.", expectedTitle, q2.getTerm().toString());
 
-        SearchServerQueryBuilderIfc qb = cfg.getSearchServerQueryBuilder();
+        QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
         String s = qb.buildQueryString(bq);
         Assert.assertEquals("Found wrong search server bool query mapping", "+Autor:Schiller +Titel:Ein_langer_Weg",
                 s.trim());
@@ -98,7 +98,7 @@ public class QueryMapperTest
         String expectedTitle = "Term(fusionFieldName=title, fusionFieldValue=[Ein_langer_Weg], fusionField=null, searchServerFieldName=Titel, searchServerFieldValue=[Ein_langer_Weg], removed=false, wasMapped=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Didn't find mapped title.", expectedTitle, q2.getTerm().toString());
 
-        SearchServerQueryBuilderIfc qb = cfg.getSearchServerQueryBuilder();
+        QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
         String s = qb.buildQueryString(bq);
         Assert.assertEquals("Found wrong search server bool query mapping", "-Autor:Schiller -Titel:Ein_langer_Weg",
                 s.trim());

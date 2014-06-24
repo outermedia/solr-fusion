@@ -101,7 +101,7 @@ public class DropTest extends AbstractTypeTest
         qm.mapQuery(cfg, serverConfig, query, env);
         // System.out.println(term.toString());
         Assert.assertTrue("Expected that field text4 was removed", term.isRemoved());
-        SearchServerQueryBuilderIfc qb = SearchServerQueryBuilder.Factory.getInstance();
+        QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
         String ds = qb.buildQueryString(query);
         Assert.assertEquals("Expected no query", "", ds);
 

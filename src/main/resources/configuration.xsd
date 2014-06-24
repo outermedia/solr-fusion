@@ -12,7 +12,6 @@
         <xs:element name="response-consolidator" type="tns:response-consolidator"/>
         <xs:element name="response-mapper" type="tns:responseMapper"/>
         <xs:element name="query-mapper" type="tns:queryMapper"/>
-        <xs:element name="search-server-query-builder" type="tns:searchServerQueryBuilder"/>
         <xs:element name="controller" type="tns:controller"/>
         <xs:element name="solr-servers" type="tns:globalSearchServerConfig"/>
       </xs:sequence>
@@ -61,11 +60,6 @@
     <xs:attribute name="class" type="xs:string" use="required"/>
   </xs:complexType>
 
-  <xs:complexType name="searchServerQueryBuilder">
-    <xs:sequence/>
-    <xs:attribute name="class" type="xs:string" use="required"/>
-  </xs:complexType>
-
   <xs:complexType name="controller">
     <xs:sequence/>
     <xs:attribute name="class" type="xs:string" use="required"/>
@@ -79,6 +73,7 @@
       <xs:element name="query-parser" type="tns:queryParser"/>
       <xs:element name="response-parser" type="tns:responseParser"/>
       <xs:element name="response-renderer" type="tns:responseRenderer" maxOccurs="unbounded"/>
+      <xs:element name="query-builder" type="tns:queryBuilder"/>
       <xs:element name="merge" type="tns:merge" minOccurs="0"/>
       <xs:element name="solr-server" type="tns:searchServerConfig" maxOccurs="unbounded"/>
     </xs:sequence>
@@ -110,6 +105,11 @@
     <xs:attribute name="type" type="tns:responseRendererType" use="required"/>
   </xs:complexType>
 
+  <xs:complexType name="queryBuilder">
+    <xs:sequence/>
+    <xs:attribute name="class" type="xs:string" use="required"/>
+  </xs:complexType>
+
   <xs:complexType name="merge">
     <xs:sequence>
       <xs:element name="target" type="tns:mergeTarget" maxOccurs="unbounded"/>
@@ -129,6 +129,7 @@
       <xs:element name="url" type="xs:string"/>
       <xs:element name="score" type="tns:scoreFactory"/>
       <xs:element name="response-parser" type="tns:responseParser" minOccurs="0"/>
+      <xs:element name="query-builder" type="tns:queryBuilder" minOccurs="0"/>
       <xs:element name="unique-key" type="xs:string"/>
       <xs:element name="field" type="tns:fieldMapping" maxOccurs="unbounded"/>
     </xs:sequence>

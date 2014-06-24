@@ -8,9 +8,9 @@ import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ControllerFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.configuration.Util;
+import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.mapper.QueryMapperIfc;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
-import org.outermedia.solrfusion.mapper.SearchServerQueryBuilderIfc;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.ClosableIterator;
@@ -156,7 +156,7 @@ public class FusionController implements FusionControllerIfc
     {
         try
         {
-            SearchServerQueryBuilderIfc queryBuilder = configuration.getSearchServerQueryBuilder();
+            QueryBuilderIfc queryBuilder = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
             int timeout = configuration.getSearchServerConfigs().getTimeout();
             SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
             String searchServerQueryStr = queryBuilder.buildQueryString(query);

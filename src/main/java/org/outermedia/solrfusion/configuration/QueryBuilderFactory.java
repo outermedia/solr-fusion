@@ -3,7 +3,7 @@ package org.outermedia.solrfusion.configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.outermedia.solrfusion.mapper.SearchServerQueryBuilderIfc;
+import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -16,11 +16,11 @@ import javax.xml.bind.annotation.XmlType;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "searchServerQueryBuilder", namespace = "http://solrfusion.outermedia.org/configuration/")
+@XmlType(name = "queryBuilder", namespace = "http://solrfusion.outermedia.org/configuration/")
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class SearchServerQueryBuilderFactory extends
-        ConfiguredFactory<SearchServerQueryBuilderIfc, SearchServerQueryBuilderFactory>
+public class QueryBuilderFactory extends
+        ConfiguredFactory<QueryBuilderIfc, QueryBuilderFactory>
 {
 }

@@ -84,7 +84,7 @@ public class DefaultSolrAdapterTest
             try
             {
                 SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
-                InputStream is = adapter.sendQuery("shakespeare", 10);
+                InputStream is = adapter.sendQuery("shakespeare", 4000);
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 XmlResponse xmlResponse = (new Util()).unmarshal(XmlResponse.class, "", br, null);

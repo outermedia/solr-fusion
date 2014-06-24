@@ -48,9 +48,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <!-- The fusion query is transformed into a specific search server query -->
     <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory" />
 
-    <!-- A search server specific search String is created from an already mapped query -->
-    <om:search-server-query-builder class="org.outermedia.solrfusion.mapper.SearchServerQueryBuilder$Factory" />
-
     <!-- This component controls the whole processing. -->
     <om:controller class="org.outermedia.solrfusion.FusionController$Factory" />
 
@@ -76,6 +73,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         <om:response-renderer type="php"
             class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory" />
 
+        <!-- A search server specific search String is created from an already mapped query -->
+        <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory" />
+
         <!-- merge solr documents of different solrs into one -->
         <!-- "prio" controls which non empty value to use at first -->
         <om:merge fusion-name="ISBN" class="org.outermedia.solrfusion.DefaultMergeStrategy$Factory">
@@ -96,7 +96,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             <!-- overwrite global setting example -->
             <om:response-parser
                 class="org.outermedia.solrfusion.SpecialResponseParser$Factory" />
-                
+
+            <!-- overwrite global setting example -->
+            <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory" />
+
             <!-- the <id-generator> has to know how to identify solr -->
             <!-- docs by id -->
             <om:unique-key>id</om:unique-key>

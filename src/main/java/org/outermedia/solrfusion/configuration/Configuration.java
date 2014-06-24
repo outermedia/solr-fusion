@@ -7,9 +7,9 @@ import org.outermedia.solrfusion.FusionControllerIfc;
 import org.outermedia.solrfusion.IdGeneratorIfc;
 import org.outermedia.solrfusion.MergeStrategyIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.mapper.QueryMapperIfc;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
-import org.outermedia.solrfusion.mapper.SearchServerQueryBuilderIfc;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
@@ -30,7 +30,7 @@ import java.util.List;
         {
                 "fusionFields", "scriptTypes", "defaultSearchField", "defaultOperator",
                 "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory",
-                "queryMapperFactory", "searchServerQueryBuilderFactory", "controllerFactory",
+                "queryMapperFactory", "controllerFactory",
                 "searchServerConfigs"
         })
 @XmlRootElement(name = "core", namespace = "http://solrfusion.outermedia.org/configuration/")
@@ -74,11 +74,6 @@ public class Configuration
     @Getter
     @Setter
     private QueryMapperFactory queryMapperFactory;
-
-    @XmlElement(name = "search-server-query-builder", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter
-    @Setter
-    private SearchServerQueryBuilderFactory searchServerQueryBuilderFactory;
 
     @XmlElement(name = "controller", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     @Getter
@@ -154,6 +149,17 @@ public class Configuration
     public ResponseParserIfc getDefaultResponseParser() throws InvocationTargetException, IllegalAccessException
     {
         return searchServerConfigs.getDefaultResponseParser();
+    }
+
+    /**
+     * Get the default query builder. Please note that
+     * {@link SearchServerAdapterIfc} can use a special query builder.
+     *
+     * @return an instance of QueryBuilderIfcs.
+     */
+    public QueryBuilderIfc getDefaultQueryBuilder() throws InvocationTargetException, IllegalAccessException
+    {
+        return searchServerConfigs.getDefaultQueryBuilder();
     }
 
     /**
@@ -239,16 +245,6 @@ public class Configuration
     public QueryMapperIfc getQueryMapper() throws InvocationTargetException, IllegalAccessException
     {
         return queryMapperFactory.getInstance();
-    }
-
-    /**
-     * Get the configured query builder.
-     *
-     * @return a non null instance of SearchServerQueryBuilderIfc
-     */
-    public SearchServerQueryBuilderIfc getSearchServerQueryBuilder() throws InvocationTargetException, IllegalAccessException
-    {
-        return searchServerQueryBuilderFactory.getInstance();
     }
 
     /**

@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.outermedia.solrfusion.ScoreCorrectorIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
 
 import javax.xml.bind.annotation.*;
@@ -21,7 +22,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "searchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
         {
-                "url", "scoreFactory", "responseParserFactory", "idFieldName",
+                "url", "scoreFactory", "responseParserFactory", "queryBuilderFactory", "idFieldName",
                 "fieldMappings"
         })
 @Getter
@@ -44,6 +45,9 @@ public class SearchServerConfig extends
 
     @XmlElement(name = "response-parser", namespace = "http://solrfusion.outermedia.org/configuration/", required = false)
     private ResponseParserFactory responseParserFactory;
+
+    @XmlElement(name = "query-builder", namespace = "http://solrfusion.outermedia.org/configuration/", required = false)
+    private QueryBuilderFactory queryBuilderFactory;
 
     @XmlElement(name = "unique-key", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private String idFieldName;
@@ -101,6 +105,17 @@ public class SearchServerConfig extends
         if (responseParserFactory != null)
         {
             result = responseParserFactory.getInstance();
+        }
+        return result;
+    }
+
+    public QueryBuilderIfc getQueryBuilder(QueryBuilderIfc defaultQueryBuilder)
+            throws InvocationTargetException, IllegalAccessException
+    {
+        QueryBuilderIfc result = defaultQueryBuilder;
+        if (queryBuilderFactory != null)
+        {
+            result = queryBuilderFactory.getInstance();
         }
         return result;
     }

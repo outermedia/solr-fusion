@@ -1,6 +1,6 @@
 package org.outermedia.solrfusion.mapper;
 
-import org.outermedia.solrfusion.configuration.SearchServerQueryBuilderFactory;
+import org.outermedia.solrfusion.configuration.QueryBuilderFactory;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * <p/>
  * Created by ballmann on 03.06.14.
  */
-public class SearchServerQueryBuilder implements SearchServerQueryBuilderIfc
+public class QueryBuilder implements QueryBuilderIfc
 {
     protected List<Query> newQueries;
     protected StringBuilder queryBuilder;
@@ -33,7 +33,7 @@ public class SearchServerQueryBuilder implements SearchServerQueryBuilderIfc
     }
 
     @Override
-    public void init(SearchServerQueryBuilderFactory config) throws InvocationTargetException, IllegalAccessException
+    public void init(QueryBuilderFactory config) throws InvocationTargetException, IllegalAccessException
     {
         // NOP
     }
@@ -41,15 +41,15 @@ public class SearchServerQueryBuilder implements SearchServerQueryBuilderIfc
     /**
      * Factory creates instances only.
      */
-    private SearchServerQueryBuilder()
+    private QueryBuilder()
     {
     }
 
     public static class Factory
     {
-        public static SearchServerQueryBuilderIfc getInstance()
+        public static QueryBuilderIfc getInstance()
         {
-            return new SearchServerQueryBuilder();
+            return new QueryBuilder();
         }
     }
 
