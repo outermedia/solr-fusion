@@ -98,20 +98,39 @@
         </om:solr-server>
 
 
-        <!--<om:solr-server name="DBoD1" version="3.6"-->
-                        <!--class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">-->
+        <om:solr-server name="DBoD1" version="3.6"
+                        class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
-            <!--<om:url>http://findex.gbv.de:9002/te/select?q=</om:url>-->
+            <om:url>http://findex.gbv.de:9002/te/select</om:url>
 
-            <!--<om:score factor="1.0"-->
-                      <!--class="org.outermedia.solrfusion.DefaultScore$Factory"/>-->
+            <om:score factor="1.0"
+                      class="org.outermedia.solrfusion.DefaultScore$Factory"/>
 
-            <!--<om:unique-key>id</om:unique-key>-->
+            <om:query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory" />
 
-            <!--<om:field name="id" fusion-name="id"/>-->
-            <!--<om:field name="dbName" fusion-name="title"/>-->
+            <om:unique-key>id</om:unique-key>
 
-        <!--</om:solr-server>-->
+            <om:field name="id" fusion-name="id"/>
+            <om:field name="dbName" fusion-name="title"/>
+
+        </om:solr-server>
+
+        <om:solr-server name="DBoD1" version="3.6"
+                        class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+
+            <om:url>http://findex.gbv.de:9003/solr/select</om:url>
+
+            <om:score factor="1.0"
+                      class="org.outermedia.solrfusion.DefaultScore$Factory"/>
+
+            <om:query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory" />
+
+            <om:unique-key>id</om:unique-key>
+
+            <om:field name="id" fusion-name="id"/>
+            <om:field name="dbName" fusion-name="title"/>
+
+        </om:solr-server>
 
     </om:solr-servers>
 </om:core>
