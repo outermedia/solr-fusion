@@ -53,6 +53,7 @@ public class SolrFusionServlet extends HttpServlet
         // set encoding/content type BEFORE getWriter() is called!
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/xml;charset=UTF-8");
+        response.setStatus(200);
         PrintWriter pw = response.getWriter();
         FusionRequest fusionRequest = buildFusionRequest(request.getParameterMap());
         FusionResponse fusionResponse = getNewFusionResponse();
