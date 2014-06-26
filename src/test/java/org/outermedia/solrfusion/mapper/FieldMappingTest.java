@@ -2,11 +2,12 @@ package org.outermedia.solrfusion.mapper;
 
 import junit.framework.Assert;
 import org.junit.Test;
-import org.outermedia.solrfusion.configuration.FieldMapping;
-import org.outermedia.solrfusion.configuration.MatchType;
+import org.outermedia.solrfusion.configuration.*;
 
 import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ballmann on 6/17/14.
@@ -39,14 +40,12 @@ public class FieldMappingTest
     @Test
     public void testValidAttributeCombinations()
     {
-        // case 1
-        assertLiteral(createFieldMapping("a", null, null, null, null, null));
-        // case 2
-        assertLiteral(createFieldMapping(null, "a", null, null, null, null));
-        // case 3
-        assertLiteral(createFieldMapping("a", "b", null, null, null, null));
-        // case 4
-        assertRegExp(createFieldMapping(null, null, "a", "b", "c", "d"));
+        assertMappingType(createFieldMapping("a", null, null, null, null, null), MappingType.EXACT_NAME_ONLY);
+        assertMappingType(createFieldMapping(null, "a", null, null, null, null), MappingType.EXACT_FUSION_NAME_ONLY);
+        assertMappingType(createFieldMapping("a", "b", null, null, null, null), MappingType.EXACT_NAME_AND_FUSION_NAME);
+        assertMappingType(createFieldMapping(null, null, "a", "b", "c", "d"), MappingType.REG_EXP_ALL);
+        assertMappingType(createFieldMapping(null, null, "a", null, null, null), MappingType.REG_EXP_NAME_ONLY);
+        assertMappingType(createFieldMapping(null, null, null, null, null, "d"), MappingType.REG_EXP_FUSION_NAME_ONLY);
     }
 
     @Test
@@ -63,10 +62,8 @@ public class FieldMappingTest
         assertException(createFieldMapping("a", null, null, null, null, "b"));
         assertException(createFieldMapping(null, "a", null, null, null, "b"));
 
-        assertException(createFieldMapping(null, null, "b", null, null, null));
         assertException(createFieldMapping(null, null, null, "b", null, null));
         assertException(createFieldMapping(null, null, null, null, "b", null));
-        assertException(createFieldMapping(null, null, null, null, null, "b"));
 
         assertException(createFieldMapping(null, null, "a", "b", null, null));
         assertException(createFieldMapping(null, null, "a", null, "b", null));
@@ -96,25 +93,12 @@ public class FieldMappingTest
         }
     }
 
-    protected void assertLiteral(TestFieldMapping fm)
+    protected void assertMappingType(TestFieldMapping fm, MappingType mappingType)
     {
         try
         {
             fm.afterUnmarshal(null, null);
-            Assert.assertEquals("Got wrong match type", MatchType.LITERAL, fm.getMatchType());
-        }
-        catch (UnmarshalException e)
-        {
-            Assert.fail("Expected no exception " + e);
-        }
-    }
-
-    protected void assertRegExp(TestFieldMapping fm)
-    {
-        try
-        {
-            fm.afterUnmarshal(null, null);
-            Assert.assertEquals("Got wrong match type", MatchType.REG_EXP, fm.getMatchType());
+            Assert.assertEquals("Got wrong match type", mappingType, fm.getMappingType());
         }
         catch (UnmarshalException e)
         {
@@ -167,5 +151,49 @@ public class FieldMappingTest
 
         ok = fm.applicableToFusionField("end52");
         Assert.assertFalse("RegExp match succeeded, but should fail", ok);
+    }
+
+    @Test
+    public void testFusionDropResponse()
+    {
+        TestFieldMapping fm = createFieldMapping(null, "fn1", null, null, null, null);
+        List<Operation> ops = new ArrayList<>();
+        DropOperation o = new DropOperation();
+        List<Target> ts = new ArrayList<>();
+        ts.add(new Response());
+        o.setTargets(ts);
+        ops.add(o);
+        fm.setOperations(ops);
+        try
+        {
+            fm.afterUnmarshal(null, null);
+            Assert.fail("Expected exception for drop fusion name in response");
+        }
+        catch (Exception e)
+        {
+            // NOP
+        }
+    }
+
+    @Test
+    public void testNameDropQuery()
+    {
+        TestFieldMapping fm = createFieldMapping("n1", null, null, null, null, null);
+        List<Operation> ops = new ArrayList<>();
+        DropOperation o = new DropOperation();
+        List<Target> ts = new ArrayList<>();
+        ts.add(new Query());
+        o.setTargets(ts);
+        ops.add(o);
+        fm.setOperations(ops);
+        try
+        {
+            fm.afterUnmarshal(null, null);
+            Assert.fail("Expected exception for drop search server name in query");
+        }
+        catch (Exception e)
+        {
+            // NOP
+        }
     }
 }

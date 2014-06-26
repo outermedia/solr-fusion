@@ -7,6 +7,7 @@ import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.types.ConversionDirection;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlTransient;
@@ -37,9 +38,9 @@ public abstract class Operation
     private List<Target> targets;
 
     /**
-     * Get all targets which are applicable to a query.
+     * Get all targets which are applicable to a query. Filters out Response targets.
      *
-     * @return a list of target object, perhaps empty
+     * @return a list of target object, perhaps empty. The objects are either of class Query or QueryResponse.
      */
     protected List<Target> getQueryTargets()
     {
@@ -58,9 +59,30 @@ public abstract class Operation
     }
 
     /**
-     * Get all targets which are applicable to a response.
+     * Get all targets which are applicable to a query.
      *
-     * @return a list of target object, perhaps empty
+     * @return a list of target object, perhaps empty. The objects are of class Query.
+     */
+    protected List<Query> getQueryOnlyTargets()
+    {
+        List<Query> result = new ArrayList<>();
+        if (targets != null)
+        {
+            for (Target t : targets)
+            {
+                if (t instanceof Query)
+                {
+                    result.add((Query) t);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Get all targets which are applicable to a response. Filters out Query targets.
+     *
+     * @return a list of target object, perhaps empty. The objects are either of class Response or QueryResponse.
      */
     protected List<Target> getResponseTargets()
     {
@@ -72,6 +94,27 @@ public abstract class Operation
                 if (t instanceof Response || t instanceof QueryResponse)
                 {
                     result.add(t);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Get all targets which are applicable to a response.
+     *
+     * @return a list of target object, perhaps empty. The objects are of class Response.
+     */
+    protected List<Response> getResponseOnlyTargets()
+    {
+        List<Response> result = new ArrayList<>();
+        if (targets != null)
+        {
+            for (Target t : targets)
+            {
+                if (t instanceof Response)
+                {
+                    result.add((Response) t);
                 }
             }
         }
@@ -122,4 +165,11 @@ public abstract class Operation
         List<String> newFusionValue = t.apply(term.getFusionFieldValue(), newEnv, ConversionDirection.SEARCH_TO_FUSION);
         term.setFusionFieldValue(newFusionValue);
     }
+
+    /**
+     * This method is called in {@link org.outermedia.solrfusion.configuration.FieldMapping#afterUnmarshal(javax.xml.bind.Unmarshaller,
+     * Object)} in order to run checks which can't be done by the XML schema validation.
+     * Implementations should throw an UnmarshalException in the case of errors.
+     */
+    protected abstract void check(FieldMapping fieldMapping) throws UnmarshalException;
 }

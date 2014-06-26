@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
@@ -39,5 +40,11 @@ public class AddOperation extends Operation
     {
         super.applyOneResponseOperation(term, env, t);
         term.addNewFusionTerm(env.getStringBinding(ScriptEnv.ENV_FUSION_FIELD), term.getFusionFieldValue());
+    }
+
+    @Override
+    protected void check(FieldMapping fieldMapping) throws UnmarshalException
+    {
+        // TODO
     }
 }

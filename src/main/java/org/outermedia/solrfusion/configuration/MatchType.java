@@ -9,6 +9,13 @@ public enum MatchType
 {
     LITERAL, REG_EXP, WILDCARD;
 
+    /**
+     * Check whether a mapping is applicable to a fusion field.
+     *
+     * @param fusionFieldName
+     * @param fieldMapping
+     * @return null if not applicable else an instance of ApplicableResult
+     */
     protected ApplicableResult applicableToFusionField(String fusionFieldName, FieldMapping fieldMapping)
     {
         ApplicableResult result = null;
@@ -27,7 +34,11 @@ public enum MatchType
                 Matcher matcher = fieldMapping.getFusionNameRegExp().matcher(fusionFieldName);
                 if (matcher.find())
                 {
-                    destinationField = matcher.replaceAll(fieldMapping.getSearchServersNameReplacement());
+                    // no replacement for <drop>
+                    if (fieldMapping.getSearchServersNameReplacement() != null)
+                    {
+                        destinationField = matcher.replaceAll(fieldMapping.getSearchServersNameReplacement());
+                    }
                     // even is destination field is empty e.g. for a <drop>, but the field was mapped
                     result = new ApplicableResult(destinationField);
                 }
@@ -38,6 +49,13 @@ public enum MatchType
         return result;
     }
 
+    /**
+     * Check whether a mapping is applicable to a search server field.
+     *
+     * @param searchServerFieldName
+     * @param fieldMapping
+     * @return null if not applicable else an instance of ApplicableResult
+     */
     protected ApplicableResult applicableToSearchServerField(String searchServerFieldName, FieldMapping fieldMapping)
     {
         ApplicableResult result = null;
@@ -56,7 +74,11 @@ public enum MatchType
                 Matcher matcher = fieldMapping.getSearchServersNameRegExp().matcher(searchServerFieldName);
                 if (matcher.find())
                 {
-                    destinationField = matcher.replaceAll(fieldMapping.getFusionNameReplacement());
+                    // no replacement for <drop>
+                    if (fieldMapping.getFusionNameReplacement() != null)
+                    {
+                        destinationField = matcher.replaceAll(fieldMapping.getFusionNameReplacement());
+                    }
                     // even is destination field is empty e.g. for a <drop>, but the field was mapped
                     result = new ApplicableResult(destinationField);
                 }

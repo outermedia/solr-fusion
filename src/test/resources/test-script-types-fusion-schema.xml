@@ -247,6 +247,18 @@
                 </om:drop>
             </om:field>
 
+            <om:field name-pattern="f9.*">
+                <om:drop>
+                    <om:response />
+                </om:drop>
+            </om:field>
+
+            <om:field fusion-name-pattern="text5.*">
+                <om:drop>
+                    <om:query />
+                </om:drop>
+            </om:field>
+
         </om:solr-server>
 
     </om:solr-servers>

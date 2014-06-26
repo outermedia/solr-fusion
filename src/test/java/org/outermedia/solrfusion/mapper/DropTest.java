@@ -7,6 +7,8 @@ import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.FieldMapping;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.query.parser.BooleanClause;
+import org.outermedia.solrfusion.query.parser.BooleanQuery;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.query.parser.TermQuery;
 import org.outermedia.solrfusion.response.ClosableIterator;
@@ -43,6 +45,7 @@ public class DropTest extends AbstractTypeTest
         buildResponseField(doc, "Autor", "Willi Schiller");
         buildResponseField(doc, "id", "132");
         Term sourceField = buildResponseField(doc, "f8", "something", "other");
+        Term sourceRegExpField = buildResponseField(doc, "f9-abc", "something2", "other2");
 
         SimpleXmlResponseRenderer renderer = SimpleXmlResponseRenderer.getInstance();
         renderer.setMultiValueKey("arr");
@@ -58,6 +61,7 @@ public class DropTest extends AbstractTypeTest
         rm.mapResponse(cfg, serverConfig, doc, env);
         // System.out.println(sourceField.toString());
         Assert.assertTrue("Expected that field f8 was removed", sourceField.isRemoved());
+        Assert.assertTrue("Expected that field f9-abc was removed", sourceRegExpField.isRemoved());
 
         ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(docs, info);
         String ds = renderer.getResponseString(docStream, "a:dummy");
@@ -69,8 +73,7 @@ public class DropTest extends AbstractTypeTest
 
         // remove <drop> for f8
         sourceField.resetSearchServerField();
-        List<FieldMapping> mappings = serverConfig.getFieldMappings();
-        FieldMapping fm = mappings.get(mappings.size() - 2);
+        FieldMapping fm = findByName("f8",serverConfig.getFieldMappings());
         Assert.assertEquals("Found different mapping than expected", "f8", fm.getSearchServersName());
         fm.setFusionName("text4");
         fm.getOperations().clear();
@@ -81,6 +84,24 @@ public class DropTest extends AbstractTypeTest
         docStream = new ClosableListIterator<>(docs, info);
         String s = renderer.getResponseString(docStream, "a:dummy");
         Assert.assertTrue("Field f8 was not mapped.", s.contains(expectedField));
+    }
+
+    protected FieldMapping findByName(String s, List<FieldMapping> mappings)
+    {
+        for(FieldMapping fm : mappings)
+        {
+            if(s.equals(fm.getSearchServersName())) return fm;
+        }
+        return null;
+    }
+
+    protected FieldMapping findByFusionName(String s, List<FieldMapping> mappings)
+    {
+        for(FieldMapping fm : mappings)
+        {
+            if(s.equals(fm.getFusionName())) return fm;
+        }
+        return null;
     }
 
     @Test
@@ -94,21 +115,26 @@ public class DropTest extends AbstractTypeTest
 
         QueryMapperIfc qm = QueryMapper.Factory.getInstance();
         Term term = Term.newFusionTerm("text4", "bla1");
+        Term term2 = Term.newFusionTerm("text5-abc", "bla2");
         Query query = new TermQuery(term);
+        Query query2 = new TermQuery(term2);
+        BooleanQuery q = new BooleanQuery(false);
+        q.add(new BooleanClause(query, BooleanClause.Occur.OCCUR_MUST));
+        q.add(new BooleanClause(query2, BooleanClause.Occur.OCCUR_MUST));
 
         ScriptEnv env = new ScriptEnv();
         SearchServerConfig serverConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
-        qm.mapQuery(cfg, serverConfig, query, env);
+        qm.mapQuery(cfg, serverConfig, q, env);
         // System.out.println(term.toString());
         Assert.assertTrue("Expected that field text4 was removed", term.isRemoved());
+        Assert.assertTrue("Expected that field text5-abc was removed", term2.isRemoved());
         QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
         String ds = qb.buildQueryString(query);
         Assert.assertEquals("Expected no query", "", ds);
 
         // remove <drop> for text4
         term.resetQuery();
-        List<FieldMapping> mappings = serverConfig.getFieldMappings();
-        FieldMapping fm = mappings.get(mappings.size() - 1);
+        FieldMapping fm = findByFusionName("text4", serverConfig.getFieldMappings());
         Assert.assertEquals("Found different mapping than expected", "text4", fm.getFusionName());
         fm.setSearchServersName("f8");
         fm.getOperations().clear();

@@ -7,6 +7,7 @@ import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.mapper.UndeclaredFusionField;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
@@ -36,6 +37,12 @@ public class ChangeOperation extends Operation
                     + "' in fusion schema. Please define it there.");
         }
         super.applyAllResponseOperations(term, env);
+    }
+
+    @Override
+    protected void check(FieldMapping fieldMapping) throws UnmarshalException
+    {
+        // NOP
     }
 
     @Override

@@ -56,7 +56,7 @@ public class FieldMapping
     private Pattern fusionNameRegExp;
 
     @XmlTransient
-    private MatchType matchType;
+    protected MappingType mappingType;
 
     /**
      * This field is set, when {@link #applicableToSearchServerField(String)} has been called.
@@ -91,7 +91,7 @@ public class FieldMapping
      */
     public boolean applicableToFusionField(String fusionFieldName)
     {
-        ApplicableResult matchResult = matchType.applicableToFusionField(fusionFieldName, this);
+        ApplicableResult matchResult = mappingType.applicableToFusionField(fusionFieldName, this);
         if (matchResult != null)
         {
             specificSearchServerName = matchResult.getDestinationFieldName();
@@ -136,7 +136,7 @@ public class FieldMapping
      */
     public boolean applicableToSearchServerField(String searchServerFieldName)
     {
-        ApplicableResult matchResult = matchType.applicableToSearchServerField(searchServerFieldName, this);
+        ApplicableResult matchResult = mappingType.applicableToSearchServerField(searchServerFieldName, this);
         if (matchResult != null)
         {
             specificFusionName = matchResult.getDestinationFieldName();
@@ -201,12 +201,16 @@ public class FieldMapping
         boolean nameReplSet = searchServersNameReplacement != null;
         boolean fusionPatSet = fusionNamePattern != null;
 
-        int case1 = (nameSet && !fusionSet && !namePatSet && !fusionReplSet && !nameReplSet && !fusionPatSet) ? 1 : 0;
-        int case2 = (!nameSet && fusionSet && !namePatSet && !fusionReplSet && !nameReplSet && !fusionPatSet) ? 1 : 0;
-        int case3 = (nameSet && fusionSet && !namePatSet && !fusionReplSet && !nameReplSet && !fusionPatSet) ? 1 : 0;
-        int case4 = (!nameSet && !fusionSet && namePatSet && fusionReplSet && nameReplSet && fusionPatSet) ? 1 : 0;
+        mappingType = MappingType.getMappingType(nameSet, fusionSet, namePatSet, fusionReplSet, nameReplSet,
+                fusionPatSet);
+        int case1 = (mappingType == MappingType.EXACT_NAME_ONLY) ? 1 : 0;
+        int case2 = (mappingType == MappingType.EXACT_FUSION_NAME_ONLY) ? 1 : 0;
+        int case3 = (mappingType == MappingType.EXACT_NAME_AND_FUSION_NAME) ? 1 : 0;
+        int case4 = (mappingType == MappingType.REG_EXP_ALL) ? 1 : 0;
+        int case5 = (mappingType == MappingType.REG_EXP_NAME_ONLY) ? 1 : 0;
+        int case6 = (mappingType == MappingType.REG_EXP_FUSION_NAME_ONLY) ? 1 : 0;
 
-        int trueCasesSum = case1 + case2 + case3 + case4;
+        int trueCasesSum = case1 + case2 + case3 + case4 + case5 + case6;
         boolean noCaseIsTrue = trueCasesSum == 0;
         boolean moreThanOneCaseIsTrue = trueCasesSum > 1;
 
@@ -218,19 +222,21 @@ public class FieldMapping
                     searchServersNameReplacement, fusionNamePattern);
             throw new UnmarshalException("Invalid attribute combination");
         }
-        if (case1 == 1 || case2 == 1 || case3 == 1)
+        if (case5 == 1 || case4 == 1)
         {
-            matchType = MatchType.LITERAL;
-        }
-        else if (case4 == 1)
-        {
-            matchType = MatchType.REG_EXP;
             searchServersNameRegExp = parseRegExp(searchServersNamePattern);
+        }
+        if (case6 == 1 || case4 == 1)
+        {
             fusionNameRegExp = parseRegExp(fusionNamePattern);
         }
-        else
+
+        if(operations != null)
         {
-            throw new UnmarshalException("Unknown match type");
+            for(Operation o: operations)
+            {
+                o.check(this);
+            }
         }
     }
 
@@ -246,5 +252,15 @@ public class FieldMapping
             throw new UnmarshalException(e);
         }
         return pat;
+    }
+
+    public boolean isFusionFieldOnlyMapping()
+    {
+        return mappingType.isFusionFieldOnly();
+    }
+
+    public boolean isSearchServerFieldOnlyMapping()
+    {
+        return mappingType.isSearchServerFieldOnly();
     }
 }
