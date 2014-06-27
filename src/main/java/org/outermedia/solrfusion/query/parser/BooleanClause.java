@@ -33,6 +33,17 @@ public class BooleanClause implements VisitableQuery
         return occur == Occur.OCCUR_MUST_NOT;
     }
 
+    public boolean isRequired()
+    {
+        return Occur.OCCUR_MUST == occur;
+    }
+
+    public boolean isOptional()
+    {
+        return Occur.OCCUR_SHOULD == occur;
+    }
+
+
     @Override
     public void accept(QueryVisitor visitor, ScriptEnv env)
     {

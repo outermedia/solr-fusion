@@ -1,5 +1,6 @@
 package org.outermedia.solrfusion.query.parser;
 
+import lombok.Getter;
 import lombok.ToString;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -7,6 +8,7 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @ToString(callSuper = true)
 public class BooleanQuery extends Query
 {
