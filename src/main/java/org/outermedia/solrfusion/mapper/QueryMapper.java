@@ -101,13 +101,6 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     }
 
     @Override
-    public void visitQuery(NumericRangeQuery t, ScriptEnv env)
-    {
-        // TODO
-
-    }
-
-    @Override
     public void visitQuery(PhraseQuery t, ScriptEnv env)
     {
         // TODO
@@ -134,5 +127,33 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
         booleanClause.accept(this, env);
     }
 
+    @Override
+    public void visitQuery(IntRangeQuery t, ScriptEnv env)
+    {
+        // TODO
+    }
 
+    @Override
+    public void visitQuery(LongRangeQuery t, ScriptEnv env)
+    {
+        // TODO
+    }
+
+    @Override
+    public void visitQuery(FloatRangeQuery t, ScriptEnv env)
+    {
+        // TODO
+    }
+
+    @Override
+    public void visitQuery(DoubleRangeQuery t, ScriptEnv env)
+    {
+        // TODO
+    }
+
+    @Override
+    public void visitQuery(DateRangeQuery t, ScriptEnv env)
+    {
+        // TODO
+    }
 }

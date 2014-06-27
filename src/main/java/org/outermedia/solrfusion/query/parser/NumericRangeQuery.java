@@ -1,46 +1,68 @@
 package org.outermedia.solrfusion.query.parser;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+import java.util.Calendar;
+
+@Getter
+@Setter
 @ToString(callSuper = true)
-public class NumericRangeQuery extends Query
+public abstract class NumericRangeQuery extends Query
 {
     private String fusionFieldName;
+    private boolean minInclusive;
+    private boolean maxInclusive;
 
     @Override
-    public void accept(QueryVisitor visitor, ScriptEnv env)
+    public abstract void accept(QueryVisitor visitor, ScriptEnv env);
+
+    protected NumericRangeQuery(String field, boolean minInclusive, boolean maxInclusive)
     {
-        visitor.visitQuery(this, env);
+        this.fusionFieldName = field;
+        this.minInclusive = minInclusive;
+        this.maxInclusive = maxInclusive;
     }
 
 	public static NumericRangeQuery newLongRange(String field, Long min,
-		Long max, boolean inclusive, boolean inclusive2)
+		Long max, boolean minInclusive, boolean maxInclusive)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new LongRangeQuery(field, min, max, minInclusive, maxInclusive);
 	}
 
 	public static NumericRangeQuery newIntRange(String field, Integer min,
-		Integer max, boolean inclusive, boolean inclusive2)
+		Integer max, boolean minInclusive, boolean maxInclusive)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new IntRangeQuery(field, min, max, minInclusive, maxInclusive);
 	}
 
-	public static NumericRangeQuery newFloatRange(String field, int i,
-		Float min, Float max, boolean inclusive, boolean inclusive2)
+	public static NumericRangeQuery newFloatRange(String field,
+		Float min, Float max, boolean minInclusive, boolean maxInclusive)
 	{
-		// TODO Auto-generated method stub
-		return null;
+        return new FloatRangeQuery(field, min, max, minInclusive, maxInclusive);
 	}
 
-	public static NumericRangeQuery newDoubleRange(String field, int i,
-		Double min, Double max, boolean inclusive, boolean inclusive2)
+	public static NumericRangeQuery newDoubleRange(String field,
+		Double min, Double max, boolean minInclusive, boolean maxInclusive)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new DoubleRangeQuery(field, min, max, minInclusive, maxInclusive);
 	}
 
+    /**
+     *
+     * @param field
+     * @param min either null ("*") or an instance of GregorianCalendar
+     * @param max either null ("*") or an instance of GregorianCalendar
+     * @param minInclusive
+     * @param maxInclusive
+     * @return
+     */
+    public static NumericRangeQuery newDateRange(String field,
+            Calendar min, Calendar max, boolean minInclusive, boolean maxInclusive)
+    {
+        return new DateRangeQuery(field, min, max, minInclusive, maxInclusive);
+    }
 }

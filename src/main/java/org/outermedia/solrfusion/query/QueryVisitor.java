@@ -16,7 +16,11 @@ public interface QueryVisitor
     public void visitQuery(FuzzyQuery t, ScriptEnv env);
     public void visitQuery(MatchAllDocsQuery t, ScriptEnv env);
     public void visitQuery(MultiPhraseQuery t, ScriptEnv env);
-    public void visitQuery(NumericRangeQuery t, ScriptEnv env);
+    public void visitQuery(IntRangeQuery t, ScriptEnv env);
+    public void visitQuery(LongRangeQuery t, ScriptEnv env);
+    public void visitQuery(FloatRangeQuery t, ScriptEnv env);
+    public void visitQuery(DoubleRangeQuery t, ScriptEnv env);
+    public void visitQuery(DateRangeQuery t, ScriptEnv env);
     public void visitQuery(PhraseQuery t, ScriptEnv env);
     public void visitQuery(PrefixQuery t, ScriptEnv env);
     public void visitQuery(WildcardQuery t, ScriptEnv env);

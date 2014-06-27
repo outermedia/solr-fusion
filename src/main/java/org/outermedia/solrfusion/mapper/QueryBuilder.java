@@ -115,13 +115,6 @@ public class QueryBuilder implements QueryBuilderIfc
     }
 
     @Override
-    public void visitQuery(NumericRangeQuery t, ScriptEnv env)
-    {
-        // TODO
-
-    }
-
-    @Override
     public void visitQuery(PhraseQuery t, ScriptEnv env)
     {
         // TODO
@@ -160,4 +153,33 @@ public class QueryBuilder implements QueryBuilderIfc
         booleanClause.accept(this, env);
     }
 
+    @Override
+    public void visitQuery(IntRangeQuery t, ScriptEnv env)
+    {
+        // TODO
+    }
+
+    @Override
+    public void visitQuery(LongRangeQuery t, ScriptEnv env)
+    {
+        // TODO
+    }
+
+    @Override
+    public void visitQuery(FloatRangeQuery t, ScriptEnv env)
+    {
+        // TODO
+    }
+
+    @Override
+    public void visitQuery(DoubleRangeQuery t, ScriptEnv env)
+    {
+        // TODO
+    }
+
+    @Override
+    public void visitQuery(DateRangeQuery t, ScriptEnv env)
+    {
+        // TODO
+    }
 }

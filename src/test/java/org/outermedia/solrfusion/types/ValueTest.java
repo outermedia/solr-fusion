@@ -22,6 +22,7 @@ import java.util.List;
 /**
  * Created by ballmann on 6/19/14.
  */
+@SuppressWarnings("unchecked")
 public class ValueTest extends AbstractTypeTest
 {
 

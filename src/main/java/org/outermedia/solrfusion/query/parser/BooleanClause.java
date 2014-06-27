@@ -7,6 +7,7 @@ import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.query.VisitableQuery;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+
 @Getter
 @Setter
 @ToString
@@ -17,7 +18,7 @@ public class BooleanClause implements VisitableQuery
         OCCUR_MAY, OCCUR_MUST, OCCUR_SHOULD, OCCUR_MUST_NOT
     }
 
-    private Occur occur = Occur.OCCUR_MAY; // TODO correct initialization?
+    private Occur occur;
     private Query query;
 
 
@@ -29,8 +30,7 @@ public class BooleanClause implements VisitableQuery
 
     public boolean isProhibited()
     {
-        // TODO Auto-generated method stub
-        return false;
+        return occur == Occur.OCCUR_MUST_NOT;
     }
 
     @Override

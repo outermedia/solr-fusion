@@ -3,7 +3,6 @@ package org.outermedia.solrfusion.types;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.*;
@@ -20,11 +19,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static org.mockito.Mockito.*;
+
 /**
  * Created by ballmann on 6/19/14.
  */
+@SuppressWarnings("unechecked")
 public class JsFileTest extends AbstractTypeTest
 {
+    @SuppressWarnings("unchecked")
     @Test
     public void testConfigParsing() throws IOException, SAXException, ParserConfigurationException
     {
@@ -32,9 +35,9 @@ public class JsFileTest extends AbstractTypeTest
 
         Util util = new Util();
         Element elem = util.parseXml(xml);
-        JsFile jsType = Mockito.spy(new JsFile());
+        JsFile jsType = spy(new JsFile());
         jsType.passArguments(util.filterElements(elem.getChildNodes()), util);
-        Mockito.verify(jsType, Mockito.times(1)).logBadConfiguration(Mockito.eq(true), Mockito.anyList());
+        verify(jsType, times(1)).logBadConfiguration(eq(true), anyList());
 
         String code = jsType.getCode();
         String expected = FileUtils.readFileToString(new File("target/test-classes/test-js-file.js"));
@@ -42,15 +45,16 @@ public class JsFileTest extends AbstractTypeTest
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testMissingConfig() throws IOException, SAXException, ParserConfigurationException
     {
         String xml = docOpen + docClose;
 
         Util util = new Util();
         Element elem = util.parseXml(xml);
-        JsFile jsType = Mockito.spy(new JsFile());
+        JsFile jsType = spy(new JsFile());
         jsType.passArguments(util.filterElements(elem.getChildNodes()), util);
-        Mockito.verify(jsType, Mockito.times(1)).logBadConfiguration(Mockito.eq(false), Mockito.anyList());
+        verify(jsType, times(1)).logBadConfiguration(eq(false), anyList());
 
         String code = jsType.getCode();
         Assert.assertNull("Handling of missing configuration failed.", code);

@@ -23,6 +23,7 @@ import java.util.Arrays;
  */
 public class BshTest extends AbstractTypeTest
 {
+    @SuppressWarnings("unchecked")
     @Test
     public void testConfigParsing() throws IOException, SAXException, ParserConfigurationException
     {
@@ -38,6 +39,7 @@ public class BshTest extends AbstractTypeTest
         Assert.assertEquals("Parsing of configuration failed.", "return 42;", code);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testMissingConfig() throws IOException, SAXException, ParserConfigurationException
     {

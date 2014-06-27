@@ -450,7 +450,7 @@ public class QueryParser {
 	    if(part2 != null && !"*".equals(part2)) max = Float.parseFloat(part2);
 	    // internal default value 4 is not working to find with e.g. [30.1 TO 34.2]
 	    // a document with float 33.1; 20 is the minimum where it starts working
-	    query = NumericRangeQuery.newFloatRange(field, 20, min, max, inclusive, inclusive);
+	    query = NumericRangeQuery.newFloatRange(field, min, max, inclusive, inclusive);
 	} else if(isDoubleField(ft)) {
 	    Double min = null;
 	    Double max = null;
@@ -458,23 +458,50 @@ public class QueryParser {
 	    if(part2 != null && !"*".equals(part2)) max = Double.parseDouble(part2);
 	    // internal default value 4 is not working to find with e.g. [30.1 TO 34.2]
 	    // a document with double 33.1; 49 is the minimum where it starts working
-	    query = NumericRangeQuery.newDoubleRange(field, 49, min, max, inclusive, inclusive);
-	} else {
-		// fallback for all other field types (could handle int/long/float/double too)
-		String min = part1;
-	    String max = part2;
+	    query = NumericRangeQuery.newDoubleRange(field, min, max, inclusive, inclusive);
+	} else if(isDateField(ft)) {
+		Calendar min = null;
+	    Calendar max = null;
 	    // for dates we want upper case 'T' and 'Z'
-	    if(isDateField(ft)) {
-	    	if(part1 != null && !"*".equals(part1)) min = part1.toUpperCase();
-	    	if(part2 != null && !"*".equals(part2)) max = part2.toUpperCase();
-	    }
-		// TODO implement date range query
-		throw new RuntimeException("date range queries are not implemented yet");
+        if(part1 != null && !"*".equals(part1))
+        {
+            min = checkDate(part1.toUpperCase(), false);
+        }
+        if(part2 != null && !"*".equals(part2))
+        {
+            max = checkDate(part2.toUpperCase(), inclusive);
+        }
+        query = NumericRangeQuery.newDateRange(field, min, max, inclusive, inclusive);
+	} else {
+		throw new ParseException("Unsupported range query type: " + ft.getFieldType());
 	}
     return query;
   }
-  
-  /* currently not used */
+
+  protected Calendar checkDate(String ds, boolean endInclusive) throws ParseException
+  {
+    DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+    df.setLenient(true);
+    try {
+      Date d1 = df.parse(ds);
+      Calendar cal = Calendar.getInstance(locale);
+      cal.setTime(d1);
+      if (endInclusive) {
+        // The user can only specify the date, not the time, so make sure
+        // the time is set to the latest possible time of that date to really
+        // include all documents:
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 999);
+      }
+      return cal;
+    } catch (Exception e) {
+        throw new ParseException("Invalid date value: '" + ds + "'");
+    }
+  }
+
+  // not used
   public static Date parseSolrDate(String date) throws ParseException
   {
   	String errorMsgText = "Invalid date value '" + date

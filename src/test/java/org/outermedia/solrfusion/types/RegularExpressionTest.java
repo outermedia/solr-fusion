@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
  */
 public class RegularExpressionTest extends AbstractTypeTest
 {
+    @SuppressWarnings("unchecked")
     @Test
     public void testConfigParsing() throws IOException, SAXException, ParserConfigurationException
     {
@@ -41,6 +42,7 @@ public class RegularExpressionTest extends AbstractTypeTest
         Assert.assertEquals("Parsing of replacement failed.", "$2 $1", replacement);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testMissingConfig() throws IOException, SAXException, ParserConfigurationException
     {
