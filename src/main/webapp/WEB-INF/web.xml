@@ -29,7 +29,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>VuFindServlet</servlet-name>
-        <url-pattern>/admin/ping</url-pattern>
+        <url-pattern>/biblio/admin/ping</url-pattern>
     </servlet-mapping>
 
 </web-app>
