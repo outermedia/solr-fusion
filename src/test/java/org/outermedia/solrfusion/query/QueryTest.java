@@ -87,6 +87,15 @@ public class QueryTest
         return o;
     }
 
+    protected void parseQueryException(Configuration cfg, String query, String msg)
+    {
+        EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
+        p.init(new QueryParserFactory());
+        Map<String, Float> boosts = new HashMap<String, Float>();
+        Query o = p.parse(cfg, boosts, query, Locale.GERMAN);
+        Assert.assertNull(msg, o);
+    }
+
     protected void isTermQuery(Query q, String fieldName, String value)
     {
         Assert.assertTrue("Expected TermQuery, but found " + q.getClass().getName(), q instanceof TermQuery);
@@ -157,7 +166,7 @@ public class QueryTest
     }
 
     @Test
-    public void parseDateRangeQuery() throws FileNotFoundException, JAXBException,
+    public void testParseDateRangeQuery() throws FileNotFoundException, JAXBException,
             SAXException, ParserConfigurationException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
@@ -186,7 +195,7 @@ public class QueryTest
     }
 
     @Test
-    public void IntRangeQuery() throws FileNotFoundException, JAXBException,
+    public void testParseIntRangeQuery() throws FileNotFoundException, JAXBException,
             SAXException, ParserConfigurationException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
@@ -209,7 +218,7 @@ public class QueryTest
     }
 
     @Test
-    public void LongRangeQuery() throws FileNotFoundException, JAXBException,
+    public void testParseLongRangeQuery() throws FileNotFoundException, JAXBException,
             SAXException, ParserConfigurationException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
@@ -232,7 +241,7 @@ public class QueryTest
     }
 
     @Test
-    public void FloatRangeQuery() throws FileNotFoundException, JAXBException,
+    public void testParseFloatRangeQuery() throws FileNotFoundException, JAXBException,
             SAXException, ParserConfigurationException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
@@ -255,7 +264,7 @@ public class QueryTest
     }
 
     @Test
-    public void DoubleRangeQuery() throws FileNotFoundException, JAXBException,
+    public void testParseDoubleRangeQuery() throws FileNotFoundException, JAXBException,
             SAXException, ParserConfigurationException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
@@ -277,10 +286,46 @@ public class QueryTest
         Assert.assertNull("Expected no maximum",((DoubleRangeQuery)q).getMax());
     }
 
-    // TODO FuzzyQuery
-    // TODO MatchAllDocsQuery
-    // TODO MultiPhraseQuery
-    // TODO PhraseQuery
-    // TODO PrefixQuery
+    @Test
+    public void testParseFuzzyQuery() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+        Query q;
+        q = parseQuery(cfg, "abcde~0.5");
+        Assert.assertTrue("Expected fuzzy query for ...~...", q instanceof FuzzyQuery);
+        FuzzyQuery fq = (FuzzyQuery) q;
+        Assert.assertEquals("Found different field name", "title", fq.getTerm().getFusionFieldName());
+        Assert.assertEquals("Found different field value", Arrays.asList("abcde"), fq.getTerm().getFusionFieldValue());
+        Assert.assertEquals("Found different fuzzy value", 0.5f, fq.getMaxEdits());
+
+        parseQueryException(cfg, "abcde~1.5", "Invalid fuzzy slop value accepted");
+        parseQueryException(cfg, "abcde~-0.5", "Invalid fuzzy slop value accepted");
+    }
+
+    @Test
+    public void testParseMatchAllDocsQuery() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+        Query q;
+        q = parseQuery(cfg, "*:*");
+        Assert.assertTrue("Expected bool query for *:*", q instanceof MatchAllDocsQuery);
+    }
+
+    @Test
+    public void testParsePrefixQuery() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+        Query q;
+        q = parseQuery(cfg, "abc*");
+        Assert.assertTrue("Expected prefix query for ...*", q instanceof PrefixQuery);
+
+        parseQueryException(cfg, "*abc", "Invalid prefix accepted");
+    }
+
     // TODO WildcardQuery
+    // TODO PhraseQuery
+    // TODO MultiPhraseQuery
 }

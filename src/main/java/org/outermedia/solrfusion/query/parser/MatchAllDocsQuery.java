@@ -7,8 +7,6 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 @ToString(callSuper = true)
 public class MatchAllDocsQuery extends Query
 {
-    // TODO
-
     @Override
     public void accept(QueryVisitor visitor, ScriptEnv env)
     {

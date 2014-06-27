@@ -408,15 +408,8 @@ public class QueryParser {
     PrefixQuery query = new PrefixQuery(prefix);
     return query;
   }
- 
-  /**
-   * Builds a new FuzzyQuery instance
-   * @param term Term
-   * @param minimumSimilarity minimum similarity
-   * @param prefixLength prefix length
-   * @return new FuzzyQuery Instance
-   */
-  protected FuzzyQuery newFuzzyQuery(Term term, int maxEdits, int prefixLength) {
+
+  protected FuzzyQuery newFuzzyQuery(Term term, float maxEdits, int prefixLength) {
     // FuzzyQuery doesn't yet allow constant score rewrite
     return new FuzzyQuery(term,maxEdits,prefixLength);
   }
@@ -698,7 +691,7 @@ public class QueryParser {
    * @return Resulting {@link Query} built for the term
    * @exception ParseException throw in overridden method to disallow
    */
-  protected FuzzyQuery getFuzzyQuery(String field, String termStr, int maxEdits) throws ParseException
+  protected FuzzyQuery getFuzzyQuery(String field, String termStr, float maxEdits) throws ParseException
   {
     if (lowercaseExpandedTerms) {
       termStr = termStr.toLowerCase();
@@ -1058,13 +1051,15 @@ Query Term(String field) : {
        	  float fms = fuzzyMinSim;
        	  try {
             fms = Float.valueOf(fuzzySlop.image.substring(1)).floatValue();
-       	  } catch (Exception ignored) { }
+       	  } catch (Exception ex1) {
+       	    log.warn("Can't parse fuzzy slop: '"+fuzzySlop.image.substring(1)+"'", ex1);
+       	  }
        	 
-       	 if(fms < 0.0f || fms > 2.0f){
+       	 if(fms < 0.0f || fms > 1.0f){
        	   throw new ParseException("Minimum similarity for a FuzzyQuery has to be between 0.0f and 1.0f !");
        	 }
        	 
-       	 result = getFuzzyQuery(field, termImage,(int)fms);
+       	 result = getFuzzyQuery(field, termImage, fms);
        } else {
          result = getFieldQuery(field, termImage, false);
        }

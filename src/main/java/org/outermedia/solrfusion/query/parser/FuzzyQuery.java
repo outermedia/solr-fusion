@@ -1,18 +1,23 @@
 package org.outermedia.solrfusion.query.parser;
 
+import lombok.Getter;
 import lombok.ToString;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 @ToString(callSuper = true)
+@Getter
 public class FuzzyQuery extends TermQuery
 {
 
-    public FuzzyQuery(Term term, int maxEdits, int prefixLength)
+    private float maxEdits;
+
+    public FuzzyQuery(Term term, float maxEdits, int prefixLength)
     {
         super(term);
-        // TODO Auto-generated constructor stub
+        this.maxEdits = maxEdits;
+        // prefixLength currently not used
     }
 
     @Override

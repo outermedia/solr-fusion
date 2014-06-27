@@ -12,7 +12,6 @@ public class PrefixQuery extends TermQuery
 	public PrefixQuery(Term prefix)
 	{
 		super(prefix);
-		// TODO Auto-generated constructor stub
 	}
 
     @Override
