@@ -10,16 +10,12 @@ import java.util.Calendar;
  * Created by ballmann on 6/27/14.
  */
 @ToString(callSuper = true)
-public class DateRangeQuery extends NumericRangeQuery
+public class DateRangeQuery extends NumericRangeQuery<Calendar>
 {
-    private final Calendar min;
-    private final Calendar max;
 
     public DateRangeQuery(String field, Calendar min, Calendar max, boolean minInclusive, boolean maxInclusive)
     {
-        super(field, minInclusive, maxInclusive);
-        this.min = min;
-        this.max = max;
+        super(field, minInclusive, maxInclusive, min, max);
     }
 
     @Override

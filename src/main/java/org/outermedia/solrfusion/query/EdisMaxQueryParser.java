@@ -1,18 +1,18 @@
 package org.outermedia.solrfusion.query;
 
-import java.util.Map;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryParserFactory;
 import org.outermedia.solrfusion.query.parser.ParseException;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.query.parser.QueryParser;
 import org.outermedia.solrfusion.query.parser.QueryParser.Operator;
+
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * A common solr query parser.
@@ -50,8 +50,7 @@ public class EdisMaxQueryParser implements QueryParserIfc
 	}
 
 	@Override
-	public Query parse(Configuration config, Map<String, Float> boosts,
-		String queryString)
+	public Query parse(Configuration config, Map<String, Float> boosts, String queryString, Locale locale)
 	{
 		Query result = null;
 		String defaultOpStr = config.getDefaultOperator();
@@ -66,8 +65,8 @@ public class EdisMaxQueryParser implements QueryParserIfc
 				"Found illegal default operator '{}'. Expected either 'or' or 'and'. Using {}.",
 				defaultOpStr, defaultOp, e);
 		}
-		QueryParser parser = new QueryParser(config.getDefaultSearchField(),
-			config, boosts, defaultOp);
+		QueryParser parser = new QueryParser(config.getDefaultSearchField(), config, boosts, defaultOp);
+        parser.setLocale(locale);
 		try
 		{
 			result = parser.parse(queryString);

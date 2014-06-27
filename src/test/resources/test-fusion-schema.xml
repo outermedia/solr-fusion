@@ -12,6 +12,9 @@
         <om:field name="city"/>
         <om:field name="title"/>
         <om:field name="numberExample" type="int"/>
+        <om:field name="longExample" type="long"/>
+        <om:field name="floatExample" type="float"/>
+        <om:field name="doubleExample" type="double"/>
         <om:field name="mappingExample"/>
         <om:field name="computingExample"/>
         <om:field name="publicationDate" type="date" format="dd.MM.yyyy"/>

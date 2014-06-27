@@ -8,16 +8,12 @@ import org.outermedia.solrfusion.types.ScriptEnv;
  * Created by ballmann on 6/27/14.
  */
 @ToString(callSuper = true)
-public class DoubleRangeQuery extends NumericRangeQuery
+public class DoubleRangeQuery extends NumericRangeQuery<Double>
 {
-    private final Double min;
-    private final Double max;
 
     public DoubleRangeQuery(String field, Double min, Double max, boolean minInclusive, boolean maxInclusive)
     {
-        super(field, minInclusive, maxInclusive);
-        this.min = min;
-        this.max = max;
+        super(field, minInclusive, maxInclusive, min, max);
     }
 
     @Override

@@ -199,7 +199,7 @@ public class FusionController implements FusionControllerIfc
             QueryParserIfc queryParser = configuration.getQueryParser();
             try
             {
-                queryObj = queryParser.parse(configuration, boosts, query);
+                queryObj = queryParser.parse(configuration, boosts, query, fusionRequest.getLocale());
             }
             catch (Exception e)
             {

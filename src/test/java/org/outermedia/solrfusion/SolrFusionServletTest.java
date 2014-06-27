@@ -88,7 +88,7 @@ public class SolrFusionServletTest
         requestParams.put(SolrFusionServlet.SEARCH_PARAM_QUERY, new String[]{q});
         try
         {
-            FusionRequest req = servlet.buildFusionRequest(requestParams);
+            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
             Assert.assertNotNull("Expected request object", req);
             Assert.assertEquals("Got different different", q, req.getQuery());
             Assert.assertEquals("Got different renderer type than expected", ResponseRendererType.XML,
@@ -107,7 +107,7 @@ public class SolrFusionServletTest
         Map<String, String[]> requestParams = new HashMap<>();
         try
         {
-            FusionRequest req = servlet.buildFusionRequest(requestParams);
+            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
             Assert.fail("Expected exception, but got none");
         }
         catch (ServletException e)
@@ -125,7 +125,7 @@ public class SolrFusionServletTest
         requestParams.put(SolrFusionServlet.SEARCH_PARAM_QUERY, new String[]{"schiller", "goethe"});
         try
         {
-            FusionRequest req = servlet.buildFusionRequest(requestParams);
+            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
             Assert.fail("Expected exception, but got none");
         }
         catch (ServletException e)
@@ -144,7 +144,7 @@ public class SolrFusionServletTest
         requestParams.put(SolrFusionServlet.SEARCH_PARAM_WT, new String[]{"xml", "json"});
         try
         {
-            FusionRequest req = servlet.buildFusionRequest(requestParams);
+            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
             Assert.fail("Expected exception, but got none");
         }
         catch (ServletException e)
@@ -167,7 +167,7 @@ public class SolrFusionServletTest
             requestParams.put(SolrFusionServlet.SEARCH_PARAM_WT, new String[]{f});
             try
             {
-                FusionRequest req = servlet.buildFusionRequest(requestParams);
+                FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
                 Assert.assertNotNull("Expected request object", req);
                 Assert.assertEquals("Got different different", q, req.getQuery());
                 Assert.assertEquals("Got different renderer type than expected",
@@ -191,7 +191,7 @@ public class SolrFusionServletTest
         requestParams.put(SolrFusionServlet.SEARCH_PARAM_WT, new String[]{"xyz"});
         try
         {
-            FusionRequest req = servlet.buildFusionRequest(requestParams);
+            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
             Assert.fail("Expected exception, but got none");
         }
         catch (ServletException e)

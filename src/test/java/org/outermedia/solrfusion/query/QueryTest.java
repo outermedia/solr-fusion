@@ -6,17 +6,14 @@ import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryParserFactory;
-import org.outermedia.solrfusion.query.parser.BooleanQuery;
-import org.outermedia.solrfusion.query.parser.Query;
-import org.outermedia.solrfusion.query.parser.TermQuery;
+import org.outermedia.solrfusion.query.parser.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class QueryTest
 {
@@ -85,7 +82,7 @@ public class QueryTest
         EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
         p.init(new QueryParserFactory());
         Map<String, Float> boosts = new HashMap<String, Float>();
-        Query o = p.parse(cfg, boosts, query);
+        Query o = p.parse(cfg, boosts, query, Locale.GERMAN);
         Assert.assertNotNull("Expected query object, but couldn't parse query string '" + query + "'", o);
         return o;
     }
@@ -159,11 +156,127 @@ public class QueryTest
         Assert.assertTrue("Expected required flag set for +...", bq2.getClauses().get(1).isRequired());
     }
 
-    // TODO DateRangeQuery
-    // TODO IntRangeQuery
-    // TODO LongRangeQuery
-    // TODO FloatRangeQuery
-    // TODO DoubleRangeQuery
+    @Test
+    public void parseDateRangeQuery() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+
+        GregorianCalendar min = new GregorianCalendar(2014, 5, 1);
+        GregorianCalendar max = new GregorianCalendar(2014, 5, 26);
+
+        Query q;
+        q = parseQuery(cfg, "publicationDate:[01.06.2014 TO 26.06.2014]");
+        equalDate(min, ((DateRangeQuery) q).getMin());
+        equalDate(max, ((DateRangeQuery) q).getMax());
+
+        q = parseQuery(cfg, "publicationDate:[* TO 26.06.2014]");
+        Assert.assertNull("Expected no minimum",((DateRangeQuery)q).getMin());
+        equalDate(max, ((DateRangeQuery) q).getMax());
+
+        q = parseQuery(cfg, "publicationDate:[01.06.2014 TO *]");
+        equalDate(min, ((DateRangeQuery) q).getMin());
+        Assert.assertNull("Expected no maximum",((DateRangeQuery)q).getMax());
+    }
+
+    protected void equalDate(Calendar c1, Calendar c2)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Assert.assertEquals("Found different dates", sdf.format(c1.getTime()), sdf.format(c2.getTime()));
+    }
+
+    @Test
+    public void IntRangeQuery() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+
+        Integer min = -5;
+        Integer max = 26;
+
+        Query q;
+        q = parseQuery(cfg, "numberExample:[-5 TO 26]");
+        Assert.assertEquals("Found different minimum", min, ((IntRangeQuery) q).getMin());
+        Assert.assertEquals("Found different maximum", max, ((IntRangeQuery) q).getMax());
+
+        q = parseQuery(cfg, "numberExample:[* TO 26]");
+        Assert.assertNull("Expected no minimum",((IntRangeQuery)q).getMin());
+        Assert.assertEquals("Found different maximum", max, ((IntRangeQuery) q).getMax());
+
+        q = parseQuery(cfg, "numberExample:[-5 TO *]");
+        Assert.assertEquals("Found different minimum", min, ((IntRangeQuery) q).getMin());
+        Assert.assertNull("Expected no maximum",((IntRangeQuery)q).getMax());
+    }
+
+    @Test
+    public void LongRangeQuery() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+
+        Long min = -5L;
+        Long max = 26L;
+
+        Query q;
+        q = parseQuery(cfg, "longExample:[-5 TO 26]");
+        Assert.assertEquals("Found different minimum", min, ((LongRangeQuery) q).getMin());
+        Assert.assertEquals("Found different maximum", max, ((LongRangeQuery) q).getMax());
+
+        q = parseQuery(cfg, "longExample:[* TO 26]");
+        Assert.assertNull("Expected no minimum",((LongRangeQuery)q).getMin());
+        Assert.assertEquals("Found different maximum", max, ((LongRangeQuery) q).getMax());
+
+        q = parseQuery(cfg, "longExample:[-5 TO *]");
+        Assert.assertEquals("Found different minimum", min, ((LongRangeQuery) q).getMin());
+        Assert.assertNull("Expected no maximum",((LongRangeQuery)q).getMax());
+    }
+
+    @Test
+    public void FloatRangeQuery() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+
+        Float min = -4.5f;
+        Float max = 26.3f;
+
+        Query q;
+        q = parseQuery(cfg, "floatExample:[-4.5 TO 26.3]");
+        Assert.assertEquals("Found different minimum", min, ((FloatRangeQuery) q).getMin());
+        Assert.assertEquals("Found different maximum", max, ((FloatRangeQuery) q).getMax());
+
+        q = parseQuery(cfg, "floatExample:[* TO 26.3]");
+        Assert.assertNull("Expected no minimum",((FloatRangeQuery)q).getMin());
+        Assert.assertEquals("Found different maximum", max, ((FloatRangeQuery) q).getMax());
+
+        q = parseQuery(cfg, "floatExample:[-4.5 TO *]");
+        Assert.assertEquals("Found different minimum", min, ((FloatRangeQuery) q).getMin());
+        Assert.assertNull("Expected no maximum",((FloatRangeQuery)q).getMax());
+    }
+
+    @Test
+    public void DoubleRangeQuery() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+
+        Double min = -4.5;
+        Double max = 26.3;
+
+        Query q;
+        q = parseQuery(cfg, "doubleExample:[-4.5 TO 26.3]");
+        Assert.assertEquals("Found different minimum", min, ((DoubleRangeQuery) q).getMin());
+        Assert.assertEquals("Found different maximum", max, ((DoubleRangeQuery) q).getMax());
+
+        q = parseQuery(cfg, "doubleExample:[* TO 26.3]");
+        Assert.assertNull("Expected no minimum",((DoubleRangeQuery)q).getMin());
+        Assert.assertEquals("Found different maximum", max, ((DoubleRangeQuery) q).getMax());
+
+        q = parseQuery(cfg, "doubleExample:[-4.5 TO *]");
+        Assert.assertEquals("Found different minimum", min, ((DoubleRangeQuery) q).getMin());
+        Assert.assertNull("Expected no maximum",((DoubleRangeQuery)q).getMax());
+    }
+
     // TODO FuzzyQuery
     // TODO MatchAllDocsQuery
     // TODO MultiPhraseQuery

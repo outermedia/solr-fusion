@@ -6,6 +6,7 @@ import org.outermedia.solrfusion.configuration.ResponseRendererType;
 
 import javax.servlet.ServletException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -16,6 +17,8 @@ import java.util.Map;
 public class FusionRequest
 {
     private String query;
+
+    private Locale locale;
 
     private ResponseRendererType responseType;
 

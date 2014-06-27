@@ -15,7 +15,7 @@ public enum DefaultFieldType
 
 	INT(true, false, false), LONG(true, false, false), DOUBLE(true, false,
 		false), FLOAT(true, false, false), BOOLEAN(false, false, true), DATE(
-		false, true, false), STRING(false, false, false);
+		false, true, false), TEXT(false, false, false);
 
 	private boolean numeric;
 	private boolean date;

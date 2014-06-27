@@ -29,6 +29,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.text.SimpleDateFormat;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.FusionField;
 import org.outermedia.solrfusion.configuration.DefaultFieldType;
@@ -53,6 +55,7 @@ import org.outermedia.solrfusion.mapper.Term;
  * 
  */
 @SuppressWarnings({"unused", "deprecation"})
+@Slf4j
 public class QueryParser {
 
   private static final int CONJ_NONE   = 0;
@@ -473,14 +476,14 @@ public class QueryParser {
         }
         query = NumericRangeQuery.newDateRange(field, min, max, inclusive, inclusive);
 	} else {
-		throw new ParseException("Unsupported range query type: " + ft.getFieldType());
+		throw new ParseException("Unsupported range query type: " + ft.getFieldType() + " in " + ft);
 	}
     return query;
   }
 
   protected Calendar checkDate(String ds, boolean endInclusive) throws ParseException
   {
-    DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+    DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
     df.setLenient(true);
     try {
       Date d1 = df.parse(ds);
@@ -497,6 +500,7 @@ public class QueryParser {
       }
       return cal;
     } catch (Exception e) {
+        log.error("Caught exception while parsing date '"+ds+"'", e);
         throw new ParseException("Invalid date value: '" + ds + "'");
     }
   }

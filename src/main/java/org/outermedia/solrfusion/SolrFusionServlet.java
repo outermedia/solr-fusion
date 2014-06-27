@@ -13,8 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Formatter;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Getter
@@ -36,6 +35,8 @@ public class SolrFusionServlet extends HttpServlet
     public static final String SEARCH_PARAM_QUERY = "q";
     public static final String SEARCH_PARAM_WT = "wt";
 
+    protected static final String HEADER_LOCALE = "_LOCALE";
+
     private Configuration cfg;
 
 
@@ -55,10 +56,27 @@ public class SolrFusionServlet extends HttpServlet
         response.setContentType("text/xml;charset=UTF-8");
         response.setStatus(200);
         PrintWriter pw = response.getWriter();
-        FusionRequest fusionRequest = buildFusionRequest(request.getParameterMap());
+        Map<String, Object> headerValues = collectHeader(request);
+        FusionRequest fusionRequest = buildFusionRequest(request.getParameterMap(), headerValues);
         FusionResponse fusionResponse = getNewFusionResponse();
         String responseStr = process(fusionRequest, fusionResponse);
         pw.println(responseStr);
+    }
+
+    protected Map<String, Object> collectHeader(HttpServletRequest request)
+    {
+        Map<String, Object> headerValues = new HashMap<>();
+        Enumeration<String> headerNameEnum = request.getHeaderNames();
+        if (headerNameEnum != null)
+        {
+            while (headerNameEnum.hasMoreElements())
+            {
+                String headerName = headerNameEnum.nextElement();
+                headerValues.put(headerName, request.getHeader(headerName));
+            }
+        }
+        headerValues.put(HEADER_LOCALE, request.getLocale());
+        return headerValues;
     }
 
     @Override
@@ -106,11 +124,18 @@ public class SolrFusionServlet extends HttpServlet
         return new FusionResponse();
     }
 
-    protected FusionRequest buildFusionRequest(Map<String, String[]> requestParams) throws ServletException
+    protected FusionRequest buildFusionRequest(Map<String, String[]> requestParams, Map<String, Object> headerValues)
+            throws ServletException
     {
         FusionRequest fusionRequest = getNewFusionRequest();
         fusionRequest.setQuery(getRequiredSingleSearchParamValue(requestParams, SEARCH_PARAM_QUERY));
         fusionRequest.setResponseTypeFromString(getOptionalSingleSearchParamValue(requestParams, SEARCH_PARAM_WT));
+        Locale sentLocale = (Locale) headerValues.get(HEADER_LOCALE);
+        if (sentLocale == null)
+        {
+            sentLocale = Locale.GERMAN;
+        }
+        fusionRequest.setLocale(sentLocale);
         return fusionRequest;
     }
 
@@ -135,7 +160,7 @@ public class SolrFusionServlet extends HttpServlet
     {
         String s = null;
         String[] qs = requestParams.get(searchParamName);
-        if(qs != null)
+        if (qs != null)
         {
             if (qs.length == 1)
             {
