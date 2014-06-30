@@ -109,12 +109,6 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     }
 
     @Override
-    public void visitQuery(MultiPhraseQuery t, ScriptEnv env)
-    {
-        // TODO
-    }
-
-    @Override
     public void visitQuery(PhraseQuery t, ScriptEnv env)
     {
         // TODO

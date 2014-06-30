@@ -35,9 +35,19 @@ public class QueryTest
 
         String query = "Schiller";
         Query o = parseQuery(cfg, query);
-        String expected = "TermQuery(super=Query(), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, newQueryTerms=null, newResponseValues=null))";
+        String expected = "TermQuery(super=Query(boostValue=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, newQueryTerms=null, newResponseValues=null))";
         Assert.assertEquals("Got different query object than expected",
                 expected, o.toString());
+
+        checkBoost(cfg, "Schiller^0.75", 0.75f);
+    }
+
+    protected Query checkBoost(Configuration cfg, String qs, float expectedBoost)
+    {
+        Query q = parseQuery(cfg, qs);
+        Assert.assertNotNull("Expected to get query object for "+qs, q);
+        Assert.assertEquals("Found different boost than expected in "+q, expectedBoost, q.getBoostValue());
+        return q;
     }
 
     @Test
@@ -48,7 +58,7 @@ public class QueryTest
                 .readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
         Query o = parseQuery(cfg, "title:Schiller");
-        String expected = "TermQuery(super=Query(), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, newQueryTerms=null, newResponseValues=null))";
+        String expected = "TermQuery(super=Query(boostValue=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, newQueryTerms=null, newResponseValues=null))";
         Assert.assertEquals("Got different query object than expected",
                 expected, o.toString());
 
@@ -57,6 +67,14 @@ public class QueryTest
         Assert.assertTrue("Expected bool query for +...", o instanceof BooleanQuery);
         BooleanQuery bq = (BooleanQuery) o;
         Assert.assertTrue("Expected required flag set for +...", bq.getClauses().get(0).isRequired());
+
+        checkBoost(cfg, "title:Schiller^0.75", 0.75f);
+
+        String qs = "+title:xyzabc^0.75";
+        Query q = parseQuery(cfg, qs);
+        Assert.assertNotNull("Expected to get query object for "+qs, q);
+        q = ((BooleanQuery)q).getClauses().get(0).getQuery();
+        Assert.assertEquals("Found different boost than expected in "+q, 0.75f, q.getBoostValue());
 
         query = "-title:Schiller";
         o = parseQuery(cfg, query);
@@ -113,7 +131,7 @@ public class QueryTest
 
         String query = "title:Schiller title:Müller";
         Query o = parseQuery(cfg, query);
-        String expected = "BooleanQuery(super=Query(), clauses=[BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, newQueryTerms=null, newResponseValues=null))), BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(), term=Term(fusionFieldName=title, fusionFieldValue=[Müller], fusionField=FusionField(fieldName=title, type=text, format=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, newQueryTerms=null, newResponseValues=null)))])";
+        String expected = "BooleanQuery(super=Query(boostValue=null), clauses=[BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, newQueryTerms=null, newResponseValues=null))), BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null), term=Term(fusionFieldName=title, fusionFieldValue=[Müller], fusionField=FusionField(fieldName=title, type=text, format=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, newQueryTerms=null, newResponseValues=null)))])";
         Assert.assertEquals("Got different query object than expected",
                 expected, o.toString());
     }
@@ -163,6 +181,8 @@ public class QueryTest
         Assert.assertTrue("Expected required flag set for +...", bq1.getClauses().get(1).isRequired());
         Assert.assertTrue("Expected required flag set for +...", bq2.getClauses().get(0).isRequired());
         Assert.assertTrue("Expected required flag set for +...", bq2.getClauses().get(1).isRequired());
+
+        checkBoost(cfg, "(title:Tag AND city:Berlin)^0.75", 0.75f);
     }
 
     @Test
@@ -186,6 +206,11 @@ public class QueryTest
         q = parseQuery(cfg, "publicationDate:[01.06.2014 TO *]");
         equalDate(min, ((DateRangeQuery) q).getMin());
         Assert.assertNull("Expected no maximum",((DateRangeQuery)q).getMax());
+
+        parseQueryException(cfg, "publicationDate:[2014-06-01 TO *]",
+                "Expected exception, because of invalid date format");
+
+        checkBoost(cfg, "publicationDate:[01.06.2014 TO *]^0.75", 0.75f);
     }
 
     protected void equalDate(Calendar c1, Calendar c2)
@@ -215,6 +240,8 @@ public class QueryTest
         q = parseQuery(cfg, "numberExample:[-5 TO *]");
         Assert.assertEquals("Found different minimum", min, ((IntRangeQuery) q).getMin());
         Assert.assertNull("Expected no maximum",((IntRangeQuery)q).getMax());
+
+        checkBoost(cfg, "numberExample:[-5 TO *]^0.75", 0.75f);
     }
 
     @Test
@@ -238,6 +265,8 @@ public class QueryTest
         q = parseQuery(cfg, "longExample:[-5 TO *]");
         Assert.assertEquals("Found different minimum", min, ((LongRangeQuery) q).getMin());
         Assert.assertNull("Expected no maximum",((LongRangeQuery)q).getMax());
+
+        checkBoost(cfg, "longExample:[-5 TO *]^0.75", 0.75f);
     }
 
     @Test
@@ -261,6 +290,8 @@ public class QueryTest
         q = parseQuery(cfg, "floatExample:[-4.5 TO *]");
         Assert.assertEquals("Found different minimum", min, ((FloatRangeQuery) q).getMin());
         Assert.assertNull("Expected no maximum",((FloatRangeQuery)q).getMax());
+
+        checkBoost(cfg, "floatExample:[-4.5 TO *]^0.75", 0.75f);
     }
 
     @Test
@@ -284,6 +315,8 @@ public class QueryTest
         q = parseQuery(cfg, "doubleExample:[-4.5 TO *]");
         Assert.assertEquals("Found different minimum", min, ((DoubleRangeQuery) q).getMin());
         Assert.assertNull("Expected no maximum",((DoubleRangeQuery)q).getMax());
+
+        checkBoost(cfg, "doubleExample:[-4.5 TO *]^0.75", 0.75f);
     }
 
     @Test
@@ -292,15 +325,16 @@ public class QueryTest
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
         Query q;
-        q = parseQuery(cfg, "abcde~0.5");
+        q = parseQuery(cfg, "abcde~2");
         Assert.assertTrue("Expected fuzzy query for ...~...", q instanceof FuzzyQuery);
         FuzzyQuery fq = (FuzzyQuery) q;
         Assert.assertEquals("Found different field name", "title", fq.getTerm().getFusionFieldName());
         Assert.assertEquals("Found different field value", Arrays.asList("abcde"), fq.getTerm().getFusionFieldValue());
-        Assert.assertEquals("Found different fuzzy value", 0.5f, fq.getMaxEdits());
+        Assert.assertEquals("Found different fuzzy value", 2, fq.getMaxEdits());
 
-        parseQueryException(cfg, "abcde~1.5", "Invalid fuzzy slop value accepted");
-        parseQueryException(cfg, "abcde~-0.5", "Invalid fuzzy slop value accepted");
+        fq = (FuzzyQuery)checkBoost(cfg, "abcde~2^0.75", 0.75f);
+        Assert.assertEquals("Found different fuzzy value", 2, fq.getMaxEdits());
+        parseQueryException(cfg,"abcde~5","Accepted invalid fuzzy slop value");
     }
 
     @Test
@@ -311,6 +345,8 @@ public class QueryTest
         Query q;
         q = parseQuery(cfg, "*:*");
         Assert.assertTrue("Expected bool query for *:*", q instanceof MatchAllDocsQuery);
+
+        parseQueryException(cfg,"*:*^0.75","*:* can't have a boost");
     }
 
     @Test
@@ -323,9 +359,50 @@ public class QueryTest
         Assert.assertTrue("Expected prefix query for ...*", q instanceof PrefixQuery);
 
         parseQueryException(cfg, "*abc", "Invalid prefix accepted");
+
+        checkBoost(cfg, "abc*^0.75", 0.75f);
     }
 
-    // TODO WildcardQuery
-    // TODO PhraseQuery
-    // TODO MultiPhraseQuery
+    @Test
+    public void testParseWildcardQuery() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+        Query q;
+        q = parseQuery(cfg, "ab?c*");
+        Assert.assertTrue("Expected prefix query for ...*", q instanceof WildcardQuery);
+
+        parseQueryException(cfg, "?abc", "Invalid prefix accepted");
+
+        checkBoost(cfg, "ab?c*^0.75", 0.75f);
+    }
+
+    @Test
+    public void testParsePhraseQuery() throws FileNotFoundException, JAXBException,
+            SAXException, ParserConfigurationException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+        Query q;
+        String query = "\"today and tomorrow\"";
+        checkPhraseQuery(cfg, query, query.substring(1, query.length() - 1));
+
+        query += "~36";
+        PhraseQuery pq = checkPhraseQuery(cfg, query, query.substring(1, query.length() - 4));
+        Assert.assertEquals("Expected other fuzzy value",Integer.valueOf(36),pq.getMaxEdits());
+
+        checkBoost(cfg, query+"^0.75", 0.75f);
+    }
+
+    protected PhraseQuery checkPhraseQuery(Configuration cfg, String query, String expectedValue)
+    {
+        Query q;
+        q = parseQuery(cfg, query);
+        Assert.assertTrue("Expected phrase query for \"...\"", q instanceof PhraseQuery);
+        PhraseQuery pq = (PhraseQuery) q;
+        Assert.assertEquals("Found different field name", "title", pq.getFusionFieldName());
+        Assert.assertEquals("Found different field value", Arrays.asList(
+                expectedValue), pq.getFusionFieldValue());
+        return pq;
+    }
+
 }

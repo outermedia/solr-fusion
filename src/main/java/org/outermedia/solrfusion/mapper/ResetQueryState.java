@@ -50,12 +50,6 @@ public class ResetQueryState implements QueryVisitor
     }
 
     @Override
-    public void visitQuery(MultiPhraseQuery t, ScriptEnv env)
-    {
-        // TODO
-    }
-
-    @Override
     public void visitQuery(IntRangeQuery t, ScriptEnv env)
     {
         // TODO

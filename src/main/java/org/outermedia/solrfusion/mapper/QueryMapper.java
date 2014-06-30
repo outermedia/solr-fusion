@@ -95,12 +95,6 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     }
 
     @Override
-    public void visitQuery(MultiPhraseQuery t, ScriptEnv env)
-    {
-        // TODO
-    }
-
-    @Override
     public void visitQuery(PhraseQuery t, ScriptEnv env)
     {
         // TODO

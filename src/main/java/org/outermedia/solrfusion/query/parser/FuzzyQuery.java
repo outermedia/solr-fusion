@@ -11,13 +11,12 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 public class FuzzyQuery extends TermQuery
 {
 
-    private float maxEdits;
+    private int maxEdits;
 
-    public FuzzyQuery(Term term, float maxEdits, int prefixLength)
+    public FuzzyQuery(Term term, int maxEdits)
     {
         super(term);
         this.maxEdits = maxEdits;
-        // prefixLength currently not used
     }
 
     @Override
