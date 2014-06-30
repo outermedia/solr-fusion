@@ -330,11 +330,14 @@ public class QueryTest
         FuzzyQuery fq = (FuzzyQuery) q;
         Assert.assertEquals("Found different field name", "title", fq.getTerm().getFusionFieldName());
         Assert.assertEquals("Found different field value", Arrays.asList("abcde"), fq.getTerm().getFusionFieldValue());
-        Assert.assertEquals("Found different fuzzy value", 2, fq.getMaxEdits());
+        Assert.assertEquals("Found different fuzzy value", Integer.valueOf(2), fq.getMaxEdits());
 
         fq = (FuzzyQuery)checkBoost(cfg, "abcde~2^0.75", 0.75f);
-        Assert.assertEquals("Found different fuzzy value", 2, fq.getMaxEdits());
+        Assert.assertEquals("Found different fuzzy value", Integer.valueOf(2), fq.getMaxEdits());
         parseQueryException(cfg,"abcde~5","Accepted invalid fuzzy slop value");
+
+        fq = (FuzzyQuery) parseQuery(cfg, "abcde~");
+        Assert.assertNull("Expected no fuzzy value: " + fq.getMaxEdits(), fq.getMaxEdits());
     }
 
     @Test
@@ -386,9 +389,9 @@ public class QueryTest
         String query = "\"today and tomorrow\"";
         checkPhraseQuery(cfg, query, query.substring(1, query.length() - 1));
 
-        query += "~36";
-        PhraseQuery pq = checkPhraseQuery(cfg, query, query.substring(1, query.length() - 4));
-        Assert.assertEquals("Expected other fuzzy value",Integer.valueOf(36),pq.getMaxEdits());
+        query += "~2";
+        PhraseQuery pq = checkPhraseQuery(cfg, query, query.substring(1, query.length() - 3));
+        Assert.assertEquals("Expected other fuzzy value",Integer.valueOf(2),pq.getMaxEdits());
 
         checkBoost(cfg, query+"^0.75", 0.75f);
     }

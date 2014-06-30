@@ -11,9 +11,9 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 public class FuzzyQuery extends TermQuery
 {
 
-    private int maxEdits;
+    private Integer maxEdits;
 
-    public FuzzyQuery(Term term, int maxEdits)
+    public FuzzyQuery(Term term, Integer maxEdits)
     {
         super(term);
         this.maxEdits = maxEdits;
