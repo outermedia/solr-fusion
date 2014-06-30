@@ -9,7 +9,7 @@
       "wt":"json",
       "version":"2.2",
       "rows":"${responseHeader.rows}"}},
-  "response":{"numFound":${response.totalHitNumber},"start":0,"docs":[
+  "response":{"numFound":${response.totalHitNumber?string("0")},"start":0,"docs":[
   <#list response.documents as document>
   {
     <#list document.multiValuedFields as field>
@@ -38,7 +38,7 @@
         <#case "double">
         <#case "int">
         <#case "long">
-            ${value}<#t>
+            ${value?string("0")}<#t>
         <#case "boolean">
             ${value}<#t>
         <#case "date">
