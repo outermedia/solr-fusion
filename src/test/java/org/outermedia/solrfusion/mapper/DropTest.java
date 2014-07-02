@@ -129,7 +129,7 @@ public class DropTest extends AbstractTypeTest
         Assert.assertTrue("Expected that field text4 was removed", term.isRemoved());
         Assert.assertTrue("Expected that field text5-abc was removed", term2.isRemoved());
         QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
-        String ds = qb.buildQueryString(query);
+        String ds = qb.buildQueryString(query, cfg);
         Assert.assertEquals("Expected no query", "", ds);
 
         // remove <drop> for text4
@@ -142,7 +142,7 @@ public class DropTest extends AbstractTypeTest
         qm.mapQuery(cfg, serverConfig, query, env);
         // System.out.println(term.toString());
         Assert.assertFalse("Expected that field text4 was not removed", term.isRemoved());
-        String s = qb.buildQueryString(query);
+        String s = qb.buildQueryString(query, cfg);
         Assert.assertEquals("Found different query than expected", "f8:bla1", s);
     }
 

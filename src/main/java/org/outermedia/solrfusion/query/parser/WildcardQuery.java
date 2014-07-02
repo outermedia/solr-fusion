@@ -10,7 +10,6 @@ public class WildcardQuery extends TermQuery
 	public WildcardQuery(Term t)
 	{
 		super(t);
-		// TODO Auto-generated constructor stub
 	}
 
 }

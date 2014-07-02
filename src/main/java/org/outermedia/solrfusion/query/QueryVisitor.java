@@ -24,5 +24,5 @@ public interface QueryVisitor
     public void visitQuery(PrefixQuery t, ScriptEnv env);
     public void visitQuery(WildcardQuery t, ScriptEnv env);
     public void visitQuery(BooleanClause booleanClause, ScriptEnv env);
-    public void visitQuery(Term term, ScriptEnv env);
+    public boolean visitQuery(Term term, ScriptEnv env, Float boost);
 }

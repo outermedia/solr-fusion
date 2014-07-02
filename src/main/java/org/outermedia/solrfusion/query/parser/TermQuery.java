@@ -35,7 +35,7 @@ public class TermQuery extends Query
 
     public void visitTerm(QueryVisitor visitor, ScriptEnv env)
     {
-        visitor.visitQuery(term, env);
+        visitor.visitQuery(term, env, getBoostValue());
     }
 
     public String getFusionFieldName()

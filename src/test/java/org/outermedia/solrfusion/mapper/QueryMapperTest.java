@@ -44,7 +44,7 @@ public class QueryMapperTest
         Assert.assertEquals("Got different mapping than expected", expected, q.getTerm().toString());
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String s = qb.buildQueryString(q);
+        String s = qb.buildQueryString(q, cfg);
         Assert.assertEquals("Found wrong search server term query mapping", "Autor:Schiller", s);
     }
 
@@ -70,7 +70,7 @@ public class QueryMapperTest
         Assert.assertEquals("Didn't find mapped title.", expectedTitle, q2.getTerm().toString());
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String s = qb.buildQueryString(bq);
+        String s = qb.buildQueryString(bq, cfg);
         Assert.assertEquals("Found wrong search server bool query mapping", "+Autor:Schiller +Titel:Ein_langer_Weg",
                 s.trim());
     }
@@ -97,7 +97,7 @@ public class QueryMapperTest
         Assert.assertEquals("Didn't find mapped title.", expectedTitle, q2.getTerm().toString());
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String s = qb.buildQueryString(bq);
+        String s = qb.buildQueryString(bq, cfg);
         Assert.assertEquals("Found wrong search server bool query mapping", "-Autor:Schiller -Titel:Ein_langer_Weg",
                 s.trim());
 
@@ -143,7 +143,7 @@ public class QueryMapperTest
         qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), wq, env);
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String s = qb.buildQueryString(wq);
+        String s = qb.buildQueryString(wq, cfg);
         Assert.assertEquals("Expected match all docs query", "*:*", s);
     }
 }

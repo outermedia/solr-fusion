@@ -4,6 +4,7 @@ import lombok.ToString;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -12,6 +13,8 @@ import java.util.Calendar;
 @ToString(callSuper = true)
 public class DateRangeQuery extends NumericRangeQuery<Calendar>
 {
+    // see lucene's DateTools, but we omit HH (no hours)
+    protected static SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 
     public DateRangeQuery(String field, Calendar min, Calendar max, boolean minInclusive, boolean maxInclusive)
     {
@@ -22,5 +25,17 @@ public class DateRangeQuery extends NumericRangeQuery<Calendar>
     public void accept(QueryVisitor visitor, ScriptEnv env)
     {
         visitor.visitQuery(this, env);
+    }
+
+    @Override protected String limitValueAsString(Calendar v)
+    {
+        String result = "*";
+        if(v != null)
+        {
+            // see lucene's DateTools
+            format.setTimeZone(v.getTimeZone());
+            result = format.format(v.getTime());
+        }
+        return result;
     }
 }
