@@ -57,7 +57,7 @@ public class QueryMapperTest
         QueryMapperIfc qm = cfg.getQueryMapper();
         TermQuery q = new TermQuery(Term.newFusionTerm("author", "Schiller"));
         ScriptEnv env = new ScriptEnv();
-        BooleanQuery bq = new BooleanQuery(false);
+        BooleanQuery bq = new BooleanQuery();
         bq.add(new BooleanClause(q, BooleanClause.Occur.OCCUR_MUST));
         TermQuery q2 = new TermQuery(Term.newFusionTerm("title", "Ein_langer_Weg"));
         bq.add(new BooleanClause(q2, BooleanClause.Occur.OCCUR_MUST));
@@ -84,7 +84,7 @@ public class QueryMapperTest
         QueryMapperIfc qm = cfg.getQueryMapper();
         TermQuery q = new TermQuery(Term.newFusionTerm("author", "Schiller"));
         ScriptEnv env = new ScriptEnv();
-        BooleanQuery bq = new BooleanQuery(false);
+        BooleanQuery bq = new BooleanQuery();
         bq.add(new BooleanClause(q, BooleanClause.Occur.OCCUR_MUST_NOT));
         TermQuery q2 = new TermQuery(Term.newFusionTerm("title", "Ein_langer_Weg"));
         bq.add(new BooleanClause(q2, BooleanClause.Occur.OCCUR_MUST_NOT));

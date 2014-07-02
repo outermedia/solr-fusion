@@ -118,7 +118,7 @@ public class DropTest extends AbstractTypeTest
         Term term2 = Term.newFusionTerm("text5-abc", "bla2");
         Query query = new TermQuery(term);
         Query query2 = new TermQuery(term2);
-        BooleanQuery q = new BooleanQuery(false);
+        BooleanQuery q = new BooleanQuery();
         q.add(new BooleanClause(query, BooleanClause.Occur.OCCUR_MUST));
         q.add(new BooleanClause(query2, BooleanClause.Occur.OCCUR_MUST));
 

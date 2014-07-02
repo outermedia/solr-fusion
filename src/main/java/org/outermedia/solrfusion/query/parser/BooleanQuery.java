@@ -14,10 +14,9 @@ public class BooleanQuery extends Query
 {
     private List<BooleanClause> clauses;
 
-    public BooleanQuery(boolean disableCoord)
+    public BooleanQuery()
     {
         clauses = new ArrayList<>();
-        // TODO Auto-generated constructor stub
     }
 
     public void add(BooleanClause clause)
