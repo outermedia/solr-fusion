@@ -5,9 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.query.parser.BooleanClause;
-import org.outermedia.solrfusion.query.parser.BooleanQuery;
-import org.outermedia.solrfusion.query.parser.TermQuery;
+import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 import org.xml.sax.SAXException;
 
@@ -131,5 +129,21 @@ public class QueryMapperTest
         List<String> searchServerFieldValue = term.getSearchServerFieldValue();
         Assert.assertEquals("RegExp mapping returned different search server field value than expected", Arrays.asList(
                 "Schiller"), searchServerFieldValue);
+    }
+
+    @Test
+    public void testWildcardHandling()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+        InvocationTargetException, IllegalAccessException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
+        QueryMapperIfc qm = cfg.getQueryMapper();
+        MatchAllDocsQuery wq = new MatchAllDocsQuery();
+        ScriptEnv env = new ScriptEnv();
+        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), wq, env);
+
+        QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
+        String s = qb.buildQueryString(wq);
+        Assert.assertEquals("Expected match all docs query", "*:*", s);
     }
 }

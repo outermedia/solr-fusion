@@ -125,8 +125,7 @@ public class QueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(WildcardQuery t, ScriptEnv env)
     {
-        // TODO
-
+        queryBuilder.append("*:*");
     }
 
     @Override

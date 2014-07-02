@@ -125,8 +125,7 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(WildcardQuery t, ScriptEnv env)
     {
-        // TODO
-
+        // NOP, leave empty
     }
 
     @Override

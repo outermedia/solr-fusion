@@ -91,7 +91,7 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     @Override
     public void visitQuery(MatchAllDocsQuery t, ScriptEnv env)
     {
-        // TODO expand * to all fields in order to apply add/remove operations?!
+        // NOP
     }
 
     @Override
