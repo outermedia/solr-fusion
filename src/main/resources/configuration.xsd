@@ -27,6 +27,7 @@
 
   <xs:complexType name="fieldType">
     <xs:sequence/>
+    <xs:attribute name="multi-value" type="xs:boolean"/>
     <xs:attribute name="format" type="xs:string"/>
     <xs:attribute name="type" type="xs:string"/>
     <xs:attribute name="name" type="xs:string" use="required"/>

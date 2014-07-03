@@ -38,6 +38,8 @@ import java.util.List;
 public class Configuration
 {
     @XmlElement(name = "fusion-schema-fields", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @Getter
+    @Setter
     private FusionFieldList fusionFields;
 
     @XmlElement(name = "script-type", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
