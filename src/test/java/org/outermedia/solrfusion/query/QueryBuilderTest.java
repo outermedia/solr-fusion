@@ -165,4 +165,144 @@ public class QueryBuilderTest
             Assert.assertEquals("Got different min value than expected", expected, qs);
         }
     }
+
+    @Test
+    public void testBoolQuery()
+    {
+        // empty case
+        QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
+        BooleanQuery bq = new BooleanQuery();
+        String qs = qb.buildQueryString(bq, cfg);
+        Assert.assertEquals("Got different bool query than expected", "", qs);
+
+        // one MUST clause
+        qb = QueryBuilder.Factory.getInstance();
+        bq = new BooleanQuery();
+        bq.add(createMustBooleanClause("abc", true));
+        qs = qb.buildQueryString(bq, cfg);
+        Assert.assertEquals("Got different bool query than expected", "(+title:abc)", qs);
+
+        // one SHOULD clause
+        qb = QueryBuilder.Factory.getInstance();
+        bq = new BooleanQuery();
+        bq.add(createShouldBooleanClause("abc", true));
+        qs = qb.buildQueryString(bq, cfg);
+        Assert.assertEquals("Got different bool query than expected", "(title:abc)", qs);
+
+        // one MUST NOT clause
+        qb = QueryBuilder.Factory.getInstance();
+        bq = new BooleanQuery();
+        bq.add(createMustNotBooleanClause("abc", true));
+        qs = qb.buildQueryString(bq, cfg);
+        Assert.assertEquals("Got different bool query than expected", "(-title:abc)", qs);
+
+        // several MUST clauses
+        qb = QueryBuilder.Factory.getInstance();
+        bq = new BooleanQuery();
+        bq.add(createMustBooleanClause("abc", true));
+        bq.add(createMustBooleanClause("def", true));
+        bq.add(createMustNotBooleanClause("ghi", true));
+        qs = qb.buildQueryString(bq, cfg);
+        Assert.assertEquals("Got different bool query than expected", "(+title:abc AND +title:def AND -title:ghi)", qs);
+
+        // several SHOULD clauses
+        qb = QueryBuilder.Factory.getInstance();
+        bq = new BooleanQuery();
+        bq.add(createShouldBooleanClause("abc", true));
+        bq.add(createShouldBooleanClause("def", true));
+        qs = qb.buildQueryString(bq, cfg);
+        Assert.assertEquals("Got different bool query than expected", "(title:abc OR title:def)", qs);
+
+        // several MUST NOT clauses
+        qb = QueryBuilder.Factory.getInstance();
+        bq = new BooleanQuery();
+        bq.add(createMustNotBooleanClause("abc", true));
+        bq.add(createMustNotBooleanClause("def", true));
+        bq.add(createMustBooleanClause("ghi", true));
+        bq.add(createShouldBooleanClause("jkl", true));
+        qs = qb.buildQueryString(bq, cfg);
+        Assert.assertEquals("Got different bool query than expected", "(-title:abc AND -title:def AND +title:ghi OR title:jkl)", qs);
+
+        // nested bool queries
+        qb = QueryBuilder.Factory.getInstance();
+        BooleanQuery bq1 = new BooleanQuery();
+        bq1.add(createMustBooleanClause("abc", true));
+        bq1.add(createMustBooleanClause("def", true));
+        BooleanQuery bq2 = new BooleanQuery();
+        bq2.add(createMustBooleanClause("ghi", true));
+        bq2.add(createMustBooleanClause("jkl", true));
+        bq = new BooleanQuery();
+        bq.add(createShouldBooleanClause(bq1));
+        bq.add(createShouldBooleanClause(bq2));
+        qs = qb.buildQueryString(bq, cfg);
+        Assert.assertEquals("Got different bool query than expected", "((+title:abc AND +title:def) OR (+title:ghi AND +title:jkl))", qs);
+
+        // several deleted clauses
+        qb = QueryBuilder.Factory.getInstance();
+        bq = new BooleanQuery();
+        bq.add(createMustNotBooleanClause("abc", false)); // del
+        bq.add(createMustBooleanClause("def", true));
+        bq.add(createShouldBooleanClause("ghi", false)); // del
+        bq.add(createShouldBooleanClause("jkl", true));
+        bq.add(createMustBooleanClause("mno", false)); // del
+        qs = qb.buildQueryString(bq, cfg);
+        Assert.assertEquals("Got different bool query than expected", "(+title:def OR title:jkl)", qs);
+
+        // delete whole bool query
+        qb = QueryBuilder.Factory.getInstance();
+        bq1 = new BooleanQuery();
+        bq1.add(createMustBooleanClause("abc", true));
+        bq1.add(createMustBooleanClause("def", true));
+        bq2 = new BooleanQuery();
+        bq2.add(createMustBooleanClause("ghi", false));
+        bq2.add(createMustBooleanClause("jkl", false));
+        bq = new BooleanQuery();
+        bq.add(createShouldBooleanClause(bq1));
+        bq.add(createShouldBooleanClause(bq2));
+        qs = qb.buildQueryString(bq, cfg);
+        Assert.assertEquals("Got different bool query than expected", "((+title:abc AND +title:def))", qs);
+
+        // delete all bool queries
+        qb = QueryBuilder.Factory.getInstance();
+        bq1 = new BooleanQuery();
+        bq1.add(createMustBooleanClause("abc", false));
+        bq1.add(createMustBooleanClause("def", false));
+        bq2 = new BooleanQuery();
+        bq2.add(createMustBooleanClause("ghi", false));
+        bq2.add(createMustBooleanClause("jkl", false));
+        bq = new BooleanQuery();
+        bq.add(createShouldBooleanClause(bq1));
+        bq.add(createShouldBooleanClause(bq2));
+        qs = qb.buildQueryString(bq, cfg);
+        Assert.assertEquals("Got different bool query than expected", "", qs);
+    }
+
+    protected BooleanClause createShouldBooleanClause(Query q)
+    {
+        return new BooleanClause(q, BooleanClause.Occur.OCCUR_SHOULD);
+    }
+
+    protected BooleanClause createMustBooleanClause(String s, boolean mapped)
+    {
+        Term term = Term.newSearchServerTerm("title", s);
+        term.setWasMapped(mapped);
+        TermQuery tq = new TermQuery(term);
+        return new BooleanClause(tq, BooleanClause.Occur.OCCUR_MUST);
+    }
+
+    protected BooleanClause createShouldBooleanClause(String s, boolean mapped)
+    {
+        Term term = Term.newSearchServerTerm("title", s);
+        term.setWasMapped(mapped);
+        TermQuery tq = new TermQuery(term);
+        return new BooleanClause(tq, BooleanClause.Occur.OCCUR_SHOULD);
+    }
+
+    protected BooleanClause createMustNotBooleanClause(String s, boolean mapped)
+    {
+        Term term = Term.newSearchServerTerm("title", s);
+        term.setWasMapped(mapped);
+        TermQuery tq = new TermQuery(term);
+        return new BooleanClause(tq, BooleanClause.Occur.OCCUR_MUST_NOT);
+    }
 }

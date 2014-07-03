@@ -71,7 +71,7 @@ public class QueryMapperTest
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
         String s = qb.buildQueryString(bq, cfg);
-        Assert.assertEquals("Found wrong search server bool query mapping", "+Autor:Schiller +Titel:Ein_langer_Weg",
+        Assert.assertEquals("Found wrong search server bool query mapping", "(+Autor:Schiller AND +Titel:Ein_langer_Weg)",
                 s.trim());
     }
 
@@ -98,7 +98,7 @@ public class QueryMapperTest
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
         String s = qb.buildQueryString(bq, cfg);
-        Assert.assertEquals("Found wrong search server bool query mapping", "-Autor:Schiller -Titel:Ein_langer_Weg",
+        Assert.assertEquals("Found wrong search server bool query mapping", "(-Autor:Schiller AND -Titel:Ein_langer_Weg)",
                 s.trim());
 
         ResetQueryState resetter = new ResetQueryState();

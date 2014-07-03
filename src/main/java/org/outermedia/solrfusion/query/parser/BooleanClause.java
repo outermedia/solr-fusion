@@ -15,7 +15,7 @@ public class BooleanClause implements VisitableQuery
 {
     public enum Occur
     {
-        OCCUR_MAY, OCCUR_MUST, OCCUR_SHOULD, OCCUR_MUST_NOT
+        OCCUR_MUST, OCCUR_SHOULD, OCCUR_MUST_NOT
     }
 
     private Occur occur;

@@ -36,6 +36,11 @@ public class QueryBuilder implements QueryBuilderIfc
         return queryBuilder.toString();
     }
 
+    public StringBuilder getQueryBuilderOutput()
+    {
+        return queryBuilder;
+    }
+
     @Override
     public void init(QueryBuilderFactory config) throws InvocationTargetException, IllegalAccessException
     {
@@ -111,8 +116,56 @@ public class QueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(BooleanQuery t, ScriptEnv env)
     {
-        // TODO
-        t.visitQueryClauses(this, env);
+        List<BooleanClause> clauses = t.getClauses();
+        if (clauses != null)
+        {
+            StringBuilder boolQueryStringBuilder = new StringBuilder();
+            for (BooleanClause booleanClause : clauses)
+            {
+                QueryBuilderIfc newClauseQueryBuilder = newQueryBuilder();
+                newClauseQueryBuilder.buildQueryString(booleanClause.getQuery(), configuration);
+                StringBuilder clauseQueryStr = newClauseQueryBuilder.getQueryBuilderOutput();
+                if(clauseQueryStr.length() > 0)
+                {
+                    if (boolQueryStringBuilder.length() > 0)
+                    {
+                        switch (booleanClause.getOccur())
+                        {
+                            // -X (must not) makes no sense in combination with OR
+                            case OCCUR_MUST_NOT:
+                            case OCCUR_MUST:
+                                boolQueryStringBuilder.append(" AND ");
+                                break;
+                            case OCCUR_SHOULD:
+                                boolQueryStringBuilder.append(" OR ");
+                                break;
+                        }
+                    }
+                    // "+" is redundant for AND, but in the case that all previous clauses were deleted, it
+                    // is not possible to decide whether to print out a "+" or not
+                    if (booleanClause.getOccur() == BooleanClause.Occur.OCCUR_MUST)
+                    {
+                        boolQueryStringBuilder.append("+");
+                    }
+                    if (booleanClause.getOccur() == BooleanClause.Occur.OCCUR_MUST_NOT)
+                    {
+                        boolQueryStringBuilder.append("-");
+                    }
+                    boolQueryStringBuilder.append(clauseQueryStr);
+                }
+            }
+            if(boolQueryStringBuilder.length() > 0)
+            {
+                queryBuilder.append("(");
+                queryBuilder.append(boolQueryStringBuilder);
+                queryBuilder.append(")");
+            }
+        }
+    }
+
+    protected QueryBuilderIfc newQueryBuilder()
+    {
+        return new QueryBuilder();
     }
 
     @Override
@@ -163,20 +216,7 @@ public class QueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(BooleanClause booleanClause, ScriptEnv env)
     {
-        // TODO
-        queryBuilder.append(" ");
-        switch (booleanClause.getOccur())
-        {
-            case OCCUR_MUST:
-                queryBuilder.append("+");
-                break;
-            case OCCUR_MUST_NOT:
-                queryBuilder.append("-");
-                break;
-            default:
-                // NOP
-        }
-        booleanClause.accept(this, env);
+        // NOP, not used
     }
 
     protected void buildSearchServerRangeQuery(NumericRangeQuery<?> rq)

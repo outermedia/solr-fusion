@@ -36,6 +36,11 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
         return queryBuilder.toString();
     }
 
+    @Override public StringBuilder getQueryBuilderOutput()
+    {
+        return queryBuilder;
+    }
+
     @Override
     public void init(QueryBuilderFactory config) throws InvocationTargetException, IllegalAccessException
     {

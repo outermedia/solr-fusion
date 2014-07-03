@@ -12,4 +12,6 @@ import org.outermedia.solrfusion.query.parser.Query;
 public interface QueryBuilderIfc extends QueryVisitor, Initiable<QueryBuilderFactory>
 {
     public String buildQueryString(Query query, Configuration configuration);
+
+    public StringBuilder getQueryBuilderOutput();
 }
