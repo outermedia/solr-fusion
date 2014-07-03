@@ -41,64 +41,67 @@ public class ResetQueryState implements QueryVisitor
     @Override
     public void visitQuery(FuzzyQuery t, ScriptEnv env)
     {
-        visitQuery((TermQuery) t, env);
+        visitQuery(t.getTerm(), env, null);
     }
 
     @Override
     public void visitQuery(MatchAllDocsQuery t, ScriptEnv env)
     {
-        // TODO expand * to all fields in order to apply add/remove operations?!
+        // NOP
+    }
+
+    protected void resetNumericRangeQuery(NumericRangeQuery<?> rq, ScriptEnv env)
+    {
+        visitQuery(rq.getMin(), env, null);
+        visitQuery(rq.getMax(), env, null);
     }
 
     @Override
     public void visitQuery(IntRangeQuery t, ScriptEnv env)
     {
-        // TODO
+        resetNumericRangeQuery(t, env);
     }
 
     @Override
     public void visitQuery(LongRangeQuery t, ScriptEnv env)
     {
-        // TODO
+        resetNumericRangeQuery(t, env);
     }
 
     @Override
     public void visitQuery(FloatRangeQuery t, ScriptEnv env)
     {
-        // TODO
+        resetNumericRangeQuery(t, env);
     }
 
     @Override
     public void visitQuery(DoubleRangeQuery t, ScriptEnv env)
     {
-        // TODO
+        resetNumericRangeQuery(t, env);
     }
 
     @Override
     public void visitQuery(DateRangeQuery t, ScriptEnv env)
     {
-        // TODO
+        resetNumericRangeQuery(t, env);
     }
 
     @Override
     public void visitQuery(PhraseQuery t, ScriptEnv env)
     {
-        // TODO
-
+        visitQuery(t.getTerm(), env, null);
     }
 
     @Override
     public void visitQuery(PrefixQuery t, ScriptEnv env)
     {
-        // TODO
-
+        visitQuery(t.getTerm(), env, null);
     }
 
     @Override
     public void visitQuery(WildcardQuery t, ScriptEnv env)
     {
-        // TODO
-
+        visitQuery(t.getTerm(), env, null);
     }
 
     @Override

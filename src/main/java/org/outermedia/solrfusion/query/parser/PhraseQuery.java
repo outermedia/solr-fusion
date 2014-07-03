@@ -25,5 +25,4 @@ public class PhraseQuery extends TermQuery
         visitor.visitQuery(this, env);
     }
 
-    // TODO
 }
