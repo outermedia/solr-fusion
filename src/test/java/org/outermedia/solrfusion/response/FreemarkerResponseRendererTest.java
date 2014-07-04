@@ -72,8 +72,13 @@ public class FreemarkerResponseRendererTest
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator =  new MappingClosableIterator(docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0));
 
         String xmlResponse = responseRenderer.getResponseString(closableIterator, "steak", null);
-
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
+        Assert.assertFalse("xml response should not contain filter query in header", xmlResponse.contains("<str name=\"fq\">"));
+
+        xmlResponse = responseRenderer.getResponseString(closableIterator, "steak", "salat");
+        Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
+        Assert.assertTrue("xml response should contain filter query in header",
+            xmlResponse.contains("<str name=\"fq\"><![CDATA[salat]]></str>"));
 
         System.out.println(xmlResponse);
     }
@@ -122,6 +127,12 @@ public class FreemarkerResponseRendererTest
         {
             Assert.fail("Exception while parsing rendered json response");
         }
+
+        Assert.assertFalse("json response should not contain filter query in header", jsonResponse.contains("\"fq\":"));
+
+        jsonResponse = responseRenderer.getResponseString(closableIterator, "steak", "salat");
+        System.out.println(jsonResponse);
+        Assert.assertFalse("json response should contain filter query in header", jsonResponse.contains("\"fq\":\"salat\","));
     }
 
 }
