@@ -24,7 +24,8 @@ public class DefaultPhpResponseRenderer implements ResponseRendererIfc
 	{}
 
     @Override
-    public String getResponseString(ClosableIterator<Document,SearchServerResponseInfo> docStream, String query)
+    public String getResponseString(ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
+        String filterQueryStr)
     {
         return null; // TODO
     }

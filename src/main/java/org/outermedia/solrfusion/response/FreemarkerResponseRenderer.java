@@ -61,13 +61,14 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(ClosableIterator<Document, SearchServerResponseInfo> docStream, String query)
+    public String getResponseString(ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
+        String filterQuery)
     {
         // prepare the template input:
         Map<String, Object> input = new HashMap<String, Object>();
 
         FreemarkerResponse freemarkerResponse = new FreemarkerResponse(docStream);
-        FreemarkerResponseHeader freemarkerResponseHeader = new FreemarkerResponseHeader(docStream, query);
+        FreemarkerResponseHeader freemarkerResponseHeader = new FreemarkerResponseHeader(docStream, query, filterQuery);
 
         input.put("responseHeader", freemarkerResponseHeader);
         input.put("response", freemarkerResponse);

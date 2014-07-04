@@ -34,9 +34,6 @@ public class SolrFusionServlet extends HttpServlet
     public static String INIT_PARAM_FUSION_SCHEMA = "fusion-schema";
     public static String INIT_PARAM_FUSION_SCHEMA_XSD = "fusion-schema-xsd";
 
-    public static final String SEARCH_PARAM_QUERY = "q";
-    public static final String SEARCH_PARAM_WT = "wt";
-
     protected static final String HEADER_LOCALE = "_LOCALE";
 
     private Configuration cfg;
@@ -172,8 +169,12 @@ public class SolrFusionServlet extends HttpServlet
         throws ServletException
     {
         FusionRequest fusionRequest = getNewFusionRequest();
-        fusionRequest.setQuery(getRequiredSingleSearchParamValue(requestParams, SEARCH_PARAM_QUERY));
-        fusionRequest.setResponseTypeFromString(getOptionalSingleSearchParamValue(requestParams, SEARCH_PARAM_WT));
+        String qParam = SolrFusionRequestParams.QUERY.getRequestParamName();
+        fusionRequest.setQuery(getRequiredSingleSearchParamValue(requestParams, qParam));
+        String fqParam = SolrFusionRequestParams.FILTER_QUERY.getRequestParamName();
+        fusionRequest.setFilterQuery(getOptionalSingleSearchParamValue(requestParams, fqParam));
+        String wtParam = SolrFusionRequestParams.WRITER_TYPE.getRequestParamName();
+        fusionRequest.setResponseTypeFromString(getOptionalSingleSearchParamValue(requestParams, wtParam));
         Locale sentLocale = (Locale) headerValues.get(HEADER_LOCALE);
         if (sentLocale == null)
         {

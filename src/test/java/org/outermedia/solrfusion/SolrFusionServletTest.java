@@ -103,7 +103,7 @@ public class SolrFusionServletTest
         SolrFusionServlet servlet = new SolrFusionServlet();
         Map<String, String[]> requestParams = new HashMap<>();
         String q = "title:schiller";
-        requestParams.put(SolrFusionServlet.SEARCH_PARAM_QUERY, new String[]{q});
+        requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{q});
         try
         {
             FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
@@ -131,7 +131,7 @@ public class SolrFusionServletTest
         catch (ServletException e)
         {
             match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_NO_QUERY_PARAMETER,
-                SolrFusionServlet.SEARCH_PARAM_QUERY);
+                SolrFusionRequestParams.QUERY.getRequestParamName());
         }
     }
 
@@ -140,7 +140,7 @@ public class SolrFusionServletTest
     {
         SolrFusionServlet servlet = new SolrFusionServlet();
         Map<String, String[]> requestParams = new HashMap<>();
-        requestParams.put(SolrFusionServlet.SEARCH_PARAM_QUERY, new String[]{"schiller", "goethe"});
+        requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{"schiller", "goethe"});
         try
         {
             FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
@@ -149,7 +149,7 @@ public class SolrFusionServletTest
         catch (ServletException e)
         {
             match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
-                SolrFusionServlet.SEARCH_PARAM_QUERY, "2");
+                SolrFusionRequestParams.QUERY.getRequestParamName(), "2");
         }
     }
 
@@ -158,8 +158,8 @@ public class SolrFusionServletTest
     {
         SolrFusionServlet servlet = new SolrFusionServlet();
         Map<String, String[]> requestParams = new HashMap<>();
-        requestParams.put(SolrFusionServlet.SEARCH_PARAM_QUERY, new String[]{"schiller"});
-        requestParams.put(SolrFusionServlet.SEARCH_PARAM_WT, new String[]{"xml", "json"});
+        requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{"schiller"});
+        requestParams.put(SolrFusionRequestParams.WRITER_TYPE.getRequestParamName(), new String[]{"xml", "json"});
         try
         {
             FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
@@ -168,7 +168,7 @@ public class SolrFusionServletTest
         catch (ServletException e)
         {
             match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
-                SolrFusionServlet.SEARCH_PARAM_WT, "2");
+                SolrFusionRequestParams.WRITER_TYPE.getRequestParamName(), "2");
         }
     }
 
@@ -178,11 +178,11 @@ public class SolrFusionServletTest
         SolrFusionServlet servlet = new SolrFusionServlet();
         Map<String, String[]> requestParams = new HashMap<>();
         String q = "title:schiller";
-        requestParams.put(SolrFusionServlet.SEARCH_PARAM_QUERY, new String[]{q});
+        requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{q});
         String formats[] = {"json", "xml", "php"};
         for (String f : formats)
         {
-            requestParams.put(SolrFusionServlet.SEARCH_PARAM_WT, new String[]{f});
+            requestParams.put(SolrFusionRequestParams.WRITER_TYPE.getRequestParamName(), new String[]{f});
             try
             {
                 FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
@@ -205,8 +205,8 @@ public class SolrFusionServletTest
         SolrFusionServlet servlet = new SolrFusionServlet();
         Map<String, String[]> requestParams = new HashMap<>();
         String q = "title:schiller";
-        requestParams.put(SolrFusionServlet.SEARCH_PARAM_QUERY, new String[]{q});
-        requestParams.put(SolrFusionServlet.SEARCH_PARAM_WT, new String[]{"xyz"});
+        requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{q});
+        requestParams.put(SolrFusionRequestParams.WRITER_TYPE.getRequestParamName(), new String[]{"xyz"});
         try
         {
             FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());

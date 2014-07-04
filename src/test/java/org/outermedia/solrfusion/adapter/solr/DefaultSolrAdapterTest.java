@@ -11,6 +11,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.outermedia.solrfusion.SolrFusionRequestParams;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.configuration.Configuration;
@@ -24,7 +25,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -84,7 +87,10 @@ public class DefaultSolrAdapterTest
             try
             {
                 SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
-                InputStream is = adapter.sendQuery("shakespeare", 4000);
+                Map<String, String> params = new HashMap<>();
+                String qParam = SolrFusionRequestParams.QUERY.getRequestParamName();
+                params.put(qParam, "shakespeare");
+                InputStream is = adapter.sendQuery(params, 4000);
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 XmlResponse xmlResponse = (new Util()).unmarshal(XmlResponse.class, "", br, null);

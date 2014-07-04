@@ -8,12 +8,14 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.outermedia.solrfusion.SolrFusionRequestParams;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 /**
  * This class is able to send requests to a solr server and to receive answers.
@@ -29,6 +31,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
 
     private final int DEFAULT_TIMEOUT = 4000;
     private final String QUERY_PARAMETER = "q";
+    private final String FILTER_QUERY_PARAMETER = "fq";
     private final String WRITER_TYPE_PARAMETER = "wt";
     private final String DEFAULT_WRITER_TYPE_PARAMETER = "xml";
 
@@ -41,19 +44,19 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
 	{}
 
     @Override
-    public InputStream sendQuery(String searchServerQueryStr) throws URISyntaxException, IOException
-    {
-        return sendQuery(searchServerQueryStr, DEFAULT_TIMEOUT);
-    }
-
-    @Override
-    public InputStream sendQuery(String searchServerQueryStr, int timeout) throws URISyntaxException, IOException
+    public InputStream sendQuery(Map<String, String> params, int timeout) throws URISyntaxException, IOException
     {
         URIBuilder ub = new URIBuilder(url);
-        ub.setParameter(QUERY_PARAMETER, searchServerQueryStr);
+        String q = params.get(SolrFusionRequestParams.QUERY.getRequestParamName());
+        ub.setParameter(QUERY_PARAMETER, q);
+        String fq = params.get(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName());
+        if(fq != null)
+        {
+            ub.setParameter(FILTER_QUERY_PARAMETER, fq);
+        }
         ub.setParameter(WRITER_TYPE_PARAMETER, DEFAULT_WRITER_TYPE_PARAMETER);
 
-        log.debug("Sending query to host {}: {}", url, searchServerQueryStr);
+        log.debug("Sending query to host {}: q={} fq={}", url, q, fq);
 
         HttpClient client = HttpClientBuilder.create().build();
 

@@ -64,7 +64,7 @@ public class DropTest extends AbstractTypeTest
         Assert.assertTrue("Expected that field f9-abc was removed", sourceRegExpField.isRemoved());
 
         ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(docs, info);
-        String ds = renderer.getResponseString(docStream, "a:dummy");
+        String ds = renderer.getResponseString(docStream, "a:dummy", null);
         String expectedField = "    <arr name=\"text4\">\n" +
                 "      <str><![CDATA[something]]></str>\n" +
                 "      <str><![CDATA[other]]></str>\n" +
@@ -82,7 +82,7 @@ public class DropTest extends AbstractTypeTest
         Assert.assertFalse("Expected that field f8 was not removed", sourceField.isRemoved());
         // System.out.println("W/O DROP "+sourceField.toString());
         docStream = new ClosableListIterator<>(docs, info);
-        String s = renderer.getResponseString(docStream, "a:dummy");
+        String s = renderer.getResponseString(docStream, "a:dummy", null);
         Assert.assertTrue("Field f8 was not mapped.", s.contains(expectedField));
     }
 

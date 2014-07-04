@@ -38,10 +38,11 @@ public class FusionResponse
 
     /**
      * Parsing of the fusion query failed.
+     * @param query
      */
-    public void setResponseForQueryParseError()
+    public void setResponseForQueryParseError(String query)
     {
-        setError("Query parsing failed.");
+        setError("Query parsing failed: " + query);
     }
 
     /**
@@ -101,5 +102,15 @@ public class FusionResponse
     public boolean requestSucceeded()
     {
         return ok;
+    }
+
+    public void setResponseForException(Throwable lastException)
+    {
+        String reason = "unknown";
+        if(lastException != null)
+        {
+            reason = lastException.getMessage();
+        }
+        setError("Internal processing error. Reason: " + reason);
     }
 }
