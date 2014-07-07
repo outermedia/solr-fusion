@@ -10,6 +10,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.outermedia.solrfusion.SolrFusionRequestParams;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.adapter.SearchServerResponseException;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 
 import java.io.IOException;
@@ -19,9 +20,8 @@ import java.util.Map;
 
 /**
  * This class is able to send requests to a solr server and to receive answers.
- * 
+ *
  * @author ballmann
- * 
  */
 
 @ToString
@@ -38,10 +38,11 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     private String url;
 
     /**
-	 * Factory creates instances only.
-	 */
-	private DefaultSolrAdapter()
-	{}
+     * Factory creates instances only.
+     */
+    private DefaultSolrAdapter()
+    {
+    }
 
     @Override
     public InputStream sendQuery(Map<String, String> params, int timeout) throws URISyntaxException, IOException
@@ -50,7 +51,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         String q = params.get(SolrFusionRequestParams.QUERY.getRequestParamName());
         ub.setParameter(QUERY_PARAMETER, q);
         String fq = params.get(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName());
-        if(fq != null)
+        if (fq != null)
         {
             ub.setParameter(FILTER_QUERY_PARAMETER, fq);
         }
@@ -62,29 +63,40 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
 
         HttpGet request = new HttpGet(ub.build());
         RequestConfig requestConfig = RequestConfig.custom()
-                .setSocketTimeout(timeout)
-                .setConnectTimeout(timeout)
-                .setConnectionRequestTimeout(timeout)
-                .build();
+            .setSocketTimeout(timeout)
+            .setConnectTimeout(timeout)
+            .setConnectionRequestTimeout(timeout)
+            .build();
 
         request.setConfig(requestConfig);
         HttpResponse response = client.execute(request);
 
+        int httpStatusCode = response.getStatusLine().getStatusCode();
+        String reason = response.getStatusLine().getReasonPhrase();
+
         log.debug("Received response from host {}: {}", url, response.getStatusLine().toString());
 
-        return response.getEntity().getContent();
+        InputStream contentStream = response.getEntity().getContent();
+
+        if (httpStatusCode != 200)
+        {
+            throw new SearchServerResponseException(httpStatusCode, reason, contentStream);
+        }
+
+        return contentStream;
     }
 
     public static class Factory
-	{
-		public static DefaultSolrAdapter getInstance()
-		{
-			return new DefaultSolrAdapter();
-		}
-	}
+    {
+        public static DefaultSolrAdapter getInstance()
+        {
+            return new DefaultSolrAdapter();
+        }
+    }
 
-	@Override
-	public void init(SearchServerConfig config) {
+    @Override
+    public void init(SearchServerConfig config)
+    {
         url = config.getUrl();
     }
 

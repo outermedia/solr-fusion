@@ -14,15 +14,20 @@ import javax.xml.bind.annotation.*;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name="")
+@XmlType(name="", propOrder = { "header", "error", "result"})
 @XmlRootElement(name = "response")
 @ToString
+@Getter
+@Setter
 public class XmlResponse
 {
+    @XmlElement(name = "lst", required = true)
+    private Object header;
+
+    @XmlElement(name = "lst", required = false)
+    private ResponseError error;
 
     @XmlElement(name = "result", required = true)
-    @Getter
-    @Setter
     private Result result;
 
 

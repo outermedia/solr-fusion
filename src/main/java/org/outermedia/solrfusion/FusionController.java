@@ -3,6 +3,7 @@ package org.outermedia.solrfusion;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.adapter.SearchServerResponseException;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ControllerFactory;
@@ -18,6 +19,7 @@ import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.response.parser.ResponseError;
 import org.outermedia.solrfusion.response.parser.Result;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
@@ -209,6 +211,19 @@ public class FusionController implements FusionControllerIfc
             ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
                 result.getDocuments(), info);
             consolidator.addResultStream(configuration, searchServerConfig, docIterator);
+        }
+        catch(SearchServerResponseException se)
+        {
+            try
+            {
+                ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
+                    configuration.getDefaultResponseParser());
+                ResponseError responseError = responseParser.parse(se.getHttpContent()).getError();
+                se.setResponseError(responseError);
+            } catch(Exception e) {
+                // depending on solr's version, a well formed error message is provided or not
+            }
+            consolidator.addErrorResponse(se);
         }
         catch (Exception e)
         {

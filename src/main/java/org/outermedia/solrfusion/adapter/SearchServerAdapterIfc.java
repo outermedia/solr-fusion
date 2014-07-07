@@ -18,9 +18,8 @@ import java.util.Map;
 public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
 {
     /**
-     * Send the provided query to a search server and returns the retrieved documents. The adapter creates an
-     * instance of {@link org.outermedia.solrfusion.adapter.SearchServerResponseInfo} and sets it in the returned
-     * ClosableIterator.
+     * Send the provided query to a search server and returns the retrieved documents as InputStream.
+     * In the case of an error a {@link org.outermedia.solrfusion.adapter.SearchServerResponseException} is thrown.
      *
      * @param searchServerQueryStr a query suitable for this search server.
      * @param timeout a timeout in milliseconds
