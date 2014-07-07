@@ -100,15 +100,26 @@ public class SolrFusionServletTest
     @Test
     public void testBuildFusionRequest()
     {
+        testBuildFusionRequestImpl(null);
+        testBuildFusionRequestImpl("title:Goethe");
+    }
+
+    protected void testBuildFusionRequestImpl(String fq)
+    {
         SolrFusionServlet servlet = new SolrFusionServlet();
         Map<String, String[]> requestParams = new HashMap<>();
         String q = "title:schiller";
         requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{q});
+        if(fq != null)
+        {
+            requestParams.put(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(), new String[]{fq});
+        }
         try
         {
             FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
             Assert.assertNotNull("Expected request object", req);
             Assert.assertEquals("Got different different", q, req.getQuery());
+            Assert.assertEquals("Got different different", fq, req.getFilterQuery());
             Assert.assertEquals("Got different renderer type than expected", ResponseRendererType.XML,
                 req.getResponseType());
         }
@@ -152,6 +163,26 @@ public class SolrFusionServletTest
                 SolrFusionRequestParams.QUERY.getRequestParamName(), "2");
         }
     }
+
+    @Test
+    public void testBuildFusionRequestWithTooManyFilterQueries()
+    {
+        SolrFusionServlet servlet = new SolrFusionServlet();
+        Map<String, String[]> requestParams = new HashMap<>();
+        requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{"schiller"});
+        requestParams.put(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(), new String[]{"schiller", "goethe"});
+        try
+        {
+            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
+            Assert.fail("Expected exception, but got none");
+        }
+        catch (ServletException e)
+        {
+            match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
+                SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(), "2");
+        }
+    }
+
 
     @Test
     public void testBuildFusionRequestWithTooManyWt()
