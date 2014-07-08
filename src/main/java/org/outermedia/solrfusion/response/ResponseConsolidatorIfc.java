@@ -24,4 +24,6 @@ public interface ResponseConsolidatorIfc extends Initiable<ResponseConsolidatorF
     public ClosableIterator<Document,SearchServerResponseInfo> getResponseIterator();
 
     public void addErrorResponse(SearchServerResponseException se);
+
+    public String getErrorMsg();
 }

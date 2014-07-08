@@ -20,7 +20,7 @@ import java.util.List;
 @XmlType(name = "fieldType")
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public class SolrSingleValuedField extends SolrField
 {
 

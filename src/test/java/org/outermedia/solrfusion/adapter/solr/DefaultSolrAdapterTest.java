@@ -95,8 +95,8 @@ public class DefaultSolrAdapterTest
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 XmlResponse xmlResponse = (new Util()).unmarshal(XmlResponse.class, "", br, null);
 
-                Assert.assertTrue("Expected a shakespeare in a library", xmlResponse.getResult().getDocuments().size() != 0);
-                Assert.assertEquals("Expected ten shakespeares on first page", 10, xmlResponse.getResult().getDocuments().size());
+                Assert.assertTrue("Expected a shakespeare in a library", xmlResponse.getDocuments().size() != 0);
+                Assert.assertEquals("Expected ten shakespeares on first page", 10, xmlResponse.getDocuments().size());
 
             }
             catch (Exception e)

@@ -161,7 +161,7 @@ public class ControllerTest
         fc.process(cfg, fusionRequest, fusionResponse);
         Assert.assertFalse("Expected processing error for too less server responses", fusionResponse.isOk());
         Assert.assertEquals("Found different error message than expected", cfg.getDisasterMessage().getText(),
-            fusionResponse.getErrorMessage());
+            fusionResponse.getErrorMessage().trim());
     }
 
     @Test

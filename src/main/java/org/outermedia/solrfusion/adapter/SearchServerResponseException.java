@@ -2,7 +2,7 @@ package org.outermedia.solrfusion.adapter;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.outermedia.solrfusion.response.parser.ResponseError;
+import org.outermedia.solrfusion.response.parser.ResponseSection;
 
 import java.io.InputStream;
 
@@ -15,7 +15,7 @@ public class SearchServerResponseException extends RuntimeException
 {
     private int httpErrorCode;
     private String httpReason;
-    private ResponseError responseError;
+    private ResponseSection responseError;
     private InputStream httpContent;
 
     public SearchServerResponseException(int httpErrorCode, String httpReason, InputStream httpContent)

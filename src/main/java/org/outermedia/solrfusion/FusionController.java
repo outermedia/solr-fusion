@@ -19,8 +19,7 @@ import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.ResponseError;
-import org.outermedia.solrfusion.response.parser.Result;
+import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.io.InputStream;
@@ -106,7 +105,8 @@ public class FusionController implements FusionControllerIfc
                 requestAllSearchServers(query, filterQuery, configuredSearchServers, consolidator);
                 if (consolidator.numberOfResponseStreams() < configuration.getDisasterLimit())
                 {
-                    fusionResponse.setResponseForTooLessServerAnsweredError(configuration.getDisasterMessage());
+                    fusionResponse.setResponseForTooLessServerAnsweredError(configuration.getDisasterMessage(),
+                        consolidator.getErrorMsg());
                 }
                 else
                 {
@@ -206,22 +206,28 @@ public class FusionController implements FusionControllerIfc
             InputStream is = adapter.sendQuery(searchServerParams, timeout);
             ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
                 configuration.getDefaultResponseParser());
-            Result result = responseParser.parse(is).getResult();
+            XmlResponse result = responseParser.parse(is);
             SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound());
             ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
                 result.getDocuments(), info);
             consolidator.addResultStream(configuration, searchServerConfig, docIterator);
         }
-        catch(SearchServerResponseException se)
+        catch (SearchServerResponseException se)
         {
             try
             {
                 ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
                     configuration.getDefaultResponseParser());
-                ResponseError responseError = responseParser.parse(se.getHttpContent()).getError();
-                se.setResponseError(responseError);
-            } catch(Exception e) {
+                XmlResponse responseError = responseParser.parse(se.getHttpContent());
+                if(responseError != null)
+                {
+                    se.setResponseError(responseError.getResponseErrors());
+                }
+            }
+            catch (Exception e)
+            {
                 // depending on solr's version, a well formed error message is provided or not
+                log.warn("Couldn't parse error response", e);
             }
             consolidator.addErrorResponse(se);
         }

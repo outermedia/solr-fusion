@@ -41,11 +41,11 @@ public class DefaultResponseParser implements ResponseParserIfc
 
         BufferedReader br = new BufferedReader(new InputStreamReader(input));
         XmlResponse response = xmlUtil.unmarshal(XmlResponse.class, "", br, null);
-        if (response != null && response.getResult() != null)
+        if (response != null)
         {
-            if (response.getResult().getDocuments() != null)
+            if (response.getDocuments() != null)
             {
-                log.debug("Query returned {} documents.", response.getResult().getDocuments().size());
+                log.debug("Query returned {} documents.", response.getDocuments().size());
             }
             else
             {

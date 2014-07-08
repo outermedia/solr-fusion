@@ -64,6 +64,7 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
             docIterator.close();
         }
         responseStreams.clear();
+        errorResponses.clear();
     }
 
     @Override
@@ -75,6 +76,20 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
     @Override public void addErrorResponse(SearchServerResponseException se)
     {
         errorResponses.add(se);
+    }
+
+    public String getErrorMsg()
+    {
+        StringBuilder sb = new StringBuilder();
+        if(errorResponses != null)
+        {
+            for(SearchServerResponseException ex : errorResponses)
+            {
+                sb.append(ex.getMessage());
+                sb.append('\n');
+            }
+        }
+        return sb.toString();
     }
 
     public static class Factory

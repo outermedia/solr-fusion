@@ -58,14 +58,14 @@ public class FreemarkerResponseRendererTest
         Assert.assertNotNull("responseRenderer should not be null", responseRenderer);
 
         XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9000.xml", null);
-        List<Document> documents9000 = response9000.getResult().getDocuments();
+        List<Document> documents9000 = response9000.getDocuments();
         XmlResponse response9001= xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9001.xml", null);
-        List<Document> documents9001 = response9001.getResult().getDocuments();
+        List<Document> documents9001 = response9001.getDocuments();
 
 //        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getResult().getNumFound());
-        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9000.getResult().getNumFound());
+        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9000.getNumFound());
 //        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9000.getResult().getDocuments(), info9000);
-        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9001.getResult().getDocuments(), info9001);
+        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9001.getDocuments(), info9001);
 
 //        consolidator.addResultStream(configuration, searchServerConfig, docIterator);
 
@@ -99,14 +99,14 @@ public class FreemarkerResponseRendererTest
         Assert.assertNotNull("responseRenderer should not be null", responseRenderer);
 
         XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9000.xml", null);
-        List<Document> documents9000 = response9000.getResult().getDocuments();
+        List<Document> documents9000 = response9000.getDocuments();
         XmlResponse response9001= xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9001.xml", null);
-        List<Document> documents9001 = response9001.getResult().getDocuments();
+        List<Document> documents9001 = response9001.getDocuments();
 
 //        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getResult().getNumFound());
-        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9000.getResult().getNumFound());
+        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9000.getNumFound());
 //        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9000.getResult().getDocuments(), info9000);
-        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9001.getResult().getDocuments(), info9001);
+        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9001.getDocuments(), info9001);
 
 //        consolidator.addResultStream(configuration, searchServerConfig, docIterator);
 

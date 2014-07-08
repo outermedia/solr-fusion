@@ -3,10 +3,12 @@ package org.outermedia.solrfusion.adapter.solr;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.outermedia.solrfusion.SolrFusionRequestParams;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
@@ -59,22 +61,19 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
 
         log.debug("Sending query to host {}: q={} fq={}", url, q, fq);
 
-        HttpClient client = HttpClientBuilder.create().build();
+        HttpClient client = newHttpClient();
 
-        HttpGet request = new HttpGet(ub.build());
-        RequestConfig requestConfig = RequestConfig.custom()
-            .setSocketTimeout(timeout)
-            .setConnectTimeout(timeout)
-            .setConnectionRequestTimeout(timeout)
-            .build();
+        HttpGet request = newHttpGet(ub);
+        RequestConfig requestConfig = newRequestConfig(timeout);
 
         request.setConfig(requestConfig);
         HttpResponse response = client.execute(request);
 
-        int httpStatusCode = response.getStatusLine().getStatusCode();
-        String reason = response.getStatusLine().getReasonPhrase();
+        StatusLine statusLine = response.getStatusLine();
+        int httpStatusCode = statusLine.getStatusCode();
+        String reason = statusLine.getReasonPhrase();
 
-        log.debug("Received response from host {}: {}", url, response.getStatusLine().toString());
+        log.debug("Received response from host {}: {}", url, statusLine.toString());
 
         InputStream contentStream = response.getEntity().getContent();
 
@@ -84,6 +83,25 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         }
 
         return contentStream;
+    }
+
+    protected CloseableHttpClient newHttpClient()
+    {
+        return HttpClientBuilder.create().build();
+    }
+
+    protected RequestConfig newRequestConfig(int timeout)
+    {
+        return RequestConfig.custom()
+            .setSocketTimeout(timeout)
+            .setConnectTimeout(timeout)
+            .setConnectionRequestTimeout(timeout)
+            .build();
+    }
+
+    protected HttpGet newHttpGet(URIBuilder ub) throws URISyntaxException
+    {
+        return new HttpGet(ub.build());
     }
 
     public static class Factory

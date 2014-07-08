@@ -38,6 +38,7 @@ public class FusionResponse
 
     /**
      * Parsing of the fusion query failed.
+     *
      * @param query
      */
     public void setResponseForQueryParseError(String query)
@@ -57,10 +58,11 @@ public class FusionResponse
      * For too few search servers a response was received.
      *
      * @param disasterMessage
+     * @param errorMsg
      */
-    public void setResponseForTooLessServerAnsweredError(Message disasterMessage)
+    public void setResponseForTooLessServerAnsweredError(Message disasterMessage, String errorMsg)
     {
-        setError(disasterMessage.getText());
+        setError(disasterMessage.getText() + "\n" + errorMsg);
     }
 
     /**
@@ -107,7 +109,7 @@ public class FusionResponse
     public void setResponseForException(Throwable lastException)
     {
         String reason = "unknown";
-        if(lastException != null)
+        if (lastException != null)
         {
             reason = lastException.getMessage();
         }
