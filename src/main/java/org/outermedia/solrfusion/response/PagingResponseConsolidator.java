@@ -49,7 +49,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         searchServerFieldsToMap.add(request.getSearchServerSortField());
         try
         {
-            // map sort field and id only
+            // map sort field and id/score only
             MappingClosableIterator mapper = new MappingClosableIterator(docIterator, config, searchServerConfig,
                 searchServerFieldsToMap);
             int docCount = 0;

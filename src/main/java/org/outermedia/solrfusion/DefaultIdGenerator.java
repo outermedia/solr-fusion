@@ -28,6 +28,11 @@ public class DefaultIdGenerator implements IdGeneratorIfc
     @Override
     public String computeId(String serverName, String searchServerDocId)
     {
+        if (serverName.contains(SEPARATOR))
+        {
+            throw new RuntimeException(
+                "Can't handle server names containing '" + SEPARATOR + "': '" + serverName);
+        }
         return serverName + SEPARATOR + searchServerDocId;
     }
 
@@ -45,7 +50,7 @@ public class DefaultIdGenerator implements IdGeneratorIfc
 
     public static class Factory
     {
-        public static DefaultIdGenerator getInstance()
+        public static IdGeneratorIfc getInstance()
         {
             return new DefaultIdGenerator();
         }
