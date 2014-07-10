@@ -1,4 +1,4 @@
-package org.outermedia.solrfusion;
+package org.outermedia.solrfusion.query;
 
 import lombok.Getter;
 
@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public enum SolrFusionRequestParams
 {
-    QUERY("q"), WRITER_TYPE("wt"), FILTER_QUERY("fq");
+    QUERY("q"), WRITER_TYPE("wt"), FILTER_QUERY("fq"), START("start"), PAGE_SIZE("rows"), SORT("sort");
 
     protected String requestParamName;
 

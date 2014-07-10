@@ -46,6 +46,8 @@
 
     <om:default-search-field>title</om:default-search-field>
 
+    <om:default-sort-field>score desc</om:default-sort-field>
+
     <!-- in a Solr query the operator is explicitly set to rewrite the default -->
     <om:default-operator>AND</om:default-operator>
 
@@ -68,6 +70,7 @@
         <om:error key="disaster-limit">Ihre Anfrage konnte nicht von ausreichend
             vielen Systemen beantwortet werden.
         </om:error>
+        <om:page-size>10</om:page-size>
 
         <!-- factory controls re-usage of created objects -->
         <om:query-parser
@@ -112,6 +115,8 @@
             <!-- the <id-generator> has to know how to identify solr -->
             <!-- docs by id -->
             <om:unique-key>id</om:unique-key>
+
+            <om:max-docs>100</om:max-docs>
 
             <!-- the following field mappings have to cover all -->
             <!-- fields listed in <fusion-schema-fields> -->

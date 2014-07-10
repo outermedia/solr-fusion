@@ -32,6 +32,8 @@
 
     <om:default-search-field>title</om:default-search-field>
 
+    <om:default-sort-field>score desc</om:default-sort-field>
+
     <om:default-operator>AND</om:default-operator>
 
     <om:id-generator fusion-name="id"
@@ -43,14 +45,13 @@
 
     <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory"/>
 
-    <om:search-server-query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
-
     <om:controller class="org.outermedia.solrfusion.FusionController$Factory"/>
 
     <om:solr-servers>
         <om:timeout>4000</om:timeout>
         <om:disaster-limit>1</om:disaster-limit>
         <om:error key="disaster-limit">Please try later again.</om:error>
+
 
         <om:query-parser
             class="org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory"/>
@@ -70,6 +71,8 @@
             <map-multi-value-type key="arr"/>
         </om:response-renderer>
 
+        <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
+
         <om:solr-server name="Bibliothek A" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
@@ -79,6 +82,8 @@
                 class="org.outermedia.solrfusion.DefaultScore$Factory"/>
 
             <om:unique-key>id</om:unique-key>
+
+            <om:max-docs>100</om:max-docs>
 
             <om:field name="id" fusion-name="id"/>
             <om:field name="Titel" fusion-name="title"/>

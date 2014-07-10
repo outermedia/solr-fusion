@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
+import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -21,7 +22,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 
 @Slf4j
 public class SolrFusionServletTest
@@ -106,7 +107,11 @@ public class SolrFusionServletTest
 
     protected void testBuildFusionRequestImpl(String fq)
     {
-        SolrFusionServlet servlet = new SolrFusionServlet();
+        SolrFusionServlet servlet = spy(new SolrFusionServlet());
+        Configuration cfg = mock(Configuration.class);
+        doReturn(10).when(cfg).getDefaultPageSize();
+        doReturn("score desc").when(cfg).getDefaultSearchField();
+        servlet.setCfg(cfg);
         Map<String, String[]> requestParams = new HashMap<>();
         String q = "title:schiller";
         requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{q});
@@ -206,7 +211,11 @@ public class SolrFusionServletTest
     @Test
     public void testBuildFusionRequestWithKnownRenderer()
     {
-        SolrFusionServlet servlet = new SolrFusionServlet();
+        SolrFusionServlet servlet = spy(new SolrFusionServlet());
+        Configuration cfg = mock(Configuration.class);
+        doReturn(10).when(cfg).getDefaultPageSize();
+        doReturn("score desc").when(cfg).getDefaultSearchField();
+        servlet.setCfg(cfg);
         Map<String, String[]> requestParams = new HashMap<>();
         String q = "title:schiller";
         requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{q});

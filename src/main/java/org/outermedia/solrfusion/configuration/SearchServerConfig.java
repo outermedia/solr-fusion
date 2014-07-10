@@ -22,7 +22,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "searchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
     {
-        "url", "scoreFactory", "responseParserFactory", "queryBuilderFactory", "idFieldName",
+        "url", "scoreFactory", "responseParserFactory", "queryBuilderFactory", "idFieldName", "maxDocs",
         "fieldMappings"
     })
 @Getter
@@ -52,6 +52,9 @@ public class SearchServerConfig extends
 
     @XmlElement(name = "unique-key", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private String idFieldName;
+
+    @XmlElement(name = "max-docs", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    private int maxDocs;
 
     @XmlElement(name = "field", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private List<FieldMapping> fieldMappings;

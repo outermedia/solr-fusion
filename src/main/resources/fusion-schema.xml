@@ -30,6 +30,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
 
     <om:default-search-field>title</om:default-search-field>
+
+    <om:default-sort-field>score desc</om:default-sort-field>
     
     <!-- in a Solr query the operator is explicitly set to rewrite the default -->
     <om:default-operator>AND</om:default-operator>
@@ -58,6 +60,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         <om:error key="disaster-limit">Ihre Anfrage konnte nicht von ausreichend
             vielen Systemen beantwortet werden.
         </om:error>
+        <!-- the default number of documents to return -->
+        <om:page-size>10</om:page-size>
         
         <!-- factory controls re-usage of created objects -->
         <om:query-parser class="org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory"/>
@@ -103,6 +107,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             <!-- the <id-generator> has to know how to identify solr -->
             <!-- docs by id -->
             <om:unique-key>id</om:unique-key>
+
+            <!-- the max number of documents to request from this search server -->
+            <om:max-docs>100</om:max-docs>
 
             <!-- the following field mappings have to cover all -->
             <!-- fields listed in <fusion-schema-fields> -->
@@ -249,10 +256,15 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             <!-- h(eight) and d(epth) -->
             <!--  
             <om:field name="w,h,d" fusion-name="measure">
-                <om:change>
+                <om:add>
                     <om:query type="extract-width" name="w" />
                     <om:query type="extract-height" name="h" />
                     <om:query type="extract-depth" name="d" />
+                </om:add>
+                <om:drop>
+                    <om:query />
+                </om:drop>
+                <om:change>
                     <om:response type="merge-measure-units">
                         <width-field>w</width-field>
                         <height-field>h</height-field>
@@ -265,10 +277,15 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             <!-- merge 3 fields into "B x H x T" -->
             <!--  
             <om:field name="measure" fusion-name="w,h,d">
-                <om:change>
+                <om:add>
                     <om:response type="extract-width" fusion-name="w" />
                     <om:response type="extract-height" fusion-name="h" />
                     <om:response type="extract-depth" fusion-name="d" />
+                </om:add>
+                <om:drop>
+                    <om:response />
+                </om:drop>
+                <om:change>
                     <om:query type="merge-measure-units">
                         <width-field>w</width-field>
                         <height-field>h</height-field>

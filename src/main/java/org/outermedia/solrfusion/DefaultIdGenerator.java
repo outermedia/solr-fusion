@@ -15,6 +15,7 @@ import org.outermedia.solrfusion.configuration.IdGeneratorFactory;
 @Getter
 public class DefaultIdGenerator implements IdGeneratorIfc
 {
+    private final static String SEPARATOR = "#";
     private String fusionIdField;
 
     /**
@@ -27,7 +28,19 @@ public class DefaultIdGenerator implements IdGeneratorIfc
     @Override
     public String computeId(String serverName, String searchServerDocId)
     {
-        return serverName + "#" + searchServerDocId;
+        return serverName + SEPARATOR + searchServerDocId;
+    }
+
+    @Override public String getSearchServerIdFromFusionId(String fusionDocId)
+    {
+        int hashPos = fusionDocId.indexOf(SEPARATOR);
+        return fusionDocId.substring(0, hashPos);
+    }
+
+    @Override public String getSearchServerDocIdFromFusionId(String fusionDocId)
+    {
+        int hashPos = fusionDocId.indexOf(SEPARATOR);
+        return fusionDocId.substring(hashPos + 1);
     }
 
     public static class Factory

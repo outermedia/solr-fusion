@@ -10,7 +10,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.outermedia.solrfusion.SolrFusionRequestParams;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseException;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
@@ -19,6 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Map;
+
+import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 /**
  * This class is able to send requests to a solr server and to receive answers.
@@ -30,12 +31,14 @@ import java.util.Map;
 @Slf4j
 public class DefaultSolrAdapter implements SearchServerAdapterIfc
 {
-
-    private final int DEFAULT_TIMEOUT = 4000;
-    private final String QUERY_PARAMETER = "q";
-    private final String FILTER_QUERY_PARAMETER = "fq";
-    private final String WRITER_TYPE_PARAMETER = "wt";
-    private final String DEFAULT_WRITER_TYPE_PARAMETER = "xml";
+    public final static String QUERY_PARAMETER = "q";
+    public final static String FILTER_QUERY_PARAMETER = "fq";
+    public final static String WRITER_TYPE_PARAMETER = "wt";
+    public final static String DEFAULT_WRITER_TYPE_PARAMETER = "xml";
+    public final static String START_PARAMETER = "start";
+    public final static String ROWS_PARAMETER = "rows";
+    public final static String SORT_PARAMETER = "sort";
+    public final static String FIELDS_TO_RETURN_PARAMETER = "fl";
 
     private String url;
 
@@ -50,16 +53,24 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     public InputStream sendQuery(Map<String, String> params, int timeout) throws URISyntaxException, IOException
     {
         URIBuilder ub = new URIBuilder(url);
-        String q = params.get(SolrFusionRequestParams.QUERY.getRequestParamName());
+        String q = params.get(QUERY.getRequestParamName());
         ub.setParameter(QUERY_PARAMETER, q);
-        String fq = params.get(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName());
+        String fq = params.get(FILTER_QUERY.getRequestParamName());
         if (fq != null)
         {
             ub.setParameter(FILTER_QUERY_PARAMETER, fq);
         }
-        ub.setParameter(WRITER_TYPE_PARAMETER, DEFAULT_WRITER_TYPE_PARAMETER);
+        String responseFormat = params.get(WRITER_TYPE.getRequestParamName());
+        ub.setParameter(WRITER_TYPE_PARAMETER, responseFormat);
+        String start = params.get(START.getRequestParamName());
+        ub.setParameter(START_PARAMETER, start);
+        String rows = params.get(PAGE_SIZE.getRequestParamName());
+        ub.setParameter(ROWS_PARAMETER, rows);
+        String sortField = params.get(SORT.getRequestParamName());
+        ub.setParameter(SORT_PARAMETER, sortField);
+        ub.setParameter(FIELDS_TO_RETURN_PARAMETER, "* " + sortField);
 
-        log.debug("Sending query to host {}: q={} fq={}", url, q, fq);
+        log.debug("Sending query to host {}: q={} fq={} start={} rows={} sort={}", url, q, fq, start, rows, sortField);
 
         HttpClient client = newHttpClient();
 
@@ -92,11 +103,8 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
 
     protected RequestConfig newRequestConfig(int timeout)
     {
-        return RequestConfig.custom()
-            .setSocketTimeout(timeout)
-            .setConnectTimeout(timeout)
-            .setConnectionRequestTimeout(timeout)
-            .build();
+        return RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).setConnectionRequestTimeout(
+            timeout).build();
     }
 
     protected HttpGet newHttpGet(URIBuilder ub) throws URISyntaxException

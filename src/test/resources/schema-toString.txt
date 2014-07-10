@@ -34,7 +34,7 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
  name=extract-depth),
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=merge-measure-units)], defaultSearchField=title, defaultOperator=AND, idGeneratorFactory=IdGeneratorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultIdGenerator$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultIdGenerator$Factory),
+ name=merge-measure-units)], defaultSearchField=title, defaultSortField=score desc, defaultOperator=AND, idGeneratorFactory=IdGeneratorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultIdGenerator$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultIdGenerator$Factory),
  fusionFieldName=id),
  responseConsolidatorFactory=ResponseConsolidatorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.ResponseConsolidator$Factory, typeClassFactory=class org.outermedia.solrfusion.response.ResponseConsolidator$Factory)),
  responseMapperFactory=ResponseMapperFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.ResponseMapper$Factory, typeClassFactory=class org.outermedia.solrfusion.mapper.ResponseMapper$Factory),
@@ -44,7 +44,7 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  searchServerConfigs=GlobalSearchServerConfig(timeout=4000, disasterLimit=3, disasterMessage=Message(key=disaster-limit, text=Ihre Anfrage konnte nicht von ausreichend
  vielen Systemen beantwortet werden.
  ),
- queryParserFactory=QueryParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory, typeClassFactory=class org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory)),
+  defaultPageSize=10, queryParserFactory=QueryParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory, typeClassFactory=class org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory)),
  defaultResponseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultResponseParser$Factory, typeClassFactory=class org.outermedia.solrfusion.response.DefaultResponseParser$Factory)),
  responseRendererFactories=[
  ResponseRendererFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory, typeClassFactory=class org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory),
@@ -62,7 +62,7 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  searchServerName=Bibliothek A, searchServerVersion=3.6, url=http://host:port/solr/xyz, scoreFactory=ScoreFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultScore$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultScore$Factory),
  factor=1.2),
  responseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.SpecialResponseParser$Factory, typeClassFactory=class org.outermedia.solrfusion.SpecialResponseParser$Factory)),
- queryBuilderFactory=null, idFieldName=id, fieldMappings=[
+ queryBuilderFactory=null, idFieldName=id, maxDocs=100, fieldMappings=[
  FieldMapping(searchServersName=start, fusionName=city, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=EXACT_NAME_AND_FUSION_NAME, specificFusionName=null, specificSearchServerName=null, operations=null),
  FieldMapping(searchServersName=*_text, fusionName=*_t, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=EXACT_NAME_AND_FUSION_NAME, specificFusionName=null, specificSearchServerName=null, operations=null),
  FieldMapping(searchServersName=int_*, fusionName=i_*, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=EXACT_NAME_AND_FUSION_NAME, specificFusionName=null, specificSearchServerName=null, operations=null),

@@ -20,4 +20,8 @@ public interface IdGeneratorIfc extends Initiable<IdGeneratorFactory>
      * @return the field name
      */
     public String getFusionIdField();
+
+    public String getSearchServerIdFromFusionId(String fusionDocId);
+
+    public String getSearchServerDocIdFromFusionId(String fusionDocId);
 }
