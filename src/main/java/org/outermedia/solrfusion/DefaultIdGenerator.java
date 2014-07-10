@@ -11,6 +11,10 @@ import org.outermedia.solrfusion.configuration.IdGeneratorFactory;
  * @author ballmann
  */
 
+/**
+ * This class creates for a given server name and a solr document id a unique fusion document id.
+ * Don't use "#" in server names.
+ */
 @ToString
 @Getter
 public class DefaultIdGenerator implements IdGeneratorIfc
