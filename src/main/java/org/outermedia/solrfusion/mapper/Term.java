@@ -36,6 +36,8 @@ public class Term
     // set by a change operation
     private boolean wasMapped;
 
+    private boolean processed;
+
     // added by an add operation
     private List<Query> newQueryTerms;
     // added by an add operation
@@ -45,6 +47,7 @@ public class Term
     {
         removed = false;
         wasMapped = false;
+        processed = false;
     }
 
     public static Term newFusionTerm(String field, String... termStr)
@@ -109,6 +112,7 @@ public class Term
         removed = false;
         wasMapped = false;
         newQueryTerms = null;
+        processed = false;
     }
 
     public void resetSearchServerField()
@@ -119,6 +123,51 @@ public class Term
         removed = false;
         wasMapped = false;
         newResponseValues = null;
+        processed = false;
+    }
+
+    public int compareFusionValue(Term t)
+    {
+        // sort the uncomparable to one end
+        int unknownReturnValue = -1;
+        if (t == null)
+        {
+            return unknownReturnValue;
+        }
+        List<String> thisFusionValues = getFusionFieldValue();
+        List<String> otherFusionValues = t.getFusionFieldValue();
+        if (thisFusionValues == null && otherFusionValues == null)
+        {
+            return 0;
+        }
+        if (otherFusionValues == null)
+        {
+            return unknownReturnValue;
+        }
+        int thisSize = thisFusionValues.size();
+        int otherSize = otherFusionValues.size();
+        if (thisSize >= 1)
+        {
+            if (otherSize == 0)
+            {
+                return unknownReturnValue;
+            }
+            else
+            {
+                // for multi values only the first field is used!
+                String otherValue = otherFusionValues.get(0);
+                String thisValue = thisFusionValues.get(0);
+                return thisValue.compareTo(otherValue);
+            }
+        }
+        else
+        {
+            if (otherSize == 0)
+            {
+                return 0;
+            }
+            return -unknownReturnValue;
+        }
     }
 
 }

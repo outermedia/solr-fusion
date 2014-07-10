@@ -37,10 +37,10 @@ public class Document implements VisitableDocument
     private List<SolrMultiValuedField> solrMultiValuedFields;
 
     /**
-     * Find a field of any type by name.
+     * Find a field of any type by search server name.
      *
      * @param name solrname of the field
-     * @return null or an instnace of {@link SolrSingleValuedField}
+     * @return null or an instance of {@link SolrSingleValuedField}
      */
     public SolrField findFieldByName(final String name)
     {
@@ -59,6 +59,31 @@ public class Document implements VisitableDocument
             }
         }, null);
     }
+
+    /**
+     * Find a field of any type by fusion name.
+     *
+     * @param fusionName fusion name of the field
+     * @return null or an instance of {@link SolrSingleValuedField}
+     */
+    public SolrField findFieldByFusionName(final String fusionName)
+    {
+        return accept(new FieldVisitor()
+        {
+            @Override
+            public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
+            {
+                return !fusionName.equals(sf.getTerm().getFusionFieldName());
+            }
+
+            @Override
+            public boolean visitField(SolrMultiValuedField sf, ScriptEnv env)
+            {
+                return !fusionName.equals(sf.getTerm().getFusionFieldName());
+            }
+        }, null);
+    }
+
 
     @Override
     public SolrField accept(FieldVisitor visitor, ScriptEnv env)
@@ -87,7 +112,7 @@ public class Document implements VisitableDocument
     }
 
     /**
-     * Get a document's field value by name. For multi value fields, all values are returned. Note: An instance of class
+     * Get a document's field value by a search server name. Note: An instance of class
      * Term contains the original and mapped value.
      *
      * @param fieldName the field's name for which to return the value
@@ -97,6 +122,24 @@ public class Document implements VisitableDocument
     {
         Term result = null;
         SolrField sf = findFieldByName(fieldName);
+        if (sf != null)
+        {
+            result = sf.getTerm();
+        }
+        return result;
+    }
+
+    /**
+     * Get a document's field value by a fusion name. Note: An instance of class
+     * Term contains the original and mapped value.
+     *
+     * @param fusionFieldName the field's name for which to return the value
+     * @return null if field was not found or the Term of the field
+     */
+    public Term getFieldTermByFusionName(String fusionFieldName)
+    {
+        Term result = null;
+        SolrField sf = findFieldByFusionName(fusionFieldName);
         if (sf != null)
         {
             result = sf.getTerm();
@@ -148,4 +191,5 @@ public class Document implements VisitableDocument
         }
         return result;
     }
+
 }

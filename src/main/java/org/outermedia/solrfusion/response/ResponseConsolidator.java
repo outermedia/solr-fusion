@@ -2,7 +2,7 @@ package org.outermedia.solrfusion.response;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.outermedia.solrfusion.adapter.SearchServerResponseException;
+import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
@@ -18,22 +18,22 @@ import java.util.List;
  */
 @ToString
 @Slf4j
-public class ResponseConsolidator implements ResponseConsolidatorIfc
+public class ResponseConsolidator extends AbstractResponseConsolidator
 {
     private List<ClosableIterator<Document, SearchServerResponseInfo>> responseStreams;
-    private List<SearchServerResponseException> errorResponses;
 
     /**
      * Factory creates instances only.
      */
     private ResponseConsolidator()
     {
+        super();
         responseStreams = new ArrayList<>();
-        errorResponses = new ArrayList<>();
     }
 
     @Override
-    public void addResultStream(Configuration config, SearchServerConfig searchServerConfig, ClosableIterator<Document, SearchServerResponseInfo> docIterator)
+    public void addResultStream(Configuration config, SearchServerConfig searchServerConfig,
+        ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request)
     {
         try
         {
@@ -41,15 +41,16 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
         }
         catch (Exception e)
         {
-            log.error("Caught exception while adding document responses of server {}", searchServerConfig.getSearchServerName(), e);
+            log.error("Caught exception while adding document responses of server {}",
+                searchServerConfig.getSearchServerName(), e);
         }
     }
 
     protected MappingClosableIterator getNewMappingClosableIterator(Configuration config,
-            SearchServerConfig searchServerConfig, ClosableIterator<Document,SearchServerResponseInfo> docIterator)
-            throws InvocationTargetException, IllegalAccessException
+        SearchServerConfig searchServerConfig, ClosableIterator<Document, SearchServerResponseInfo> docIterator)
+        throws InvocationTargetException, IllegalAccessException
     {
-        return new MappingClosableIterator(docIterator, config, searchServerConfig);
+        return new MappingClosableIterator(docIterator, config, searchServerConfig, null);
     }
 
     public int numberOfResponseStreams()
@@ -59,7 +60,7 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
 
     public void clear()
     {
-        for (ClosableIterator<Document,SearchServerResponseInfo> docIterator : responseStreams)
+        for (ClosableIterator<Document, SearchServerResponseInfo> docIterator : responseStreams)
         {
             docIterator.close();
         }
@@ -68,33 +69,15 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
     }
 
     @Override
-    public ClosableIterator<Document,SearchServerResponseInfo> getResponseIterator()
+    public ClosableIterator<Document, SearchServerResponseInfo> getResponseIterator(Configuration config,
+        FusionRequest fusionRequest)
     {
         return new DefaultClosableIterator(responseStreams);
     }
 
-    @Override public void addErrorResponse(SearchServerResponseException se)
-    {
-        errorResponses.add(se);
-    }
-
-    public String getErrorMsg()
-    {
-        StringBuilder sb = new StringBuilder();
-        if(errorResponses != null)
-        {
-            for(SearchServerResponseException ex : errorResponses)
-            {
-                sb.append(ex.getMessage());
-                sb.append('\n');
-            }
-        }
-        return sb.toString();
-    }
-
     public static class Factory
     {
-        public static ResponseConsolidator getInstance()
+        public static ResponseConsolidatorIfc getInstance()
         {
             return new ResponseConsolidator();
         }

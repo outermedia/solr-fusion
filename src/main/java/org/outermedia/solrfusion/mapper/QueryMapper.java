@@ -76,6 +76,7 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
         {
             m.applyQueryMappings(t, env);
         }
+        t.setProcessed(true);
         return true;
     }
 

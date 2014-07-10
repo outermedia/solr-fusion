@@ -17,17 +17,18 @@ import java.util.List;
  * Created by ballmann on 04.06.14.
  */
 @Slf4j
-@ToString(exclude = {"serverConfig", "doc"})
+@ToString(exclude = {"serverConfig", "doc", "config"})
 public class ResponseMapper implements ResponseMapperIfc
 {
     protected static final boolean MISSING_MAPPING_POLICY_IGNORE = true;
     protected static final boolean MISSING_MAPPING_POLICY_THROW_EXCEPTION = false;
 
-    protected static final String DOC_FIELD_NAME_SCORE = "score";
     private SearchServerConfig serverConfig;
     private Document doc;
     private boolean missingMappingPolicy;
     private Configuration config;
+    private List<String> searchServerFieldNamesToMap;
+    protected int numberOfMappedFields;
 
     /**
      * Factory creates instances only.
@@ -46,28 +47,34 @@ public class ResponseMapper implements ResponseMapperIfc
     }
 
     /**
-     * Map a response of a certain search server (serverConfig) to the fusion fields.
-     *
-     * @param config       the whole configuration
+     * Map a response of a certain search server (serverConfig) to the fusion fields. Already processed fields are
+     * ignored.
+     *  @param config       the whole configuration
      * @param serverConfig the currently used server's configuration
      * @param doc          one response document to process
      * @param env          the environment needed by the scripts which transform values
+     * @param searchServerFieldNamesToMap  either null (for all) or a list of searchServerFieldName fields to map
+     * @return number of mapped fields
      */
-    public void mapResponse(Configuration config, SearchServerConfig serverConfig, Document doc, ScriptEnv env)
+    public int mapResponse(Configuration config, SearchServerConfig serverConfig, Document doc, ScriptEnv env,
+        List<String> searchServerFieldNamesToMap)
     {
         this.serverConfig = serverConfig;
         this.doc = doc;
         this.config = config;
+        this.searchServerFieldNamesToMap = searchServerFieldNamesToMap;
         env.setConfiguration(config);
-        doc.accept(this, env);
+        numberOfMappedFields = 0;
         setFusionDocId(config, doc);
         correctScore(doc);
+        doc.accept(this, env);
+        return numberOfMappedFields;
     }
 
     protected void correctScore(Document doc)
     {
         Term scoreTerm = doc.getFieldTermByName(DOC_FIELD_NAME_SCORE);
-        if (scoreTerm != null)
+        if (scoreTerm != null && !scoreTerm.isProcessed())
         {
             try
             {
@@ -88,10 +95,12 @@ public class ResponseMapper implements ResponseMapperIfc
                     scoreTerm.setFusionFieldValue(newScoreVal);
                     scoreTerm.setWasMapped(true);
                     scoreTerm.setFusionField(config.findFieldByName(DOC_FIELD_NAME_SCORE));
+                    scoreTerm.setProcessed(true);
                 }
                 catch (Exception e)
                 {
-                    log.warn("Can't parse double value '{}'. score is not corrected and not set.", searchServerScoreStr, e);
+                    log.warn("Can't parse double value '{}'. score is not corrected and not set.", searchServerScoreStr,
+                        e);
                 }
             }
             catch (Exception e)
@@ -113,7 +122,7 @@ public class ResponseMapper implements ResponseMapperIfc
             if (missingMappingPolicy == MISSING_MAPPING_POLICY_THROW_EXCEPTION)
             {
                 String message = "Found no mapping for fusion field '"
-                        + searchServerFieldName + "'";
+                    + searchServerFieldName + "'";
                 throw new MissingSearchServerFieldMapping(message);
             }
             else
@@ -139,13 +148,20 @@ public class ResponseMapper implements ResponseMapperIfc
             if (idTerm == null || idTerm.getSearchServerFieldValue() == null)
             {
                 throw new RuntimeException("Found no id (" + serverConfig.getIdFieldName() + ") in response of server '"
-                        + serverConfig.getSearchServerName() + "'");
+                    + serverConfig.getSearchServerName() + "'");
             }
-            String id = idGenerator.computeId(serverConfig.getSearchServerName(), idTerm.getSearchServerFieldValue().get(0));
-            idTerm.setFusionFieldName(idGenerator.getFusionIdField());
-            List<String> newId = new ArrayList<>();
-            newId.add(id);
-            idTerm.setFusionFieldValue(newId);
+            if(!idTerm.isProcessed())
+            {
+                String id = idGenerator.computeId(serverConfig.getSearchServerName(),
+                    idTerm.getSearchServerFieldValue().get(0));
+                idTerm.setFusionFieldName(idGenerator.getFusionIdField());
+                List<String> newId = new ArrayList<>();
+                newId.add(id);
+                idTerm.setFusionFieldValue(newId);
+                idTerm.setProcessed(true);
+                idTerm.setWasMapped(true);
+                idTerm.setFusionField(config.findFieldByName(config.getIdGenerator().getFusionIdField()));
+            }
         }
         catch (Exception e)
         {
@@ -158,8 +174,8 @@ public class ResponseMapper implements ResponseMapperIfc
     {
         Boolean ignoreMissingMappings = config.getIgnoreMissingMappings();
         missingMappingPolicy =
-                (ignoreMissingMappings != null && ignoreMissingMappings.booleanValue()) ? MISSING_MAPPING_POLICY_IGNORE
-                        : MISSING_MAPPING_POLICY_THROW_EXCEPTION;
+            (ignoreMissingMappings != null && ignoreMissingMappings.booleanValue()) ? MISSING_MAPPING_POLICY_IGNORE
+                : MISSING_MAPPING_POLICY_THROW_EXCEPTION;
     }
 
     public void ignoreMissingMappings()
@@ -167,17 +183,39 @@ public class ResponseMapper implements ResponseMapperIfc
         missingMappingPolicy = MISSING_MAPPING_POLICY_IGNORE;
     }
 
+    protected boolean processField(String searchServerFieldName, Term t)
+    {
+        boolean ok = !t.isProcessed();
+        if(ok && searchServerFieldNamesToMap != null)
+        {
+            ok = searchServerFieldNamesToMap.contains(searchServerFieldName);
+        }
+        return ok;
+    }
+
+    protected void mapField(String fieldName, Term t, ScriptEnv env)
+    {
+        if (processField(fieldName, t))
+        {
+            List<FieldMapping> mappings = getFieldMappings(fieldName);
+            if(mappings.size() > 0)
+            {
+                for (FieldMapping m : mappings)
+                {
+                    m.applyResponseMappings(t, env, getFusionField(env, m));
+                }
+                t.setProcessed(true);
+                numberOfMappedFields++;
+            }
+        }
+    }
+
     // ---- Visitor methods --------------------------------------------------------------------------------------------
 
     @Override
     public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
     {
-        List<FieldMapping> mappings = getFieldMappings(sf.getFieldName());
-        Term t = sf.getTerm();
-        for (FieldMapping m : mappings)
-        {
-            m.applyResponseMappings(t, env, getFusionField(env, m));
-        }
+        mapField(sf.getFieldName(), sf.getTerm(), env);
         // always continue visiting
         return true;
     }
@@ -185,12 +223,7 @@ public class ResponseMapper implements ResponseMapperIfc
     @Override
     public boolean visitField(SolrMultiValuedField sf, ScriptEnv env)
     {
-        List<FieldMapping> mappings = getFieldMappings(sf.getFieldName());
-        Term t = sf.getTerm();
-        for (FieldMapping m : mappings)
-        {
-            m.applyResponseMappings(t, env, getFusionField(env, m));
-        }
+        mapField(sf.getFieldName(), sf.getTerm(), env);
         // always continue visiting
         return true;
     }

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.PropertyConfigurator;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Util;
+import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -17,30 +18,29 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
+import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
+
 @Slf4j
 @Getter
 @Setter
 public class SolrFusionServlet extends HttpServlet
 {
+    protected static final String HEADER_LOCALE = "_LOCALE";
     /**
      * Default serialization id.
      */
     private static final long serialVersionUID = 1L;
-
+    private final static long FIVE_MIN_IN_MILLIS = 1000 * 60 * 5;
     public static String ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS = "Found too many query parameters (%s). Expected only 1, but got %d";
     public static String ERROR_MSG_FOUND_NO_QUERY_PARAMETER = "Found no query parameter (%s)";
     public static String ERROR_MSG_FUSION_SCHEMA_FILE_NOT_CONFIGURED = "Fusion schema file not configured.";
-
     public static String INIT_PARAM_FUSION_SCHEMA = "fusion-schema";
     public static String INIT_PARAM_FUSION_SCHEMA_XSD = "fusion-schema-xsd";
-
-    protected static final String HEADER_LOCALE = "_LOCALE";
-
+    // TODO static cfg, so that all servlets share the same config?
     private Configuration cfg;
     private String fusionXsdFileName;
     private long lastModifiedOfLoadedSolrFusionSchema = 0L;
     private long solrFusionSchemaLoadTime = 0L;
-    private final static long FIVE_MIN_IN_MILLIS = 1000 * 60 * 5;
     private String fusionSchemaFileName;
 
     static
@@ -62,8 +62,7 @@ public class SolrFusionServlet extends HttpServlet
      * @param response the answer is a typical solr response.
      */
     @Override
-    protected void doGet(HttpServletRequest request,
-        HttpServletResponse response) throws ServletException, IOException
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         // check for modifications
         loadSolrFusionConfig(fusionSchemaFileName, request.getParameter("forceSchemaReload") != null);
@@ -137,8 +136,7 @@ public class SolrFusionServlet extends HttpServlet
                 long lastModified = absolutePathToFusionSchema.lastModified();
                 if (force || lastModifiedOfLoadedSolrFusionSchema != lastModified)
                 {
-                    cfg = xmlUtil.unmarshal(Configuration.class, fusionSchemaFileName,
-                        fusionXsdFileName);
+                    cfg = xmlUtil.unmarshal(Configuration.class, fusionSchemaFileName, fusionXsdFileName);
                     lastModifiedOfLoadedSolrFusionSchema = lastModified;
                 }
                 else
@@ -169,52 +167,87 @@ public class SolrFusionServlet extends HttpServlet
         throws ServletException
     {
         FusionRequest fusionRequest = getNewFusionRequest();
-        String qParam = SolrFusionRequestParams.QUERY.getRequestParamName();
-        fusionRequest.setQuery(getRequiredSingleSearchParamValue(requestParams, qParam));
-        String fqParam = SolrFusionRequestParams.FILTER_QUERY.getRequestParamName();
-        fusionRequest.setFilterQuery(getOptionalSingleSearchParamValue(requestParams, fqParam));
-        String wtParam = SolrFusionRequestParams.WRITER_TYPE.getRequestParamName();
-        fusionRequest.setResponseTypeFromString(getOptionalSingleSearchParamValue(requestParams, wtParam));
+
+        fusionRequest.setQuery(getRequiredSingleSearchParamValue(requestParams, QUERY));
+        fusionRequest.setFilterQuery(getOptionalSingleSearchParamValue(requestParams, FILTER_QUERY, null));
+        // TODO configure default response type in solrfusion schema?
+        fusionRequest.setResponseTypeFromString(getOptionalSingleSearchParamValue(requestParams, WRITER_TYPE, "xml"));
         Locale sentLocale = (Locale) headerValues.get(HEADER_LOCALE);
         if (sentLocale == null)
         {
             sentLocale = Locale.GERMAN;
         }
         fusionRequest.setLocale(sentLocale);
+        String startStr = getOptionalSingleSearchParamValue(requestParams, START, "0");
+        fusionRequest.setStart(parseInt(startStr, 0));
+        int defaultPageSize = cfg.getDefaultPageSize();
+        String pageSizeStr = getOptionalSingleSearchParamValue(requestParams, PAGE_SIZE,
+            String.valueOf(defaultPageSize));
+        fusionRequest.setPageSize(parseInt(pageSizeStr, defaultPageSize));
+        String sortStr = getOptionalSingleSearchParamValue(requestParams, SORT, cfg.getDefaultSearchField());
+        // "<SPACE> desc" in the case a field's name contains "desc" too
+        // because sortStr is trimmed a single "desc" would be treated right
+        boolean sortAsc = !sortStr.contains(" desc");
+        StringTokenizer st = new StringTokenizer(sortStr, " ");
+        fusionRequest.setSolrFusionSortField(st.nextToken());
+        fusionRequest.setSortAsc(sortAsc);
+
         return fusionRequest;
     }
 
-    protected String getRequiredSingleSearchParamValue(Map<String, String[]> requestParams, String searchParamName)
-        throws ServletException
+    protected int parseInt(String s, int defaultValue)
     {
-        String[] qs = requestParams.get(searchParamName);
+        int result = defaultValue;
+        try
+        {
+            result = Integer.parseInt(s);
+            if (result < 0)
+            {
+                log.error("Ignoring negative start '{}'. Using {} instead.", s, defaultValue);
+                result = defaultValue;
+            }
+        }
+        catch (Exception e)
+        {
+            result = defaultValue;
+            log.error("Couldn't parse '{}' to int. Using {} instead.", s, defaultValue);
+        }
+        return result;
+    }
+
+    protected String getRequiredSingleSearchParamValue(Map<String, String[]> requestParams,
+        SolrFusionRequestParams searchParamName) throws ServletException
+    {
+        String requestParamName = searchParamName.getRequestParamName();
+        String[] qs = requestParams.get(requestParamName);
         if (qs == null || qs.length == 0)
         {
-            throw new ServletException(buildErrorMessage(ERROR_MSG_FOUND_NO_QUERY_PARAMETER, searchParamName));
+            throw new ServletException(buildErrorMessage(ERROR_MSG_FOUND_NO_QUERY_PARAMETER, requestParamName));
         }
         if (qs.length > 1)
         {
             throw new ServletException(
-                buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, searchParamName, qs.length));
+                buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, requestParamName, qs.length));
         }
-        return qs[0];
+        return qs[0].trim();
     }
 
-    protected String getOptionalSingleSearchParamValue(Map<String, String[]> requestParams, String searchParamName)
-        throws ServletException
+    protected String getOptionalSingleSearchParamValue(Map<String, String[]> requestParams,
+        SolrFusionRequestParams searchParamName, String defaultValue) throws ServletException
     {
-        String s = null;
-        String[] qs = requestParams.get(searchParamName);
+        String s = defaultValue;
+        String requestParamName = searchParamName.getRequestParamName();
+        String[] qs = requestParams.get(requestParamName);
         if (qs != null)
         {
             if (qs.length == 1)
             {
-                s = qs[0];
+                s = qs[0].trim();
             }
             else if (qs.length > 1)
             {
                 throw new ServletException(
-                    buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, searchParamName, qs.length));
+                    buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, requestParamName, qs.length));
             }
         }
         return s;

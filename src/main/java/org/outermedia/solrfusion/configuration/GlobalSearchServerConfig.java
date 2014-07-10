@@ -28,7 +28,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "globalSearchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
         {
-                "timeout", "disasterLimit", "disasterMessage", "queryParserFactory",
+                "timeout", "disasterLimit", "disasterMessage", "defaultPageSize", "queryParserFactory",
                 "defaultResponseParserFactory", "responseRendererFactories", "queryBuilderFactory", "merge",
                 "searchServerConfigs"
         })
@@ -45,6 +45,9 @@ public class GlobalSearchServerConfig
 
     @XmlElement(name = "error", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private Message disasterMessage;
+
+    @XmlElement(name = "page-size", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    private int defaultPageSize;
 
     @XmlElement(name = "query-parser", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private QueryParserFactory queryParserFactory;
@@ -146,5 +149,28 @@ public class GlobalSearchServerConfig
             }
         }
         return result;
+    }
+
+    /**
+     * Get a search server's configuration by the server's name.
+     *
+     * @param searchServerId
+     * @return null or an object
+     */
+    public SearchServerConfig getSearchServerConfigById(String searchServerId)
+    {
+        SearchServerConfig result = null;
+        if (searchServerConfigs != null)
+        {
+            for (SearchServerConfig config : searchServerConfigs)
+            {
+                if(searchServerId.equals(config.getSearchServerName()))
+                {
+                    result = config;
+                    break;
+                }
+            }
+        }
+        return  result;
     }
 }

@@ -3,6 +3,7 @@ package org.outermedia.solrfusion;
 import lombok.Getter;
 import lombok.Setter;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
+import org.outermedia.solrfusion.query.parser.Query;
 
 import javax.servlet.ServletException;
 import java.util.HashMap;
@@ -20,9 +21,25 @@ public class FusionRequest
 
     private String filterQuery;
 
+    private int start;
+
+    private int pageSize;
+
     private Locale locale;
 
+    private Query parsedQuery;
+
+    private Query parsedFilterQuery;
+
     private ResponseRendererType responseType;
+
+    private String solrFusionSortField;
+
+    private String searchServerSortField;
+
+    // otherwise desc
+    private boolean sortAsc;
+
 
     public FusionRequest()
     {

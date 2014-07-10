@@ -28,7 +28,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder =
         {
-                "fusionFields", "scriptTypes", "defaultSearchField", "defaultOperator",
+                "fusionFields", "scriptTypes", "defaultSearchField", "defaultSortField", "defaultOperator",
                 "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory",
                 "queryMapperFactory", "controllerFactory",
                 "searchServerConfigs"
@@ -51,6 +51,11 @@ public class Configuration
     @Getter
     @Setter
     private String defaultSearchField;
+
+    @XmlElement(name = "default-sort-field", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @Getter
+    @Setter
+    private String defaultSortField;
 
     @XmlElement(name = "default-operator", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     @Getter
@@ -257,5 +262,30 @@ public class Configuration
     public FusionControllerIfc getController() throws InvocationTargetException, IllegalAccessException
     {
         return controllerFactory.getInstance();
+    }
+
+    /**
+     * Get the default page size.
+     *
+     * @return a number
+     */
+    public int getDefaultPageSize()
+    {
+        return searchServerConfigs.getDefaultPageSize();
+    }
+
+    /**
+     *  Get a search server's configuration by the server's id.
+     *
+     * @param fusionDocId
+     * @return null or an object
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    public SearchServerConfig getSearchServerConfigByFusionDocId(String fusionDocId)
+        throws InvocationTargetException, IllegalAccessException
+    {
+        String searchServerId = getIdGenerator().getSearchServerIdFromFusionId(fusionDocId);
+        return searchServerConfigs.getSearchServerConfigById(searchServerId);
     }
 }

@@ -7,6 +7,7 @@
         <xs:element name="fusion-schema-fields" type="tns:fusionSchemaFields"/>
         <xs:element name="script-type" type="tns:scriptType" maxOccurs="unbounded"/>
         <xs:element name="default-search-field" type="xs:string"/>
+        <xs:element name="default-sort-field" type="xs:string"/>
         <xs:element name="default-operator" type="xs:string"/>
         <xs:element name="id-generator" type="tns:idGenerator"/>
         <xs:element name="response-consolidator" type="tns:response-consolidator"/>
@@ -71,6 +72,7 @@
       <xs:element name="timeout" type="xs:int"/>
       <xs:element name="disaster-limit" type="xs:int"/>
       <xs:element name="error" type="tns:message"/>
+      <xs:element name="page-size" type="xs:int"/>
       <xs:element name="query-parser" type="tns:queryParser"/>
       <xs:element name="response-parser" type="tns:responseParser"/>
       <xs:element name="response-renderer" type="tns:responseRenderer" maxOccurs="unbounded"/>
@@ -132,6 +134,7 @@
       <xs:element name="response-parser" type="tns:responseParser" minOccurs="0"/>
       <xs:element name="query-builder" type="tns:queryBuilder" minOccurs="0"/>
       <xs:element name="unique-key" type="xs:string"/>
+      <xs:element name="max-docs" type="xs:int"/>
       <xs:element name="field" type="tns:fieldMapping" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="class" type="xs:string" use="required"/>

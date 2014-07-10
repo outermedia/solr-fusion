@@ -110,14 +110,16 @@ public class FieldMapping
     {
         // initialize term with mapped name and original fusion value
         term.setSearchServerFieldName(specificSearchServerName);
-        term.setSearchServerFieldValue(term.getFusionFieldValue());
+        List<String> fusionFieldValues = term.getFusionFieldValue();
+        term.setSearchServerFieldValue(fusionFieldValues);
         term.setWasMapped(true);
 
         ScriptEnv newEnv = new ScriptEnv(env);
         newEnv.setBinding(ScriptEnv.ENV_FUSION_FIELD, term.getFusionFieldName());
         newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_FIELD, term.getSearchServerFieldName());
         newEnv.setBinding(ScriptEnv.ENV_FUSION_FIELD_DECLARATION, term.getFusionField());
-        if (operations != null)
+        // don't apply operations on null value (empty list is OK)
+        if (operations != null && fusionFieldValues != null)
         {
             for (Operation o : operations)
             {
@@ -166,14 +168,16 @@ public class FieldMapping
 
         // initialize term with mapped name and original search server value
         term.setFusionFieldName(specificFusionName);
-        term.setFusionFieldValue(term.getSearchServerFieldValue());
+        List<String> searchServerFieldValues = term.getSearchServerFieldValue();
+        term.setFusionFieldValue(searchServerFieldValues);
         term.setWasMapped(true);
 
         ScriptEnv newEnv = new ScriptEnv(env);
         newEnv.setBinding(ScriptEnv.ENV_FUSION_FIELD, term.getFusionFieldName());
         newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_FIELD, term.getSearchServerFieldName());
         newEnv.setBinding(ScriptEnv.ENV_FUSION_FIELD_DECLARATION, term.getFusionField());
-        if (operations != null)
+        // don't apply operations on null value (empty list is OK)
+        if (operations != null && searchServerFieldValues != null)
         {
             for (Operation o : operations)
             {
