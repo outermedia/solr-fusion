@@ -22,7 +22,7 @@ import java.util.List;
  */
 
 /**
- * Supports sorting and paging.
+ * Supports sorting and paging and a limit of documents to retrieve (per search server).
  */
 @ToString
 @Slf4j
@@ -52,10 +52,13 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             // map sort field and id only
             MappingClosableIterator mapper = new MappingClosableIterator(docIterator, config, searchServerConfig,
                 searchServerFieldsToMap);
+            int docCount = 0;
             while (mapper.hasNext())
             {
                 allDocs.add(mapper.next());
+                docCount++;
             }
+            log.debug("Added {} docs from server {}", searchServerConfig.getSearchServerName(), docCount);
         }
         catch (Exception e)
         {

@@ -41,7 +41,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         class="org.outermedia.solrfusion.DefaultIdGenerator$Factory" />
 
     <!-- The consolidator merges the document responses of all configured search servers -->
-    <om:response-consolidator class="org.outermedia.solrfusion.response.ResponseConsolidator$Factory"/>
+    <om:response-consolidator class="org.outermedia.solrfusion.response.PagingResponseConsolidator$Factory"/>
 
     <!-- This component transforms a search server's document into a fusion document, -->
     <!-- i.e. all search server's fields are mapped to fusion fields. -->

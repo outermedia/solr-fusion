@@ -15,6 +15,9 @@ import java.util.List;
 
 /**
  * Created by ballmann on 04.06.14.
+ * <p/>
+ * A simple consolidator which neither supports paging or sorting. All hits of all search servers are returned in a
+ * round-robin manner.
  */
 @ToString
 @Slf4j

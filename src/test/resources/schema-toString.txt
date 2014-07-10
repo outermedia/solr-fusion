@@ -36,7 +36,7 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
  name=merge-measure-units)], defaultSearchField=title, defaultSortField=score desc, defaultOperator=AND, idGeneratorFactory=IdGeneratorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultIdGenerator$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultIdGenerator$Factory),
  fusionFieldName=id),
- responseConsolidatorFactory=ResponseConsolidatorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.ResponseConsolidator$Factory, typeClassFactory=class org.outermedia.solrfusion.response.ResponseConsolidator$Factory)),
+ responseConsolidatorFactory=ResponseConsolidatorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.PagingResponseConsolidator$Factory, typeClassFactory=class org.outermedia.solrfusion.response.PagingResponseConsolidator$Factory)),
  responseMapperFactory=ResponseMapperFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.ResponseMapper$Factory, typeClassFactory=class org.outermedia.solrfusion.mapper.ResponseMapper$Factory),
  ignoreMissingMappings=false),
  queryMapperFactory=QueryMapperFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.QueryMapper$Factory, typeClassFactory=class org.outermedia.solrfusion.mapper.QueryMapper$Factory)),

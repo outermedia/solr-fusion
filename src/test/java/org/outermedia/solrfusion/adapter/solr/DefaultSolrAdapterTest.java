@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import static org.mockito.Mockito.*;
+import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 /**
  * Created by stephan on 11.06.14.
@@ -140,7 +141,8 @@ public class DefaultSolrAdapterTest
         // without response
         when(entity.getContent()).thenReturn(null);
         Map<String, String> params = new HashMap<>();
-        params.put(SolrFusionRequestParams.QUERY.getRequestParamName(), "*:*");
+        params.put(QUERY.getRequestParamName(), "*:*");
+        params.put(SORT.getRequestParamName(), "score desc");
         try
         {
             adapter.sendQuery(params, 3000);

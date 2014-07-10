@@ -83,7 +83,7 @@ public class ConsolidatorTest
     public void testErrorHandling()
         throws SAXException, JAXBException, ParserConfigurationException, FileNotFoundException
     {
-        ResponseConsolidatorIfc rc = ResponseConsolidator.Factory.getInstance();
+        ResponseConsolidatorIfc rc = PagingResponseConsolidator.Factory.getInstance();
         String case2Response = "<response>\n" +
             "    <lst name=\"responseHeader\">\n" +
             "        <int name=\"status\">500</int>\n" +
