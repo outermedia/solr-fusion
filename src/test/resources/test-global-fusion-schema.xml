@@ -40,6 +40,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <om:script-type name="merge-measure-units" class="org.outermedia.solrfusion.types.DummyType"/>
 
     <om:default-search-field>title</om:default-search-field>
+
+    <om:default-sort-field>score desc</om:default-sort-field>
     
     <!-- in a Solr query the operator is explicitly set to rewrite the default -->
     <om:default-operator>AND</om:default-operator>
@@ -63,6 +65,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         <om:error key="disaster-limit">Ihre Anfrage konnte nicht von ausreichend
             vielen Systemen beantwortet werden.
         </om:error>
+        <om:page-size>10</om:page-size>
         
         <!-- factory controls re-usage of created objects -->
         <om:query-parser class="org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory"/>

@@ -31,6 +31,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.anyMapOf;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.*;
+import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 /**
  * Created by ballmann on 6/6/14.
@@ -83,6 +84,8 @@ public class ControllerFilterQueryTest
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:Schiller -title:morgen");
         fusionRequest.setFilterQuery("author:Goethe -title:tomorrow");
+        fusionRequest.setSortAsc(false);
+        fusionRequest.setSolrFusionSortField("score");
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
         // System.out.println("ERROR " + fusionResponse.getErrorMessage());
@@ -173,8 +176,11 @@ public class ControllerFilterQueryTest
     protected Map<String, String> buildParams(String q, String fq)
     {
         Map<String, String> result = new HashMap<>();
-        result.put(SolrFusionRequestParams.QUERY.getRequestParamName(), q);
-        result.put(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(), fq);
+        result.put(QUERY.getRequestParamName(), q);
+        result.put(FILTER_QUERY.getRequestParamName(), fq);
+        result.put(PAGE_SIZE.getRequestParamName(), "10");
+        result.put(START.getRequestParamName(), "0");
+        result.put(SORT.getRequestParamName(), "score desc");
         return result;
     }
 
@@ -216,6 +222,10 @@ public class ControllerFilterQueryTest
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery(queryStr);
         fusionRequest.setFilterQuery(filterQueryStr);
+        fusionRequest.setPageSize(10);
+        fusionRequest.setStart(0);
+        fusionRequest.setSortAsc(false);
+        fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(spyCfg, fusionRequest, fusionResponse);

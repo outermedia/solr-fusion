@@ -69,7 +69,7 @@ public class FreemarkerResponseRendererTest
 
 //        consolidator.addResultStream(configuration, searchServerConfig, docIterator);
 
-        ClosableIterator<Document, SearchServerResponseInfo> closableIterator =  new MappingClosableIterator(docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0));
+        ClosableIterator<Document, SearchServerResponseInfo> closableIterator =  new MappingClosableIterator(docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null);
 
         String xmlResponse = responseRenderer.getResponseString(closableIterator, "steak", null);
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
@@ -110,7 +110,7 @@ public class FreemarkerResponseRendererTest
 
 //        consolidator.addResultStream(configuration, searchServerConfig, docIterator);
 
-        ClosableIterator<Document, SearchServerResponseInfo> closableIterator =  new MappingClosableIterator(docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0));
+        ClosableIterator<Document, SearchServerResponseInfo> closableIterator =  new MappingClosableIterator(docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null);
 
         String jsonResponse = responseRenderer.getResponseString(closableIterator, "steak", null);
 

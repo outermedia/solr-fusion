@@ -14,7 +14,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.outermedia.solrfusion.SolrFusionRequestParams;
+import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseException;

@@ -17,6 +17,8 @@
     <!-- docs by id -->
     <om:unique-key>id</om:unique-key>
 
+    <om:max-docs>100</om:max-docs>
+
     <!-- the following field mappings have to cover all -->
     <!-- fields listed in <fusion-schema-fields> -->
 

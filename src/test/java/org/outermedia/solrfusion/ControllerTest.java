@@ -28,8 +28,10 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.anyMapOf;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.*;
+import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 /**
  * Created by ballmann on 6/6/14.
@@ -81,6 +83,8 @@ public class ControllerTest
         FusionControllerIfc fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:Schiller -title:morgen");
+        fusionRequest.setSortAsc(false);
+        fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
         // System.out.println("ERROR " + fusionResponse.getErrorMessage());
@@ -127,6 +131,8 @@ public class ControllerTest
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:Schiller -title:morgen");
+        fusionRequest.setSortAsc(false);
+        fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         // response format not set
         fusionRequest.setResponseType(null);
         FusionResponse fusionResponse = new FusionResponse();
@@ -156,6 +162,8 @@ public class ControllerTest
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:Schiller -title:morgen");
+        fusionRequest.setSortAsc(false);
+        fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
@@ -173,6 +181,8 @@ public class ControllerTest
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:Schiller -title:morgen");
+        fusionRequest.setSortAsc(false);
+        fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
@@ -190,6 +200,8 @@ public class ControllerTest
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:*:Schiller");
+        fusionRequest.setSortAsc(false);
+        fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
@@ -240,7 +252,10 @@ public class ControllerTest
     protected Map<String, String> buildParams(String q)
     {
         Map<String, String> result = new HashMap<>();
-        result.put(SolrFusionRequestParams.QUERY.getRequestParamName(), q);
+        result.put(QUERY.getRequestParamName(), q);
+        result.put(PAGE_SIZE.getRequestParamName(), "10");
+        result.put(START.getRequestParamName(), "0");
+        result.put(SORT.getRequestParamName(), "score desc");
         return result;
     }
 
@@ -281,6 +296,10 @@ public class ControllerTest
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("title:abc");
+        fusionRequest.setPageSize(10);
+        fusionRequest.setStart(0);
+        fusionRequest.setSortAsc(false);
+        fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(spyCfg, fusionRequest, fusionResponse);
