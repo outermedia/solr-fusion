@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
@@ -66,8 +67,11 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         ub.setParameter(START_PARAMETER, start);
         String rows = params.get(PAGE_SIZE.getRequestParamName());
         ub.setParameter(ROWS_PARAMETER, rows);
-        String sortField = params.get(SORT.getRequestParamName());
-        ub.setParameter(SORT_PARAMETER, sortField);
+        String sortStr = params.get(SORT.getRequestParamName());
+        ub.setParameter(SORT_PARAMETER, sortStr);
+        StringTokenizer st = new StringTokenizer(sortStr, " ");
+        String sortField = st.nextToken();
+        String sortDir = st.nextToken();
         ub.setParameter(FIELDS_TO_RETURN_PARAMETER, "* " + sortField);
 
         log.debug("Sending query to host {}: q={} fq={} start={} rows={} sort={}", url, q, fq, start, rows, sortField);

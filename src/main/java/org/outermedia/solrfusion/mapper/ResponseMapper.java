@@ -49,11 +49,12 @@ public class ResponseMapper implements ResponseMapperIfc
     /**
      * Map a response of a certain search server (serverConfig) to the fusion fields. Already processed fields are
      * ignored.
-     *  @param config       the whole configuration
-     * @param serverConfig the currently used server's configuration
-     * @param doc          one response document to process
-     * @param env          the environment needed by the scripts which transform values
-     * @param searchServerFieldNamesToMap  either null (for all) or a list of searchServerFieldName fields to map
+     *
+     * @param config                      the whole configuration
+     * @param serverConfig                the currently used server's configuration
+     * @param doc                         one response document to process
+     * @param env                         the environment needed by the scripts which transform values
+     * @param searchServerFieldNamesToMap either null (for all) or a list of searchServerFieldName fields to map
      * @return number of mapped fields
      */
     public int mapResponse(Configuration config, SearchServerConfig serverConfig, Document doc, ScriptEnv env,
@@ -96,6 +97,7 @@ public class ResponseMapper implements ResponseMapperIfc
                     scoreTerm.setWasMapped(true);
                     scoreTerm.setFusionField(config.findFieldByName(DOC_FIELD_NAME_SCORE));
                     scoreTerm.setProcessed(true);
+                    numberOfMappedFields++;
                 }
                 catch (Exception e)
                 {
@@ -121,8 +123,7 @@ public class ResponseMapper implements ResponseMapperIfc
         {
             if (missingMappingPolicy == MISSING_MAPPING_POLICY_THROW_EXCEPTION)
             {
-                String message = "Found no mapping for fusion field '"
-                    + searchServerFieldName + "'";
+                String message = "Found no mapping for fusion field '" + searchServerFieldName + "'";
                 throw new MissingSearchServerFieldMapping(message);
             }
             else
@@ -147,10 +148,11 @@ public class ResponseMapper implements ResponseMapperIfc
             Term idTerm = doc.getFieldTermByName(serverConfig.getIdFieldName());
             if (idTerm == null || idTerm.getSearchServerFieldValue() == null)
             {
-                throw new RuntimeException("Found no id (" + serverConfig.getIdFieldName() + ") in response of server '"
-                    + serverConfig.getSearchServerName() + "'");
+                throw new RuntimeException(
+                    "Found no id (" + serverConfig.getIdFieldName() + ") in response of server '" +
+                        serverConfig.getSearchServerName() + "'");
             }
-            if(!idTerm.isProcessed())
+            if (!idTerm.isProcessed())
             {
                 String id = idGenerator.computeId(serverConfig.getSearchServerName(),
                     idTerm.getSearchServerFieldValue().get(0));
@@ -161,6 +163,7 @@ public class ResponseMapper implements ResponseMapperIfc
                 idTerm.setProcessed(true);
                 idTerm.setWasMapped(true);
                 idTerm.setFusionField(config.findFieldByName(config.getIdGenerator().getFusionIdField()));
+                numberOfMappedFields++;
             }
         }
         catch (Exception e)
@@ -186,7 +189,7 @@ public class ResponseMapper implements ResponseMapperIfc
     protected boolean processField(String searchServerFieldName, Term t)
     {
         boolean ok = !t.isProcessed();
-        if(ok && searchServerFieldNamesToMap != null)
+        if (ok && searchServerFieldNamesToMap != null)
         {
             ok = searchServerFieldNamesToMap.contains(searchServerFieldName);
         }
@@ -198,7 +201,7 @@ public class ResponseMapper implements ResponseMapperIfc
         if (processField(fieldName, t))
         {
             List<FieldMapping> mappings = getFieldMappings(fieldName);
-            if(mappings.size() > 0)
+            if (mappings.size() > 0)
             {
                 for (FieldMapping m : mappings)
                 {

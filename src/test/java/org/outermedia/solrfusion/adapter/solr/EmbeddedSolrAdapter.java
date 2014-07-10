@@ -64,14 +64,11 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
         String sortField = st.nextToken();
         String sortDir = st.nextToken();
         query.setSort(sortField, sortDir.equals("asc") ? SolrQuery.ORDER.asc : SolrQuery.ORDER.desc);
-        query.setFields("* " + sortField);
+        query.setFields("*", sortField);
 
         log.debug("Sending query: q={} fq={} start={} rows={} sort={}", q, fq, start, rows, sortStr);
 
-//        query.setRows(10);
-//        query.addField("id");
-//        query.addField("author");
-//        query.addField("score");
+
         QueryResponse response = null;
         try
         {
@@ -79,7 +76,7 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
         }
         catch (SolrServerException e)
         {
-            e.printStackTrace();
+            log.error("Caught exception during solr send/receive", e);
         }
         InputStream inputStream = TestHelper.embeddedQueryToXmlInputStream(query, response);
 
