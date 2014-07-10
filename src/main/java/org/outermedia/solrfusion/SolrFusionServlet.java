@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.PropertyConfigurator;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 
@@ -67,14 +68,23 @@ public class SolrFusionServlet extends HttpServlet
         // check for modifications
         loadSolrFusionConfig(fusionSchemaFileName, request.getParameter("forceSchemaReload") != null);
         // set encoding/content type BEFORE getWriter() is called!
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/xml;charset=UTF-8");
-        response.setStatus(200);
         PrintWriter pw = response.getWriter();
         Map<String, Object> headerValues = collectHeader(request);
         FusionRequest fusionRequest = buildFusionRequest(request.getParameterMap(), headerValues);
         FusionResponse fusionResponse = getNewFusionResponse();
         String responseStr = process(fusionRequest, fusionResponse);
+
+        ResponseRendererType rendererType = fusionRequest.getResponseType();
+        if (rendererType == ResponseRendererType.JSON)
+            response.setContentType("application/json;charset=UTF-8");
+        else if (rendererType == ResponseRendererType.PHP)
+            response.setContentType("text/x-php;charset=UTF-8");
+        else
+            response.setContentType("text/xml;charset=UTF-8");
+
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(200);
+
         pw.println(responseStr);
     }
 
