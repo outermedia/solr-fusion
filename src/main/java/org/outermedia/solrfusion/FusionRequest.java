@@ -18,6 +18,8 @@ public class FusionRequest
 {
     private String query;
 
+    private String filterQuery;
+
     private Locale locale;
 
     private ResponseRendererType responseType;

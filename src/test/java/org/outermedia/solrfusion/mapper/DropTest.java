@@ -64,7 +64,7 @@ public class DropTest extends AbstractTypeTest
         Assert.assertTrue("Expected that field f9-abc was removed", sourceRegExpField.isRemoved());
 
         ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(docs, info);
-        String ds = renderer.getResponseString(docStream, "a:dummy");
+        String ds = renderer.getResponseString(docStream, "a:dummy", null);
         String expectedField = "    <arr name=\"text4\">\n" +
                 "      <str><![CDATA[something]]></str>\n" +
                 "      <str><![CDATA[other]]></str>\n" +
@@ -82,7 +82,7 @@ public class DropTest extends AbstractTypeTest
         Assert.assertFalse("Expected that field f8 was not removed", sourceField.isRemoved());
         // System.out.println("W/O DROP "+sourceField.toString());
         docStream = new ClosableListIterator<>(docs, info);
-        String s = renderer.getResponseString(docStream, "a:dummy");
+        String s = renderer.getResponseString(docStream, "a:dummy", null);
         Assert.assertTrue("Field f8 was not mapped.", s.contains(expectedField));
     }
 
@@ -118,7 +118,7 @@ public class DropTest extends AbstractTypeTest
         Term term2 = Term.newFusionTerm("text5-abc", "bla2");
         Query query = new TermQuery(term);
         Query query2 = new TermQuery(term2);
-        BooleanQuery q = new BooleanQuery(false);
+        BooleanQuery q = new BooleanQuery();
         q.add(new BooleanClause(query, BooleanClause.Occur.OCCUR_MUST));
         q.add(new BooleanClause(query2, BooleanClause.Occur.OCCUR_MUST));
 
@@ -129,7 +129,7 @@ public class DropTest extends AbstractTypeTest
         Assert.assertTrue("Expected that field text4 was removed", term.isRemoved());
         Assert.assertTrue("Expected that field text5-abc was removed", term2.isRemoved());
         QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
-        String ds = qb.buildQueryString(query);
+        String ds = qb.buildQueryString(query, cfg);
         Assert.assertEquals("Expected no query", "", ds);
 
         // remove <drop> for text4
@@ -142,7 +142,7 @@ public class DropTest extends AbstractTypeTest
         qm.mapQuery(cfg, serverConfig, query, env);
         // System.out.println(term.toString());
         Assert.assertFalse("Expected that field text4 was not removed", term.isRemoved());
-        String s = qb.buildQueryString(query);
+        String s = qb.buildQueryString(query, cfg);
         Assert.assertEquals("Found different query than expected", "f8:bla1", s);
     }
 

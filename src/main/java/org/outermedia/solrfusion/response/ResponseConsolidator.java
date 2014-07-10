@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.response;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.adapter.SearchServerResponseException;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ResponseConsolidator implements ResponseConsolidatorIfc
 {
     private List<ClosableIterator<Document, SearchServerResponseInfo>> responseStreams;
+    private List<SearchServerResponseException> errorResponses;
 
     /**
      * Factory creates instances only.
@@ -27,6 +29,7 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
     private ResponseConsolidator()
     {
         responseStreams = new ArrayList<>();
+        errorResponses = new ArrayList<>();
     }
 
     @Override
@@ -61,12 +64,32 @@ public class ResponseConsolidator implements ResponseConsolidatorIfc
             docIterator.close();
         }
         responseStreams.clear();
+        errorResponses.clear();
     }
 
     @Override
     public ClosableIterator<Document,SearchServerResponseInfo> getResponseIterator()
     {
         return new DefaultClosableIterator(responseStreams);
+    }
+
+    @Override public void addErrorResponse(SearchServerResponseException se)
+    {
+        errorResponses.add(se);
+    }
+
+    public String getErrorMsg()
+    {
+        StringBuilder sb = new StringBuilder();
+        if(errorResponses != null)
+        {
+            for(SearchServerResponseException ex : errorResponses)
+            {
+                sb.append(ex.getMessage());
+                sb.append('\n');
+            }
+        }
+        return sb.toString();
     }
 
     public static class Factory

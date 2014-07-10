@@ -19,7 +19,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>SolrFusionServlet</servlet-name>
-        <url-pattern>/search</url-pattern>
+        <url-pattern>/biblio/select</url-pattern>
     </servlet-mapping>
 
     <servlet>

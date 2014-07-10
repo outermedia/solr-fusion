@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.query.parser;
 
 import lombok.Getter;
 import lombok.ToString;
+import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
@@ -11,23 +12,21 @@ import java.util.Calendar;
 @ToString(callSuper = true)
 public abstract class NumericRangeQuery<T> extends Query
 {
-    private String fusionFieldName;
+    private Term min;
+    private Term max;
     private boolean minInclusive;
     private boolean maxInclusive;
 
-    private T min;
-    private T max;
 
     @Override
     public abstract void accept(QueryVisitor visitor, ScriptEnv env);
 
     protected NumericRangeQuery(String field, boolean minInclusive, boolean maxInclusive, T min, T max)
     {
-        this.fusionFieldName = field;
         this.minInclusive = minInclusive;
         this.maxInclusive = maxInclusive;
-        this.min = min;
-        this.max = max;
+        this.min = Term.newFusionTerm(field,limitValueAsString(min));
+        this.max = Term.newFusionTerm(field,limitValueAsString(max));
     }
 
 	public static NumericRangeQuery newLongRange(String field, Long min,
@@ -67,5 +66,15 @@ public abstract class NumericRangeQuery<T> extends Query
             Calendar min, Calendar max, boolean minInclusive, boolean maxInclusive)
     {
         return new DateRangeQuery(field, min, max, minInclusive, maxInclusive);
+    }
+
+    protected String limitValueAsString(T v)
+    {
+        String result = "*";
+        if(v != null)
+        {
+            result = v.toString();
+        }
+        return result;
     }
 }

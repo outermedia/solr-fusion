@@ -17,11 +17,16 @@ public class FreemarkerResponseHeader
     private String query;
 
     @Getter
+    private String filterQuery;
+
+    @Getter
     private int rows;
 
-    public FreemarkerResponseHeader(ClosableIterator<Document, SearchServerResponseInfo> docStream, String query)
+    public FreemarkerResponseHeader(ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
+        String filterQuery)
     {
         this.rows = docStream.size();
         this.query = query;
+        this.filterQuery = filterQuery;
     }
 }

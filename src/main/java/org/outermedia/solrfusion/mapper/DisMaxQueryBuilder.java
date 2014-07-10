@@ -1,5 +1,6 @@
 package org.outermedia.solrfusion.mapper;
 
+import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryBuilderFactory;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -17,19 +18,27 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
 {
     protected List<Query> newQueries;
     protected StringBuilder queryBuilder;
+    protected Configuration configuration;
 
     /**
      * Build the query string for a search server.
      *
      * @param query the query to map to process
+     * @param configuration
      */
     @Override
-    public String buildQueryString(Query query)
+    public String buildQueryString(Query query, Configuration configuration)
     {
         newQueries = new ArrayList<>();
         queryBuilder = new StringBuilder();
+        this.configuration = configuration;
         query.accept(this, null);
         return queryBuilder.toString();
+    }
+
+    @Override public StringBuilder getQueryBuilderOutput()
+    {
+        return queryBuilder;
     }
 
     @Override
@@ -62,22 +71,23 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     }
 
     @Override
-    public void visitQuery(Term term, ScriptEnv env)
+    public boolean visitQuery(Term term, ScriptEnv env, Float boost)
     {
-        buildSearchServerTermQuery(term, false);
+        boolean added = buildSearchServerTermQuery(term, false, boost);
         List<Query> l = term.getNewQueryTerms();
         if (l != null)
         {
             newQueries.addAll(l);
         }
+        return added;
     }
 
-    protected void buildSearchServerTermQuery(Term term, boolean quoted)
+    protected boolean buildSearchServerTermQuery(Term term, boolean quoted, Float boost)
     {
+        boolean added = false;
         if (term.isWasMapped() && !term.isRemoved() && term.getSearchServerFieldValue() != null)
         {
-//            queryBuilder.append(term.getSearchServerFieldName());
-//            queryBuilder.append(":");
+            added = true;
             if (quoted)
             {
                 queryBuilder.append('"');
@@ -87,38 +97,38 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
             {
                 queryBuilder.append('"');
             }
+            if(boost != null)
+            {
+                queryBuilder.append("^");
+                queryBuilder.append(boost);
+            }
         }
+        return added;
     }
 
     @Override
     public void visitQuery(BooleanQuery t, ScriptEnv env)
     {
+        // TODO
         t.visitQueryClauses(this, env);
     }
 
     @Override
     public void visitQuery(FuzzyQuery t, ScriptEnv env)
     {
-        visitQuery((TermQuery) t, env);
+        // NOP, not supported by dismax parser
     }
 
     @Override
     public void visitQuery(MatchAllDocsQuery t, ScriptEnv env)
     {
-        queryBuilder.append("");
+        // NOP, dismax doesn't know *:*, so leave empty
     }
 
     @Override
-    public void visitQuery(MultiPhraseQuery t, ScriptEnv env)
+    public void visitQuery(PhraseQuery pq, ScriptEnv env)
     {
-        // TODO
-    }
-
-    @Override
-    public void visitQuery(PhraseQuery t, ScriptEnv env)
-    {
-        // TODO
-
+        buildSearchServerTermQuery(pq.getTerm(), true, pq.getBoostValue());
     }
 
     @Override
@@ -131,13 +141,13 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(WildcardQuery t, ScriptEnv env)
     {
-        // TODO
-
+        // NOP, leave empty
     }
 
     @Override
     public void visitQuery(BooleanClause booleanClause, ScriptEnv env)
     {
+        // TODO
         queryBuilder.append(" ");
         switch (booleanClause.getOccur())
         {

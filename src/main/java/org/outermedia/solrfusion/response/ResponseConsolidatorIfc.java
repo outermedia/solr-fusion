@@ -1,5 +1,6 @@
 package org.outermedia.solrfusion.response;
 
+import org.outermedia.solrfusion.adapter.SearchServerResponseException;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Initiable;
@@ -22,4 +23,7 @@ public interface ResponseConsolidatorIfc extends Initiable<ResponseConsolidatorF
 
     public ClosableIterator<Document,SearchServerResponseInfo> getResponseIterator();
 
+    public void addErrorResponse(SearchServerResponseException se);
+
+    public String getErrorMsg();
 }

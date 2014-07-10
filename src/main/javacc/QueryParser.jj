@@ -82,7 +82,7 @@ public class QueryParser {
 
   String field;
   int phraseSlop = 0;
-  float fuzzyMinSim = 2.0f;
+  int fuzzyMinSim = 2;
   int fuzzyPrefixLength = 0;
   Locale locale = Locale.getDefault();
   Configuration configuration;
@@ -118,7 +118,7 @@ public class QueryParser {
     try {
       // TopLevelQuery is a Query followed by the end-of-input (EOF)
       Query res = TopLevelQuery(field);
-      return (res != null ? res : newBooleanQuery(false));
+      return (res != null ? res : newBooleanQuery());
     }
     catch (ParseException tme) {
       // rethrow to include the original query:
@@ -154,7 +154,7 @@ public class QueryParser {
    /**
    * Get the minimal similarity for fuzzy queries.
    */
-  public float getFuzzyMinSim() {
+  public int getFuzzyMinSim() {
       return fuzzyMinSim;
   }
 
@@ -162,7 +162,7 @@ public class QueryParser {
    * Set the minimum similarity for fuzzy queries.
    * Default is 0.5f.
    */
-  public void setFuzzyMinSim(float fuzzyMinSim) {
+  public void setFuzzyMinSim(int fuzzyMinSim) {
       this.fuzzyMinSim = fuzzyMinSim;
   }
 
@@ -306,22 +306,16 @@ public class QueryParser {
   /**
    * @exception ParseException throw in overridden method to disallow
    */
-  protected TermQuery getFieldQuery(String field, String queryText, boolean quoted)  throws ParseException {
-    return newTermQuery(newTerm(field, queryText));
+  protected TermQuery getFieldQuery(String field, String queryText)  throws ParseException {
+    TermQuery tq = newTermQuery(newTerm(field, queryText));
+    return tq;
   }
 
-
-
-  /**
-   * Base implementation delegates to {@link #getFieldQuery(String,String,boolean)}.
-   * This method may be overridden, for example, to return
-   * a SpanNearQuery instead of a PhraseQuery.
-   *
-   * @exception ParseException throw in overridden method to disallow
-   */
-  protected TermQuery getFieldQuery(String field, String queryText, int slop)
+  protected PhraseQuery getPhraseQuery(String field, String queryText, Integer slop)
         throws ParseException {
-    return getFieldQuery(field, queryText, true);
+    PhraseQuery pq = new PhraseQuery(Term.newFusionTerm(field,queryText));
+    if(slop != null) pq.setMaxEdits(slop);
+    return pq;
   }
 
 
@@ -336,13 +330,8 @@ public class QueryParser {
     return newRangeQuery(field, part1, part2, inclusive);
   }
 
- /**
-  * Builds a new BooleanQuery instance
-  * @param disableCoord disable coord
-  * @return new BooleanQuery instance
-  */
-  protected BooleanQuery newBooleanQuery(boolean disableCoord) {
-    return new BooleanQuery(disableCoord); 
+  protected BooleanQuery newBooleanQuery() {
+    return new BooleanQuery();
   }
 
  /**
@@ -382,23 +371,7 @@ public class QueryParser {
     t.setFusionField(fusionField);
     return t;
   }
- 
-  /**
-   * Builds a new PhraseQuery instance
-   * @return new PhraseQuery instance
-   */
-  protected PhraseQuery newPhraseQuery(){
-    return new PhraseQuery();
-  }
- 
-  /**
-   * Builds a new MultiPhraseQuery instance
-   * @return new MultiPhraseQuery instance
-   */
-  protected MultiPhraseQuery newMultiPhraseQuery(){
-    return new MultiPhraseQuery();
-  }
- 
+
   /**
    * Builds a new PrefixQuery instance
    * @param prefix Prefix term
@@ -409,9 +382,8 @@ public class QueryParser {
     return query;
   }
 
-  protected FuzzyQuery newFuzzyQuery(Term term, float maxEdits, int prefixLength) {
-    // FuzzyQuery doesn't yet allow constant score rewrite
-    return new FuzzyQuery(term,maxEdits,prefixLength);
+  protected FuzzyQuery newFuzzyQuery(Term term, Integer maxEdits) {
+    return new FuzzyQuery(term,maxEdits);
   }
 
   /**
@@ -458,14 +430,19 @@ public class QueryParser {
 	} else if(isDateField(ft)) {
 		Calendar min = null;
 	    Calendar max = null;
+	    DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
+	    if(ft.getFormat() != null)
+	    {
+	        dateFormat = new SimpleDateFormat(ft.getFormat(), locale);
+	    }
 	    // for dates we want upper case 'T' and 'Z'
         if(part1 != null && !"*".equals(part1))
         {
-            min = checkDate(part1.toUpperCase(), false);
+            min = checkDate(part1.toUpperCase(), false, dateFormat);
         }
         if(part2 != null && !"*".equals(part2))
         {
-            max = checkDate(part2.toUpperCase(), inclusive);
+            max = checkDate(part2.toUpperCase(), inclusive, dateFormat);
         }
         query = NumericRangeQuery.newDateRange(field, min, max, inclusive, inclusive);
 	} else {
@@ -474,9 +451,8 @@ public class QueryParser {
     return query;
   }
 
-  protected Calendar checkDate(String ds, boolean endInclusive) throws ParseException
+  protected Calendar checkDate(String ds, boolean endInclusive, DateFormat df) throws ParseException
   {
-    DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
     df.setLenient(true);
     try {
       Date d1 = df.parse(ds);
@@ -575,35 +551,18 @@ public class QueryParser {
    *
    * @param clauses List that contains {@link BooleanClause} instances
    *    to join.
-   *
-   * @return Resulting {@link Query} object.
-   * @exception ParseException throw in overridden method to disallow
-   */
-  protected Query getBooleanQuery(List<BooleanClause> clauses) throws ParseException {
-    return getBooleanQuery(clauses, false);
-  }
-
-  /**
-   * Factory method for generating query, given a set of clauses.
-   * By default creates a boolean query composed of clauses passed in.
-   *
-   * Can be overridden by extending classes, to modify query being
-   * returned.
-   *
-   * @param clauses List that contains {@link BooleanClause} instances
-   *    to join.
    * @param disableCoord true if coord scoring should be disabled.
    *
    * @return Resulting {@link Query} object.
    * @exception ParseException throw in overridden method to disallow
    */
-  protected Query getBooleanQuery(List<BooleanClause> clauses, boolean disableCoord)
+  protected Query getBooleanQuery(List<BooleanClause> clauses)
     throws ParseException
   {
     if (clauses.size()==0) {
       return null; // all clause words were filtered away by the analyzer.
     }
-    BooleanQuery query = newBooleanQuery(disableCoord);
+    BooleanQuery query = newBooleanQuery();
     for(BooleanClause clause: clauses) {
       query.add(clause);
     }
@@ -691,13 +650,13 @@ public class QueryParser {
    * @return Resulting {@link Query} built for the term
    * @exception ParseException throw in overridden method to disallow
    */
-  protected FuzzyQuery getFuzzyQuery(String field, String termStr, float maxEdits) throws ParseException
+  protected FuzzyQuery getFuzzyQuery(String field, String termStr, Integer maxEdits) throws ParseException
   {
     if (lowercaseExpandedTerms) {
       termStr = termStr.toLowerCase();
     }
     Term t = newTerm(field, termStr);
-    return newFuzzyQuery(t, maxEdits, fuzzyPrefixLength);
+    return newFuzzyQuery(t, maxEdits);
   }
 
   /**
@@ -798,6 +757,25 @@ public class QueryParser {
       sb.append(c);
     }
     return sb.toString();
+  }
+
+  protected Integer getFuzzySlop(Token slop) throws ParseException
+  {
+      Integer result = null;
+      if(slop != null) {
+          String slopStr = slop.image.substring(1);
+          try {
+            if(slopStr.length() > 0)
+                result = Float.valueOf(slopStr).intValue();
+          } catch (Exception ex1) {
+            log.warn("Can't parse fuzzy slop: '"+slopStr+"'", ex1);
+          }
+
+         if(result != null && (result < 0 || result > 2)){
+           throw new ParseException("Minimum similarity for a FuzzyQuery has to be between 0 and 2!");
+         }
+     }
+     return result;
   }
 
 }
@@ -1048,20 +1026,10 @@ Query Term(String field) : {
            discardEscapeChar(term.image.substring
           (0, term.image.length()-1)));
        } else if (fuzzy) {
-       	  float fms = fuzzyMinSim;
-       	  try {
-            fms = Float.valueOf(fuzzySlop.image.substring(1)).floatValue();
-       	  } catch (Exception ex1) {
-       	    log.warn("Can't parse fuzzy slop: '"+fuzzySlop.image.substring(1)+"'", ex1);
-       	  }
-       	 
-       	 if(fms < 0.0f || fms > 1.0f){
-       	   throw new ParseException("Minimum similarity for a FuzzyQuery has to be between 0.0f and 1.0f !");
-       	 }
-       	 
+       	  Integer fms = getFuzzySlop(fuzzySlop);
        	 result = getFuzzyQuery(field, termImage, fms);
        } else {
-         result = getFieldQuery(field, termImage, false);
+         result = getFieldQuery(field, termImage);
        }
      }
      | ( <RANGEIN_START> ( goop1=<RANGEIN_GOOP>|goop1=<RANGEIN_QUOTED>|goop1=<NUMBER> )
@@ -1111,15 +1079,8 @@ Query Term(String field) : {
        [ fuzzySlop=<FUZZY_SLOP> ]
        [ <CARAT> boost=<NUMBER> ]
        {
-         int s = phraseSlop;
-
-         if (fuzzySlop != null) {
-           try {
-             s = Float.valueOf(fuzzySlop.image.substring(1)).intValue();
-           }
-           catch (Exception ignored) { }
-         }
-         result = getFieldQuery(field, discardEscapeChar(term.image.substring(1, term.image.length()-1)), s);
+         Integer s = getFuzzySlop(fuzzySlop);
+         result = getPhraseQuery(field, discardEscapeChar(term.image.substring(1, term.image.length()-1)), s);
        }
   )
   {
@@ -1129,9 +1090,7 @@ Query Term(String field) : {
         f = Float.valueOf(boost.image).floatValue();
       }
       catch (Exception ignored) {
-    /* Should this be handled somehow? (defaults to "no boost", if
-     * boost number is invalid)
-     */
+        log.error("Caught exception while parsing boost value: "+boost.image);
       }
 
       // avoid boosting null queries, such as those caused by stop words

@@ -27,9 +27,10 @@ public class DefaultXmlResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(ClosableIterator<Document,SearchServerResponseInfo> docStream, String query)
+    public String getResponseString(ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
+        String filterQueryStr)
     {
-        return freemarkerResponseRenderer.getResponseString(docStream, query);
+        return freemarkerResponseRenderer.getResponseString(docStream, query, filterQueryStr);
     }
 
     public static class Factory

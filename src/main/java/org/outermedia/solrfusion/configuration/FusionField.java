@@ -34,6 +34,10 @@ public class FusionField
     @XmlAttribute(name = "format", required = false)
     private String format;
 
+    @XmlAttribute(name = "multi-value", required = false)
+    private Boolean multiValue;
+
+
     /**
      * Get the {@link #type}'s corresponding enum.
      *
@@ -57,12 +61,22 @@ public class FusionField
     }
 
     protected void afterUnmarshal(Unmarshaller u, Object parent)
-            throws UnmarshalException
+        throws UnmarshalException
     {
         FusionFieldList list = (FusionFieldList) parent;
         if (type == null)
         {
             type = ((FusionFieldList) parent).getDefaultType();
         }
+    }
+
+    public boolean isSingleValue()
+    {
+        return multiValue == null || Boolean.FALSE.equals(multiValue);
+    }
+
+    public boolean isMultiValue()
+    {
+        return Boolean.TRUE.equals(multiValue);
     }
 }

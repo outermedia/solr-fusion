@@ -41,7 +41,8 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(ClosableIterator<Document, SearchServerResponseInfo> docStream, String query)
+    public String getResponseString(ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
+        String filterQueryStr)
     {
         final StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -53,6 +54,10 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
         sb.append("    <str name=\"indent\">on</str>\n");
         sb.append("    <str name=\"start\">0</str>\n");
         sb.append("    <str name=\"q\"><![CDATA[" + query + "]]></str>\n");
+        if(filterQueryStr != null)
+        {
+            sb.append("    <str name=\"fq\"><![CDATA[" + filterQueryStr + "]]></str>\n");
+        }
         sb.append("    <str name=\"version\">2.2</str>\n");
         sb.append("    <str name=\"rows\">" + docStream.size() + "</str>\n");
         sb.append("  </lst>\n");

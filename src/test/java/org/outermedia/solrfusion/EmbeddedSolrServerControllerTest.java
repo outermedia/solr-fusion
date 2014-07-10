@@ -23,7 +23,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
@@ -53,7 +55,8 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
     private SearchServerConfig testSearchConfig;
 
     @Before
-    public void fillSolr() throws IOException, SolrServerException {
+    public void fillSolr() throws IOException, SolrServerException
+    {
         SolrInputDocument document = new SolrInputDocument();
         document.addField("id", String.valueOf(1));
         document.addField("title", String.valueOf("abc"));
@@ -70,7 +73,8 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
     }
 
     @After
-    public void cleanSolr() throws IOException, SolrServerException {
+    public void cleanSolr() throws IOException, SolrServerException
+    {
         firstServer.deleteByQuery("*:*");
     }
 
@@ -84,59 +88,71 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
 
     @Test
     public void testQueryWithMultipleServersAndResponseDocuments()
-            throws IOException, ParserConfigurationException, SAXException, JAXBException,
-            InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException,
+        InvocationTargetException, IllegalAccessException, URISyntaxException
     {
         testMultipleServers();
-        verify(testAdapter9000,times(1)).sendQuery("title:abc", 4000);
-        verify(testAdapter9002,times(1)).sendQuery("titleVT_eng:abc", 4000);
+        String qParam = SolrFusionRequestParams.QUERY.getRequestParamName();
+        verify(testAdapter9000, times(1)).sendQuery(buildMap(qParam, "title:abc"), 4000);
+        verify(testAdapter9002, times(1)).sendQuery(buildMap(qParam,"titleVT_eng:abc"), 4000);
+    }
+
+    protected Map<String, String> buildMap(String... v)
+    {
+        Map<String, String> result = new HashMap<>();
+        for (int i = 0; i < v.length; i += 2)
+        {
+            result.put(v[i], v[i + 1]);
+        }
+        return result;
     }
 
     @Test
     public void testQueryWithMultipleServersButNoResponseDocuments()
-            throws IOException, ParserConfigurationException, SAXException, JAXBException,
-            InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException,
+        InvocationTargetException, IllegalAccessException, URISyntaxException
     {
         String xml = testMultipleServers();
 
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<response>\n" +
-                "<lst name=\"responseHeader\">\n" +
-                "  <int name=\"status\">0</int>\n" +
-                "  <int name=\"QTime\">0</int>\n" +
-                "  <lst name=\"params\">\n" +
-                "    <str name=\"indent\">on</str>\n" +
-                "    <str name=\"start\">0</str>\n" +
-                "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
-                "    <str name=\"version\">2.2</str>\n" +
-                "    <str name=\"rows\">2</str>\n" +
-                "  </lst>\n" +
-                "</lst>\n" +
-                "<result name=\"response\" numFound=\"2\" start=\"0\">\n" +
-                "  <doc>\n" +
-                "    <str name=\"id\"><![CDATA[Bibliothek 9000#1]]></str>\n" +
-                "    <arr name=\"title\">\n" +
-                "      <str><![CDATA[abc]]></str>\n" +
-                "    </arr>\n" +
-                "  </doc>\n" +
-                "  <doc>\n" +
-                "    <str name=\"id\"><![CDATA[Bibliothek 9002#1]]></str>\n" +
-                "    <str name=\"title\"><![CDATA[abc]]></str>\n" +
-                "  </doc>\n" +
-                "</result>\n" +
-                "</response>";
+            "<response>\n" +
+            "<lst name=\"responseHeader\">\n" +
+            "  <int name=\"status\">0</int>\n" +
+            "  <int name=\"QTime\">0</int>\n" +
+            "  <lst name=\"params\">\n" +
+            "    <str name=\"indent\">on</str>\n" +
+            "    <str name=\"start\">0</str>\n" +
+            "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
+            "    <str name=\"version\">2.2</str>\n" +
+            "    <str name=\"rows\">2</str>\n" +
+            "  </lst>\n" +
+            "</lst>\n" +
+            "<result name=\"response\" numFound=\"2\" start=\"0\">\n" +
+            "  <doc>\n" +
+            "    <str name=\"id\"><![CDATA[Bibliothek 9000#1]]></str>\n" +
+            "    <arr name=\"title\">\n" +
+            "      <str><![CDATA[abc]]></str>\n" +
+            "    </arr>\n" +
+            "  </doc>\n" +
+            "  <doc>\n" +
+            "    <str name=\"id\"><![CDATA[Bibliothek 9002#1]]></str>\n" +
+            "    <str name=\"title\"><![CDATA[abc]]></str>\n" +
+            "  </doc>\n" +
+            "</result>\n" +
+            "</response>";
 
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000,times(1)).sendQuery("title:abc", 4000);
-        verify(testAdapter9002,times(1)).sendQuery("titleVT_eng:abc", 4000);
+        String qParam = SolrFusionRequestParams.QUERY.getRequestParamName();
+        verify(testAdapter9000, times(1)).sendQuery(buildMap(qParam,"title:abc"), 4000);
+        verify(testAdapter9002, times(1)).sendQuery(buildMap(qParam,"titleVT_eng:abc"), 4000);
     }
 
     protected String testMultipleServers()
-            throws IOException, ParserConfigurationException, SAXException, JAXBException,
-            InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException,
+        InvocationTargetException, IllegalAccessException, URISyntaxException
     {
         cfg = helper
-                .readFusionSchemaWithoutValidation("test-fusion-schema-embedder-solr-adapter.xml");
+            .readFusionSchemaWithoutValidation("test-fusion-schema-embedder-solr-adapter.xml");
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
         // the mapping is very incomplete, so ignore all unmapped fields
         testResponseMapper.ignoreMissingMappings();

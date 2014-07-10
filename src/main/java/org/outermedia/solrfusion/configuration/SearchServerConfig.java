@@ -21,15 +21,15 @@ import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "searchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
-        {
-                "url", "scoreFactory", "responseParserFactory", "queryBuilderFactory", "idFieldName",
-                "fieldMappings"
-        })
+    {
+        "url", "scoreFactory", "responseParserFactory", "queryBuilderFactory", "idFieldName",
+        "fieldMappings"
+    })
 @Getter
 @Setter
 @ToString(callSuper = true)
 public class SearchServerConfig extends
-        ConfiguredFactory<SearchServerAdapterIfc, SearchServerConfig>
+    ConfiguredFactory<SearchServerAdapterIfc, SearchServerConfig>
 {
     @XmlAttribute(name = "name", required = true)
     private String searchServerName;
@@ -43,7 +43,8 @@ public class SearchServerConfig extends
     @XmlElement(name = "score", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private ScoreFactory scoreFactory;
 
-    @XmlElement(name = "response-parser", namespace = "http://solrfusion.outermedia.org/configuration/", required = false)
+    @XmlElement(name = "response-parser", namespace = "http://solrfusion.outermedia.org/configuration/",
+        required = false)
     private ResponseParserFactory responseParserFactory;
 
     @XmlElement(name = "query-builder", namespace = "http://solrfusion.outermedia.org/configuration/", required = false)
@@ -99,7 +100,7 @@ public class SearchServerConfig extends
     }
 
     public ResponseParserIfc getResponseParser(ResponseParserIfc defaultResponseParser)
-            throws InvocationTargetException, IllegalAccessException
+        throws InvocationTargetException, IllegalAccessException
     {
         ResponseParserIfc result = defaultResponseParser;
         if (responseParserFactory != null)
@@ -110,7 +111,7 @@ public class SearchServerConfig extends
     }
 
     public QueryBuilderIfc getQueryBuilder(QueryBuilderIfc defaultQueryBuilder)
-            throws InvocationTargetException, IllegalAccessException
+        throws InvocationTargetException, IllegalAccessException
     {
         QueryBuilderIfc result = defaultQueryBuilder;
         if (queryBuilderFactory != null)

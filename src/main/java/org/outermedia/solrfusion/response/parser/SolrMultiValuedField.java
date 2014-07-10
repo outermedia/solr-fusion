@@ -21,7 +21,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public class SolrMultiValuedField extends SolrField
 {
 

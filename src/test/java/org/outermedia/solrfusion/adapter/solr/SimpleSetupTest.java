@@ -54,8 +54,8 @@ public class SimpleSetupTest extends SolrServerDualTestBase {
         ResponseParserIfc responseParser = DefaultResponseParser.Factory.getInstance();
         XmlResponse xmlResponse = responseParser.parse(inputStream);
 
-        Assert.assertEquals("Expected one document", 1, xmlResponse.getResult().getNumFound());
-        String expected = "[Document(solrSingleValuedFields=[SolrSingleValuedField(value=1), SolrSingleValuedField(value=Shakespeare)], solrMultiValuedFields=[SolrMultiValuedField(values=[Troilus und Cressida])])]";
-        Assert.assertEquals("Expected one document", expected, xmlResponse.getResult().getDocuments().toString());
+        Assert.assertEquals("Expected one document", 1, xmlResponse.getNumFound());
+        String expected = "[Document(solrSingleValuedFields=[SolrSingleValuedField(super=SolrField(fieldName=id), value=1), SolrSingleValuedField(super=SolrField(fieldName=author), value=Shakespeare)], solrMultiValuedFields=[SolrMultiValuedField(super=SolrField(fieldName=title), values=[Troilus und Cressida])])]";
+        Assert.assertEquals("Expected one document", expected, xmlResponse.getDocuments().toString());
     }
 }

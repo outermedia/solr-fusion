@@ -3,6 +3,7 @@ package org.outermedia.solrfusion;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.adapter.SearchServerResponseException;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ControllerFactory;
@@ -18,12 +19,14 @@ import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.Result;
+import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -35,8 +38,10 @@ public class FusionController implements FusionControllerIfc
     private Configuration configuration;
     private ResetQueryState queryResetter;
     private QueryMapperIfc queryMapper;
-    private String query;
+    private String queryStr;
+    private String filterQueryStr;
     private Util util;
+    private Throwable lastException;
 
     /**
      * Only factory creates instances.
@@ -56,40 +61,62 @@ public class FusionController implements FusionControllerIfc
 
     @Override
     public void process(Configuration configuration, FusionRequest fusionRequest, FusionResponse fusionResponse)
-            throws InvocationTargetException, IllegalAccessException
+        throws InvocationTargetException, IllegalAccessException
     {
         this.configuration = configuration;
         queryResetter = getNewResetQueryState();
         queryMapper = configuration.getQueryMapper();
 
-        Query query = parseQuery(fusionRequest);
+        queryStr = fusionRequest.getQuery();
+        filterQueryStr = fusionRequest.getFilterQuery();
+
+        Map<String, Float> boosts = fusionRequest.getBoosts();
+        Locale locale = fusionRequest.getLocale();
+        Query query = parseQuery(fusionRequest.getQuery(), boosts, locale);
+        Query filterQuery = parseQuery(filterQueryStr, boosts, locale);
+
         if (query == null)
         {
-            fusionResponse.setResponseForQueryParseError();
+            fusionResponse.setResponseForQueryParseError(queryStr);
+        }
+        else if (filterQueryStr != null && filterQuery == null)
+        {
+            fusionResponse.setResponseForQueryParseError(filterQueryStr);
         }
         else
         {
-            List<SearchServerConfig> configuredSearchServers = configuration.getConfigurationOfSearchServers();
-            if (configuredSearchServers == null || configuredSearchServers.isEmpty())
+            processQuery(configuration, fusionRequest, fusionResponse, query, filterQuery);
+        }
+    }
+
+    protected void processQuery(Configuration configuration, FusionRequest fusionRequest, FusionResponse fusionResponse,
+        Query query, Query filterQuery)
+    {
+        List<SearchServerConfig> configuredSearchServers = configuration.getConfigurationOfSearchServers();
+        if (configuredSearchServers == null || configuredSearchServers.isEmpty())
+        {
+            fusionResponse.setResponseForNoSearchServerConfiguredError();
+        }
+        else
+        {
+            ResponseConsolidatorIfc consolidator = getNewResponseConsolidator();
+            if (consolidator != null)
             {
-                fusionResponse.setResponseForNoSearchServerConfiguredError();
+                requestAllSearchServers(query, filterQuery, configuredSearchServers, consolidator);
+                if (consolidator.numberOfResponseStreams() < configuration.getDisasterLimit())
+                {
+                    fusionResponse.setResponseForTooLessServerAnsweredError(configuration.getDisasterMessage(),
+                        consolidator.getErrorMsg());
+                }
+                else
+                {
+                    processResponses(fusionRequest, fusionResponse, consolidator);
+                }
+                consolidator.clear();
             }
             else
             {
-                ResponseConsolidatorIfc consolidator = getNewResponseConsolidator();
-                if (consolidator != null)
-                {
-                    requestAllSearchServers(query, configuredSearchServers, consolidator);
-                    if (consolidator.numberOfResponseStreams() < configuration.getDisasterLimit())
-                    {
-                        fusionResponse.setResponseForTooLessServerAnsweredError(configuration.getDisasterMessage());
-                    }
-                    else
-                    {
-                        processResponses(fusionRequest, fusionResponse, consolidator);
-                    }
-                    consolidator.clear();
-                }
+                fusionResponse.setResponseForException(lastException);
             }
         }
     }
@@ -102,15 +129,19 @@ public class FusionController implements FusionControllerIfc
         }
         catch (Exception e)
         {
+            log.error("Unable to get a new ResponseConsolidatorIfc", e);
+            lastException = e;
             return null;
         }
     }
 
-    protected void processResponses(FusionRequest fusionRequest, FusionResponse fusionResponse, ResponseConsolidatorIfc consolidator)
+    protected void processResponses(FusionRequest fusionRequest, FusionResponse fusionResponse,
+        ResponseConsolidatorIfc consolidator)
     {
         try
         {
-            ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(fusionRequest.getResponseType());
+            ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(
+                fusionRequest.getResponseType());
             if (responseRenderer == null)
             {
                 fusionResponse.setResponseForMissingResponseRendererError(fusionRequest.getResponseType());
@@ -119,26 +150,31 @@ public class FusionController implements FusionControllerIfc
             {
                 ClosableIterator<Document, SearchServerResponseInfo> response = consolidator.getResponseIterator();
                 // TODO better to pass in a Writer in order to avoid building of very big String
-                fusionResponse.setOkResponse(responseRenderer.getResponseString(response, query));
+                fusionResponse.setOkResponse(responseRenderer.getResponseString(response, queryStr, filterQueryStr));
             }
         }
         catch (Exception e)
         {
             log.error("Caught exception while processing search server's responses", e);
+            fusionResponse.setResponseForException(e);
         }
     }
 
-    protected void requestAllSearchServers(Query query, List<SearchServerConfig> configuredSearchServers,
-            ResponseConsolidatorIfc consolidator)
+    protected void requestAllSearchServers(Query query, Query filterQuery,
+        List<SearchServerConfig> configuredSearchServers, ResponseConsolidatorIfc consolidator)
     {
         ScriptEnv env = getNewScriptEnv();
         for (SearchServerConfig searchServerConfig : configuredSearchServers)
         {
-            if (mapQuery(query, env, searchServerConfig))
+            if (mapQuery(query, env, searchServerConfig) && mapQuery(filterQuery, env, searchServerConfig))
             {
-                sendAndReceive(query, consolidator, searchServerConfig);
+                sendAndReceive(query, filterQuery, consolidator, searchServerConfig);
             }
             queryResetter.reset(query);
+            if (filterQuery != null)
+            {
+                queryResetter.reset(filterQuery);
+            }
         }
     }
 
@@ -152,63 +188,106 @@ public class FusionController implements FusionControllerIfc
         return new ResetQueryState();
     }
 
-    protected void sendAndReceive(Query query, ResponseConsolidatorIfc consolidator, SearchServerConfig searchServerConfig)
+    protected void sendAndReceive(Query query, Query filterQuery, ResponseConsolidatorIfc consolidator,
+        SearchServerConfig searchServerConfig)
     {
         try
         {
-            QueryBuilderIfc queryBuilder = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
+            Map<String, String> searchServerParams = new HashMap<>();
+
+            String qParam = SolrFusionRequestParams.QUERY.getRequestParamName();
+            buildSearchServerQuery(query, qParam, searchServerConfig, searchServerParams);
+
+            String fqParam = SolrFusionRequestParams.FILTER_QUERY.getRequestParamName();
+            buildSearchServerQuery(filterQuery, fqParam, searchServerConfig, searchServerParams);
+
             int timeout = configuration.getSearchServerConfigs().getTimeout();
             SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
-            String searchServerQueryStr = queryBuilder.buildQueryString(query);
-            InputStream is = adapter.sendQuery(searchServerQueryStr, timeout);
-            ResponseParserIfc responseParser = searchServerConfig.getResponseParser(configuration.getDefaultResponseParser());
-            Result result = responseParser.parse(is).getResult();
+            InputStream is = adapter.sendQuery(searchServerParams, timeout);
+            ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
+                configuration.getDefaultResponseParser());
+            XmlResponse result = responseParser.parse(is);
             SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound());
-            ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(result.getDocuments(), info);
+            ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
+                result.getDocuments(), info);
             consolidator.addResultStream(configuration, searchServerConfig, docIterator);
+        }
+        catch (SearchServerResponseException se)
+        {
+            try
+            {
+                ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
+                    configuration.getDefaultResponseParser());
+                XmlResponse responseError = responseParser.parse(se.getHttpContent());
+                if(responseError != null)
+                {
+                    se.setResponseError(responseError.getResponseErrors());
+                }
+            }
+            catch (Exception e)
+            {
+                // depending on solr's version, a well formed error message is provided or not
+                log.warn("Couldn't parse error response", e);
+            }
+            consolidator.addErrorResponse(se);
         }
         catch (Exception e)
         {
-            log.error("Caught exception while communicating with server {}", searchServerConfig.getSearchServerName(), e);
+            log.error("Caught exception while communicating with server {}", searchServerConfig.getSearchServerName(),
+                e);
+        }
+    }
+
+    protected void buildSearchServerQuery(Query query, String qParam, SearchServerConfig searchServerConfig,
+        Map<String, String> searchServerParams) throws InvocationTargetException, IllegalAccessException
+    {
+        if (query != null)
+        {
+            QueryBuilderIfc queryBuilder = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
+            searchServerParams.put(qParam, queryBuilder.buildQueryString(query, configuration));
         }
     }
 
     protected boolean mapQuery(Query query, ScriptEnv env, SearchServerConfig searchServerConfig)
     {
         boolean result = true;
-        try
+        if (query != null)
         {
-            queryMapper.mapQuery(configuration, searchServerConfig, query, env);
-        }
-        catch (Exception e)
-        {
-            log.error("Caught exception while mapping fusion query to server {}", searchServerConfig.getSearchServerName(), e);
-            result = false;
-        }
-
-        return result;
-    }
-
-    protected Query parseQuery(FusionRequest fusionRequest)
-    {
-        Map<String, Float> boosts = fusionRequest.getBoosts();
-        query = fusionRequest.getQuery();
-        Query queryObj = null;
-        try
-        {
-            QueryParserIfc queryParser = configuration.getQueryParser();
             try
             {
-                queryObj = queryParser.parse(configuration, boosts, query, fusionRequest.getLocale());
+                queryMapper.mapQuery(configuration, searchServerConfig, query, env);
             }
             catch (Exception e)
             {
-                log.error("Parsing of query {} failed.", query, e);
+                log.error("Caught exception while mapping fusion queryStr to server {}",
+                    searchServerConfig.getSearchServerName(), e);
+                result = false;
             }
         }
-        catch (Exception e)
+        return result;
+    }
+
+    protected Query parseQuery(String query, Map<String, Float> boosts, Locale locale)
+    {
+        Query queryObj = null;
+        if (query != null)
         {
-            log.error("Caught exception while parsing query: {}", query, e);
+            try
+            {
+                QueryParserIfc queryParser = configuration.getQueryParser();
+                try
+                {
+                    queryObj = queryParser.parse(configuration, boosts, query, locale);
+                }
+                catch (Exception e)
+                {
+                    log.error("Parsing of queryStr {} failed.", query, e);
+                }
+            }
+            catch (Exception e)
+            {
+                log.error("Caught exception while parsing queryStr: {}", query, e);
+            }
         }
         return queryObj;
     }

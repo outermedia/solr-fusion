@@ -7,6 +7,9 @@
     <str name="indent">on</str>
     <str name="start">0</str>
     <str name="q"><![CDATA[${responseHeader.query}]]></str>
+    <#if responseHeader.filterQuery??>
+    <str name="fq"><![CDATA[${responseHeader.filterQuery}]]></str>
+    </#if>
     <str name="version">2.2</str>
     <str name="rows">${responseHeader.rows}</str>
   </lst>

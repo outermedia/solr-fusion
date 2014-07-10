@@ -10,11 +10,11 @@ import org.outermedia.solrfusion.query.VisitableQuery;
 @Setter
 public abstract class Query implements VisitableQuery
 {
+    private Float boostValue;
 
     public void setBoost(float f)
     {
-        // TODO Auto-generated method stub
-
+        this.boostValue = f;
     }
 
 }

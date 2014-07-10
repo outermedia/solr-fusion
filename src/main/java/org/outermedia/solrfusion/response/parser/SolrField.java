@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.response.parser;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.outermedia.solrfusion.mapper.Term;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 
 @XmlTransient
+@ToString(exclude = {"term"})
 public abstract class SolrField {
 
     @XmlAttribute(name = "name", required = true)

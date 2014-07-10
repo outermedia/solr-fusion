@@ -2,7 +2,15 @@ package org.outermedia.solrfusion.response;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.outermedia.solrfusion.adapter.SearchServerResponseException;
+import org.outermedia.solrfusion.response.parser.XmlResponse;
+import org.xml.sax.SAXException;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.StringBufferInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -69,5 +77,39 @@ public class ConsolidatorTest
         rr.close();
         Assert.assertFalse("Expected no element after close()", rr.hasNext());
         Assert.assertTrue("close() not called for second iterator", t1.calledClose);
+    }
+
+    @Test
+    public void testErrorHandling()
+        throws SAXException, JAXBException, ParserConfigurationException, FileNotFoundException
+    {
+        ResponseConsolidator rc = ResponseConsolidator.Factory.getInstance();
+        String case2Response = "<response>\n" +
+            "    <lst name=\"responseHeader\">\n" +
+            "        <int name=\"status\">500</int>\n" +
+            "        <int name=\"QTime\">2</int>\n" +
+            "        <lst name=\"params\">\n" +
+            "            <str name=\"q\">flubb:*</str>\n" +
+            "            <str name=\"fq\">(collection:GVK OR collection:DOAJ OR (collection_details:ZDB-1-PIO))</str>\n" +
+            "        </lst>\n" +
+            "    </lst>\n" +
+            "    <lst name=\"error\">\n" +
+            "        <str name=\"msg\">undefined field flubb</str>\n" +
+            "        <int name=\"code\">500</int>\n" +
+            "    </lst>\n" +
+            "</response>";
+        SearchServerResponseException case1 = new SearchServerResponseException(400, "Case1", null);
+        rc.addErrorResponse(case1);
+
+        InputStream httpContent = new StringBufferInputStream(case2Response);
+        // 400 should be hidden by 500 contained in case2Response
+        SearchServerResponseException case2 = new SearchServerResponseException(400, "Case2", httpContent);
+        rc.addErrorResponse(case2);
+        ResponseParserIfc responseParser = DefaultResponseParser.Factory.getInstance();
+        XmlResponse responseError = responseParser.parse(httpContent);
+        // System.out.println("RESPONSE "+responseError);
+        case2.setResponseError(responseError.getResponseErrors());
+        String errorMsg = rc.getErrorMsg();
+        Assert.assertEquals("", "ERROR 400: Case1\nERROR 500: undefined field flubb", errorMsg.trim());
     }
 }

@@ -58,22 +58,27 @@ public class FreemarkerResponseRendererTest
         Assert.assertNotNull("responseRenderer should not be null", responseRenderer);
 
         XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9000.xml", null);
-        List<Document> documents9000 = response9000.getResult().getDocuments();
+        List<Document> documents9000 = response9000.getDocuments();
         XmlResponse response9001= xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9001.xml", null);
-        List<Document> documents9001 = response9001.getResult().getDocuments();
+        List<Document> documents9001 = response9001.getDocuments();
 
 //        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getResult().getNumFound());
-        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9000.getResult().getNumFound());
+        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9000.getNumFound());
 //        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9000.getResult().getDocuments(), info9000);
-        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9001.getResult().getDocuments(), info9001);
+        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9001.getDocuments(), info9001);
 
 //        consolidator.addResultStream(configuration, searchServerConfig, docIterator);
 
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator =  new MappingClosableIterator(docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0));
 
-        String xmlResponse = responseRenderer.getResponseString(closableIterator, "steak");
-
+        String xmlResponse = responseRenderer.getResponseString(closableIterator, "steak", null);
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
+        Assert.assertFalse("xml response should not contain filter query in header", xmlResponse.contains("<str name=\"fq\">"));
+
+        xmlResponse = responseRenderer.getResponseString(closableIterator, "steak", "salat");
+        Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
+        Assert.assertTrue("xml response should contain filter query in header",
+            xmlResponse.contains("<str name=\"fq\"><![CDATA[salat]]></str>"));
 
         System.out.println(xmlResponse);
     }
@@ -94,20 +99,20 @@ public class FreemarkerResponseRendererTest
         Assert.assertNotNull("responseRenderer should not be null", responseRenderer);
 
         XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9000.xml", null);
-        List<Document> documents9000 = response9000.getResult().getDocuments();
+        List<Document> documents9000 = response9000.getDocuments();
         XmlResponse response9001= xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9001.xml", null);
-        List<Document> documents9001 = response9001.getResult().getDocuments();
+        List<Document> documents9001 = response9001.getDocuments();
 
 //        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getResult().getNumFound());
-        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9000.getResult().getNumFound());
+        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9000.getNumFound());
 //        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9000.getResult().getDocuments(), info9000);
-        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9001.getResult().getDocuments(), info9001);
+        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9001.getDocuments(), info9001);
 
 //        consolidator.addResultStream(configuration, searchServerConfig, docIterator);
 
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator =  new MappingClosableIterator(docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0));
 
-        String jsonResponse = responseRenderer.getResponseString(closableIterator, "steak");
+        String jsonResponse = responseRenderer.getResponseString(closableIterator, "steak", null);
 
         try
         {
@@ -122,6 +127,12 @@ public class FreemarkerResponseRendererTest
         {
             Assert.fail("Exception while parsing rendered json response");
         }
+
+        Assert.assertFalse("json response should not contain filter query in header", jsonResponse.contains("\"fq\":"));
+
+        jsonResponse = responseRenderer.getResponseString(closableIterator, "steak", "salat");
+        System.out.println(jsonResponse);
+        Assert.assertFalse("json response should contain filter query in header", jsonResponse.contains("\"fq\":\"salat\","));
     }
 
 }

@@ -6,6 +6,9 @@
       "indent":"on",
       "start":"0",
       "q":"${responseHeader.query}",
+    <#if responseHeader.filterQuery??>
+      "fq":${responseHeader.filterQuery},
+    </#if>
       "wt":"json",
       "version":"2.2",
       "rows":"${responseHeader.rows}"}},

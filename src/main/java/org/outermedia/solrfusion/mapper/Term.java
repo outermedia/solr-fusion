@@ -4,13 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.outermedia.solrfusion.configuration.FusionField;
-import org.outermedia.solrfusion.query.QueryVisitor;
-import org.outermedia.solrfusion.query.VisitableQuery;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.query.parser.TermQuery;
 import org.outermedia.solrfusion.response.parser.SolrField;
 import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
-import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +22,7 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
-public class Term implements VisitableQuery
+public class Term
 {
     private String fusionFieldName;
     private List<String> fusionFieldValue;
@@ -124,9 +121,4 @@ public class Term implements VisitableQuery
         newResponseValues = null;
     }
 
-    @Override
-    public void accept(QueryVisitor visitor, ScriptEnv env)
-    {
-        visitor.visitQuery(this, env);
-    }
 }
