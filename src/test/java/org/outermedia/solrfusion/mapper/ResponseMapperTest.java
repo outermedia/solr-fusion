@@ -56,8 +56,19 @@ public class ResponseMapperTest
         strFields.add(sfId);
         doc.setSolrSingleValuedFields(strFields);
         ScriptEnv env = new ScriptEnv();
-        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null);
 
+        // map one field only
+        List<String> mapFields = Arrays.asList("Titel");
+        int mappedNr = rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, mapFields);
+        // id is mapped automatically
+        Assert.assertEquals("Wrong number of mapped fields", 2, mappedNr);
+        Assert.assertTrue("id should be mapped", sfId.getTerm().isWasMapped());
+        Assert.assertTrue("'Titel' should be mapped", sfTitle.getTerm().isWasMapped());
+        Assert.assertFalse("'Autor' shouldn't be mapped", sfAuthor.getTerm().isWasMapped());
+
+        // map remaining field Autor
+        mappedNr = rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null);
+        Assert.assertEquals("Wrong number of mapped fields", 1, mappedNr);
         String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=[Willi Schiller], fusionField=FusionField(fieldName=author, type=text, format=null, multiValue=null), searchServerFieldName=Autor, searchServerFieldValue=[Willi Schiller], removed=false, wasMapped=true, processed=true, newQueryTerms=null, newResponseValues=null)";
         Assert.assertEquals("Mapping of author returned different result.", expectedAuthor,
                 sfAuthor.getTerm().toString());

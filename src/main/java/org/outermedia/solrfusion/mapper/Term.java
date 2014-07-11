@@ -140,6 +140,10 @@ public class Term
         {
             return 0;
         }
+        if (thisFusionValues == null)
+        {
+            return -unknownReturnValue;
+        }
         if (otherFusionValues == null)
         {
             return unknownReturnValue;

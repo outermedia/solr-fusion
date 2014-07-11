@@ -35,9 +35,9 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 @Slf4j
 public class FusionController implements FusionControllerIfc
 {
-    private Configuration configuration;
-    private Util util;
-    private Throwable lastException;
+    protected Configuration configuration;
+    protected Util util;
+    protected Throwable lastException;
 
     /**
      * Only factory creates instances.
@@ -147,6 +147,7 @@ public class FusionController implements FusionControllerIfc
                 String responseString = responseRenderer.getResponseString(configuration, response, fusionRequest.getQuery(),
                     fusionRequest.getFilterQuery());
                 fusionResponse.setOkResponse(responseString);
+                response.close();
             }
         }
         catch (Exception e)

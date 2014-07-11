@@ -23,11 +23,11 @@ public class ResponseMapper implements ResponseMapperIfc
     protected static final boolean MISSING_MAPPING_POLICY_IGNORE = true;
     protected static final boolean MISSING_MAPPING_POLICY_THROW_EXCEPTION = false;
 
-    private SearchServerConfig serverConfig;
-    private Document doc;
-    private boolean missingMappingPolicy;
-    private Configuration config;
-    private List<String> searchServerFieldNamesToMap;
+    protected SearchServerConfig serverConfig;
+    protected Document doc;
+    protected boolean missingMappingPolicy;
+    protected Configuration config;
+    protected List<String> searchServerFieldNamesToMap;
     protected int numberOfMappedFields;
 
     /**
@@ -112,7 +112,10 @@ public class ResponseMapper implements ResponseMapperIfc
         }
         else
         {
-            log.warn("Can't correct score in documents, because document contains no value (any more).");
+            if (scoreTerm == null || !scoreTerm.isProcessed())
+            {
+                log.warn("Can't correct score in documents, because document contains no value (any more).");
+            }
         }
     }
 

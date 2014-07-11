@@ -194,7 +194,7 @@ public class SolrFusionServlet extends HttpServlet
         String pageSizeStr = getOptionalSingleSearchParamValue(requestParams, PAGE_SIZE,
             String.valueOf(defaultPageSize));
         fusionRequest.setPageSize(parseInt(pageSizeStr, defaultPageSize));
-        String sortStr = getOptionalSingleSearchParamValue(requestParams, SORT, cfg.getDefaultSearchField());
+        String sortStr = getOptionalSingleSearchParamValue(requestParams, SORT, cfg.getDefaultSortField());
         // "<SPACE> desc" in the case a field's name contains "desc" too
         // because sortStr is trimmed a single "desc" would be treated right
         boolean sortAsc = !sortStr.contains(" desc");

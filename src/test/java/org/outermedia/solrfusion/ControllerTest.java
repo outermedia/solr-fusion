@@ -12,6 +12,8 @@ import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
+import org.outermedia.solrfusion.mapper.Term;
+import org.outermedia.solrfusion.query.parser.TermQuery;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.xml.sax.SAXException;
@@ -20,14 +22,18 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.anyMapOf;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.*;
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
@@ -37,21 +43,17 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 @SuppressWarnings("unchecked")
 public class ControllerTest
 {
-    protected TestHelper helper;
+    TestHelper helper;
 
-    @Mock
-    ResponseRendererIfc testRenderer;
+    @Mock ResponseRendererIfc testRenderer;
 
     ByteArrayInputStream testResponse;
 
-    @Mock
-    SearchServerAdapterIfc testAdapter;
+    @Mock SearchServerAdapterIfc testAdapter;
 
-    @Mock
-    SearchServerAdapterIfc testAdapter9000;
+    @Mock SearchServerAdapterIfc testAdapter9000;
 
-    @Mock
-    SearchServerAdapterIfc testAdapter9002;
+    @Mock SearchServerAdapterIfc testAdapter9002;
 
     Configuration cfg;
 
@@ -75,8 +77,8 @@ public class ControllerTest
 
     @Test
     public void testProcess()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
         FusionControllerIfc fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
         FusionRequest fusionRequest = new FusionRequest();
@@ -90,11 +92,10 @@ public class ControllerTest
     }
 
     protected FusionControllerIfc createTestFusionController(String fusionSchema)
-        throws IOException, JAXBException, SAXException, ParserConfigurationException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, JAXBException, SAXException, ParserConfigurationException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
-        cfg = spy(helper
-            .readFusionSchemaWithoutValidation(fusionSchema));
+        cfg = spy(helper.readFusionSchemaWithoutValidation(fusionSchema));
         when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class), anyString(), anyString())).thenReturn(
             "<xml>42</xml>");
         when(cfg.getResponseRendererByType(any(ResponseRendererType.class))).thenReturn(testRenderer);
@@ -113,11 +114,10 @@ public class ControllerTest
 
     @Test
     public void testWrongRenderer()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
-        Configuration cfg = spy(helper
-            .readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml"));
+        Configuration cfg = spy(helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml"));
         when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class), anyString(), anyString())).thenReturn(
             "<xml>42</xml>");
         List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
@@ -153,8 +153,8 @@ public class ControllerTest
 
     @Test
     public void testTooLessResponses()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
         FusionControllerIfc fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
@@ -172,8 +172,8 @@ public class ControllerTest
 
     @Test
     public void testSearchServersConfigured()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
         FusionControllerIfc fc = createTestFusionController("test-empty-fusion-schema.xml");
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
@@ -191,8 +191,8 @@ public class ControllerTest
 
     @Test
     public void testQueryParsingFailed()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
         FusionControllerIfc fc = createTestFusionController("test-empty-fusion-schema.xml");
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
@@ -210,8 +210,8 @@ public class ControllerTest
 
     @Test
     public void testQueryWithMultipleServersAndResponseDocuments()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
         testMultipleServers("target/test-classes/test-xml-response-9000.xml",
             "target/test-classes/test-xml-response-9002.xml");
@@ -221,8 +221,8 @@ public class ControllerTest
 
     @Test
     public void testQueryWithMultipleServersButNoResponseDocuments()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
         String xml = testMultipleServers("target/test-classes/test-empty-xml-response.xml",
             "target/test-classes/test-empty-xml-response.xml");
@@ -258,16 +258,15 @@ public class ControllerTest
     }
 
     protected String testMultipleServers(String responseServer1, String responseServer2)
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
         byte[] documents9000 = Files.toByteArray(new File(responseServer1));
         byte[] documents9002 = Files.toByteArray(new File(responseServer2));
         ByteArrayInputStream documents9000Stream = new ByteArrayInputStream(documents9000);
         ByteArrayInputStream documents9002Stream = new ByteArrayInputStream(documents9002);
 
-        cfg = helper
-            .readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
+        cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
         // the mapping is very incomplete, so ignore all unmapped fields
         testResponseMapper.ignoreMissingMappings();
@@ -308,4 +307,87 @@ public class ControllerTest
         // System.out.println("RESPONSE " + result);
         return result;
     }
+
+    @Test
+    public void testBuildParams()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+        InvocationTargetException, IllegalAccessException
+    {
+        FusionController controller = (FusionController) FusionController.Factory.getInstance();
+        cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
+        controller.configuration = cfg;
+        SearchServerConfig serverConfig = cfg.getSearchServerConfigByName("Bibliothek 9002");
+        Assert.assertNotNull("Didn't find server 9002", serverConfig);
+        FusionRequest fusionRequest = new FusionRequest();
+        Term t = Term.newFusionTerm("title", "abc");
+        t.setSearchServerFieldName("titleVT_de");
+        t.setSearchServerFieldValue(Arrays.asList("abc"));
+        t.setWasMapped(true);
+        t.setRemoved(false);
+        TermQuery q = new TermQuery(t);
+        fusionRequest.setParsedQuery(q);
+        fusionRequest.setStart(5);
+        fusionRequest.setPageSize(200);
+        fusionRequest.setSolrFusionSortField("title");
+        fusionRequest.setSortAsc(true);
+        Map<String, String> map = controller.buildQueryParams(fusionRequest, serverConfig);
+        Assert.assertEquals("Expected other sort field", "titleVT_de asc", map.get(SORT.getRequestParamName()));
+        Assert.assertEquals("Expected other start value", "0", map.get(START.getRequestParamName()));
+        int maxDocs = serverConfig.getMaxDocs();
+        Assert.assertEquals("Expected other page size", String.valueOf(maxDocs),
+            map.get(PAGE_SIZE.getRequestParamName()));
+        Assert.assertEquals("Expected other start value", "titleVT_de:abc", map.get(QUERY.getRequestParamName()));
+
+        // below server's max limit, return wanted size
+        int start = 4;
+        Assert.assertTrue("Please set max-docs >" + start, start < maxDocs);
+        fusionRequest.setStart(start);
+        fusionRequest.setPageSize(maxDocs - 1 - start);
+        map = controller.buildQueryParams(fusionRequest, serverConfig);
+        Assert.assertEquals("Expected other page size", "99", map.get(PAGE_SIZE.getRequestParamName()));
+
+        // up to server's max limit, return wanted size
+        fusionRequest.setStart(start);
+        fusionRequest.setPageSize(maxDocs - start);
+        map = controller.buildQueryParams(fusionRequest, serverConfig);
+        Assert.assertEquals("Expected other page size", String.valueOf(maxDocs),
+            map.get(PAGE_SIZE.getRequestParamName()));
+
+        // above  server's max limit, return server's limit
+        fusionRequest.setStart(start + 1);
+        fusionRequest.setPageSize(maxDocs - start);
+        map = controller.buildQueryParams(fusionRequest, serverConfig);
+        Assert.assertEquals("Expected other page size", String.valueOf(maxDocs),
+            map.get(PAGE_SIZE.getRequestParamName()));
+    }
+
+    @Test
+    public void testMapFusionFieldToSearchServerField()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+        InvocationTargetException, IllegalAccessException
+    {
+        FusionController controller = (FusionController) FusionController.Factory.getInstance();
+        cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
+        controller.configuration = cfg;
+        SearchServerConfig serverConfig = cfg.getSearchServerConfigByName("Bibliothek 9002");
+        Assert.assertNotNull("Didn't find server 9002", serverConfig);
+
+        String searchServerField = controller.mapFusionFieldToSearchServerField("title", serverConfig);
+        Assert.assertEquals("Mapping returned other field than expected", "titleVT_de", searchServerField);
+
+        searchServerField = controller.mapFusionFieldToSearchServerField("language", serverConfig);
+        Assert.assertEquals("Mapping returned other field than expected", "language", searchServerField);
+
+        searchServerField = controller.mapFusionFieldToSearchServerField("unknown", serverConfig);
+        Assert.assertEquals("Mapping returned other field than expected", "score", searchServerField);
+
+        // special case id
+        searchServerField = controller.mapFusionFieldToSearchServerField("id", serverConfig);
+        Assert.assertEquals("Mapping returned other field than expected", "id", searchServerField);
+
+        // special case score
+        searchServerField = controller.mapFusionFieldToSearchServerField("score", serverConfig);
+        Assert.assertEquals("Mapping returned other field than expected", "score", searchServerField);
+    }
+
 }
