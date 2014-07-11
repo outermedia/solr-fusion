@@ -1,4 +1,1388 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <response>
-<lst name="responseHeader"><int name="status">0</int><int name="QTime">400</int><lst name="params"><str name="q">shakespeare</str><str name="fq">(collection:GVK OR collection:DOAJ OR (collection_details:ZDB-1-PIO))</str></lst></lst><result name="response" numFound="91373" start="0" maxScore="2.5404873"><doc><str name="illustrated">Not Illustrated</str><arr name="format_phy_str_mv"><str>Article</str></arr><arr name="collection"><str>NL</str></arr><bool name="hochschulschrift_bool">false</bool><arr name="topic_title"><str>pio natliz</str><str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review) Wilhelm Dibelius</str></arr><arr name="format_facet"><str>Aufsätze</str><str>Gedruckte Aufsätze</str></arr><str name="id">NLZ042429315</str><arr name="journal"><str>Shakespeare Jahrbuch.</str></arr><arr name="journalStr"><str>Shakespeare Jahrbuch.</str></arr><str name="author">Dibelius, Wilhelm</str><arr name="spellingShingle"><str>Dibelius, Wilhelm</str><str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review)</str><str>pio natliz</str></arr><str name="authorStr">Dibelius, Wilhelm</str><arr name="author_browse"><str>Dibelius, Wilhelm</str></arr><arr name="title"><str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review)</str></arr><str name="allfields">pioa020300960048 GBVCP ger rakwb ger pio natliz Dibelius, Wilhelm Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review) Wilhelm Dibelius Zeitschriftenschau In:  Shakespeare Jahrbuch. Heidelberg : Quelle und Meyer, etc. 38 (1902) 318 38&lt;318 (DE-601)000040096 GBV ZDB-1-PIO GBV_NL_ARTICLE AR 38 1902 318 38 (1902) 318</str><str name="spelling">pioa020300960048 GBVCP ger rakwb ger pio natliz Dibelius, Wilhelm Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review) Wilhelm Dibelius Zeitschriftenschau In:  Shakespeare Jahrbuch. Heidelberg : Quelle und Meyer, etc. 38 (1902) 318 38&lt;318 (DE-601)000040096 GBV ZDB-1-PIO GBV_NL_ARTICLE AR 38 1902 318 38 (1902) 318</str><str name="allfields_unstemmed">pioa020300960048 GBVCP ger rakwb ger pio natliz Dibelius, Wilhelm Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review) Wilhelm Dibelius Zeitschriftenschau In:  Shakespeare Jahrbuch. Heidelberg : Quelle und Meyer, etc. 38 (1902) 318 38&lt;318 (DE-601)000040096 GBV ZDB-1-PIO GBV_NL_ARTICLE AR 38 1902 318 38 (1902) 318</str><str name="allfieldsGer">pioa020300960048 GBVCP ger rakwb ger pio natliz Dibelius, Wilhelm Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review) Wilhelm Dibelius Zeitschriftenschau In:  Shakespeare Jahrbuch. Heidelberg : Quelle und Meyer, etc. 38 (1902) 318 38&lt;318 (DE-601)000040096 GBV ZDB-1-PIO GBV_NL_ARTICLE AR 38 1902 318 38 (1902) 318</str><str name="allfieldsSound">pioa020300960048 GBVCP ger rakwb ger pio natliz Dibelius, Wilhelm Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review) Wilhelm Dibelius Zeitschriftenschau In:  Shakespeare Jahrbuch. Heidelberg : Quelle und Meyer, etc. 38 (1902) 318 38&lt;318 (DE-601)000040096 GBV ZDB-1-PIO GBV_NL_ARTICLE AR 38 1902 318 38 (1902) 318</str><arr name="collection_details"><str>ZDB-1-PIO</str><str>GBV_NL_ARTICLE</str></arr><str name="publishDateSort">1902</str><arr name="publishDate"><str>1902</str></arr><arr name="format_se"><str>Aufsätze</str></arr><arr name="institution"><str>findex.gbv.de</str></arr><str name="recordtype">marc</str><arr name="abstract"><str>Zeitschriftenschau</str></arr><arr name="abstractGer"><str>Zeitschriftenschau</str></arr><arr name="abstract_unstemmed"><str>Zeitschriftenschau</str></arr><arr name="topic"><str>pio natliz</str></arr><arr name="topic_unstemmed"><str>pio natliz</str></arr><arr name="topic_browse"><str>pio natliz</str></arr><arr name="language_de"><str>deutsch</str></arr><arr name="title_auth"><str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review)</str></arr><arr name="class"><str>pio natliz</str></arr><arr name="format"><str>Article</str></arr><str name="title_sort">shakespeares charakter, bildung und kunst: shakespeares sprachkenntnisse. shakespeares naturwissenschaftliche auffassungen. shakespeares astronomische ansichten. die historische treue in shakespeares dramen. die einheit des charakters bei shakespeare. über die psychologie des gewissens nach shakespeare. shakespeares innere entwicklung. shakespeares patriotismus. shakespeares kunst. shakespeare und die jugend (book review)</str><arr name="title_short"><str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review)</str></arr><str name="fullrecord">01062naa a2200229 c 4500001001300000003000700013005001700020008004100037024002100078040002200099041000800121084001600129100002200145245045000167520002300617773011100640901000800751912001400759912001900773951000700792952003300799#30;NLZ042429315#30;DE-601#30;20101227181644.0#30;060713s1902    gw            000 0 ger d#30;8 #31;apioa020300960048#30;  #31;aGBVCP#31;bger#31;erakwb#30;0 #31;ager#30;  #31;apio#31;2natliz#30;1 #31;aDibelius, Wilhelm#30;10#31;aShakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review)#31;cWilhelm Dibelius#30;  #31;aZeitschriftenschau#30;08#31;iIn: #31;tShakespeare Jahrbuch.#31;dHeidelberg : Quelle und Meyer, etc.#31;g38 (1902) 318#31;q38&lt;318#31;w(DE-601)000040096#30;  #31;aGBV#30;  #31;aZDB-1-PIO#30;  #31;aGBV_NL_ARTICLE#30;  #31;aAR#30;  #31;d38#31;j1902#31;h318#31;y38 (1902) 318#30;#29;</str><arr name="ppnlink"><str>000040096</str></arr><str name="source">In: Shakespeare Jahrbuch. 38 (1902) 318</str><str name="sourceStr">In: Shakespeare Jahrbuch. 38 (1902) 318</str><arr name="author-letter"><str>Dibelius, Wilhelm</str></arr><arr name="language"><str>German</str></arr><arr name="lang_code"><str>ger</str></arr><bool name="remote_bool">false</bool><arr name="title_full"><str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review) Wilhelm Dibelius</str></arr><arr name="title_fullStr"><str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review) Wilhelm Dibelius</str></arr><arr name="title_full_unstemmed"><str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review) Wilhelm Dibelius</str></arr><arr name="title_fullGer"><str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review) Wilhelm Dibelius</str></arr><long name="_version_">1459960420448075776</long></doc><doc><str name="illustrated">Not Illustrated</str><arr name="format_phy_str_mv"><str>Article</str></arr><arr name="collection"><str>GVK</str></arr><bool name="hochschulschrift_bool">false</bool><arr name="topic_title"><str>Shakespeare 5 Measure for measure / William Shakespeare</str></arr><arr name="format_facet"><str>Aufsätze</str><str>Gedruckte Aufsätze</str></arr><str name="id">340732091</str><arr name="journal"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><arr name="journalStr"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><str name="author">Shakespeare, William</str><arr name="spellingShingle"><str>Shakespeare, William</str><str>Shakespeare</str></arr><str name="authorStr">Shakespeare, William</str><arr name="author_browse"><str>Shakespeare, William</str><str>Dyce, Alexander</str></arr><arr name="title"><str>Shakespeare</str></arr><arr name="signature_iln"><str>65</str></arr><str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Measure for measure / William Shakespeare Dyce, Alexander (DE-601)340730447 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543207935 0003 x</str><str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Measure for measure / William Shakespeare Dyce, Alexander (DE-601)340730447 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543207935 0003 x</str><str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Measure for measure / William Shakespeare Dyce, Alexander (DE-601)340730447 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543207935 0003 x</str><str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Measure for measure / William Shakespeare Dyce, Alexander (DE-601)340730447 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543207935 0003 x</str><str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Measure for measure / William Shakespeare Dyce, Alexander (DE-601)340730447 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543207935 0003 x</str><arr name="collection_details"><str>SYSFLAG_1</str><str>GBV_GVK</str><str>GBV_ILN_65</str></arr><arr name="author2"><str>Dyce, Alexander</str></arr><arr name="author2Str"><str>Dyce, Alexander</str></arr><str name="publishDateSort">1875</str><arr name="publishDate"><str>1875</str></arr><arr name="format_se"><str>Aufsätze</str></arr><arr name="institution"><str>findex.gbv.de</str></arr><str name="recordtype">marc</str><arr name="building"><str>65</str></arr><arr name="title_auth"><str>Shakespeare</str></arr><arr name="selectkey"><str>65:x</str></arr><arr name="format"><str>Article</str></arr><str name="title_sort">shakespeare</str><arr name="title_short"><str>Shakespeare Measure for measure / William Shakespeare</str></arr><str name="fullrecord">00570naa a22002052c 4500001001000000003000700010005001700017008004100034040002200075100002500097245006200122700002000184773007300204901000800277912001400285912001200299912001500311951000700326980003100333#30;340732091#30;DE-601#30;20020121093650.0#30;020121s1875                  000 0     d#30;  #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare, William#30;10#31;aShakespeare#31;n5#31;pMeasure for measure / William Shakespeare#30;1 #31;aDyce, Alexander#30;0 #31;w(DE-601)340730447#31;tShakespeare, William. - London : Chapman and Hall#30;  #31;aGBV#30;  #31;aSYSFLAG_1#30;  #31;aGBV_GVK#30;  #31;aGBV_ILN_65#30;  #31;aAI#30;  #31;265#31;101#31;b543207935#31;x0003#31;yx#30;#29;</str><arr name="ppnlink"><str>340730447</str></arr><str name="source">Shakespeare, William. - London : Chapman and Hall</str><str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str><arr name="author-letter"><str>Shakespeare, William</str></arr><bool name="remote_bool">false</bool><arr name="title_full"><str>Shakespeare 5 Measure for measure / William Shakespeare</str></arr><arr name="title_fullStr"><str>Shakespeare 5 Measure for measure / William Shakespeare</str></arr><arr name="title_full_unstemmed"><str>Shakespeare 5 Measure for measure / William Shakespeare</str></arr><arr name="title_fullGer"><str>Shakespeare 5 Measure for measure / William Shakespeare</str></arr><long name="_version_">1459933728098746368</long></doc><doc><str name="illustrated">Not Illustrated</str><arr name="format_phy_str_mv"><str>Article</str></arr><arr name="collection"><str>GVK</str></arr><bool name="hochschulschrift_bool">false</bool><arr name="topic_title"><str>Shakespeare 2 Much ado about nothing / William Shakespeare</str></arr><arr name="format_facet"><str>Aufsätze</str><str>Gedruckte Aufsätze</str></arr><str name="id">340733039</str><arr name="journal"><str>Shakespeare, William. - London</str></arr><arr name="journalStr"><str>Shakespeare, William. - London</str></arr><str name="author">Shakespeare, William</str><arr name="spellingShingle"><str>Shakespeare, William</str><str>Shakespeare</str></arr><str name="authorStr">Shakespeare, William</str><arr name="author_browse"><str>Shakespeare, William</str><str>Dyce, Alexander</str></arr><arr name="title"><str>Shakespeare</str></arr><arr name="signature_iln"><str>65</str></arr><str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 2 Much ado about nothing / William Shakespeare Dyce, Alexander (DE-601)34073275X Shakespeare, William. - London GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543211878 0003 x</str><str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 2 Much ado about nothing / William Shakespeare Dyce, Alexander (DE-601)34073275X Shakespeare, William. - London GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543211878 0003 x</str><str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 2 Much ado about nothing / William Shakespeare Dyce, Alexander (DE-601)34073275X Shakespeare, William. - London GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543211878 0003 x</str><str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 2 Much ado about nothing / William Shakespeare Dyce, Alexander (DE-601)34073275X Shakespeare, William. - London GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543211878 0003 x</str><str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 2 Much ado about nothing / William Shakespeare Dyce, Alexander (DE-601)34073275X Shakespeare, William. - London GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543211878 0003 x</str><arr name="collection_details"><str>SYSFLAG_1</str><str>GBV_GVK</str><str>GBV_ILN_65</str></arr><arr name="author2"><str>Dyce, Alexander</str></arr><arr name="author2Str"><str>Dyce, Alexander</str></arr><str name="publishDateSort">1875</str><arr name="publishDate"><str>1875</str></arr><arr name="format_se"><str>Aufsätze</str></arr><arr name="institution"><str>findex.gbv.de</str></arr><str name="recordtype">marc</str><arr name="building"><str>65</str></arr><arr name="title_auth"><str>Shakespeare</str></arr><arr name="selectkey"><str>65:x</str></arr><arr name="format"><str>Article</str></arr><str name="title_sort">shakespeare</str><arr name="title_short"><str>Shakespeare Much ado about nothing / William Shakespeare</str></arr><str name="fullrecord">00554naa a22002052c 4500001001000000003000700010005001700017008004100034040002200075100002500097245006500122700002000187773005400207901000800261912001400269912001200283912001500295951000700310980003100317#30;340733039#30;DE-601#30;20020121094641.0#30;020121s1875                  000 0     d#30;  #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare, William#30;10#31;aShakespeare#31;n2#31;pMuch ado about nothing / William Shakespeare#30;1 #31;aDyce, Alexander#30;0 #31;w(DE-601)34073275X#31;tShakespeare, William. - London#30;  #31;aGBV#30;  #31;aSYSFLAG_1#30;  #31;aGBV_GVK#30;  #31;aGBV_ILN_65#30;  #31;aAI#30;  #31;265#31;101#31;b543211878#31;x0003#31;yx#30;#29;</str><arr name="ppnlink"><str>34073275X</str></arr><str name="source">Shakespeare, William. - London</str><str name="sourceStr">Shakespeare, William. - London</str><arr name="author-letter"><str>Shakespeare, William</str></arr><bool name="remote_bool">false</bool><arr name="title_full"><str>Shakespeare 2 Much ado about nothing / William Shakespeare</str></arr><arr name="title_fullStr"><str>Shakespeare 2 Much ado about nothing / William Shakespeare</str></arr><arr name="title_full_unstemmed"><str>Shakespeare 2 Much ado about nothing / William Shakespeare</str></arr><arr name="title_fullGer"><str>Shakespeare 2 Much ado about nothing / William Shakespeare</str></arr><long name="_version_">1459933730115158016</long></doc><doc><str name="illustrated">Not Illustrated</str><arr name="format_phy_str_mv"><str>Article</str></arr><arr name="collection"><str>GVK</str></arr><bool name="hochschulschrift_bool">false</bool><arr name="topic_title"><str>Shakespeare 1 Troilus and cressida / William Shakespeare</str></arr><arr name="format_facet"><str>Aufsätze</str><str>Gedruckte Aufsätze</str></arr><str name="id">340737689</str><arr name="journal"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><arr name="journalStr"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><str name="author">Shakespeare, William</str><arr name="spellingShingle"><str>Shakespeare, William</str><str>Shakespeare</str></arr><str name="authorStr">Shakespeare, William</str><arr name="author_browse"><str>Shakespeare, William</str><str>Dyce, Alexander</str></arr><arr name="title"><str>Shakespeare</str></arr><arr name="signature_iln"><str>65</str></arr><str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 1 Troilus and cressida / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543231828 0003 x</str><str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 1 Troilus and cressida / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543231828 0003 x</str><str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 1 Troilus and cressida / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543231828 0003 x</str><str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 1 Troilus and cressida / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543231828 0003 x</str><str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 1 Troilus and cressida / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543231828 0003 x</str><arr name="collection_details"><str>SYSFLAG_1</str><str>GBV_GVK</str><str>GBV_ILN_65</str></arr><arr name="author2"><str>Dyce, Alexander</str></arr><arr name="author2Str"><str>Dyce, Alexander</str></arr><str name="publishDateSort">1875</str><arr name="publishDate"><str>1875</str></arr><arr name="format_se"><str>Aufsätze</str></arr><arr name="institution"><str>findex.gbv.de</str></arr><str name="recordtype">marc</str><arr name="building"><str>65</str></arr><arr name="title_auth"><str>Shakespeare</str></arr><arr name="selectkey"><str>65:x</str></arr><arr name="format"><str>Article</str></arr><str name="title_sort">shakespeare</str><arr name="title_short"><str>Shakespeare Troilus and cressida / William Shakespeare</str></arr><str name="fullrecord">00571naa a22002052c 4500001001000000003000700010005001700017008004100034040002200075100002500097245006300122700002000185773007300205901000800278912001400286912001200300912001500312951000700327980003100334#30;340737689#30;DE-601#30;20020121103223.0#30;020121s1875                  000 0     d#30;  #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare, William#30;10#31;aShakespeare#31;n1#31;pTroilus and cressida / William Shakespeare#30;1 #31;aDyce, Alexander#30;0 #31;w(DE-601)340737557#31;tShakespeare, William. - London : Chapman and Hall#30;  #31;aGBV#30;  #31;aSYSFLAG_1#30;  #31;aGBV_GVK#30;  #31;aGBV_ILN_65#30;  #31;aAI#30;  #31;265#31;101#31;b543231828#31;x0003#31;yx#30;#29;</str><arr name="ppnlink"><str>340737557</str></arr><str name="source">Shakespeare, William. - London : Chapman and Hall</str><str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str><arr name="author-letter"><str>Shakespeare, William</str></arr><bool name="remote_bool">false</bool><arr name="title_full"><str>Shakespeare 1 Troilus and cressida / William Shakespeare</str></arr><arr name="title_fullStr"><str>Shakespeare 1 Troilus and cressida / William Shakespeare</str></arr><arr name="title_full_unstemmed"><str>Shakespeare 1 Troilus and cressida / William Shakespeare</str></arr><arr name="title_fullGer"><str>Shakespeare 1 Troilus and cressida / William Shakespeare</str></arr><long name="_version_">1459933740317802496</long></doc><doc><str name="illustrated">Not Illustrated</str><arr name="format_phy_str_mv"><str>Article</str></arr><arr name="collection"><str>GVK</str></arr><bool name="hochschulschrift_bool">false</bool><arr name="topic_title"><str>Shakespeare 6 Julius Cæsar / William Shakespeare</str></arr><arr name="format_facet"><str>Aufsätze</str><str>Gedruckte Aufsätze</str></arr><str name="id">340738111</str><arr name="journal"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><arr name="journalStr"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><str name="author">Shakespeare, William</str><arr name="spellingShingle"><str>Shakespeare, William</str><str>Shakespeare</str></arr><str name="authorStr">Shakespeare, William</str><arr name="author_browse"><str>Shakespeare, William</str><str>Dyce, Alexander</str></arr><arr name="title"><str>Shakespeare</str></arr><arr name="signature_iln"><str>65</str></arr><str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 6 Julius Cæsar / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543233456 0003 x</str><str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 6 Julius Cæsar / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543233456 0003 x</str><str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 6 Julius Cæsar / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543233456 0003 x</str><str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 6 Julius Cæsar / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543233456 0003 x</str><str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 6 Julius Cæsar / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543233456 0003 x</str><arr name="collection_details"><str>SYSFLAG_1</str><str>GBV_GVK</str><str>GBV_ILN_65</str></arr><arr name="author2"><str>Dyce, Alexander</str></arr><arr name="author2Str"><str>Dyce, Alexander</str></arr><str name="publishDateSort">1875</str><arr name="publishDate"><str>1875</str></arr><arr name="format_se"><str>Aufsätze</str></arr><arr name="institution"><str>findex.gbv.de</str></arr><str name="recordtype">marc</str><arr name="building"><str>65</str></arr><arr name="title_auth"><str>Shakespeare</str></arr><arr name="selectkey"><str>65:x</str></arr><arr name="format"><str>Article</str></arr><str name="title_sort">shakespeare</str><arr name="title_short"><str>Shakespeare Julius Cæsar / William Shakespeare</str></arr><str name="fullrecord">00564naa a22002052c 4500001001000000003000700010005001700017008004100034040002200075100002500097245005600122700002000178773007300198901000800271912001400279912001200293912001500305951000700320980003100327#30;340738111#30;DE-601#30;20020121103607.0#30;020121s1875                  000 0     d#30;  #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare, William#30;10#31;aShakespeare#31;n6#31;pJulius Cæsar / William Shakespeare#30;1 #31;aDyce, Alexander#30;0 #31;w(DE-601)340737557#31;tShakespeare, William. - London : Chapman and Hall#30;  #31;aGBV#30;  #31;aSYSFLAG_1#30;  #31;aGBV_GVK#30;  #31;aGBV_ILN_65#30;  #31;aAI#30;  #31;265#31;101#31;b543233456#31;x0003#31;yx#30;#29;</str><arr name="ppnlink"><str>340737557</str></arr><str name="source">Shakespeare, William. - London : Chapman and Hall</str><str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str><arr name="author-letter"><str>Shakespeare, William</str></arr><bool name="remote_bool">false</bool><arr name="title_full"><str>Shakespeare 6 Julius Cæsar / William Shakespeare</str></arr><arr name="title_fullStr"><str>Shakespeare 6 Julius Cæsar / William Shakespeare</str></arr><arr name="title_full_unstemmed"><str>Shakespeare 6 Julius Cæsar / William Shakespeare</str></arr><arr name="title_fullGer"><str>Shakespeare 6 Julius Cæsar / William Shakespeare</str></arr><long name="_version_">1459933741136740352</long></doc><doc><str name="illustrated">Not Illustrated</str><arr name="format_phy_str_mv"><str>Article</str></arr><arr name="collection"><str>GVK</str></arr><bool name="hochschulschrift_bool">false</bool><arr name="topic_title"><str>Shakespeare 4 Twelfth-Night / William Shakespeare</str></arr><arr name="format_facet"><str>Aufsätze</str><str>Gedruckte Aufsätze</str></arr><str name="id">340734183</str><arr name="journal"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><arr name="journalStr"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><str name="author">Shakespeare, William</str><arr name="spellingShingle"><str>Shakespeare, William</str><str>Shakespeare</str></arr><str name="authorStr">Shakespeare, William</str><arr name="author_browse"><str>Shakespeare, William</str><str>Dyce, Alexander</str></arr><arr name="title"><str>Shakespeare</str></arr><arr name="signature_iln"><str>65</str></arr><str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Twelfth-Night / William Shakespeare Dyce, Alexander (DE-601)340733632 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543217167 0003 x</str><str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Twelfth-Night / William Shakespeare Dyce, Alexander (DE-601)340733632 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543217167 0003 x</str><str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Twelfth-Night / William Shakespeare Dyce, Alexander (DE-601)340733632 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543217167 0003 x</str><str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Twelfth-Night / William Shakespeare Dyce, Alexander (DE-601)340733632 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543217167 0003 x</str><str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Twelfth-Night / William Shakespeare Dyce, Alexander (DE-601)340733632 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543217167 0003 x</str><arr name="collection_details"><str>SYSFLAG_1</str><str>GBV_GVK</str><str>GBV_ILN_65</str></arr><arr name="author2"><str>Dyce, Alexander</str></arr><arr name="author2Str"><str>Dyce, Alexander</str></arr><str name="publishDateSort">1875</str><arr name="publishDate"><str>1875</str></arr><arr name="format_se"><str>Aufsätze</str></arr><arr name="institution"><str>findex.gbv.de</str></arr><str name="recordtype">marc</str><arr name="building"><str>65</str></arr><arr name="title_auth"><str>Shakespeare</str></arr><arr name="selectkey"><str>65:x</str></arr><arr name="format"><str>Article</str></arr><str name="title_sort">shakespeare</str><arr name="title_short"><str>Shakespeare Twelfth-Night / William Shakespeare</str></arr><str name="fullrecord">00564naa a22002052c 4500001001000000003000700010005001700017008004100034040002200075100002500097245005600122700002000178773007300198901000800271912001400279912001200293912001500305951000700320980003100327#30;340734183#30;DE-601#30;20020121095832.0#30;020121s1875                  000 0     d#30;  #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare, William#30;10#31;aShakespeare#31;n4#31;pTwelfth-Night / William Shakespeare#30;1 #31;aDyce, Alexander#30;0 #31;w(DE-601)340733632#31;tShakespeare, William. - London : Chapman and Hall#30;  #31;aGBV#30;  #31;aSYSFLAG_1#30;  #31;aGBV_GVK#30;  #31;aGBV_ILN_65#30;  #31;aAI#30;  #31;265#31;101#31;b543217167#31;x0003#31;yx#30;#29;</str><arr name="ppnlink"><str>340733632</str></arr><str name="source">Shakespeare, William. - London : Chapman and Hall</str><str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str><arr name="author-letter"><str>Shakespeare, William</str></arr><bool name="remote_bool">false</bool><arr name="title_full"><str>Shakespeare 4 Twelfth-Night / William Shakespeare</str></arr><arr name="title_fullStr"><str>Shakespeare 4 Twelfth-Night / William Shakespeare</str></arr><arr name="title_full_unstemmed"><str>Shakespeare 4 Twelfth-Night / William Shakespeare</str></arr><arr name="title_fullGer"><str>Shakespeare 4 Twelfth-Night / William Shakespeare</str></arr><long name="_version_">1459933732809998336</long></doc><doc><str name="illustrated">Not Illustrated</str><arr name="format_phy_str_mv"><str>Article</str></arr><arr name="collection"><str>GVK</str></arr><bool name="hochschulschrift_bool">false</bool><arr name="topic_title"><str>Shakespeare 4 King Richard III. / William Shakespeare</str></arr><arr name="format_facet"><str>Aufsätze</str><str>Gedruckte Aufsätze</str></arr><str name="id">340737123</str><arr name="journal"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><arr name="journalStr"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><str name="author">Shakespeare, William</str><arr name="spellingShingle"><str>Shakespeare, William</str><str>Shakespeare</str></arr><str name="authorStr">Shakespeare, William</str><arr name="author_browse"><str>Shakespeare, William</str><str>Dyce, Alexander</str></arr><arr name="title"><str>Shakespeare</str></arr><arr name="signature_iln"><str>65</str></arr><str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 4 King Richard III. / William Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229637 0003 x</str><str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 4 King Richard III. / William Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229637 0003 x</str><str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 4 King Richard III. / William Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229637 0003 x</str><str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 4 King Richard III. / William Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229637 0003 x</str><str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 4 King Richard III. / William Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229637 0003 x</str><arr name="collection_details"><str>SYSFLAG_1</str><str>GBV_GVK</str><str>GBV_ILN_65</str></arr><arr name="author2"><str>Dyce, Alexander</str></arr><arr name="author2Str"><str>Dyce, Alexander</str></arr><str name="publishDateSort">1875</str><arr name="publishDate"><str>1875</str></arr><arr name="format_se"><str>Aufsätze</str></arr><arr name="institution"><str>findex.gbv.de</str></arr><str name="recordtype">marc</str><arr name="building"><str>65</str></arr><arr name="title_auth"><str>Shakespeare</str></arr><arr name="selectkey"><str>65:x</str></arr><arr name="format"><str>Article</str></arr><str name="title_sort">shakespeare</str><arr name="title_short"><str>Shakespeare King Richard III. / William Shakespeare</str></arr><str name="fullrecord">00568naa a22002052c 4500001001000000003000700010005001700017008004100034040002200075100002500097245006000122700002000182773007300202901000800275912001400283912001200297912001500309951000700324980003100331#30;340737123#30;DE-601#30;20020121102703.0#30;020121s1875                  000 0     d#30;  #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare, William#30;10#31;aShakespeare#31;n4#31;pKing Richard III. / William Shakespeare#30;1 #31;aDyce, Alexander#30;0 #31;w(DE-601)340736542#31;tShakespeare, William. - London : Chapman and Hall#30;  #31;aGBV#30;  #31;aSYSFLAG_1#30;  #31;aGBV_GVK#30;  #31;aGBV_ILN_65#30;  #31;aAI#30;  #31;265#31;101#31;b543229637#31;x0003#31;yx#30;#29;</str><arr name="ppnlink"><str>340736542</str></arr><str name="source">Shakespeare, William. - London : Chapman and Hall</str><str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str><arr name="author-letter"><str>Shakespeare, William</str></arr><bool name="remote_bool">false</bool><arr name="title_full"><str>Shakespeare 4 King Richard III. / William Shakespeare</str></arr><arr name="title_fullStr"><str>Shakespeare 4 King Richard III. / William Shakespeare</str></arr><arr name="title_full_unstemmed"><str>Shakespeare 4 King Richard III. / William Shakespeare</str></arr><arr name="title_fullGer"><str>Shakespeare 4 King Richard III. / William Shakespeare</str></arr><long name="_version_">1459933739066851328</long></doc><doc><str name="illustrated">Not Illustrated</str><arr name="format_phy_str_mv"><str>Article</str></arr><arr name="collection"><str>GVK</str></arr><bool name="hochschulschrift_bool">false</bool><arr name="topic_title"><str>Shakespeare 5 King Henry VIII. / William Shakespeare</str></arr><arr name="format_facet"><str>Aufsätze</str><str>Gedruckte Aufsätze</str></arr><str name="id">340737220</str><arr name="journal"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><arr name="journalStr"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><str name="author">Shakespeare, William</str><arr name="spellingShingle"><str>Shakespeare, William</str><str>Shakespeare</str></arr><str name="authorStr">Shakespeare, William</str><arr name="author_browse"><str>Shakespeare, William</str><str>Dyce, Alexander</str></arr><arr name="title"><str>Shakespeare</str></arr><arr name="signature_iln"><str>65</str></arr><str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 5 King Henry VIII. / William Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229920 0003 x</str><str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 5 King Henry VIII. / William Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229920 0003 x</str><str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 5 King Henry VIII. / William Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229920 0003 x</str><str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 5 King Henry VIII. / William Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229920 0003 x</str><str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 5 King Henry VIII. / William Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229920 0003 x</str><arr name="collection_details"><str>SYSFLAG_1</str><str>GBV_GVK</str><str>GBV_ILN_65</str></arr><arr name="author2"><str>Dyce, Alexander</str></arr><arr name="author2Str"><str>Dyce, Alexander</str></arr><str name="publishDateSort">1875</str><arr name="publishDate"><str>1875</str></arr><arr name="format_se"><str>Aufsätze</str></arr><arr name="institution"><str>findex.gbv.de</str></arr><str name="recordtype">marc</str><arr name="building"><str>65</str></arr><arr name="title_auth"><str>Shakespeare</str></arr><arr name="selectkey"><str>65:x</str></arr><arr name="format"><str>Article</str></arr><str name="title_sort">shakespeare</str><arr name="title_short"><str>Shakespeare King Henry VIII. / William Shakespeare</str></arr><str name="fullrecord">00567naa a22002052c 4500001001000000003000700010005001700017008004100034040002200075100002500097245005900122700002000181773007300201901000800274912001400282912001200296912001500308951000700323980003100330#30;340737220#30;DE-601#30;20020121102742.0#30;020121s1875                  000 0     d#30;  #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare, William#30;10#31;aShakespeare#31;n5#31;pKing Henry VIII. / William Shakespeare#30;1 #31;aDyce, Alexander#30;0 #31;w(DE-601)340736542#31;tShakespeare, William. - London : Chapman and Hall#30;  #31;aGBV#30;  #31;aSYSFLAG_1#30;  #31;aGBV_GVK#30;  #31;aGBV_ILN_65#30;  #31;aAI#30;  #31;265#31;101#31;b543229920#31;x0003#31;yx#30;#29;</str><arr name="ppnlink"><str>340736542</str></arr><str name="source">Shakespeare, William. - London : Chapman and Hall</str><str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str><arr name="author-letter"><str>Shakespeare, William</str></arr><bool name="remote_bool">false</bool><arr name="title_full"><str>Shakespeare 5 King Henry VIII. / William Shakespeare</str></arr><arr name="title_fullStr"><str>Shakespeare 5 King Henry VIII. / William Shakespeare</str></arr><arr name="title_full_unstemmed"><str>Shakespeare 5 King Henry VIII. / William Shakespeare</str></arr><arr name="title_fullGer"><str>Shakespeare 5 King Henry VIII. / William Shakespeare</str></arr><long name="_version_">1459933739226234880</long></doc><doc><str name="illustrated">Not Illustrated</str><arr name="format_phy_str_mv"><str>Article</str></arr><arr name="collection"><str>GVK</str></arr><bool name="hochschulschrift_bool">false</bool><arr name="topic_title"><str>Shakespeare 4 Lucrece / William Shakespeare</str></arr><arr name="format_facet"><str>Aufsätze</str><str>Gedruckte Aufsätze</str></arr><str name="id">340739169</str><arr name="journal"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><arr name="journalStr"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><str name="author">Shakespeare, William</str><arr name="spellingShingle"><str>Shakespeare, William</str><str>Shakespeare</str></arr><str name="authorStr">Shakespeare, William</str><arr name="author_browse"><str>Shakespeare, William</str><str>Dyce, Alexander</str></arr><arr name="title"><str>Shakespeare</str></arr><arr name="signature_iln"><str>65</str></arr><str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Lucrece / William Shakespeare Dyce, Alexander (DE-601)34073874X Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543237850 0003 x</str><str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Lucrece / William Shakespeare Dyce, Alexander (DE-601)34073874X Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543237850 0003 x</str><str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Lucrece / William Shakespeare Dyce, Alexander (DE-601)34073874X Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543237850 0003 x</str><str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Lucrece / William Shakespeare Dyce, Alexander (DE-601)34073874X Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543237850 0003 x</str><str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Lucrece / William Shakespeare Dyce, Alexander (DE-601)34073874X Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543237850 0003 x</str><arr name="collection_details"><str>SYSFLAG_1</str><str>GBV_GVK</str><str>GBV_ILN_65</str></arr><arr name="author2"><str>Dyce, Alexander</str></arr><arr name="author2Str"><str>Dyce, Alexander</str></arr><str name="publishDateSort">1876</str><arr name="publishDate"><str>1876</str></arr><arr name="format_se"><str>Aufsätze</str></arr><arr name="institution"><str>findex.gbv.de</str></arr><str name="recordtype">marc</str><arr name="building"><str>65</str></arr><arr name="title_auth"><str>Shakespeare</str></arr><arr name="selectkey"><str>65:x</str></arr><arr name="format"><str>Article</str></arr><str name="title_sort">shakespeare</str><arr name="title_short"><str>Shakespeare Lucrece / William Shakespeare</str></arr><str name="fullrecord">00558naa a22002052c 4500001001000000003000700010005001700017008004100034040002200075100002500097245005000122700002000172773007300192901000800265912001400273912001200287912001500299951000700314980003100321#30;340739169#30;DE-601#30;20020121104731.0#30;020121s1876                  000 0     d#30;  #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare, William#30;10#31;aShakespeare#31;n4#31;pLucrece / William Shakespeare#30;1 #31;aDyce, Alexander#30;0 #31;w(DE-601)34073874X#31;tShakespeare, William. - London : Chapman and Hall#30;  #31;aGBV#30;  #31;aSYSFLAG_1#30;  #31;aGBV_GVK#30;  #31;aGBV_ILN_65#30;  #31;aAI#30;  #31;265#31;101#31;b543237850#31;x0003#31;yx#30;#29;</str><arr name="ppnlink"><str>34073874X</str></arr><str name="source">Shakespeare, William. - London : Chapman and Hall</str><str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str><arr name="author-letter"><str>Shakespeare, William</str></arr><bool name="remote_bool">false</bool><arr name="title_full"><str>Shakespeare 4 Lucrece / William Shakespeare</str></arr><arr name="title_fullStr"><str>Shakespeare 4 Lucrece / William Shakespeare</str></arr><arr name="title_full_unstemmed"><str>Shakespeare 4 Lucrece / William Shakespeare</str></arr><arr name="title_fullGer"><str>Shakespeare 4 Lucrece / William Shakespeare</str></arr><long name="_version_">1459933743764471808</long></doc><doc><str name="illustrated">Not Illustrated</str><arr name="format_phy_str_mv"><str>Article</str></arr><arr name="collection"><str>GVK</str></arr><bool name="hochschulschrift_bool">false</bool><arr name="topic_title"><str>Shakespeare 5 Timon of Athens / William Shakespeare</str></arr><arr name="format_facet"><str>Aufsätze</str><str>Gedruckte Aufsätze</str></arr><str name="id">340737980</str><arr name="journal"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><arr name="journalStr"><str>Shakespeare, William. - London : Chapman and Hall</str></arr><str name="author">Shakespeare, William</str><arr name="spellingShingle"><str>Shakespeare, William</str><str>Shakespeare</str></arr><str name="authorStr">Shakespeare, William</str><arr name="author_browse"><str>Shakespeare, William</str><str>Dyce, Alexander</str></arr><arr name="title"><str>Shakespeare</str></arr><arr name="signature_iln"><str>65</str></arr><str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Timon of Athens / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543232964 0003 x</str><str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Timon of Athens / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543232964 0003 x</str><str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Timon of Athens / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543232964 0003 x</str><str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Timon of Athens / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543232964 0003 x</str><str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Timon of Athens / William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543232964 0003 x</str><arr name="collection_details"><str>SYSFLAG_1</str><str>GBV_GVK</str><str>GBV_ILN_65</str></arr><arr name="author2"><str>Dyce, Alexander</str></arr><arr name="author2Str"><str>Dyce, Alexander</str></arr><str name="publishDateSort">1875</str><arr name="publishDate"><str>1875</str></arr><arr name="format_se"><str>Aufsätze</str></arr><arr name="institution"><str>findex.gbv.de</str></arr><str name="recordtype">marc</str><arr name="building"><str>65</str></arr><arr name="title_auth"><str>Shakespeare</str></arr><arr name="selectkey"><str>65:x</str></arr><arr name="format"><str>Article</str></arr><str name="title_sort">shakespeare</str><arr name="title_short"><str>Shakespeare Timon of Athens / William Shakespeare</str></arr><str name="fullrecord">00566naa a22002052c 4500001001000000003000700010005001700017008004100034040002200075100002500097245005800122700002000180773007300200901000800273912001400281912001200295912001500307951000700322980003100329#30;340737980#30;DE-601#30;20020121103510.0#30;020121s1875                  000 0     d#30;  #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare, William#30;10#31;aShakespeare#31;n5#31;pTimon of Athens / William Shakespeare#30;1 #31;aDyce, Alexander#30;0 #31;w(DE-601)340737557#31;tShakespeare, William. - London : Chapman and Hall#30;  #31;aGBV#30;  #31;aSYSFLAG_1#30;  #31;aGBV_GVK#30;  #31;aGBV_ILN_65#30;  #31;aAI#30;  #31;265#31;101#31;b543232964#31;x0003#31;yx#30;#29;</str><arr name="ppnlink"><str>340737557</str></arr><str name="source">Shakespeare, William. - London : Chapman and Hall</str><str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str><arr name="author-letter"><str>Shakespeare, William</str></arr><bool name="remote_bool">false</bool><arr name="title_full"><str>Shakespeare 5 Timon of Athens / William Shakespeare</str></arr><arr name="title_fullStr"><str>Shakespeare 5 Timon of Athens / William Shakespeare</str></arr><arr name="title_full_unstemmed"><str>Shakespeare 5 Timon of Athens / William Shakespeare</str></arr><arr name="title_fullGer"><str>Shakespeare 5 Timon of Athens / William Shakespeare</str></arr><long name="_version_">1459933740870402048</long></doc></result>
+    <lst name="responseHeader">
+        <int name="status">0</int>
+        <int name="QTime">400</int>
+        <lst name="params">
+            <str name="q">shakespeare</str>
+            <str name="fq">(collection:GVK OR collection:DOAJ OR (collection_details:ZDB-1-PIO))</str>
+        </lst>
+    </lst>
+    <result name="response" numFound="91373" start="0" maxScore="2.5404873">
+        <doc>
+            <str name="illustrated">Not Illustrated</str>
+            <arr name="format_phy_str_mv">
+                <str>Article</str>
+            </arr>
+            <arr name="collection">
+                <str>NL</str>
+            </arr>
+            <bool name="hochschulschrift_bool">false</bool>
+            <arr name="topic_title">
+                <str>pio natliz</str>
+                <str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares
+                    naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in
+                    Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens
+                    nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst.
+                    Shakespeare und die Jugend (Book Review) Wilhelm Dibelius
+                </str>
+            </arr>
+            <arr name="format_facet">
+                <str>Aufsätze</str>
+                <str>Gedruckte Aufsätze</str>
+            </arr>
+            <str name="id">NLZ042429315</str>
+            <arr name="journal">
+                <str>Shakespeare Jahrbuch.</str>
+            </arr>
+            <arr name="journalStr">
+                <str>Shakespeare Jahrbuch.</str>
+            </arr>
+            <str name="author">Dibelius, Wilhelm</str>
+            <arr name="spellingShingle">
+                <str>Dibelius, Wilhelm</str>
+                <str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares
+                    naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in
+                    Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens
+                    nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst.
+                    Shakespeare und die Jugend (Book Review)
+                </str>
+                <str>pio natliz</str>
+            </arr>
+            <str name="authorStr">Dibelius, Wilhelm</str>
+            <arr name="author_browse">
+                <str>Dibelius, Wilhelm</str>
+            </arr>
+            <arr name="title">
+                <str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares
+                    naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in
+                    Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens
+                    nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst.
+                    Shakespeare und die Jugend (Book Review)
+                </str>
+            </arr>
+            <str name="allfields">pioa020300960048 GBVCP ger rakwb ger pio natliz Dibelius, Wilhelm Shakespeares
+                Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche
+                Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die
+                Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare.
+                Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die
+                Jugend (Book Review) Wilhelm Dibelius Zeitschriftenschau In: Shakespeare Jahrbuch. Heidelberg : Quelle
+                und Meyer, etc. 38 (1902) 318 38&lt;318 (DE-601)000040096 GBV ZDB-1-PIO GBV_NL_ARTICLE AR 38 1902 318 38
+                (1902) 318
+            </str>
+            <str name="spelling">pioa020300960048 GBVCP ger rakwb ger pio natliz Dibelius, Wilhelm Shakespeares
+                Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche
+                Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die
+                Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare.
+                Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die
+                Jugend (Book Review) Wilhelm Dibelius Zeitschriftenschau In: Shakespeare Jahrbuch. Heidelberg : Quelle
+                und Meyer, etc. 38 (1902) 318 38&lt;318 (DE-601)000040096 GBV ZDB-1-PIO GBV_NL_ARTICLE AR 38 1902 318 38
+                (1902) 318
+            </str>
+            <str name="allfields_unstemmed">pioa020300960048 GBVCP ger rakwb ger pio natliz Dibelius, Wilhelm
+                Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares
+                naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in
+                Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens
+                nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst.
+                Shakespeare und die Jugend (Book Review) Wilhelm Dibelius Zeitschriftenschau In: Shakespeare Jahrbuch.
+                Heidelberg : Quelle und Meyer, etc. 38 (1902) 318 38&lt;318 (DE-601)000040096 GBV ZDB-1-PIO
+                GBV_NL_ARTICLE AR 38 1902 318 38 (1902) 318
+            </str>
+            <str name="allfieldsGer">pioa020300960048 GBVCP ger rakwb ger pio natliz Dibelius, Wilhelm Shakespeares
+                Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche
+                Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die
+                Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare.
+                Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die
+                Jugend (Book Review) Wilhelm Dibelius Zeitschriftenschau In: Shakespeare Jahrbuch. Heidelberg : Quelle
+                und Meyer, etc. 38 (1902) 318 38&lt;318 (DE-601)000040096 GBV ZDB-1-PIO GBV_NL_ARTICLE AR 38 1902 318 38
+                (1902) 318
+            </str>
+            <str name="allfieldsSound">pioa020300960048 GBVCP ger rakwb ger pio natliz Dibelius, Wilhelm Shakespeares
+                Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche
+                Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die
+                Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens nach Shakespeare.
+                Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die
+                Jugend (Book Review) Wilhelm Dibelius Zeitschriftenschau In: Shakespeare Jahrbuch. Heidelberg : Quelle
+                und Meyer, etc. 38 (1902) 318 38&lt;318 (DE-601)000040096 GBV ZDB-1-PIO GBV_NL_ARTICLE AR 38 1902 318 38
+                (1902) 318
+            </str>
+            <arr name="collection_details">
+                <str>ZDB-1-PIO</str>
+                <str>GBV_NL_ARTICLE</str>
+            </arr>
+            <str name="publishDateSort">1902</str>
+            <arr name="publishDate">
+                <str>1902</str>
+            </arr>
+            <arr name="format_se">
+                <str>Aufsätze</str>
+            </arr>
+            <arr name="institution">
+                <str>findex.gbv.de</str>
+            </arr>
+            <str name="recordtype">marc</str>
+            <arr name="abstract">
+                <str>Zeitschriftenschau</str>
+            </arr>
+            <arr name="abstractGer">
+                <str>Zeitschriftenschau</str>
+            </arr>
+            <arr name="abstract_unstemmed">
+                <str>Zeitschriftenschau</str>
+            </arr>
+            <arr name="topic">
+                <str>pio natliz</str>
+            </arr>
+            <arr name="topic_unstemmed">
+                <str>pio natliz</str>
+            </arr>
+            <arr name="topic_browse">
+                <str>pio natliz</str>
+            </arr>
+            <arr name="language_de">
+                <str>deutsch</str>
+            </arr>
+            <arr name="title_auth">
+                <str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares
+                    naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in
+                    Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens
+                    nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst.
+                    Shakespeare und die Jugend (Book Review)
+                </str>
+            </arr>
+            <arr name="class">
+                <str>pio natliz</str>
+            </arr>
+            <arr name="format">
+                <str>Article</str>
+            </arr>
+            <str name="title_sort">shakespeares charakter, bildung und kunst: shakespeares sprachkenntnisse.
+                shakespeares naturwissenschaftliche auffassungen. shakespeares astronomische ansichten. die historische
+                treue in shakespeares dramen. die einheit des charakters bei shakespeare. über die psychologie des
+                gewissens nach shakespeare. shakespeares innere entwicklung. shakespeares patriotismus. shakespeares
+                kunst. shakespeare und die jugend (book review)
+            </str>
+            <arr name="title_short">
+                <str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares
+                    naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in
+                    Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens
+                    nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst.
+                    Shakespeare und die Jugend (Book Review)
+                </str>
+            </arr>
+            <str name="fullrecord">01062naa a2200229 c
+                4500001001300000003000700013005001700020008004100037024002100078040002200099041000800121084001600129100002200145245045000167520002300617773011100640901000800751912001400759912001900773951000700792952003300799#30;NLZ042429315#30;DE-601#30;20101227181644.0#30;060713s1902
+                gw 000 0 ger d#30;8 #31;apioa020300960048#30; #31;aGBVCP#31;bger#31;erakwb#30;0 #31;ager#30;
+                #31;apio#31;2natliz#30;1 #31;aDibelius, Wilhelm#30;10#31;aShakespeares Charakter, Bildung und Kunst:
+                Shakespeares Sprachkenntnisse. Shakespeares naturwissenschaftliche Auffassungen. Shakespeares
+                astronomische Ansichten. Die historische Treue in Shakespeares Dramen. Die Einheit des Charakters bei
+                Shakespeare. Über die psychologie des Gewissens nach Shakespeare. Shakespeares innere Entwicklung.
+                Shakespeares Patriotismus. Shakespeares Kunst. Shakespeare und die Jugend (Book Review)#31;cWilhelm
+                Dibelius#30; #31;aZeitschriftenschau#30;08#31;iIn: #31;tShakespeare Jahrbuch.#31;dHeidelberg : Quelle
+                und Meyer, etc.#31;g38 (1902) 318#31;q38&lt;318#31;w(DE-601)000040096#30; #31;aGBV#30;
+                #31;aZDB-1-PIO#30; #31;aGBV_NL_ARTICLE#30; #31;aAR#30; #31;d38#31;j1902#31;h318#31;y38 (1902)
+                318#30;#29;
+            </str>
+            <arr name="ppnlink">
+                <str>000040096</str>
+            </arr>
+            <str name="source">In: Shakespeare Jahrbuch. 38 (1902) 318</str>
+            <str name="sourceStr">In: Shakespeare Jahrbuch. 38 (1902) 318</str>
+            <arr name="author-letter">
+                <str>Dibelius, Wilhelm</str>
+            </arr>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="lang_code">
+                <str>ger</str>
+            </arr>
+            <bool name="remote_bool">false</bool>
+            <arr name="title_full">
+                <str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares
+                    naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in
+                    Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens
+                    nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst.
+                    Shakespeare und die Jugend (Book Review) Wilhelm Dibelius
+                </str>
+            </arr>
+            <arr name="title_fullStr">
+                <str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares
+                    naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in
+                    Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens
+                    nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst.
+                    Shakespeare und die Jugend (Book Review) Wilhelm Dibelius
+                </str>
+            </arr>
+            <arr name="title_full_unstemmed">
+                <str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares
+                    naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in
+                    Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens
+                    nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst.
+                    Shakespeare und die Jugend (Book Review) Wilhelm Dibelius
+                </str>
+            </arr>
+            <arr name="title_fullGer">
+                <str>Shakespeares Charakter, Bildung und Kunst: Shakespeares Sprachkenntnisse. Shakespeares
+                    naturwissenschaftliche Auffassungen. Shakespeares astronomische Ansichten. Die historische Treue in
+                    Shakespeares Dramen. Die Einheit des Charakters bei Shakespeare. Über die psychologie des Gewissens
+                    nach Shakespeare. Shakespeares innere Entwicklung. Shakespeares Patriotismus. Shakespeares Kunst.
+                    Shakespeare und die Jugend (Book Review) Wilhelm Dibelius
+                </str>
+            </arr>
+            <long name="_version_">1459960420448075776</long>
+        </doc>
+        <doc>
+            <str name="illustrated">Not Illustrated</str>
+            <arr name="format_phy_str_mv">
+                <str>Article</str>
+            </arr>
+            <arr name="collection">
+                <str>GVK</str>
+            </arr>
+            <bool name="hochschulschrift_bool">false</bool>
+            <arr name="topic_title">
+                <str>Shakespeare 5 Measure for measure / William Shakespeare</str>
+            </arr>
+            <arr name="format_facet">
+                <str>Aufsätze</str>
+                <str>Gedruckte Aufsätze</str>
+            </arr>
+            <str name="id">340732091</str>
+            <arr name="journal">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <arr name="journalStr">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <str name="author">Shakespeare, William</str>
+            <arr name="spellingShingle">
+                <str>Shakespeare, William</str>
+                <str>Shakespeare</str>
+            </arr>
+            <str name="authorStr">Shakespeare, William</str>
+            <arr name="author_browse">
+                <str>Shakespeare, William</str>
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="title">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="signature_iln">
+                <str>65</str>
+            </arr>
+            <str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Measure for measure / William
+                Shakespeare Dyce, Alexander (DE-601)340730447 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543207935 0003 x
+            </str>
+            <str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Measure for measure / William
+                Shakespeare Dyce, Alexander (DE-601)340730447 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543207935 0003 x
+            </str>
+            <str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Measure for measure /
+                William Shakespeare Dyce, Alexander (DE-601)340730447 Shakespeare, William. - London : Chapman and Hall
+                GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543207935 0003 x
+            </str>
+            <str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Measure for measure / William
+                Shakespeare Dyce, Alexander (DE-601)340730447 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543207935 0003 x
+            </str>
+            <str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Measure for measure / William
+                Shakespeare Dyce, Alexander (DE-601)340730447 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543207935 0003 x
+            </str>
+            <arr name="collection_details">
+                <str>SYSFLAG_1</str>
+                <str>GBV_GVK</str>
+                <str>GBV_ILN_65</str>
+            </arr>
+            <arr name="author2">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="author2Str">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <str name="publishDateSort">1875</str>
+            <arr name="publishDate">
+                <str>1875</str>
+            </arr>
+            <arr name="format_se">
+                <str>Aufsätze</str>
+            </arr>
+            <arr name="institution">
+                <str>findex.gbv.de</str>
+            </arr>
+            <str name="recordtype">marc</str>
+            <arr name="building">
+                <str>65</str>
+            </arr>
+            <arr name="title_auth">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="selectkey">
+                <str>65:x</str>
+            </arr>
+            <arr name="format">
+                <str>Article</str>
+            </arr>
+            <str name="title_sort">shakespeare</str>
+            <arr name="title_short">
+                <str>Shakespeare Measure for measure / William Shakespeare</str>
+            </arr>
+            <str name="fullrecord">00570naa a22002052c
+                4500001001000000003000700010005001700017008004100034040002200075100002500097245006200122700002000184773007300204901000800277912001400285912001200299912001500311951000700326980003100333#30;340732091#30;DE-601#30;20020121093650.0#30;020121s1875
+                000 0 d#30; #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare,
+                William#30;10#31;aShakespeare#31;n5#31;pMeasure for measure / William Shakespeare#30;1 #31;aDyce,
+                Alexander#30;0 #31;w(DE-601)340730447#31;tShakespeare, William. - London : Chapman and Hall#30;
+                #31;aGBV#30; #31;aSYSFLAG_1#30; #31;aGBV_GVK#30; #31;aGBV_ILN_65#30; #31;aAI#30;
+                #31;265#31;101#31;b543207935#31;x0003#31;yx#30;#29;
+            </str>
+            <arr name="ppnlink">
+                <str>340730447</str>
+            </arr>
+            <str name="source">Shakespeare, William. - London : Chapman and Hall</str>
+            <str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str>
+            <arr name="author-letter">
+                <str>Shakespeare, William</str>
+            </arr>
+            <bool name="remote_bool">false</bool>
+            <arr name="title_full">
+                <str>Shakespeare 5 Measure for measure / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullStr">
+                <str>Shakespeare 5 Measure for measure / William Shakespeare</str>
+            </arr>
+            <arr name="title_full_unstemmed">
+                <str>Shakespeare 5 Measure for measure / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullGer">
+                <str>Shakespeare 5 Measure for measure / William Shakespeare</str>
+            </arr>
+            <long name="_version_">1459933728098746368</long>
+        </doc>
+        <doc>
+            <str name="illustrated">Not Illustrated</str>
+            <arr name="format_phy_str_mv">
+                <str>Article</str>
+            </arr>
+            <arr name="collection">
+                <str>GVK</str>
+            </arr>
+            <bool name="hochschulschrift_bool">false</bool>
+            <arr name="topic_title">
+                <str>Shakespeare 2 Much ado about nothing / William Shakespeare</str>
+            </arr>
+            <arr name="format_facet">
+                <str>Aufsätze</str>
+                <str>Gedruckte Aufsätze</str>
+            </arr>
+            <str name="id">340733039</str>
+            <arr name="journal">
+                <str>Shakespeare, William. - London</str>
+            </arr>
+            <arr name="journalStr">
+                <str>Shakespeare, William. - London</str>
+            </arr>
+            <str name="author">Shakespeare, William</str>
+            <arr name="spellingShingle">
+                <str>Shakespeare, William</str>
+                <str>Shakespeare</str>
+            </arr>
+            <str name="authorStr">Shakespeare, William</str>
+            <arr name="author_browse">
+                <str>Shakespeare, William</str>
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="title">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="signature_iln">
+                <str>65</str>
+            </arr>
+            <str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 2 Much ado about nothing / William
+                Shakespeare Dyce, Alexander (DE-601)34073275X Shakespeare, William. - London GBV SYSFLAG_1 GBV_GVK
+                GBV_ILN_65 AI 65 01 543211878 0003 x
+            </str>
+            <str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 2 Much ado about nothing / William
+                Shakespeare Dyce, Alexander (DE-601)34073275X Shakespeare, William. - London GBV SYSFLAG_1 GBV_GVK
+                GBV_ILN_65 AI 65 01 543211878 0003 x
+            </str>
+            <str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 2 Much ado about nothing /
+                William Shakespeare Dyce, Alexander (DE-601)34073275X Shakespeare, William. - London GBV SYSFLAG_1
+                GBV_GVK GBV_ILN_65 AI 65 01 543211878 0003 x
+            </str>
+            <str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 2 Much ado about nothing / William
+                Shakespeare Dyce, Alexander (DE-601)34073275X Shakespeare, William. - London GBV SYSFLAG_1 GBV_GVK
+                GBV_ILN_65 AI 65 01 543211878 0003 x
+            </str>
+            <str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 2 Much ado about nothing /
+                William Shakespeare Dyce, Alexander (DE-601)34073275X Shakespeare, William. - London GBV SYSFLAG_1
+                GBV_GVK GBV_ILN_65 AI 65 01 543211878 0003 x
+            </str>
+            <arr name="collection_details">
+                <str>SYSFLAG_1</str>
+                <str>GBV_GVK</str>
+                <str>GBV_ILN_65</str>
+            </arr>
+            <arr name="author2">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="author2Str">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <str name="publishDateSort">1875</str>
+            <arr name="publishDate">
+                <str>1875</str>
+            </arr>
+            <arr name="format_se">
+                <str>Aufsätze</str>
+            </arr>
+            <arr name="institution">
+                <str>findex.gbv.de</str>
+            </arr>
+            <str name="recordtype">marc</str>
+            <arr name="building">
+                <str>65</str>
+            </arr>
+            <arr name="title_auth">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="selectkey">
+                <str>65:x</str>
+            </arr>
+            <arr name="format">
+                <str>Article</str>
+            </arr>
+            <str name="title_sort">shakespeare</str>
+            <arr name="title_short">
+                <str>Shakespeare Much ado about nothing / William Shakespeare</str>
+            </arr>
+            <str name="fullrecord">00554naa a22002052c
+                4500001001000000003000700010005001700017008004100034040002200075100002500097245006500122700002000187773005400207901000800261912001400269912001200283912001500295951000700310980003100317#30;340733039#30;DE-601#30;20020121094641.0#30;020121s1875
+                000 0 d#30; #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare,
+                William#30;10#31;aShakespeare#31;n2#31;pMuch ado about nothing / William Shakespeare#30;1 #31;aDyce,
+                Alexander#30;0 #31;w(DE-601)34073275X#31;tShakespeare, William. - London#30; #31;aGBV#30;
+                #31;aSYSFLAG_1#30; #31;aGBV_GVK#30; #31;aGBV_ILN_65#30; #31;aAI#30;
+                #31;265#31;101#31;b543211878#31;x0003#31;yx#30;#29;
+            </str>
+            <arr name="ppnlink">
+                <str>34073275X</str>
+            </arr>
+            <str name="source">Shakespeare, William. - London</str>
+            <str name="sourceStr">Shakespeare, William. - London</str>
+            <arr name="author-letter">
+                <str>Shakespeare, William</str>
+            </arr>
+            <bool name="remote_bool">false</bool>
+            <arr name="title_full">
+                <str>Shakespeare 2 Much ado about nothing / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullStr">
+                <str>Shakespeare 2 Much ado about nothing / William Shakespeare</str>
+            </arr>
+            <arr name="title_full_unstemmed">
+                <str>Shakespeare 2 Much ado about nothing / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullGer">
+                <str>Shakespeare 2 Much ado about nothing / William Shakespeare</str>
+            </arr>
+            <long name="_version_">1459933730115158016</long>
+        </doc>
+        <doc>
+            <str name="illustrated">Not Illustrated</str>
+            <arr name="format_phy_str_mv">
+                <str>Article</str>
+            </arr>
+            <arr name="collection">
+                <str>GVK</str>
+            </arr>
+            <bool name="hochschulschrift_bool">false</bool>
+            <arr name="topic_title">
+                <str>Shakespeare 1 Troilus and cressida / William Shakespeare</str>
+            </arr>
+            <arr name="format_facet">
+                <str>Aufsätze</str>
+                <str>Gedruckte Aufsätze</str>
+            </arr>
+            <str name="id">340737689</str>
+            <arr name="journal">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <arr name="journalStr">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <str name="author">Shakespeare, William</str>
+            <arr name="spellingShingle">
+                <str>Shakespeare, William</str>
+                <str>Shakespeare</str>
+            </arr>
+            <str name="authorStr">Shakespeare, William</str>
+            <arr name="author_browse">
+                <str>Shakespeare, William</str>
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="title">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="signature_iln">
+                <str>65</str>
+            </arr>
+            <str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 1 Troilus and cressida / William
+                Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543231828 0003 x
+            </str>
+            <str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 1 Troilus and cressida / William
+                Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543231828 0003 x
+            </str>
+            <str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 1 Troilus and cressida /
+                William Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall
+                GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543231828 0003 x
+            </str>
+            <str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 1 Troilus and cressida / William
+                Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543231828 0003 x
+            </str>
+            <str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 1 Troilus and cressida / William
+                Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543231828 0003 x
+            </str>
+            <arr name="collection_details">
+                <str>SYSFLAG_1</str>
+                <str>GBV_GVK</str>
+                <str>GBV_ILN_65</str>
+            </arr>
+            <arr name="author2">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="author2Str">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <str name="publishDateSort">1875</str>
+            <arr name="publishDate">
+                <str>1875</str>
+            </arr>
+            <arr name="format_se">
+                <str>Aufsätze</str>
+            </arr>
+            <arr name="institution">
+                <str>findex.gbv.de</str>
+            </arr>
+            <str name="recordtype">marc</str>
+            <arr name="building">
+                <str>65</str>
+            </arr>
+            <arr name="title_auth">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="selectkey">
+                <str>65:x</str>
+            </arr>
+            <arr name="format">
+                <str>Article</str>
+            </arr>
+            <str name="title_sort">shakespeare</str>
+            <arr name="title_short">
+                <str>Shakespeare Troilus and cressida / William Shakespeare</str>
+            </arr>
+            <str name="fullrecord">00571naa a22002052c
+                4500001001000000003000700010005001700017008004100034040002200075100002500097245006300122700002000185773007300205901000800278912001400286912001200300912001500312951000700327980003100334#30;340737689#30;DE-601#30;20020121103223.0#30;020121s1875
+                000 0 d#30; #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare,
+                William#30;10#31;aShakespeare#31;n1#31;pTroilus and cressida / William Shakespeare#30;1 #31;aDyce,
+                Alexander#30;0 #31;w(DE-601)340737557#31;tShakespeare, William. - London : Chapman and Hall#30;
+                #31;aGBV#30; #31;aSYSFLAG_1#30; #31;aGBV_GVK#30; #31;aGBV_ILN_65#30; #31;aAI#30;
+                #31;265#31;101#31;b543231828#31;x0003#31;yx#30;#29;
+            </str>
+            <arr name="ppnlink">
+                <str>340737557</str>
+            </arr>
+            <str name="source">Shakespeare, William. - London : Chapman and Hall</str>
+            <str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str>
+            <arr name="author-letter">
+                <str>Shakespeare, William</str>
+            </arr>
+            <bool name="remote_bool">false</bool>
+            <arr name="title_full">
+                <str>Shakespeare 1 Troilus and cressida / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullStr">
+                <str>Shakespeare 1 Troilus and cressida / William Shakespeare</str>
+            </arr>
+            <arr name="title_full_unstemmed">
+                <str>Shakespeare 1 Troilus and cressida / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullGer">
+                <str>Shakespeare 1 Troilus and cressida / William Shakespeare</str>
+            </arr>
+            <long name="_version_">1459933740317802496</long>
+        </doc>
+        <doc>
+            <str name="illustrated">Not Illustrated</str>
+            <arr name="format_phy_str_mv">
+                <str>Article</str>
+            </arr>
+            <arr name="collection">
+                <str>GVK</str>
+            </arr>
+            <bool name="hochschulschrift_bool">false</bool>
+            <arr name="topic_title">
+                <str>Shakespeare 6 Julius Cæsar / William Shakespeare</str>
+            </arr>
+            <arr name="format_facet">
+                <str>Aufsätze</str>
+                <str>Gedruckte Aufsätze</str>
+            </arr>
+            <str name="id">340738111</str>
+            <arr name="journal">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <arr name="journalStr">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <str name="author">Shakespeare, William</str>
+            <arr name="spellingShingle">
+                <str>Shakespeare, William</str>
+                <str>Shakespeare</str>
+            </arr>
+            <str name="authorStr">Shakespeare, William</str>
+            <arr name="author_browse">
+                <str>Shakespeare, William</str>
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="title">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="signature_iln">
+                <str>65</str>
+            </arr>
+            <str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 6 Julius Cæsar / William Shakespeare
+                Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1
+                GBV_GVK GBV_ILN_65 AI 65 01 543233456 0003 x
+            </str>
+            <str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 6 Julius Cæsar / William Shakespeare
+                Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1
+                GBV_GVK GBV_ILN_65 AI 65 01 543233456 0003 x
+            </str>
+            <str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 6 Julius Cæsar / William
+                Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543233456 0003 x
+            </str>
+            <str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 6 Julius Cæsar / William
+                Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543233456 0003 x
+            </str>
+            <str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 6 Julius Cæsar / William
+                Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543233456 0003 x
+            </str>
+            <arr name="collection_details">
+                <str>SYSFLAG_1</str>
+                <str>GBV_GVK</str>
+                <str>GBV_ILN_65</str>
+            </arr>
+            <arr name="author2">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="author2Str">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <str name="publishDateSort">1875</str>
+            <arr name="publishDate">
+                <str>1875</str>
+            </arr>
+            <arr name="format_se">
+                <str>Aufsätze</str>
+            </arr>
+            <arr name="institution">
+                <str>findex.gbv.de</str>
+            </arr>
+            <str name="recordtype">marc</str>
+            <arr name="building">
+                <str>65</str>
+            </arr>
+            <arr name="title_auth">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="selectkey">
+                <str>65:x</str>
+            </arr>
+            <arr name="format">
+                <str>Article</str>
+            </arr>
+            <str name="title_sort">shakespeare</str>
+            <arr name="title_short">
+                <str>Shakespeare Julius Cæsar / William Shakespeare</str>
+            </arr>
+            <str name="fullrecord">00564naa a22002052c
+                4500001001000000003000700010005001700017008004100034040002200075100002500097245005600122700002000178773007300198901000800271912001400279912001200293912001500305951000700320980003100327#30;340738111#30;DE-601#30;20020121103607.0#30;020121s1875
+                000 0 d#30; #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare,
+                William#30;10#31;aShakespeare#31;n6#31;pJulius Cæsar / William Shakespeare#30;1 #31;aDyce,
+                Alexander#30;0 #31;w(DE-601)340737557#31;tShakespeare, William. - London : Chapman and Hall#30;
+                #31;aGBV#30; #31;aSYSFLAG_1#30; #31;aGBV_GVK#30; #31;aGBV_ILN_65#30; #31;aAI#30;
+                #31;265#31;101#31;b543233456#31;x0003#31;yx#30;#29;
+            </str>
+            <arr name="ppnlink">
+                <str>340737557</str>
+            </arr>
+            <str name="source">Shakespeare, William. - London : Chapman and Hall</str>
+            <str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str>
+            <arr name="author-letter">
+                <str>Shakespeare, William</str>
+            </arr>
+            <bool name="remote_bool">false</bool>
+            <arr name="title_full">
+                <str>Shakespeare 6 Julius Cæsar / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullStr">
+                <str>Shakespeare 6 Julius Cæsar / William Shakespeare</str>
+            </arr>
+            <arr name="title_full_unstemmed">
+                <str>Shakespeare 6 Julius Cæsar / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullGer">
+                <str>Shakespeare 6 Julius Cæsar / William Shakespeare</str>
+            </arr>
+            <long name="_version_">1459933741136740352</long>
+        </doc>
+        <doc>
+            <str name="illustrated">Not Illustrated</str>
+            <arr name="format_phy_str_mv">
+                <str>Article</str>
+            </arr>
+            <arr name="collection">
+                <str>GVK</str>
+            </arr>
+            <bool name="hochschulschrift_bool">false</bool>
+            <arr name="topic_title">
+                <str>Shakespeare 4 Twelfth-Night / William Shakespeare</str>
+            </arr>
+            <arr name="format_facet">
+                <str>Aufsätze</str>
+                <str>Gedruckte Aufsätze</str>
+            </arr>
+            <str name="id">340734183</str>
+            <arr name="journal">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <arr name="journalStr">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <str name="author">Shakespeare, William</str>
+            <arr name="spellingShingle">
+                <str>Shakespeare, William</str>
+                <str>Shakespeare</str>
+            </arr>
+            <str name="authorStr">Shakespeare, William</str>
+            <arr name="author_browse">
+                <str>Shakespeare, William</str>
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="title">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="signature_iln">
+                <str>65</str>
+            </arr>
+            <str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Twelfth-Night / William Shakespeare
+                Dyce, Alexander (DE-601)340733632 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1
+                GBV_GVK GBV_ILN_65 AI 65 01 543217167 0003 x
+            </str>
+            <str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Twelfth-Night / William Shakespeare
+                Dyce, Alexander (DE-601)340733632 Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1
+                GBV_GVK GBV_ILN_65 AI 65 01 543217167 0003 x
+            </str>
+            <str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Twelfth-Night / William
+                Shakespeare Dyce, Alexander (DE-601)340733632 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543217167 0003 x
+            </str>
+            <str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Twelfth-Night / William
+                Shakespeare Dyce, Alexander (DE-601)340733632 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543217167 0003 x
+            </str>
+            <str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Twelfth-Night / William
+                Shakespeare Dyce, Alexander (DE-601)340733632 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543217167 0003 x
+            </str>
+            <arr name="collection_details">
+                <str>SYSFLAG_1</str>
+                <str>GBV_GVK</str>
+                <str>GBV_ILN_65</str>
+            </arr>
+            <arr name="author2">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="author2Str">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <str name="publishDateSort">1875</str>
+            <arr name="publishDate">
+                <str>1875</str>
+            </arr>
+            <arr name="format_se">
+                <str>Aufsätze</str>
+            </arr>
+            <arr name="institution">
+                <str>findex.gbv.de</str>
+            </arr>
+            <str name="recordtype">marc</str>
+            <arr name="building">
+                <str>65</str>
+            </arr>
+            <arr name="title_auth">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="selectkey">
+                <str>65:x</str>
+            </arr>
+            <arr name="format">
+                <str>Article</str>
+            </arr>
+            <str name="title_sort">shakespeare</str>
+            <arr name="title_short">
+                <str>Shakespeare Twelfth-Night / William Shakespeare</str>
+            </arr>
+            <str name="fullrecord">00564naa a22002052c
+                4500001001000000003000700010005001700017008004100034040002200075100002500097245005600122700002000178773007300198901000800271912001400279912001200293912001500305951000700320980003100327#30;340734183#30;DE-601#30;20020121095832.0#30;020121s1875
+                000 0 d#30; #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare,
+                William#30;10#31;aShakespeare#31;n4#31;pTwelfth-Night / William Shakespeare#30;1 #31;aDyce,
+                Alexander#30;0 #31;w(DE-601)340733632#31;tShakespeare, William. - London : Chapman and Hall#30;
+                #31;aGBV#30; #31;aSYSFLAG_1#30; #31;aGBV_GVK#30; #31;aGBV_ILN_65#30; #31;aAI#30;
+                #31;265#31;101#31;b543217167#31;x0003#31;yx#30;#29;
+            </str>
+            <arr name="ppnlink">
+                <str>340733632</str>
+            </arr>
+            <str name="source">Shakespeare, William. - London : Chapman and Hall</str>
+            <str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str>
+            <arr name="author-letter">
+                <str>Shakespeare, William</str>
+            </arr>
+            <bool name="remote_bool">false</bool>
+            <arr name="title_full">
+                <str>Shakespeare 4 Twelfth-Night / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullStr">
+                <str>Shakespeare 4 Twelfth-Night / William Shakespeare</str>
+            </arr>
+            <arr name="title_full_unstemmed">
+                <str>Shakespeare 4 Twelfth-Night / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullGer">
+                <str>Shakespeare 4 Twelfth-Night / William Shakespeare</str>
+            </arr>
+            <long name="_version_">1459933732809998336</long>
+        </doc>
+        <doc>
+            <str name="illustrated">Not Illustrated</str>
+            <arr name="format_phy_str_mv">
+                <str>Article</str>
+            </arr>
+            <arr name="collection">
+                <str>GVK</str>
+            </arr>
+            <bool name="hochschulschrift_bool">false</bool>
+            <arr name="topic_title">
+                <str>Shakespeare 4 King Richard III. / William Shakespeare</str>
+            </arr>
+            <arr name="format_facet">
+                <str>Aufsätze</str>
+                <str>Gedruckte Aufsätze</str>
+            </arr>
+            <str name="id">340737123</str>
+            <arr name="journal">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <arr name="journalStr">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <str name="author">Shakespeare, William</str>
+            <arr name="spellingShingle">
+                <str>Shakespeare, William</str>
+                <str>Shakespeare</str>
+            </arr>
+            <str name="authorStr">Shakespeare, William</str>
+            <arr name="author_browse">
+                <str>Shakespeare, William</str>
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="title">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="signature_iln">
+                <str>65</str>
+            </arr>
+            <str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 4 King Richard III. / William
+                Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229637 0003 x
+            </str>
+            <str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 4 King Richard III. / William
+                Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229637 0003 x
+            </str>
+            <str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 4 King Richard III. /
+                William Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall
+                GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229637 0003 x
+            </str>
+            <str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 4 King Richard III. / William
+                Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229637 0003 x
+            </str>
+            <str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 4 King Richard III. / William
+                Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229637 0003 x
+            </str>
+            <arr name="collection_details">
+                <str>SYSFLAG_1</str>
+                <str>GBV_GVK</str>
+                <str>GBV_ILN_65</str>
+            </arr>
+            <arr name="author2">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="author2Str">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <str name="publishDateSort">1875</str>
+            <arr name="publishDate">
+                <str>1875</str>
+            </arr>
+            <arr name="format_se">
+                <str>Aufsätze</str>
+            </arr>
+            <arr name="institution">
+                <str>findex.gbv.de</str>
+            </arr>
+            <str name="recordtype">marc</str>
+            <arr name="building">
+                <str>65</str>
+            </arr>
+            <arr name="title_auth">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="selectkey">
+                <str>65:x</str>
+            </arr>
+            <arr name="format">
+                <str>Article</str>
+            </arr>
+            <str name="title_sort">shakespeare</str>
+            <arr name="title_short">
+                <str>Shakespeare King Richard III. / William Shakespeare</str>
+            </arr>
+            <str name="fullrecord">00568naa a22002052c
+                4500001001000000003000700010005001700017008004100034040002200075100002500097245006000122700002000182773007300202901000800275912001400283912001200297912001500309951000700324980003100331#30;340737123#30;DE-601#30;20020121102703.0#30;020121s1875
+                000 0 d#30; #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare,
+                William#30;10#31;aShakespeare#31;n4#31;pKing Richard III. / William Shakespeare#30;1 #31;aDyce,
+                Alexander#30;0 #31;w(DE-601)340736542#31;tShakespeare, William. - London : Chapman and Hall#30;
+                #31;aGBV#30; #31;aSYSFLAG_1#30; #31;aGBV_GVK#30; #31;aGBV_ILN_65#30; #31;aAI#30;
+                #31;265#31;101#31;b543229637#31;x0003#31;yx#30;#29;
+            </str>
+            <arr name="ppnlink">
+                <str>340736542</str>
+            </arr>
+            <str name="source">Shakespeare, William. - London : Chapman and Hall</str>
+            <str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str>
+            <arr name="author-letter">
+                <str>Shakespeare, William</str>
+            </arr>
+            <bool name="remote_bool">false</bool>
+            <arr name="title_full">
+                <str>Shakespeare 4 King Richard III. / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullStr">
+                <str>Shakespeare 4 King Richard III. / William Shakespeare</str>
+            </arr>
+            <arr name="title_full_unstemmed">
+                <str>Shakespeare 4 King Richard III. / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullGer">
+                <str>Shakespeare 4 King Richard III. / William Shakespeare</str>
+            </arr>
+            <long name="_version_">1459933739066851328</long>
+        </doc>
+        <doc>
+            <str name="illustrated">Not Illustrated</str>
+            <arr name="format_phy_str_mv">
+                <str>Article</str>
+            </arr>
+            <arr name="collection">
+                <str>GVK</str>
+            </arr>
+            <bool name="hochschulschrift_bool">false</bool>
+            <arr name="topic_title">
+                <str>Shakespeare 5 King Henry VIII. / William Shakespeare</str>
+            </arr>
+            <arr name="format_facet">
+                <str>Aufsätze</str>
+                <str>Gedruckte Aufsätze</str>
+            </arr>
+            <str name="id">340737220</str>
+            <arr name="journal">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <arr name="journalStr">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <str name="author">Shakespeare, William</str>
+            <arr name="spellingShingle">
+                <str>Shakespeare, William</str>
+                <str>Shakespeare</str>
+            </arr>
+            <str name="authorStr">Shakespeare, William</str>
+            <arr name="author_browse">
+                <str>Shakespeare, William</str>
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="title">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="signature_iln">
+                <str>65</str>
+            </arr>
+            <str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 5 King Henry VIII. / William
+                Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229920 0003 x
+            </str>
+            <str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 5 King Henry VIII. / William
+                Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229920 0003 x
+            </str>
+            <str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 5 King Henry VIII. /
+                William Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall
+                GBV SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229920 0003 x
+            </str>
+            <str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 5 King Henry VIII. / William
+                Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229920 0003 x
+            </str>
+            <str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 5 King Henry VIII. / William
+                Shakespeare Dyce, Alexander (DE-601)340736542 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543229920 0003 x
+            </str>
+            <arr name="collection_details">
+                <str>SYSFLAG_1</str>
+                <str>GBV_GVK</str>
+                <str>GBV_ILN_65</str>
+            </arr>
+            <arr name="author2">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="author2Str">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <str name="publishDateSort">1875</str>
+            <arr name="publishDate">
+                <str>1875</str>
+            </arr>
+            <arr name="format_se">
+                <str>Aufsätze</str>
+            </arr>
+            <arr name="institution">
+                <str>findex.gbv.de</str>
+            </arr>
+            <str name="recordtype">marc</str>
+            <arr name="building">
+                <str>65</str>
+            </arr>
+            <arr name="title_auth">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="selectkey">
+                <str>65:x</str>
+            </arr>
+            <arr name="format">
+                <str>Article</str>
+            </arr>
+            <str name="title_sort">shakespeare</str>
+            <arr name="title_short">
+                <str>Shakespeare King Henry VIII. / William Shakespeare</str>
+            </arr>
+            <str name="fullrecord">00567naa a22002052c
+                4500001001000000003000700010005001700017008004100034040002200075100002500097245005900122700002000181773007300201901000800274912001400282912001200296912001500308951000700323980003100330#30;340737220#30;DE-601#30;20020121102742.0#30;020121s1875
+                000 0 d#30; #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare,
+                William#30;10#31;aShakespeare#31;n5#31;pKing Henry VIII. / William Shakespeare#30;1 #31;aDyce,
+                Alexander#30;0 #31;w(DE-601)340736542#31;tShakespeare, William. - London : Chapman and Hall#30;
+                #31;aGBV#30; #31;aSYSFLAG_1#30; #31;aGBV_GVK#30; #31;aGBV_ILN_65#30; #31;aAI#30;
+                #31;265#31;101#31;b543229920#31;x0003#31;yx#30;#29;
+            </str>
+            <arr name="ppnlink">
+                <str>340736542</str>
+            </arr>
+            <str name="source">Shakespeare, William. - London : Chapman and Hall</str>
+            <str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str>
+            <arr name="author-letter">
+                <str>Shakespeare, William</str>
+            </arr>
+            <bool name="remote_bool">false</bool>
+            <arr name="title_full">
+                <str>Shakespeare 5 King Henry VIII. / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullStr">
+                <str>Shakespeare 5 King Henry VIII. / William Shakespeare</str>
+            </arr>
+            <arr name="title_full_unstemmed">
+                <str>Shakespeare 5 King Henry VIII. / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullGer">
+                <str>Shakespeare 5 King Henry VIII. / William Shakespeare</str>
+            </arr>
+            <long name="_version_">1459933739226234880</long>
+        </doc>
+        <doc>
+            <str name="illustrated">Not Illustrated</str>
+            <arr name="format_phy_str_mv">
+                <str>Article</str>
+            </arr>
+            <arr name="collection">
+                <str>GVK</str>
+            </arr>
+            <bool name="hochschulschrift_bool">false</bool>
+            <arr name="topic_title">
+                <str>Shakespeare 4 Lucrece / William Shakespeare</str>
+            </arr>
+            <arr name="format_facet">
+                <str>Aufsätze</str>
+                <str>Gedruckte Aufsätze</str>
+            </arr>
+            <str name="id">340739169</str>
+            <arr name="journal">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <arr name="journalStr">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <str name="author">Shakespeare, William</str>
+            <arr name="spellingShingle">
+                <str>Shakespeare, William</str>
+                <str>Shakespeare</str>
+            </arr>
+            <str name="authorStr">Shakespeare, William</str>
+            <arr name="author_browse">
+                <str>Shakespeare, William</str>
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="title">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="signature_iln">
+                <str>65</str>
+            </arr>
+            <str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Lucrece / William Shakespeare Dyce,
+                Alexander (DE-601)34073874X Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK
+                GBV_ILN_65 AI 65 01 543237850 0003 x
+            </str>
+            <str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Lucrece / William Shakespeare Dyce,
+                Alexander (DE-601)34073874X Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1 GBV_GVK
+                GBV_ILN_65 AI 65 01 543237850 0003 x
+            </str>
+            <str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Lucrece / William
+                Shakespeare Dyce, Alexander (DE-601)34073874X Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543237850 0003 x
+            </str>
+            <str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Lucrece / William Shakespeare
+                Dyce, Alexander (DE-601)34073874X Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1
+                GBV_GVK GBV_ILN_65 AI 65 01 543237850 0003 x
+            </str>
+            <str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 4 Lucrece / William Shakespeare
+                Dyce, Alexander (DE-601)34073874X Shakespeare, William. - London : Chapman and Hall GBV SYSFLAG_1
+                GBV_GVK GBV_ILN_65 AI 65 01 543237850 0003 x
+            </str>
+            <arr name="collection_details">
+                <str>SYSFLAG_1</str>
+                <str>GBV_GVK</str>
+                <str>GBV_ILN_65</str>
+            </arr>
+            <arr name="author2">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="author2Str">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <str name="publishDateSort">1876</str>
+            <arr name="publishDate">
+                <str>1876</str>
+            </arr>
+            <arr name="format_se">
+                <str>Aufsätze</str>
+            </arr>
+            <arr name="institution">
+                <str>findex.gbv.de</str>
+            </arr>
+            <str name="recordtype">marc</str>
+            <arr name="building">
+                <str>65</str>
+            </arr>
+            <arr name="title_auth">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="selectkey">
+                <str>65:x</str>
+            </arr>
+            <arr name="format">
+                <str>Article</str>
+            </arr>
+            <str name="title_sort">shakespeare</str>
+            <arr name="title_short">
+                <str>Shakespeare Lucrece / William Shakespeare</str>
+            </arr>
+            <str name="fullrecord">00558naa a22002052c
+                4500001001000000003000700010005001700017008004100034040002200075100002500097245005000122700002000172773007300192901000800265912001400273912001200287912001500299951000700314980003100321#30;340739169#30;DE-601#30;20020121104731.0#30;020121s1876
+                000 0 d#30; #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare,
+                William#30;10#31;aShakespeare#31;n4#31;pLucrece / William Shakespeare#30;1 #31;aDyce, Alexander#30;0
+                #31;w(DE-601)34073874X#31;tShakespeare, William. - London : Chapman and Hall#30; #31;aGBV#30;
+                #31;aSYSFLAG_1#30; #31;aGBV_GVK#30; #31;aGBV_ILN_65#30; #31;aAI#30;
+                #31;265#31;101#31;b543237850#31;x0003#31;yx#30;#29;
+            </str>
+            <arr name="ppnlink">
+                <str>34073874X</str>
+            </arr>
+            <str name="source">Shakespeare, William. - London : Chapman and Hall</str>
+            <str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str>
+            <arr name="author-letter">
+                <str>Shakespeare, William</str>
+            </arr>
+            <bool name="remote_bool">false</bool>
+            <arr name="title_full">
+                <str>Shakespeare 4 Lucrece / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullStr">
+                <str>Shakespeare 4 Lucrece / William Shakespeare</str>
+            </arr>
+            <arr name="title_full_unstemmed">
+                <str>Shakespeare 4 Lucrece / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullGer">
+                <str>Shakespeare 4 Lucrece / William Shakespeare</str>
+            </arr>
+            <long name="_version_">1459933743764471808</long>
+        </doc>
+        <doc>
+            <str name="illustrated">Not Illustrated</str>
+            <arr name="format_phy_str_mv">
+                <str>Article</str>
+            </arr>
+            <arr name="collection">
+                <str>GVK</str>
+            </arr>
+            <bool name="hochschulschrift_bool">false</bool>
+            <arr name="topic_title">
+                <str>Shakespeare 5 Timon of Athens / William Shakespeare</str>
+            </arr>
+            <arr name="format_facet">
+                <str>Aufsätze</str>
+                <str>Gedruckte Aufsätze</str>
+            </arr>
+            <str name="id">340737980</str>
+            <arr name="journal">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <arr name="journalStr">
+                <str>Shakespeare, William. - London : Chapman and Hall</str>
+            </arr>
+            <str name="author">Shakespeare, William</str>
+            <arr name="spellingShingle">
+                <str>Shakespeare, William</str>
+                <str>Shakespeare</str>
+            </arr>
+            <str name="authorStr">Shakespeare, William</str>
+            <arr name="author_browse">
+                <str>Shakespeare, William</str>
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="title">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="signature_iln">
+                <str>65</str>
+            </arr>
+            <str name="allfields">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Timon of Athens / William
+                Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543232964 0003 x
+            </str>
+            <str name="spelling">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Timon of Athens / William
+                Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543232964 0003 x
+            </str>
+            <str name="allfields_unstemmed">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Timon of Athens / William
+                Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543232964 0003 x
+            </str>
+            <str name="allfieldsGer">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Timon of Athens / William
+                Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543232964 0003 x
+            </str>
+            <str name="allfieldsSound">GBVCP ger rakwb Shakespeare, William Shakespeare 5 Timon of Athens / William
+                Shakespeare Dyce, Alexander (DE-601)340737557 Shakespeare, William. - London : Chapman and Hall GBV
+                SYSFLAG_1 GBV_GVK GBV_ILN_65 AI 65 01 543232964 0003 x
+            </str>
+            <arr name="collection_details">
+                <str>SYSFLAG_1</str>
+                <str>GBV_GVK</str>
+                <str>GBV_ILN_65</str>
+            </arr>
+            <arr name="author2">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <arr name="author2Str">
+                <str>Dyce, Alexander</str>
+            </arr>
+            <str name="publishDateSort">1875</str>
+            <arr name="publishDate">
+                <str>1875</str>
+            </arr>
+            <arr name="format_se">
+                <str>Aufsätze</str>
+            </arr>
+            <arr name="institution">
+                <str>findex.gbv.de</str>
+            </arr>
+            <str name="recordtype">marc</str>
+            <arr name="building">
+                <str>65</str>
+            </arr>
+            <arr name="title_auth">
+                <str>Shakespeare</str>
+            </arr>
+            <arr name="selectkey">
+                <str>65:x</str>
+            </arr>
+            <arr name="format">
+                <str>Article</str>
+            </arr>
+            <str name="title_sort">shakespeare</str>
+            <arr name="title_short">
+                <str>Shakespeare Timon of Athens / William Shakespeare</str>
+            </arr>
+            <str name="fullrecord">00566naa a22002052c
+                4500001001000000003000700010005001700017008004100034040002200075100002500097245005800122700002000180773007300200901000800273912001400281912001200295912001500307951000700322980003100329#30;340737980#30;DE-601#30;20020121103510.0#30;020121s1875
+                000 0 d#30; #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aShakespeare,
+                William#30;10#31;aShakespeare#31;n5#31;pTimon of Athens / William Shakespeare#30;1 #31;aDyce,
+                Alexander#30;0 #31;w(DE-601)340737557#31;tShakespeare, William. - London : Chapman and Hall#30;
+                #31;aGBV#30; #31;aSYSFLAG_1#30; #31;aGBV_GVK#30; #31;aGBV_ILN_65#30; #31;aAI#30;
+                #31;265#31;101#31;b543232964#31;x0003#31;yx#30;#29;
+            </str>
+            <arr name="ppnlink">
+                <str>340737557</str>
+            </arr>
+            <str name="source">Shakespeare, William. - London : Chapman and Hall</str>
+            <str name="sourceStr">Shakespeare, William. - London : Chapman and Hall</str>
+            <arr name="author-letter">
+                <str>Shakespeare, William</str>
+            </arr>
+            <bool name="remote_bool">false</bool>
+            <arr name="title_full">
+                <str>Shakespeare 5 Timon of Athens / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullStr">
+                <str>Shakespeare 5 Timon of Athens / William Shakespeare</str>
+            </arr>
+            <arr name="title_full_unstemmed">
+                <str>Shakespeare 5 Timon of Athens / William Shakespeare</str>
+            </arr>
+            <arr name="title_fullGer">
+                <str>Shakespeare 5 Timon of Athens / William Shakespeare</str>
+            </arr>
+            <long name="_version_">1459933740870402048</long>
+        </doc>
+    </result>
 </response>

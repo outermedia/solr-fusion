@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://solrfusion.outermedia.org/configuration/ ../../main/resources/configuration.xsd ">
 
     <om:fusion-schema-fields default-type="text">
-        <om:field name="id" />
-        <om:field name="language" />
-        <om:field name="author" />
-        <om:field name="title" multi-value="true"/>
-        <om:field name="score" type="float" />
+        <om:field name="singlevalueAsSingleValue" multi-value="false"/>
+        <om:field name="singlevalueAsMultivalue" multi-value="true"/>
+        <om:field name="multivalueAsMultivalueWithOneValue" multi-value="true"/>
+        <om:field name="multivalueAsSinglevalueWithOneValue" multi-value="false"/>
+        <om:field name="multivalueAsMultivalueWithTwoValue" multi-value="true"/>
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js" />
@@ -66,31 +66,32 @@
 
             <om:max-docs>100</om:max-docs>
 
-            <om:field name="id" fusion-name="id" />
-            <om:field name="title" fusion-name="title" />
-            <om:field name="author" fusion-name="author" />
-            <om:field name="language" fusion-name="language" />
+            <om:field name="singlevalueAsSingleValue" fusion-name="singlevalueAsSingleValue" />
+            <om:field name="singlevalueAsMultivalue" fusion-name="singlevalueAsMultivalue" />
+            <om:field name="multivalueAsMultivalueWithOneValue" fusion-name="multivalueAsMultivalueWithOneValue" />
+            <om:field name="multivalueAsSinglevalueWithOneValue" fusion-name="multivalueAsSinglevalueWithOneValue" />
+            <om:field name="multivalueAsMultivalueWithTwoValue" fusion-name="multivalueAsMultivalueWithTwoValue" />
 
         </om:solr-server>
 
-        <om:solr-server name="Bibliothek 9001" version="3.6"
-                        class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+        <!--<om:solr-server name="Bibliothek 9001" version="3.6"-->
+                        <!--class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">-->
 
-            <om:url>http://host:port/solr/xyz</om:url>
+            <!--<om:url>http://host:port/solr/xyz</om:url>-->
 
-            <om:score factor="2.2"
-                      class="org.outermedia.solrfusion.DefaultScore$Factory" />
+            <!--<om:score factor="2.2"-->
+                      <!--class="org.outermedia.solrfusion.DefaultScore$Factory" />-->
 
-            <om:unique-key>id</om:unique-key>
+            <!--<om:unique-key>id</om:unique-key>-->
 
-            <om:max-docs>100</om:max-docs>
+            <!--<om:max-docs>100</om:max-docs>-->
 
-            <om:field name="id" fusion-name="id" />
-            <om:field name="titleVT_de" fusion-name="title" />
-            <om:field name="titleVT_eng" fusion-name="title" />
-            <om:field name="language" fusion-name="language" />
+            <!--<om:field name="id" fusion-name="id" />-->
+            <!--<om:field name="titleVT_de" fusion-name="title" />-->
+            <!--<om:field name="titleVT_eng" fusion-name="title" />-->
+            <!--<om:field name="language" fusion-name="language" />-->
 
-        </om:solr-server>
+        <!--</om:solr-server>-->
 
     </om:solr-servers>
 </om:core>

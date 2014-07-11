@@ -2,8 +2,10 @@ package org.outermedia.solrfusion.response.freemarker;
 
 import lombok.Getter;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
+import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,18 +23,21 @@ public class FreemarkerResponse
     @Getter
     private List<FreemarkerDocument> documents;
 
-    public FreemarkerResponse(ClosableIterator<Document, SearchServerResponseInfo> docStream)
+    public FreemarkerResponse(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream)
     {
         this.totalHitNumber = docStream.getExtraInfo().getTotalNumberOfHits();
         this.documents = new ArrayList<>();
 
         Document d;
         FreemarkerDocument freemarkerDocument;
+        ScriptEnv env = new ScriptEnv();
+        env.setConfiguration(configuration);
+
         while (docStream.hasNext())
         {
             freemarkerDocument = new FreemarkerDocument();
             d = docStream.next();
-            d.accept(freemarkerDocument, null);
+            d.accept(freemarkerDocument, env);
             documents.add(freemarkerDocument);
         }
 

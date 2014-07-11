@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
+import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.FusionField;
 import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 import org.outermedia.solrfusion.configuration.Util;
@@ -41,8 +42,8 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
-        String filterQueryStr)
+    public String getResponseString(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
+                                    String filterQueryStr)
     {
         final StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");

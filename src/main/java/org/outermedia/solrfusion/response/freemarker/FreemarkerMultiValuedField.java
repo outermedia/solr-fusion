@@ -2,7 +2,7 @@ package org.outermedia.solrfusion.response.freemarker;
 
 import lombok.Getter;
 import org.outermedia.solrfusion.mapper.Term;
-import org.outermedia.solrfusion.response.parser.SolrMultiValuedField;
+import org.outermedia.solrfusion.response.parser.SolrField;
 
 import java.util.List;
 
@@ -23,11 +23,11 @@ public class FreemarkerMultiValuedField
     @Getter
     private List<String> values;
 
-    public static FreemarkerMultiValuedField fromSolrMultiValuedField(SolrMultiValuedField msf)
+    public static FreemarkerMultiValuedField fromSolrField(SolrField sf)
     {
         FreemarkerMultiValuedField freemarkerField = null;
 
-        Term t = msf.getTerm();
+        Term t = sf.getTerm();
         if (t != null)
         {
             boolean printNone = true;

@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.response;
 
 import lombok.ToString;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
+import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 import org.outermedia.solrfusion.response.parser.Document;
 
@@ -26,10 +27,10 @@ public class DefaultJsonResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
-        String filterQueryStr)
+    public String getResponseString(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
+                                    String filterQueryStr)
     {
-        return freemarkerResponseRenderer.getResponseString(docStream, query, filterQueryStr);
+        return freemarkerResponseRenderer.getResponseString(configuration, docStream, query, filterQueryStr);
     }
 
     public static class Factory

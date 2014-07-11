@@ -71,11 +71,11 @@ public class FreemarkerResponseRendererTest
 
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator =  new MappingClosableIterator(docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null);
 
-        String xmlResponse = responseRenderer.getResponseString(closableIterator, "steak", null);
+        String xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, "steak", null);
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
         Assert.assertFalse("xml response should not contain filter query in header", xmlResponse.contains("<str name=\"fq\">"));
 
-        xmlResponse = responseRenderer.getResponseString(closableIterator, "steak", "salat");
+        xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, "steak", "salat");
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
         Assert.assertTrue("xml response should contain filter query in header",
             xmlResponse.contains("<str name=\"fq\"><![CDATA[salat]]></str>"));
@@ -86,7 +86,7 @@ public class FreemarkerResponseRendererTest
     @Test
     public void freemarkerJsonTest() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException, IllegalAccessException, ScriptException {
 
-        cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-response-renderer.xml");
+        cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-freemarker-response-renderer.xml");
 
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
         // the mapping is very incomplete, so ignore all unmapped fields
@@ -98,21 +98,22 @@ public class FreemarkerResponseRendererTest
 
         Assert.assertNotNull("responseRenderer should not be null", responseRenderer);
 
-        XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9000.xml", null);
+        XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-freemarker.xml", null);
         List<Document> documents9000 = response9000.getDocuments();
-        XmlResponse response9001= xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9001.xml", null);
-        List<Document> documents9001 = response9001.getDocuments();
+//        XmlResponse response9001= xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9001.xml", null);
+//        List<Document> documents9001 = response9001.getDocuments();
 
-//        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getResult().getNumFound());
-        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9000.getNumFound());
-//        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9000.getResult().getDocuments(), info9000);
-        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9001.getDocuments(), info9001);
+        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getNumFound());
+//        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9000.getNumFound());
+        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9000.getDocuments(), info9000);
+//        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9001.getDocuments(), info9001);
 
 //        consolidator.addResultStream(configuration, searchServerConfig, docIterator);
 
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator =  new MappingClosableIterator(docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null);
 
-        String jsonResponse = responseRenderer.getResponseString(closableIterator, "steak", null);
+        String jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, "Shakespeares", null);
+//        System.out.println(jsonResponse);
 
         try
         {
@@ -121,7 +122,11 @@ public class FreemarkerResponseRendererTest
 
             JsonElement el = parser.parse(jsonResponse);
             jsonResponse = gson.toJson(el); // done
-            System.out.println(jsonResponse);
+//            System.out.println(jsonResponse);
+
+            String expected = "{\"responseHeader\":{\"status\":0,\"QTime\":0,\"params\":{\"indent\":\"on\",\"start\":\"0\",\"q\":\"Shakespeares\",\"wt\":\"json\",\"version\":\"2.2\",\"rows\":\"1\"}},\"response\":{\"numFound\":1,\"start\":0,\"docs\":[{\"singlevalueAsMultivalue\":[\"Shakespeare\"],\"multivalueAsMultivalueWithOneValue\":[\"Poe\"],\"multivalueAsMultivalueWithTwoValue\":[\"Poe\",\"Morgenstern\"],\"singlevalueAsSingleValue\":\"Shakespeare\"}]}}";
+            Assert.assertEquals("Got different json response than expected", expected, jsonResponse);
+
         }
         catch (JsonSyntaxException jse)
         {
@@ -130,8 +135,8 @@ public class FreemarkerResponseRendererTest
 
         Assert.assertFalse("json response should not contain filter query in header", jsonResponse.contains("\"fq\":"));
 
-        jsonResponse = responseRenderer.getResponseString(closableIterator, "steak", "salat");
-        System.out.println(jsonResponse);
+        jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, "Shakespeares", "salat");
+//        System.out.println(jsonResponse);
         Assert.assertFalse("json response should contain filter query in header", jsonResponse.contains("\"fq\":\"salat\","));
     }
 

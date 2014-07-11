@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.anyMapOf;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.*;
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
@@ -97,7 +95,7 @@ public class ControllerTest
     {
         cfg = spy(helper
             .readFusionSchemaWithoutValidation(fusionSchema));
-        when(testRenderer.getResponseString(any(ClosableIterator.class), anyString(), anyString())).thenReturn(
+        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class), anyString(), anyString())).thenReturn(
             "<xml>42</xml>");
         when(cfg.getResponseRendererByType(any(ResponseRendererType.class))).thenReturn(testRenderer);
         List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
@@ -120,7 +118,7 @@ public class ControllerTest
     {
         Configuration cfg = spy(helper
             .readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml"));
-        when(testRenderer.getResponseString(any(ClosableIterator.class), anyString(), anyString())).thenReturn(
+        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class), anyString(), anyString())).thenReturn(
             "<xml>42</xml>");
         List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
         SearchServerConfig configuredSearchServer = spy(searchServerConfigs.get(0));

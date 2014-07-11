@@ -1,6 +1,8 @@
 package org.outermedia.solrfusion.response.freemarker;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.configuration.FusionField;
 import org.outermedia.solrfusion.response.parser.FieldVisitor;
 import org.outermedia.solrfusion.response.parser.SolrMultiValuedField;
 import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
@@ -14,6 +16,7 @@ import java.util.List;
  *
  * @author stephan
  */
+@Slf4j
 public class FreemarkerDocument  implements FieldVisitor
 {
 
@@ -32,25 +35,60 @@ public class FreemarkerDocument  implements FieldVisitor
     @Override
     public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
     {
-        FreemarkerSingleValuedField freemarkerField = FreemarkerSingleValuedField.fromSolrSingleValuedField(sf);
-        if (freemarkerField != null)
+        FusionField field = env.getConfiguration().findFieldByName(sf.getTerm().getFusionFieldName());
+        if (field == null)
+            return true;
+//        field.getFieldType();
+
+        if (field.isMultiValue())
         {
-            singleValuedFields.add(freemarkerField);
-            hasSingleValuedFields = true;
+            // fusion-field is configured as multivalue, but solr server gave a single valued field
+            FreemarkerMultiValuedField freemarkerField = FreemarkerMultiValuedField.fromSolrField(sf);
+            addMultiValuedField(freemarkerField);
         }
+        else
+        {
+            FreemarkerSingleValuedField freemarkerField = FreemarkerSingleValuedField.fromSolrField(sf);
+            addSingleValuedField(freemarkerField);
+        }
+
         return true;
     }
 
     @Override
-    public boolean visitField(SolrMultiValuedField msf, ScriptEnv env)
+    public boolean visitField(SolrMultiValuedField sf, ScriptEnv env)
     {
-        FreemarkerMultiValuedField freemarkerField = FreemarkerMultiValuedField.fromSolrMultiValuedField(msf);
+        FusionField field = env.getConfiguration().findFieldByName(sf.getTerm().getFusionFieldName());
+//        field.getFieldType();
+        if (field == null)
+            return true;
+
+        if (field.isSingleValue())
+        {
+            // error in mapping. will ne logged and nothing is rendered
+            log.error("Unable to render multiple values in single valued field {}", field.getFieldName());
+            return true;
+        }
+
+        FreemarkerMultiValuedField freemarkerField = FreemarkerMultiValuedField.fromSolrField(sf);
+        addMultiValuedField(freemarkerField);
+        return true;
+    }
+
+    private void addMultiValuedField(FreemarkerMultiValuedField freemarkerField) {
         if (freemarkerField != null)
         {
             multiValuedFields.add(freemarkerField);
             hasMultiValuedFields = true;
         }
-        return true;
+    }
+
+    private void addSingleValuedField(FreemarkerSingleValuedField freemarkerField) {
+        if (freemarkerField != null)
+        {
+            singleValuedFields.add(freemarkerField);
+            hasSingleValuedFields = true;
+        }
     }
 
 }
