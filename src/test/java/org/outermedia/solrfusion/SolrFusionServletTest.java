@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.GlobalSearchServerConfig;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 
@@ -37,8 +38,7 @@ public class SolrFusionServletTest
         }
     }
 
-    @Mock
-    ServletConfig servletConfig;
+    @Mock ServletConfig servletConfig;
 
     @Before
     public void setup()
@@ -110,12 +110,12 @@ public class SolrFusionServletTest
         SolrFusionServlet servlet = spy(new SolrFusionServlet());
         Configuration cfg = mock(Configuration.class);
         doReturn(10).when(cfg).getDefaultPageSize();
-        doReturn("score desc").when(cfg).getDefaultSearchField();
+        doReturn("score desc").when(cfg).getDefaultSortField();
         servlet.setCfg(cfg);
         Map<String, String[]> requestParams = new HashMap<>();
         String q = "title:schiller";
         requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{q});
-        if(fq != null)
+        if (fq != null)
         {
             requestParams.put(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(), new String[]{fq});
         }
@@ -175,7 +175,8 @@ public class SolrFusionServletTest
         SolrFusionServlet servlet = new SolrFusionServlet();
         Map<String, String[]> requestParams = new HashMap<>();
         requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{"schiller"});
-        requestParams.put(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(), new String[]{"schiller", "goethe"});
+        requestParams.put(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(),
+            new String[]{"schiller", "goethe"});
         try
         {
             FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
@@ -214,7 +215,7 @@ public class SolrFusionServletTest
         SolrFusionServlet servlet = spy(new SolrFusionServlet());
         Configuration cfg = mock(Configuration.class);
         doReturn(10).when(cfg).getDefaultPageSize();
-        doReturn("score desc").when(cfg).getDefaultSearchField();
+        doReturn("score desc").when(cfg).getDefaultSortField();
         servlet.setCfg(cfg);
         Map<String, String[]> requestParams = new HashMap<>();
         String q = "title:schiller";
@@ -229,8 +230,7 @@ public class SolrFusionServletTest
                 Assert.assertNotNull("Expected request object", req);
                 Assert.assertEquals("Got different different", q, req.getQuery());
                 Assert.assertEquals("Got different renderer type than expected",
-                    ResponseRendererType.valueOf(f.toUpperCase()),
-                    req.getResponseType());
+                    ResponseRendererType.valueOf(f.toUpperCase()), req.getResponseType());
             }
             catch (ServletException e)
             {
@@ -320,5 +320,32 @@ public class SolrFusionServletTest
         log.info("----5");
         servlet.loadSolrFusionConfig(tmpSchema.getName(), true);
         Assert.assertNotSame("Solr Fusion schema not re-loaded", oldCfg, servlet.getCfg());
+    }
+
+    @Test
+    public void testPageSizeSortDefaulting() throws ServletException
+    {
+        SolrFusionServlet servlet = new SolrFusionServlet();
+        Configuration cfg = new Configuration();
+        servlet.setCfg(cfg);
+        cfg.setDefaultSortField("auto asc");
+        GlobalSearchServerConfig searchConfig = new GlobalSearchServerConfig();
+        cfg.setSearchServerConfigs(searchConfig);
+        searchConfig.setDefaultPageSize(23);
+        Map<String, Object> headerValues = new HashMap<>();
+        Map<String, String[]> requestParams = new HashMap<>();
+        requestParams.put("q", new String[]{"*:*"});
+        FusionRequest fusionRequest = servlet.buildFusionRequest(requestParams, headerValues);
+        Assert.assertEquals("Expected other start value", 0, fusionRequest.getStart());
+        Assert.assertEquals("Expected other rows value", searchConfig.getDefaultPageSize(),
+            fusionRequest.getPageSize());
+        Assert.assertEquals("Expected other sort field", "auto", fusionRequest.getSolrFusionSortField());
+        Assert.assertTrue("Expected other sort dir", fusionRequest.isSortAsc());
+
+        // check desc sort direction
+        cfg.setDefaultSortField("mobile desc");
+        fusionRequest = servlet.buildFusionRequest(requestParams, headerValues);
+        Assert.assertEquals("Expected other sort field", "mobile", fusionRequest.getSolrFusionSortField());
+        Assert.assertFalse("Expected other sort dir", fusionRequest.isSortAsc());
     }
 }

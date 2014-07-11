@@ -54,6 +54,7 @@ public class MappingClosableIterator implements ClosableIterator<Document, Searc
                 int mappedFieldNr = config.getResponseMapper().mapResponse(config, searchServerConfig, nextDoc, env,
                     fieldsToMap);
                 // no field was mapped = no fusion value present -> ignore the empty document
+                // because the id is always mapped, this should not happen
                 if (mappedFieldNr == 0)
                 {
                     log.debug("Ignoring unmapped doc from server {}: {}", searchServerConfig.getSearchServerName(),
@@ -93,6 +94,8 @@ public class MappingClosableIterator implements ClosableIterator<Document, Searc
     public void close()
     {
         documents.close();
+        config = null;
+        searchServerConfig = null;
     }
 
     @Override

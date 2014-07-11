@@ -288,4 +288,15 @@ public class Configuration
         String searchServerId = getIdGenerator().getSearchServerIdFromFusionId(fusionDocId);
         return searchServerConfigs.getSearchServerConfigById(searchServerId);
     }
+
+    /**
+     * Get a search server's configuration by server name.
+     *
+     * @param serverName
+     * @return null or an object
+     */
+    public SearchServerConfig getSearchServerConfigByName(String serverName)
+    {
+        return searchServerConfigs.getSearchServerConfigById(serverName);
+    }
 }

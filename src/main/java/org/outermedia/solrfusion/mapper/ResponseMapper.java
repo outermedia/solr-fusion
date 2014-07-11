@@ -112,7 +112,10 @@ public class ResponseMapper implements ResponseMapperIfc
         }
         else
         {
-            log.warn("Can't correct score in documents, because document contains no value (any more).");
+            if (scoreTerm == null || !scoreTerm.isProcessed())
+            {
+                log.warn("Can't correct score in documents, because document contains no value (any more).");
+            }
         }
     }
 

@@ -28,8 +28,8 @@ import java.util.List;
 @Slf4j
 public class PagingResponseConsolidator extends AbstractResponseConsolidator
 {
-    private List<Document> allDocs;
-    private int streamCounter;
+    protected List<Document> allDocs;
+    protected int streamCounter;
 
     /**
      * Factory creates instances only.
@@ -65,6 +65,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             log.error("Caught exception while mapping documents of server {}", searchServerConfig.getSearchServerName(),
                 e);
         }
+        docIterator.close();
     }
 
     @Override public int numberOfResponseStreams()
@@ -74,7 +75,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
 
     @Override public void clear()
     {
-        allDocs = null;
+        allDocs.clear();
     }
 
     @Override public ClosableIterator<Document, SearchServerResponseInfo> getResponseIterator(Configuration config,
@@ -90,11 +91,12 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         String fusionIdField = config.getIdGenerator().getFusionIdField();
         for (int i = 0; i < fusionRequest.getPageSize() && (i + start) < allDocs.size(); i++)
         {
-            Document d = allDocs.get(i);
+            Document d = allDocs.get(start + i);
             // id was mapped too when sort field was mapped
             Term idTerm = d.getFieldTermByFusionName(fusionIdField);
             // id is always a single value
-            SearchServerConfig searchServerConfig = config.getSearchServerConfigByFusionDocId(idTerm.getFusionFieldValue().get(0));
+            SearchServerConfig searchServerConfig = config.getSearchServerConfigByFusionDocId(
+                idTerm.getFusionFieldValue().get(0));
             // map whole document
             config.getResponseMapper().mapResponse(config, searchServerConfig, d, new ScriptEnv(), null);
             docsOfPage.add(d);
