@@ -2,7 +2,7 @@ package org.outermedia.solrfusion.response.freemarker;
 
 import lombok.Getter;
 import org.outermedia.solrfusion.mapper.Term;
-import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
+import org.outermedia.solrfusion.response.parser.SolrField;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class FreemarkerSingleValuedField
     @Getter
     private String value;
 
-    public static FreemarkerSingleValuedField fromSolrSingleValuedField(SolrSingleValuedField sf)
+    public static FreemarkerSingleValuedField fromSolrField(SolrField sf)
     {
         FreemarkerSingleValuedField freemarkerField = null;
         Term t = sf.getTerm();

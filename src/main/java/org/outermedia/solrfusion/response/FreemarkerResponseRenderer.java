@@ -61,13 +61,13 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
-        String filterQuery)
+    public String getResponseString(org.outermedia.solrfusion.configuration.Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
+                                    String filterQuery)
     {
         // prepare the template input:
         Map<String, Object> input = new HashMap<String, Object>();
 
-        FreemarkerResponse freemarkerResponse = new FreemarkerResponse(docStream);
+        FreemarkerResponse freemarkerResponse = new FreemarkerResponse(configuration, docStream);
         FreemarkerResponseHeader freemarkerResponseHeader = new FreemarkerResponseHeader(docStream, query, filterQuery);
 
         input.put("responseHeader", freemarkerResponseHeader);

@@ -96,7 +96,7 @@ public class ControllerTest
         IllegalAccessException, URISyntaxException
     {
         cfg = spy(helper.readFusionSchemaWithoutValidation(fusionSchema));
-        when(testRenderer.getResponseString(any(ClosableIterator.class), anyString(), anyString())).thenReturn(
+        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class), anyString(), anyString())).thenReturn(
             "<xml>42</xml>");
         when(cfg.getResponseRendererByType(any(ResponseRendererType.class))).thenReturn(testRenderer);
         List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
@@ -118,7 +118,7 @@ public class ControllerTest
         IllegalAccessException, URISyntaxException
     {
         Configuration cfg = spy(helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml"));
-        when(testRenderer.getResponseString(any(ClosableIterator.class), anyString(), anyString())).thenReturn(
+        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class), anyString(), anyString())).thenReturn(
             "<xml>42</xml>");
         List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
         SearchServerConfig configuredSearchServer = spy(searchServerConfigs.get(0));
