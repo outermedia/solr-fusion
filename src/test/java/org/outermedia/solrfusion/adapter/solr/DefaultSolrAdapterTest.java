@@ -50,8 +50,7 @@ public class DefaultSolrAdapterTest
         helper = new TestHelper();
     }
 
-    @Test
-    @Ignore
+    @Test @Ignore
     public void testHttpClientGet() throws IOException, URISyntaxException
     {
         HttpClient client = HttpClientBuilder.create().build();
@@ -85,8 +84,7 @@ public class DefaultSolrAdapterTest
         Assert.assertEquals("", "[q=*:*]", ub.getQueryParams().toString());
     }
 
-    @Test
-    @Ignore
+    @Test @Ignore
     public void testDefaultSolrAdapter()
         throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
     {
@@ -169,4 +167,26 @@ public class DefaultSolrAdapterTest
         }
     }
 
+    @Test
+    public void testHttpClientParamBuilding()
+        throws URISyntaxException, FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+    {
+        DefaultSolrAdapter adapter = DefaultSolrAdapter.Factory.getInstance();
+        SearchServerConfig serverConfig = mock(SearchServerConfig.class);
+        doReturn("http://unit.test.com/").when(serverConfig).getUrl();
+        adapter.init(serverConfig);
+        Map<String, String> params = new HashMap<>();
+
+        params.put(QUERY.getRequestParamName(), "*:*");
+        params.put(FILTER_QUERY.getRequestParamName(), "title:a");
+        params.put(WRITER_TYPE.getRequestParamName(), "json");
+        params.put(START.getRequestParamName(), "5");
+        params.put(PAGE_SIZE.getRequestParamName(), "12");
+        params.put(SORT.getRequestParamName(), "title asc");
+
+        String ub = adapter.buildHttpClientParams(params).build().toString();
+        // System.out.println(ub);
+        Assert.assertEquals("Expected other solr query url",
+            "http://unit.test.com/?q=*%3A*&fq=title%3Aa&wt=json&start=5&rows=12&sort=title+asc&fl=*+title", ub);
+    }
 }

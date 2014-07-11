@@ -53,32 +53,9 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     @Override
     public InputStream sendQuery(Map<String, String> params, int timeout) throws URISyntaxException, IOException
     {
-        URIBuilder ub = new URIBuilder(url);
-        String q = params.get(QUERY.getRequestParamName());
-        ub.setParameter(QUERY_PARAMETER, q);
-        String fq = params.get(FILTER_QUERY.getRequestParamName());
-        if (fq != null)
-        {
-            ub.setParameter(FILTER_QUERY_PARAMETER, fq);
-        }
-        String responseFormat = params.get(WRITER_TYPE.getRequestParamName());
-        ub.setParameter(WRITER_TYPE_PARAMETER, responseFormat);
-        String start = params.get(START.getRequestParamName());
-        ub.setParameter(START_PARAMETER, start);
-        String rows = params.get(PAGE_SIZE.getRequestParamName());
-        ub.setParameter(ROWS_PARAMETER, rows);
-        String sortStr = params.get(SORT.getRequestParamName());
-        ub.setParameter(SORT_PARAMETER, sortStr);
-        StringTokenizer st = new StringTokenizer(sortStr, " ");
-        String sortField = st.nextToken();
-        String sortDir = st.nextToken();
-        ub.setParameter(FIELDS_TO_RETURN_PARAMETER, "* " + sortField);
-
-        log.debug("Sending query to host {}: q={} fq={} start={} rows={} sort={}", url, q, fq, start, rows, sortField);
-
         HttpClient client = newHttpClient();
 
-        HttpGet request = newHttpGet(ub);
+        HttpGet request = newHttpGet(buildHttpClientParams(params));
         RequestConfig requestConfig = newRequestConfig(timeout);
 
         request.setConfig(requestConfig);
@@ -98,6 +75,33 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         }
 
         return contentStream;
+    }
+
+    protected URIBuilder buildHttpClientParams(Map<String, String> params) throws URISyntaxException
+    {
+        URIBuilder ub = new URIBuilder(url);
+        String q = params.get(QUERY.getRequestParamName());
+        ub.setParameter(QUERY_PARAMETER, q);
+        String fq = params.get(FILTER_QUERY.getRequestParamName());
+        if (fq != null)
+        {
+            ub.setParameter(FILTER_QUERY_PARAMETER, fq);
+        }
+        String responseFormat = params.get(WRITER_TYPE.getRequestParamName());
+        ub.setParameter(WRITER_TYPE_PARAMETER, responseFormat);
+        String start = params.get(START.getRequestParamName());
+        ub.setParameter(START_PARAMETER, start);
+        String rows = params.get(PAGE_SIZE.getRequestParamName());
+        ub.setParameter(ROWS_PARAMETER, rows);
+        String sortStr = params.get(SORT.getRequestParamName());
+        ub.setParameter(SORT_PARAMETER, sortStr);
+        StringTokenizer st = new StringTokenizer(sortStr, " ");
+        String sortField = st.nextToken();
+        ub.setParameter(FIELDS_TO_RETURN_PARAMETER, "* " + sortField);
+
+        log.debug("Sending query to host {}: q={} fq={} start={} rows={} sort={}", url, q, fq, start, rows, sortField);
+
+        return ub;
     }
 
     protected CloseableHttpClient newHttpClient()
