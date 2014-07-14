@@ -5,9 +5,9 @@
     "params":{
       "indent":"on",
       "start":"0",
-      "q":"${responseHeader.query}",
+      "q":"${responseHeader.query?json_string}",
     <#if responseHeader.filterQuery??>
-      "fq":${responseHeader.filterQuery},
+      "fq":"${responseHeader.filterQuery?json_string}",
     </#if>
       "wt":"json",
       "version":"2.2",
@@ -48,7 +48,7 @@
             <#break>
         <#case "date">
         <#case "text">
-            "${value}"<#t>
+            "${value?json_string}"<#t>
             <#break>
     </#switch>
 </#macro>

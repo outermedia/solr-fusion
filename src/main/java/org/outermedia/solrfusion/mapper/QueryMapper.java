@@ -1,5 +1,6 @@
 package org.outermedia.solrfusion.mapper;
 
+import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.FieldMapping;
 import org.outermedia.solrfusion.configuration.QueryMapperFactory;
@@ -16,9 +17,16 @@ import java.util.List;
  * <p/>
  * Created by ballmann on 03.06.14.
  */
+@Slf4j
 public class QueryMapper implements QueryVisitor, QueryMapperIfc
 {
+    private final static String NO_MAPPING_THROW_EXCEPTION = "error";
+    private final static String NO_MAPPING_DELETE = "delete";
+
+
     private SearchServerConfig serverConfig;
+
+    private String noMappingPolicy = NO_MAPPING_DELETE;
 
     /**
      * Only factory creates instances.
@@ -70,7 +78,14 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
         List<FieldMapping> mappings = serverConfig.findAllMappingsForFusionField(fusionFieldName);
         if (mappings.isEmpty())
         {
-            throw new MissingFusionFieldMapping("Found no mapping for fusion field '" + fusionFieldName + "'");
+            if(noMappingPolicy.equals(NO_MAPPING_THROW_EXCEPTION))
+            {
+                throw new MissingFusionFieldMapping("Found no mapping for fusion field '" + fusionFieldName + "'");
+            } else if(noMappingPolicy.equals(NO_MAPPING_DELETE))
+            {
+                t.setRemoved(true);
+                log.warn("Found no mapping for fusion field '{}'. Deleting query part.", fusionFieldName);
+            }
         }
         for (FieldMapping m : mappings)
         {
