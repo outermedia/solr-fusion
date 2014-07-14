@@ -348,4 +348,20 @@ public class SolrFusionServletTest
         Assert.assertEquals("Expected other sort field", "mobile", fusionRequest.getSolrFusionSortField());
         Assert.assertFalse("Expected other sort dir", fusionRequest.isSortAsc());
     }
+
+    @Test
+    public void testBuildPrintableParams()
+    {
+        SolrFusionServlet servlet = new SolrFusionServlet();
+        Configuration cfg = new Configuration();
+        servlet.setCfg(cfg);
+        Map<String, Object> map = new HashMap<>();
+        map.put("k1", new String[]{"v1"});
+        map.put("k2", "v2");
+        String s = servlet.buildPrintableParamMap(map);
+        Assert.assertEquals("Expected other string", "{\n" +
+            "\tk1=[v1]\n" +
+            "\tk2=v2\n" +
+            "}", s);
+    }
 }

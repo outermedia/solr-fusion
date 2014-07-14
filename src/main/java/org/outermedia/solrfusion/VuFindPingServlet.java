@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 @Slf4j
 @Getter
@@ -37,6 +38,30 @@ public class VuFindPingServlet extends HttpServlet
         response.setContentType("text/html;charset=UTF-8");
         response.setStatus(200);
         PrintWriter pw = response.getWriter();
-        pw.println("");
+        StringBuilder sb = new StringBuilder();
+        if("all".equals(request.getParameter("echoParams")))
+        {
+            Enumeration<String> paramEnum = request.getParameterNames();
+            if (paramEnum != null)
+            {
+                while (paramEnum.hasMoreElements())
+                {
+                    String paramName = paramEnum.nextElement();
+                    String paramValue = request.getParameter(paramName);
+                    sb.append("\t\t\t<str name=\"" + paramName + "\">" + paramValue + "</str>\n");
+                }
+            }
+        }
+        pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<response>\n" +
+            "\t<lst name=\"responseHeader\">\n" +
+            "\t\t<int name=\"status\">0</int>\n" +
+            "\t\t<int name=\"QTime\">3</int>\n" +
+            "\t\t<lst name=\"params\">\n" +
+            sb.toString() +
+            "\t\t</lst>\n" +
+            "\t</lst>\n" +
+            "\t<str name=\"status\">OK</str>\n" +
+            "</response>");
     }
 }

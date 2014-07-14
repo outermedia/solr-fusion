@@ -73,24 +73,64 @@ public class SolrFusionServlet extends HttpServlet
         // check for modifications
         loadSolrFusionConfig(fusionSchemaFileName, request.getParameter("forceSchemaReload") != null);
         // set encoding/content type BEFORE getWriter() is called!
-        PrintWriter pw = response.getWriter();
+        response.setCharacterEncoding("UTF-8");
         Map<String, Object> headerValues = collectHeader(request);
-        FusionRequest fusionRequest = buildFusionRequest(request.getParameterMap(), headerValues);
-        FusionResponse fusionResponse = getNewFusionResponse();
-        String responseStr = process(fusionRequest, fusionResponse);
-
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        if(log.isDebugEnabled())
+        {
+            log.debug("Received request:\nHeader:\n{}\nParams:\n{}", buildPrintableParamMap(headerValues),
+                buildPrintableParamMap(parameterMap));
+        }
+        FusionRequest fusionRequest = buildFusionRequest(parameterMap, headerValues);
         ResponseRendererType rendererType = fusionRequest.getResponseType();
         if (rendererType == ResponseRendererType.JSON)
+        {
             response.setContentType("application/json;charset=UTF-8");
+        }
         else if (rendererType == ResponseRendererType.PHP)
+        {
             response.setContentType("text/x-php;charset=UTF-8");
+        }
         else
+        {
             response.setContentType("text/xml;charset=UTF-8");
+        }
 
-        response.setCharacterEncoding("UTF-8");
+        PrintWriter pw = response.getWriter();
+        FusionResponse fusionResponse = getNewFusionResponse();
+        String responseStr = process(fusionRequest, fusionResponse);
         response.setStatus(200);
 
+        log.debug("Returning:\n{}", responseStr);
+        
         pw.println(responseStr);
+    }
+
+    protected String buildPrintableParamMap(Map<String, ?> params)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\n");
+        if(params != null)
+        {
+            for(String paramName : params.keySet())
+            {
+                Object paramValue = params.get(paramName);
+                String s;
+                if(paramValue.getClass().isArray())
+                {
+                    s = Arrays.toString((Object[]) paramValue);
+                } else {
+                    s = String.valueOf(paramValue);
+                }
+                sb.append("\t");
+                sb.append(paramName);
+                sb.append("=");
+                sb.append(s);
+                sb.append("\n");
+            }
+        }
+        sb.append("}");
+        return sb.toString();
     }
 
     protected Map<String, Object> collectHeader(HttpServletRequest request)
