@@ -45,7 +45,7 @@ public class FreemarkerResponseRendererTest
     @Test
     public void freemarkerXmlTest() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException, IllegalAccessException {
 
-        cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-response-renderer.xml");
+        cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-freemarker-response-renderer.xml");
 
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
         // the mapping is very incomplete, so ignore all unmapped fields
@@ -63,7 +63,7 @@ public class FreemarkerResponseRendererTest
         List<Document> documents9001 = response9001.getDocuments();
 
 //        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getResult().getNumFound());
-        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9000.getNumFound());
+        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9001.getNumFound());
 //        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9000.getResult().getDocuments(), info9000);
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9001.getDocuments(), info9001);
 

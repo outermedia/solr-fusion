@@ -36,15 +36,20 @@
         <#case "float">
         <#case "double">
             <#assign responseKey="float">
+            <#break>
         <#case "int">
         <#case "long">
             <#assign responseKey="int">
+            <#break>
         <#case "boolean">
             <#assign responseKey="bool">
+            <#break>
         <#case "date">
             <#assign responseKey="date">
+            <#break>
         <#default>
             <#assign responseKey="str">
+            <#break>
     </#switch>
     <#if name??>
         <#assign printName="name=\"${name}\"">

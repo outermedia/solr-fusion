@@ -6,9 +6,9 @@
 
     <om:fusion-schema-fields default-type="text">
         <om:field name="id"/>
-        <!--<om:field name="language"/>-->
+        <om:field name="language"/>
         <om:field name="title"/>
-        <!--<om:field name="author"/>-->
+        <om:field name="author"/>
         <om:field name="score" type="float"/>
     </om:fusion-schema-fields>
 
@@ -80,8 +80,8 @@
 
             <om:field name="id" fusion-name="id"/>
             <om:field name="title" fusion-name="title"/>
-            <!--<om:field name="author" fusion-name="author"/>-->
-            <!--<om:field name="language" fusion-name="language"/>-->
+            <om:field name="author" fusion-name="author"/>
+            <om:field name="language" fusion-name="language"/>
 
         </om:solr-server>
 
@@ -99,12 +99,12 @@
 
             <om:field name="id" fusion-name="id"/>
             <om:field name="title" fusion-name="title"/>
-            <!--<om:field name="author" fusion-name="author"/>-->
-            <!--<om:field name="language_de" fusion-name="language"/>-->
+            <om:field name="author" fusion-name="author"/>
+            <om:field name="language_de" fusion-name="language"/>
 
         </om:solr-server>
 
-
+<!-- 
         <om:solr-server name="DBoD1" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
@@ -138,6 +138,8 @@
             <om:field name="dbName" fusion-name="title"/>
 
         </om:solr-server>
+
+-->
 
     </om:solr-servers>
 </om:core>

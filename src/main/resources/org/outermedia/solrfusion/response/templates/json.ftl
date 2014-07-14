@@ -42,10 +42,13 @@
         <#case "int">
         <#case "long">
             ${value?string("0")}<#t>
+            <#break>
         <#case "boolean">
             ${value}<#t>
+            <#break>
         <#case "date">
         <#case "text">
             "${value}"<#t>
+            <#break>
     </#switch>
 </#macro>

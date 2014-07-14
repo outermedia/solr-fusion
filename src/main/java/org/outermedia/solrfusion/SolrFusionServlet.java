@@ -51,6 +51,11 @@ public class SolrFusionServlet extends HttpServlet
         PropertyConfigurator.configureAndWatch(absolutePathToLogConfig.getAbsolutePath(), FIVE_MIN_IN_MILLIS);
     }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        doGet(request, response);
+    }
 
     /**
      * Main distribution servlet. Queries are prepared for configured solr instances and their responses are collected
