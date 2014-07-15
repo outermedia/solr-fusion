@@ -4,6 +4,7 @@ import com.google.gson.*;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
@@ -71,11 +72,14 @@ public class FreemarkerResponseRendererTest
 
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator =  new MappingClosableIterator(docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null);
 
-        String xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, "steak", null);
+        FusionRequest req = new FusionRequest();
+        req.setQuery("steak");
+        String xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, req);
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
         Assert.assertFalse("xml response should not contain filter query in header", xmlResponse.contains("<str name=\"fq\">"));
 
-        xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, "steak", "salat");
+        req.setFilterQuery("salat");
+        xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, req);
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
         Assert.assertTrue("xml response should contain filter query in header",
             xmlResponse.contains("<str name=\"fq\"><![CDATA[salat]]></str>"));
@@ -112,7 +116,10 @@ public class FreemarkerResponseRendererTest
 
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator =  new MappingClosableIterator(docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null);
 
-        String jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, "Shakespeares", null);
+        FusionRequest req = new FusionRequest();
+        req.setQuery("Shakespeares");
+
+        String jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req);
 //        System.out.println(jsonResponse);
 
         try
@@ -135,7 +142,8 @@ public class FreemarkerResponseRendererTest
 
         Assert.assertFalse("json response should not contain filter query in header", jsonResponse.contains("\"fq\":"));
 
-        jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, "Shakespeares", "salat");
+        req.setFilterQuery("salat");
+        jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req);
         // System.out.println(jsonResponse);
         Assert.assertTrue("json response should contain filter query in header", jsonResponse.contains("\"fq\":\"salat\","));
     }

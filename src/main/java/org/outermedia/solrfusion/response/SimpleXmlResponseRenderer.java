@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.response;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.FusionField;
@@ -42,9 +43,13 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
-                                    String filterQueryStr)
+    public String getResponseString(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request)
     {
+        String query = request.getQuery();
+        String filterQueryStr = request.getFilterQuery();
+        String sort = request.getSolrFusionSortField();
+        String fields = request.getFieldsToReturn();
+
         final StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         sb.append("<response>\n");
@@ -58,6 +63,14 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
         if(filterQueryStr != null)
         {
             sb.append("    <str name=\"fq\"><![CDATA[" + filterQueryStr + "]]></str>\n");
+        }
+        if(sort != null)
+        {
+            sb.append("    <str name=\"sort\"><![CDATA[" + sort + "]]></str>\n");
+        }
+        if(fields != null)
+        {
+            sb.append("    <str name=\"fl\"><![CDATA[" + fields + "]]></str>\n");
         }
         sb.append("    <str name=\"version\">2.2</str>\n");
         sb.append("    <str name=\"rows\">" + docStream.size() + "</str>\n");

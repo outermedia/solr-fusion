@@ -39,19 +39,15 @@ public class ControllerFilterQueryTest
 {
     protected TestHelper helper;
 
-    @Mock
-    ResponseRendererIfc testRenderer;
+    @Mock ResponseRendererIfc testRenderer;
 
     ByteArrayInputStream testResponse;
 
-    @Mock
-    SearchServerAdapterIfc testAdapter;
+    @Mock SearchServerAdapterIfc testAdapter;
 
-    @Mock
-    SearchServerAdapterIfc testAdapter9000;
+    @Mock SearchServerAdapterIfc testAdapter9000;
 
-    @Mock
-    SearchServerAdapterIfc testAdapter9002;
+    @Mock SearchServerAdapterIfc testAdapter9002;
 
     Configuration cfg;
 
@@ -75,8 +71,8 @@ public class ControllerFilterQueryTest
 
     @Test
     public void testProcess()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
         FusionControllerIfc fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
         FusionRequest fusionRequest = new FusionRequest();
@@ -91,13 +87,12 @@ public class ControllerFilterQueryTest
     }
 
     protected FusionControllerIfc createTestFusionController(String fusionSchema)
-        throws IOException, JAXBException, SAXException, ParserConfigurationException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, JAXBException, SAXException, ParserConfigurationException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
-        cfg = spy(helper
-            .readFusionSchemaWithoutValidation(fusionSchema));
-        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class), anyString(), anyString())).thenReturn(
-            "<xml>42</xml>");
+        cfg = spy(helper.readFusionSchemaWithoutValidation(fusionSchema));
+        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class),
+            any(FusionRequest.class))).thenReturn("<xml>42</xml>");
         when(cfg.getResponseRendererByType(any(ResponseRendererType.class))).thenReturn(testRenderer);
         List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
         if (searchServerConfigs != null && !searchServerConfigs.isEmpty())
@@ -114,8 +109,8 @@ public class ControllerFilterQueryTest
 
     @Test
     public void testQueryParsingFailed()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
         FusionControllerIfc fc = createTestFusionController("test-empty-fusion-schema.xml");
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
@@ -133,8 +128,8 @@ public class ControllerFilterQueryTest
 
     @Test
     public void testQueryWithMultipleServersAndResponseDocuments()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
         testMultipleServers("title:abc", "title:def", "target/test-classes/test-xml-response-9000.xml",
             "target/test-classes/test-xml-response-9002.xml");
@@ -144,8 +139,8 @@ public class ControllerFilterQueryTest
 
     @Test
     public void testQueryWithMultipleServersButNoResponseDocuments()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
         String xml = testMultipleServers("title:abc", "title:def", "target/test-classes/test-empty-xml-response.xml",
             "target/test-classes/test-empty-xml-response.xml");
@@ -159,6 +154,7 @@ public class ControllerFilterQueryTest
             "    <str name=\"start\">0</str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
             "    <str name=\"fq\"><![CDATA[title:def]]></str>\n" +
+            "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "    <str name=\"rows\">0</str>\n" +
             "  </lst>\n" +
@@ -179,20 +175,21 @@ public class ControllerFilterQueryTest
         result.put(PAGE_SIZE.getRequestParamName(), "10");
         result.put(START.getRequestParamName(), "0");
         result.put(SORT.getRequestParamName(), "score desc");
+        result.put(FIELDS_TO_RETURN.getRequestParamName(), "score");
         return result;
     }
 
-    protected String testMultipleServers(String queryStr, String filterQueryStr, String responseServer1, String responseServer2)
-        throws IOException, ParserConfigurationException, SAXException, JAXBException,
-        InvocationTargetException, IllegalAccessException, URISyntaxException
+    protected String testMultipleServers(String queryStr, String filterQueryStr, String responseServer1,
+        String responseServer2)
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
     {
         byte[] documents9000 = Files.toByteArray(new File(responseServer1));
         byte[] documents9002 = Files.toByteArray(new File(responseServer2));
         ByteArrayInputStream documents9000Stream = new ByteArrayInputStream(documents9000);
         ByteArrayInputStream documents9002Stream = new ByteArrayInputStream(documents9002);
 
-        cfg = helper
-            .readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
+        cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
         // the mapping is very incomplete, so ignore all unmapped fields
         testResponseMapper.ignoreMissingMappings();

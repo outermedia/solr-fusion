@@ -1,6 +1,7 @@
 package org.outermedia.solrfusion.response.freemarker;
 
 import lombok.Getter;
+import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.parser.Document;
@@ -22,11 +23,18 @@ public class FreemarkerResponseHeader
     @Getter
     private int rows;
 
-    public FreemarkerResponseHeader(ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
-        String filterQuery)
+    @Getter
+    private String sort;
+
+    @Getter
+    private String fields;
+
+    public FreemarkerResponseHeader(ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request)
     {
         this.rows = docStream.size();
-        this.query = query;
-        this.filterQuery = filterQuery;
+        this.query = request.getQuery();
+        this.filterQuery = request.getFilterQuery();
+        this.sort = request.getSolrFusionSortField();
+        this.fields = request.getFieldsToReturn();
     }
 }

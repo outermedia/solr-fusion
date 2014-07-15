@@ -102,6 +102,8 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "    <str name=\"start\">0</str>\n" +
             "    <str name=\"q\"><![CDATA[title:xyz]]></str>\n" +
             "    <str name=\"fq\"><![CDATA[title:XYZ]]></str>\n" +
+            "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
+            "    <str name=\"fl\"><![CDATA[id title score]]></str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "    <str name=\"rows\">0</str>\n" +
             "  </lst>\n" +
@@ -111,11 +113,11 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "</response>";
         Assert.assertEquals("Found different xml response", expectedXml, xml.trim());
         verify(testAdapter9000, times(1)).sendQuery(
-            buildMap(QUERY, "title:xyz", FILTER_QUERY, "title:XYZ", PAGE_SIZE, "10", START, "0", SORT, "score desc"),
-            4000);
+            buildMap(QUERY, "title:xyz", FILTER_QUERY, "title:XYZ", PAGE_SIZE, "10", START, "0", SORT, "score desc",
+                FIELDS_TO_RETURN, "id title score"), 4000);
         verify(testAdapter9002, times(1)).sendQuery(
             buildMap(QUERY, "titleVT_eng:xyz", FILTER_QUERY, "titleVT_eng:XYZ", PAGE_SIZE, "10", START, "0", SORT,
-                "score desc"), 4000);
+                "score desc", FIELDS_TO_RETURN, "id titleVT_de titleVT_eng score"), 4000);
     }
 
     protected Map<String, String> buildMap(Object... v)
@@ -145,6 +147,8 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "    <str name=\"start\">0</str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
             "    <str name=\"fq\"><![CDATA[title:abc]]></str>\n" +
+            "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
+            "    <str name=\"fl\"><![CDATA[id title score]]></str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "    <str name=\"rows\">2</str>\n" +
             "  </lst>\n" +
@@ -167,11 +171,11 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
 
         Assert.assertEquals("Found different xml response", expected, xml.trim());
         verify(testAdapter9000, times(1)).sendQuery(
-            buildMap(QUERY, "title:abc", FILTER_QUERY, "title:abc", PAGE_SIZE, "10", START, "0", SORT, "score desc"),
-            4000);
+            buildMap(QUERY, "title:abc", FILTER_QUERY, "title:abc", PAGE_SIZE, "10", START, "0", SORT, "score desc",
+                FIELDS_TO_RETURN, "id title score"), 4000);
         verify(testAdapter9002, times(1)).sendQuery(
             buildMap(QUERY, "titleVT_eng:abc", FILTER_QUERY, "titleVT_eng:abc", PAGE_SIZE, "10", START, "0", SORT,
-                "score desc"), 4000);
+                "score desc", FIELDS_TO_RETURN, "id titleVT_de titleVT_eng score"), 4000);
     }
 
     protected String testMultipleServers(String queryStr, String filterQueryStr)
@@ -209,9 +213,10 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         fusionRequest.setPageSize(10);
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
+        fusionRequest.setFieldsToReturn("id title " + fusionRequest.getSolrFusionSortField());
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(spyCfg, fusionRequest, fusionResponse);
-        // System.out.println("RESPONSE "+fusionResponse.getErrorMessage());
+        System.out.println("RESPONSE " + fusionResponse.getErrorMessage());
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
 
         String result = fusionResponse.getResponseAsString();

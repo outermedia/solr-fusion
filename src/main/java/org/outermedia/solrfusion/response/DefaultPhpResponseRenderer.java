@@ -1,6 +1,7 @@
 package org.outermedia.solrfusion.response;
 
 import lombok.ToString;
+import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
@@ -24,8 +25,7 @@ public class DefaultPhpResponseRenderer implements ResponseRendererIfc
 	{}
 
     @Override
-    public String getResponseString(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, String query,
-                                    String filterQueryStr)
+    public String getResponseString(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request)
     {
         return null; // TODO
     }

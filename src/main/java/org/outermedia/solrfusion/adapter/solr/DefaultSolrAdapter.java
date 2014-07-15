@@ -98,43 +98,12 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         StringTokenizer st = new StringTokenizer(sortStr, " ");
         String sortField = st.nextToken();
         String fieldsToReturn = params.get(FIELDS_TO_RETURN.getRequestParamName());
-        if (fieldsToReturn == null)
-        {
-            // if sortField is score add it explicitly
-            fieldsToReturn = "* " + sortField;
-        }
-        else
-        {
-            fieldsToReturn = mergeField(sortField, fieldsToReturn);
-        }
         ub.setParameter(FIELDS_TO_RETURN_PARAMETER, fieldsToReturn);
 
         log.debug("Sending query to host {}: q={} fq={} start={} rows={} sort={} fl={}", url, q, fq, start, rows,
             sortField, fieldsToReturn);
 
         return ub;
-    }
-
-    /**
-     * Add a field to a field list if it is not already contained.
-     *
-     * @param field
-     * @param fieldList are separated by SPACE (see {@link org.outermedia.solrfusion.FusionRequest#mapFusionFieldListToSearchServerField(String,
-     *                  org.outermedia.solrfusion.configuration.Configuration, org.outermedia.solrfusion.configuration.SearchServerConfig)}
-     *                  )
-     * @return a modified field list
-     */
-    protected String mergeField(String field, String fieldList)
-    {
-        if ((" " + fieldList + " ").contains(" " + field + " "))
-        {
-            return fieldList;
-        }
-        if (fieldList.isEmpty())
-        {
-            return field;
-        }
-        return fieldList + " " + field;
     }
 
     protected CloseableHttpClient newHttpClient()

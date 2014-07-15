@@ -65,17 +65,8 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
         String sortDir = st.nextToken();
         query.setSort(sortField, sortDir.equals("asc") ? SolrQuery.ORDER.asc : SolrQuery.ORDER.desc);
         String fieldsToReturn = params.get(FIELDS_TO_RETURN.getRequestParamName());
-        String fieldsToReturnArr[] = null;
-        if (fieldsToReturn == null)
-        {
-            // if sortField is score add it explicitly
-            fieldsToReturnArr = new String[]{"*", sortField};
-        }
-        else
-        {
-            fieldsToReturn = mergeField(sortField, fieldsToReturn);
-            fieldsToReturnArr = fieldsToReturn.split(" ");
-        }
+        fieldsToReturn = mergeField(sortField, fieldsToReturn);
+        String fieldsToReturnArr[] = fieldsToReturn.split(" ");
         query.setFields(fieldsToReturnArr);
 
         log.debug("Sending query: q={} fq={} start={} rows={} sort={} fl={}", q, fq, start, rows, sortStr,

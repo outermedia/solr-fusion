@@ -30,6 +30,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
 {
     protected List<Document> allDocs;
     protected int streamCounter;
+    private int maxDocNr;
 
     /**
      * Factory creates instances only.
@@ -39,12 +40,14 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         super();
         allDocs = new ArrayList<>();
         streamCounter = 0;
+        maxDocNr = 0;
     }
 
     @Override public void addResultStream(Configuration config, SearchServerConfig searchServerConfig,
         ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request)
     {
         streamCounter++;
+        maxDocNr += Math.min(searchServerConfig.getMaxDocs(), docIterator.getExtraInfo().getTotalNumberOfHits());
         List<String> searchServerFieldsToMap = new ArrayList<>();
         searchServerFieldsToMap.add(request.getSearchServerSortField());
         try
@@ -101,7 +104,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             config.getResponseMapper().mapResponse(config, searchServerConfig, d, new ScriptEnv(), null);
             docsOfPage.add(d);
         }
-        SearchServerResponseInfo info = new SearchServerResponseInfo(allDocs.size());
+        SearchServerResponseInfo info = new SearchServerResponseInfo(maxDocNr);
         return new ClosableListIterator<>(docsOfPage, info);
     }
 

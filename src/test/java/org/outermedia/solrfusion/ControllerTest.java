@@ -33,7 +33,6 @@ import java.util.Map;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.anyMapOf;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.*;
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
@@ -96,8 +95,8 @@ public class ControllerTest
         IllegalAccessException, URISyntaxException
     {
         cfg = spy(helper.readFusionSchemaWithoutValidation(fusionSchema));
-        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class), anyString(), anyString())).thenReturn(
-            "<xml>42</xml>");
+        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class),
+            any(FusionRequest.class))).thenReturn("<xml>42</xml>");
         when(cfg.getResponseRendererByType(any(ResponseRendererType.class))).thenReturn(testRenderer);
         List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
         if (searchServerConfigs != null && !searchServerConfigs.isEmpty())
@@ -118,8 +117,8 @@ public class ControllerTest
         IllegalAccessException, URISyntaxException
     {
         Configuration cfg = spy(helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml"));
-        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class), anyString(), anyString())).thenReturn(
-            "<xml>42</xml>");
+        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class),
+            any(FusionRequest.class))).thenReturn("<xml>42</xml>");
         List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
         SearchServerConfig configuredSearchServer = spy(searchServerConfigs.get(0));
         searchServerConfigs.clear();
@@ -235,6 +234,7 @@ public class ControllerTest
             "    <str name=\"indent\">on</str>\n" +
             "    <str name=\"start\">0</str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
+            "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "    <str name=\"rows\">0</str>\n" +
             "  </lst>\n" +
@@ -254,6 +254,7 @@ public class ControllerTest
         result.put(PAGE_SIZE.getRequestParamName(), "10");
         result.put(START.getRequestParamName(), "0");
         result.put(SORT.getRequestParamName(), "score desc");
+        result.put(FIELDS_TO_RETURN.getRequestParamName(), "score");
         return result;
     }
 

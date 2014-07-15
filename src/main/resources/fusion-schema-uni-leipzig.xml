@@ -6,8 +6,11 @@
 
     <om:fusion-schema-fields default-type="text">
         <om:field name="id"/>
-        <om:field name="language"/>
-        <om:field name="title"/>
+        <om:field name="language" />
+        <om:field name="title" />
+        <om:field name="title_full" />
+        <om:field name="title_fullStr" />
+        <om:field name="title_short" />
         <om:field name="author"/>
         <om:field name="score" type="float"/>
     </om:fusion-schema-fields>
@@ -36,7 +39,7 @@
 
     <om:solr-servers>
         <om:timeout>4000</om:timeout>
-        <om:disaster-limit>2</om:disaster-limit>
+        <om:disaster-limit>0</om:disaster-limit>
         <om:error key="disaster-limit">Please try later again.</om:error>
         <om:page-size>10</om:page-size>
 
@@ -76,10 +79,13 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>10</om:max-docs>
+            <om:max-docs>30</om:max-docs>
 
             <om:field name="id" fusion-name="id"/>
             <om:field name="title" fusion-name="title"/>
+            <om:field name="title_full" fusion-name="title_full"/>
+            <om:field name="title_fullStr" fusion-name="title_fullStr"/>
+            <om:field name="title_short" fusion-name="title_short"/>
             <om:field name="author" fusion-name="author"/>
             <om:field name="language" fusion-name="language"/>
 
@@ -95,10 +101,13 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>100</om:max-docs>
+            <om:max-docs>30</om:max-docs>
 
             <om:field name="id" fusion-name="id"/>
             <om:field name="title" fusion-name="title"/>
+            <om:field name="title_full" fusion-name="title_full"/>
+            <om:field name="title_fullStr" fusion-name="title_fullStr"/>
+            <om:field name="title_short" fusion-name="title_short"/>
             <om:field name="author" fusion-name="author"/>
             <om:field name="language_de" fusion-name="language"/>
 

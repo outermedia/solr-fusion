@@ -10,6 +10,12 @@
     <#if responseHeader.filterQuery??>
     <str name="fq"><![CDATA[${responseHeader.filterQuery}]]></str>
     </#if>
+    <#if responseHeader.sort??>
+    <str name="sort"><![CDATA[${responseHeader.sort}]]></str>
+    </#if>
+    <#if responseHeader.fields??>
+    <str name="fl"><![CDATA[${responseHeader.fields}]]></str>
+    </#if>
     <str name="version">2.2</str>
     <str name="rows">${responseHeader.rows}</str>
   </lst>

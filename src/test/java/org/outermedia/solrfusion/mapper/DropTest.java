@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.mapper;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
@@ -64,7 +65,9 @@ public class DropTest extends AbstractTypeTest
         Assert.assertTrue("Expected that field f9-abc was removed", sourceRegExpField.isRemoved());
 
         ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(docs, info);
-        String ds = renderer.getResponseString(cfg, docStream, "a:dummy", null);
+        FusionRequest req = new FusionRequest();
+        req.setQuery("a:dummy");
+        String ds = renderer.getResponseString(cfg, docStream, req);
         String expectedField = "    <arr name=\"text4\">\n" +
                 "      <str><![CDATA[something]]></str>\n" +
                 "      <str><![CDATA[other]]></str>\n" +
@@ -82,7 +85,7 @@ public class DropTest extends AbstractTypeTest
         Assert.assertFalse("Expected that field f8 was not removed", sourceField.isRemoved());
         // System.out.println("W/O DROP "+sourceField.toString());
         docStream = new ClosableListIterator<>(docs, info);
-        String s = renderer.getResponseString(cfg, docStream, "a:dummy", null);
+        String s = renderer.getResponseString(cfg, docStream, req);
         Assert.assertTrue("Field f8 was not mapped.", s.contains(expectedField));
     }
 

@@ -48,6 +48,8 @@ public class FusionRequest
 
     private String fieldsToReturn;
 
+    private String highlightingFieldsToReturn;
+
     // otherwise desc
     private boolean sortAsc;
 
@@ -94,19 +96,27 @@ public class FusionRequest
             searchServerConfig).iterator().next();
         setSearchServerSortField(searchServerSortField);
         searchServerParams.put(SORT.getRequestParamName(), searchServerSortField + (isSortAsc() ? " asc" : " desc"));
-        String fieldsToReturn = mapFusionFieldListToSearchServerField(this.fieldsToReturn, configuration,
-            searchServerConfig);
-        if (!fieldsToReturn.isEmpty())
+        String fusionFieldsToReturn = fieldsToReturn;
+        if (fusionFieldsToReturn == null)
         {
-            searchServerParams.put(FIELDS_TO_RETURN.getRequestParamName(), fieldsToReturn);
+            fusionFieldsToReturn = "";
         }
+        fusionFieldsToReturn += " " + getSolrFusionSortField();
+        // TODO still necessary when highlighting is supported?
+        if (highlightingFieldsToReturn != null)
+        {
+            fusionFieldsToReturn += " " + highlightingFieldsToReturn;
+        }
+        String fieldsToReturn = mapFusionFieldListToSearchServerField(fusionFieldsToReturn, configuration,
+            searchServerConfig);
+        searchServerParams.put(FIELDS_TO_RETURN.getRequestParamName(), fieldsToReturn);
         return searchServerParams;
     }
 
     /**
      * Map a list of fusion field names to a list of search server fields.
      *
-     * @param fieldList separated by SPACE or comma or combinations of them
+     * @param fieldList          separated by SPACE or comma or combinations of them
      * @param configuration
      * @param searchServerConfig
      * @return a string of field names separated by SPACE

@@ -191,26 +191,4 @@ public class DefaultSolrAdapterTest
             "http://unit.test.com/?q=*%3A*&fq=title%3Aa&wt=json&start=5&rows=12&sort=title+asc&fl=*%2Cscore%2C+title", ub);
     }
 
-    @Test
-    public void testMergeField()
-    {
-        DefaultSolrAdapter adapter = DefaultSolrAdapter.Factory.getInstance();
-        String s = adapter.mergeField("score", "");
-        Assert.assertEquals("Expected other merge result", "score", s);
-
-        s = adapter.mergeField("score", "id");
-        Assert.assertEquals("Expected other merge result", "id score", s);
-
-        s = adapter.mergeField("score", "score");
-        Assert.assertEquals("Expected other merge result", "score", s);
-
-        s = adapter.mergeField("score", "id score");
-        Assert.assertEquals("Expected other merge result", "id score", s);
-
-        s = adapter.mergeField("score", "score id");
-        Assert.assertEquals("Expected other merge result", "score id", s);
-
-        s = adapter.mergeField("score", "title score id");
-        Assert.assertEquals("Expected other merge result", "title score id", s);
-    }
 }

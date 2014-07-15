@@ -141,8 +141,7 @@ public class FusionController implements FusionControllerIfc
                 ClosableIterator<Document, SearchServerResponseInfo> response = consolidator.getResponseIterator(
                     configuration, fusionRequest);
                 // TODO better to pass in a Writer in order to avoid building of very big String
-                String responseString = responseRenderer.getResponseString(configuration, response,
-                    fusionRequest.getQuery(), fusionRequest.getFilterQuery());
+                String responseString = responseRenderer.getResponseString(configuration, response, fusionRequest);
                 fusionResponse.setOkResponse(responseString);
                 response.close();
             }
@@ -197,6 +196,7 @@ public class FusionController implements FusionControllerIfc
             ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
                 configuration.getDefaultResponseParser());
             XmlResponse result = responseParser.parse(is);
+            log.debug("Received from {}: {}", searchServerConfig.getSearchServerName(), result.toString());
             SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound());
             ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
                 result.getDocuments(), info);

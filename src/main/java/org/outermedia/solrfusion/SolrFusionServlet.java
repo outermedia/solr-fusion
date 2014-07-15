@@ -248,6 +248,8 @@ public class SolrFusionServlet extends HttpServlet
         fusionRequest.setSortAsc(sortAsc);
         String fieldsToReturn = getOptionalSingleSearchParamValue(requestParams, FIELDS_TO_RETURN, null);
         fusionRequest.setFieldsToReturn(fieldsToReturn);
+        String highLightFieldsToReturn = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_FIELDS_TO_RETURN, null);
+        fusionRequest.setHighlightingFieldsToReturn(highLightFieldsToReturn);
 
         return fusionRequest;
     }

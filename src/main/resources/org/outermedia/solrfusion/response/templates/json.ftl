@@ -9,6 +9,12 @@
     <#if responseHeader.filterQuery??>
       "fq":"${responseHeader.filterQuery?json_string}",
     </#if>
+    <#if responseHeader.sort??>
+      "sort":"${responseHeader.sort?json_string}",
+    </#if>
+    <#if responseHeader.fields??>
+      "fl":"${responseHeader.fields?json_string}",
+    </#if>
       "wt":"json",
       "version":"2.2",
       "rows":"${responseHeader.rows}"}},
