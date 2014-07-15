@@ -136,8 +136,8 @@ public class FreemarkerResponseRendererTest
         Assert.assertFalse("json response should not contain filter query in header", jsonResponse.contains("\"fq\":"));
 
         jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, "Shakespeares", "salat");
-//        System.out.println(jsonResponse);
-        Assert.assertFalse("json response should contain filter query in header", jsonResponse.contains("\"fq\":\"salat\","));
+        // System.out.println(jsonResponse);
+        Assert.assertTrue("json response should contain filter query in header", jsonResponse.contains("\"fq\":\"salat\","));
     }
 
 }
