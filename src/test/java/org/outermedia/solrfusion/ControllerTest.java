@@ -330,7 +330,7 @@ public class ControllerTest
         fusionRequest.setPageSize(200);
         fusionRequest.setSolrFusionSortField("title");
         fusionRequest.setSortAsc(true);
-        Map<String, String> map = controller.buildQueryParams(fusionRequest, serverConfig);
+        Map<String, String> map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
         Assert.assertEquals("Expected other sort field", "titleVT_de asc", map.get(SORT.getRequestParamName()));
         Assert.assertEquals("Expected other start value", "0", map.get(START.getRequestParamName()));
         int maxDocs = serverConfig.getMaxDocs();
@@ -343,20 +343,20 @@ public class ControllerTest
         Assert.assertTrue("Please set max-docs >" + start, start < maxDocs);
         fusionRequest.setStart(start);
         fusionRequest.setPageSize(maxDocs - 1 - start);
-        map = controller.buildQueryParams(fusionRequest, serverConfig);
+        map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
         Assert.assertEquals("Expected other page size", "99", map.get(PAGE_SIZE.getRequestParamName()));
 
         // up to server's max limit, return wanted size
         fusionRequest.setStart(start);
         fusionRequest.setPageSize(maxDocs - start);
-        map = controller.buildQueryParams(fusionRequest, serverConfig);
+        map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
         Assert.assertEquals("Expected other page size", String.valueOf(maxDocs),
             map.get(PAGE_SIZE.getRequestParamName()));
 
         // above  server's max limit, return server's limit
         fusionRequest.setStart(start + 1);
         fusionRequest.setPageSize(maxDocs - start);
-        map = controller.buildQueryParams(fusionRequest, serverConfig);
+        map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
         Assert.assertEquals("Expected other page size", String.valueOf(maxDocs),
             map.get(PAGE_SIZE.getRequestParamName()));
     }
@@ -372,22 +372,37 @@ public class ControllerTest
         SearchServerConfig serverConfig = cfg.getSearchServerConfigByName("Bibliothek 9002");
         Assert.assertNotNull("Didn't find server 9002", serverConfig);
 
-        String searchServerField = controller.mapFusionFieldToSearchServerField("title", serverConfig);
+        FusionRequest request = new FusionRequest();
+
+        String searchServerField = mapField("title", request, cfg, serverConfig);
         Assert.assertEquals("Mapping returned other field than expected", "titleVT_de", searchServerField);
 
-        searchServerField = controller.mapFusionFieldToSearchServerField("language", serverConfig);
+        searchServerField = mapField("language_de", request, cfg, serverConfig);
         Assert.assertEquals("Mapping returned other field than expected", "language", searchServerField);
 
-        searchServerField = controller.mapFusionFieldToSearchServerField("unknown", serverConfig);
+        searchServerField = mapField("unknown", request, cfg, serverConfig);
         Assert.assertEquals("Mapping returned other field than expected", "score", searchServerField);
 
         // special case id
-        searchServerField = controller.mapFusionFieldToSearchServerField("id", serverConfig);
+        searchServerField = mapField("id", request, cfg, serverConfig);
         Assert.assertEquals("Mapping returned other field than expected", "id", searchServerField);
 
         // special case score
-        searchServerField = controller.mapFusionFieldToSearchServerField("score", serverConfig);
+        searchServerField = mapField("score", request, cfg, serverConfig);
         Assert.assertEquals("Mapping returned other field than expected", "score", searchServerField);
+
+        // language_de and language_en are both mapped to language
+        String fl = request.mapFusionFieldListToSearchServerField("language_de, language_en", cfg, serverConfig);
+        Assert.assertEquals("Mapping returned other field than expected", "language", fl);
+
+        // title is mapped to two fields, preserve order of textual order of mappings
+        fl = request.mapFusionFieldListToSearchServerField("title id", cfg, serverConfig);
+        Assert.assertEquals("Mapping returned other field than expected", "titleVT_de titleVT_eng id", fl);
     }
 
+    protected String mapField(String field, FusionRequest request, Configuration cfg, SearchServerConfig serverConfig)
+        throws InvocationTargetException, IllegalAccessException
+    {
+        return request.mapFusionFieldToSearchServerField(field, cfg, serverConfig).iterator().next();
+    }
 }

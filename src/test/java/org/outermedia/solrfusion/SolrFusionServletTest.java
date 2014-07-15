@@ -24,6 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.mockito.Mockito.*;
+import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 @Slf4j
 public class SolrFusionServletTest
@@ -114,19 +115,22 @@ public class SolrFusionServletTest
         servlet.setCfg(cfg);
         Map<String, String[]> requestParams = new HashMap<>();
         String q = "title:schiller";
-        requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{q});
+        requestParams.put(QUERY.getRequestParamName(), new String[]{q});
         if (fq != null)
         {
-            requestParams.put(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(), new String[]{fq});
+            requestParams.put(FILTER_QUERY.getRequestParamName(), new String[]{fq});
         }
+        String fieldsToReturn = "* score";
+        requestParams.put(FIELDS_TO_RETURN.getRequestParamName(), new String[]{fieldsToReturn});
         try
         {
             FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
             Assert.assertNotNull("Expected request object", req);
-            Assert.assertEquals("Got different different", q, req.getQuery());
-            Assert.assertEquals("Got different different", fq, req.getFilterQuery());
+            Assert.assertEquals("Got different query", q, req.getQuery());
+            Assert.assertEquals("Got different filter query", fq, req.getFilterQuery());
             Assert.assertEquals("Got different renderer type than expected", ResponseRendererType.XML,
                 req.getResponseType());
+            Assert.assertEquals("Got different fields", fieldsToReturn, req.getFieldsToReturn());
         }
         catch (ServletException e)
         {

@@ -246,6 +246,8 @@ public class SolrFusionServlet extends HttpServlet
         StringTokenizer st = new StringTokenizer(sortStr, " ");
         fusionRequest.setSolrFusionSortField(st.nextToken());
         fusionRequest.setSortAsc(sortAsc);
+        String fieldsToReturn = getOptionalSingleSearchParamValue(requestParams, FIELDS_TO_RETURN, null);
+        fusionRequest.setFieldsToReturn(fieldsToReturn);
 
         return fusionRequest;
     }

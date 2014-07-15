@@ -41,7 +41,7 @@
         <#case "double">
         <#case "int">
         <#case "long">
-            ${value?string("0")}<#t>
+            ${value}<#t>
             <#break>
         <#case "boolean">
             ${value}<#t>

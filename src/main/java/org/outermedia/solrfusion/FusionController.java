@@ -5,12 +5,12 @@ import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseException;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
-import org.outermedia.solrfusion.configuration.*;
-import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
+import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.ControllerFactory;
+import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
-import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.query.QueryParserIfc;
-import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
@@ -22,12 +22,9 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 /**
  * Created by ballmann on 04.06.14.
@@ -144,8 +141,8 @@ public class FusionController implements FusionControllerIfc
                 ClosableIterator<Document, SearchServerResponseInfo> response = consolidator.getResponseIterator(
                     configuration, fusionRequest);
                 // TODO better to pass in a Writer in order to avoid building of very big String
-                String responseString = responseRenderer.getResponseString(configuration, response, fusionRequest.getQuery(),
-                    fusionRequest.getFilterQuery());
+                String responseString = responseRenderer.getResponseString(configuration, response,
+                    fusionRequest.getQuery(), fusionRequest.getFilterQuery());
                 fusionResponse.setOkResponse(responseString);
                 response.close();
             }
@@ -192,7 +189,8 @@ public class FusionController implements FusionControllerIfc
     {
         try
         {
-            Map<String, String> searchServerParams = buildQueryParams(fusionRequest, searchServerConfig);
+            Map<String, String> searchServerParams = fusionRequest.buildSearchServerQueryParams(configuration,
+                searchServerConfig);
             int timeout = configuration.getSearchServerConfigs().getTimeout();
             SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
             InputStream is = adapter.sendQuery(searchServerParams, timeout);
@@ -206,6 +204,7 @@ public class FusionController implements FusionControllerIfc
         }
         catch (SearchServerResponseException se)
         {
+            // try to parse error response if present
             try
             {
                 ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
@@ -227,71 +226,6 @@ public class FusionController implements FusionControllerIfc
         {
             log.error("Caught exception while communicating with server {}", searchServerConfig.getSearchServerName(),
                 e);
-        }
-    }
-
-    protected Map<String, String> buildQueryParams(FusionRequest fusionRequest, SearchServerConfig searchServerConfig)
-        throws InvocationTargetException, IllegalAccessException
-    {
-        Query query = fusionRequest.getParsedQuery();
-        Query filterQuery = fusionRequest.getParsedFilterQuery();
-        Map<String, String> searchServerParams = new HashMap<>();
-        buildSearchServerQuery(query, QUERY, searchServerConfig, searchServerParams);
-        buildSearchServerQuery(filterQuery, FILTER_QUERY, searchServerConfig, searchServerParams);
-        // get all documents from 0..min(MAXDOCS,start+page size)
-        searchServerParams.put(START.getRequestParamName(), String.valueOf(0));
-        int rows = Math.min(searchServerConfig.getMaxDocs(), fusionRequest.getStart() + fusionRequest.getPageSize());
-        searchServerParams.put(PAGE_SIZE.getRequestParamName(), String.valueOf(rows));
-        String searchServerSortField = mapFusionFieldToSearchServerField(fusionRequest.getSolrFusionSortField(),
-            searchServerConfig);
-        fusionRequest.setSearchServerSortField(searchServerSortField);
-        searchServerParams.put(SORT.getRequestParamName(),
-            searchServerSortField + (fusionRequest.isSortAsc() ? " asc" : " desc"));
-        return searchServerParams;
-    }
-
-    protected String mapFusionFieldToSearchServerField(String fusionField, SearchServerConfig searchServerConfig)
-        throws InvocationTargetException, IllegalAccessException
-    {
-        List<FieldMapping> mappings = searchServerConfig.findAllMappingsForFusionField(fusionField);
-        String result = null;
-        // TODO handle 1:n mapping i.e. 1 solrfusion field is mapped to several search server fields?
-        // does it mean to sort by several search server fields?
-        if (mappings.size() > 0)
-        {
-            result = mappings.get(0).getSearchServersName();
-        }
-        else
-        {
-            if (ResponseMapperIfc.FUSION_FIELD_NAME_SCORE.equals(fusionField))
-            {
-                result = ResponseMapperIfc.DOC_FIELD_NAME_SCORE;
-            }
-            String fusionIdField = configuration.getIdGenerator().getFusionIdField();
-            if (fusionIdField.equals(fusionField))
-            {
-                result = searchServerConfig.getIdFieldName();
-            }
-        }
-        if (result == null)
-        {
-            result = ResponseMapperIfc.DOC_FIELD_NAME_SCORE;
-            log.error(
-                "Can't sort by fusion field '{}', because no mapping exist for search server {}. Using {} instead.",
-                fusionField, searchServerConfig.getSearchServerName(), result);
-        }
-        return result;
-    }
-
-    protected void buildSearchServerQuery(Query query, SolrFusionRequestParams paramName,
-        SearchServerConfig searchServerConfig, Map<String, String> searchServerParams)
-        throws InvocationTargetException, IllegalAccessException
-    {
-        if (query != null)
-        {
-            QueryBuilderIfc queryBuilder = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
-            searchServerParams.put(paramName.getRequestParamName(),
-                queryBuilder.buildQueryString(query, configuration));
         }
     }
 
