@@ -21,6 +21,7 @@
 
     <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js"/>
     <om:script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh"/>
+    <om:script-type name="merge-multi-value" class="org.outermedia.solrfusion.types.MultiValueMerger"/>
 
     <om:default-search-field>title</om:default-search-field>
 

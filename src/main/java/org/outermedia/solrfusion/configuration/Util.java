@@ -50,8 +50,7 @@ public class Util
      * @throws ParserConfigurationException
      */
     public <T> T unmarshal(Class<T> docClass, String xml, String schemaPath)
-            throws JAXBException, SAXException, FileNotFoundException,
-            ParserConfigurationException
+        throws JAXBException, SAXException, FileNotFoundException, ParserConfigurationException
     {
         String xmlPath = findXmlInClasspath(xml);
         T result = null;
@@ -76,14 +75,10 @@ public class Util
      * @throws ParserConfigurationException
      */
     @SuppressWarnings("unchecked")
-    public <T> T unmarshal(Class<T> docClass, String xmlPath, Reader xmlReader,
-            String schemaPath) throws JAXBException, SAXException,
-            ParserConfigurationException
+    public <T> T unmarshal(Class<T> docClass, String xmlPath, Reader xmlReader, String schemaPath)
+        throws JAXBException, SAXException, ParserConfigurationException
     {
-        JAXBContext jc = JAXBContext.newInstance(new Class[]
-                {
-                        docClass
-                });
+        JAXBContext jc = JAXBContext.newInstance(new Class[]{docClass});
         Unmarshaller u = jc.createUnmarshaller();
         SAXParserFactory spf = SAXParserFactory.newInstance();
         spf.setXIncludeAware(true);
@@ -95,8 +90,7 @@ public class Util
             schemaUrl = Util.class.getResource("/" + schemaPath);
             if (schemaUrl != null)
             {
-                SchemaFactory sf = SchemaFactory
-                        .newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+                SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
                 Schema schema = sf.newSchema(schemaUrl);
                 u.setSchema(schema);
                 validationHandler = new XmlValidationHandler();
@@ -104,19 +98,16 @@ public class Util
             }
             else
             {
-                log.error("Can't find resource '/{}'. Can't validate.",
-                        schemaPath);
+                log.error("Can't find resource '/{}'. Can't validate.", schemaPath);
             }
         }
-        log.info("{} Reading conf file: '{}' (schema: '{}' -> {})",
-                docClass.getName(), xmlPath, schemaPath, schemaUrl);
+        log.info("{} Reading conf file: '{}' (schema: '{}' -> {})", docClass.getName(), xmlPath, schemaPath, schemaUrl);
 
         XMLReader xr = spf.newSAXParser().getXMLReader();
         // prevent validation error:
         // Attribute 'xml:base' is not allowed to appear in element 'om:solr-server'. at line=78, column=119
         // when <xi:include> is used
-        xr.setFeature(
-                "http://apache.org/xml/features/xinclude/fixup-base-uris", false);
+        xr.setFeature("http://apache.org/xml/features/xinclude/fixup-base-uris", false);
         SAXSource source = new SAXSource(xr, new InputSource(xmlReader));
         T result = (T) u.unmarshal(source);
         if (validationHandler != null && validationHandler.isFoundErrors())
@@ -150,15 +141,30 @@ public class Util
 
     /**
      * Get the value for a given xpath and a list of elements. VERY IMPORTANT: Use the ":" e.g. in //:script, otherwise
-     * no xpath will match.
+     * no xpath will match. The value is trimmed.
      *
      * @param xpathStr   is the xpath.
      * @param typeConfig is a list of dom w3c elements
      * @return null if nothing is found or the value of the first(!) matched element
      * @throws XPathExpressionException
      */
-    public String getValueOfXpath(String xpathStr, List<Element> typeConfig)
-            throws XPathExpressionException
+    public String getValueOfXpath(String xpathStr, List<Element> typeConfig) throws XPathExpressionException
+    {
+        return getValueOfXpath(xpathStr, typeConfig, true);
+    }
+
+    /**
+     * Get the value for a given xpath and a list of elements. VERY IMPORTANT: Use the ":" e.g. in //:script, otherwise
+     * no xpath will match. The value is trimmed.
+     *
+     * @param xpathStr   is the xpath.
+     * @param typeConfig is a list of dom w3c elements
+     * @param trim whether to trim the found value or not
+     * @return null if nothing is found or the value of the first(!) matched element
+     * @throws XPathExpressionException
+     */
+    public String getValueOfXpath(String xpathStr, List<Element> typeConfig, boolean trim)
+        throws XPathExpressionException
     {
         String result = null;
         List<Node> nl = xpath(xpathStr, typeConfig);
@@ -166,7 +172,7 @@ public class Util
         {
             result = nl.get(0).getTextContent();
         }
-        if (result != null)
+        if (result != null && trim)
         {
             result = result.trim();
         }
@@ -182,8 +188,7 @@ public class Util
      * @return a list of w3c org nodes (perhaps empty)
      * @throws XPathExpressionException
      */
-    public List<Node> xpath(String xpathStr, List<Element> typeConfig)
-            throws XPathExpressionException
+    public List<Node> xpath(String xpathStr, List<Element> typeConfig) throws XPathExpressionException
     {
         List<Node> result = new ArrayList<>();
         XPathFactory xPathfactory = XPathFactory.newInstance();

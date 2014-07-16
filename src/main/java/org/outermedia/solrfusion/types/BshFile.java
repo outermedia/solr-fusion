@@ -31,12 +31,9 @@ public class BshFile extends Bsh
     @Override
     public void passArguments(List<Element> typeConfig, Util util)
     {
-        /* unfortunately the ":" is necessary for the empty xml namespace!
-         * please see Util.getValueOfXpath() */
-        String xpathStr = "//:file";
         try
         {
-            String fileName = util.getValueOfXpath(xpathStr, typeConfig);
+            String fileName = getConfigString("file", typeConfig, util);
             setCode(FileUtils.readFileToString(new File(fileName)));
         }
         catch (Exception e)

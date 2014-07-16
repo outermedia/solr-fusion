@@ -11,11 +11,9 @@ import javax.script.ScriptEngine;
 import java.util.List;
 
 /**
- * A Javascript Shell interpreter which evaluates expressions contained in the
- * xml to process a field conversion.
- * 
+ * A Javascript Shell interpreter which evaluates expressions contained in the xml to process a field conversion.
+ *
  * @author ballmann
- * 
  */
 
 @ToString(callSuper = true, exclude = {"engine", "engineName"})
@@ -32,7 +30,8 @@ public class Js extends AbstractType
 
     private String code;
 
-    protected Js() {
+    protected Js()
+    {
         engine = getScriptEngine(engineName);
     }
 
@@ -44,26 +43,16 @@ public class Js extends AbstractType
      *  </script>
      * }
      * </pre>
+     *
      * @param typeConfig a list of XML elements
      * @param util       helper which simplifies to apply xpaths
      */
-	@Override
-	public void passArguments(List<Element> typeConfig, Util util)
-	{
-        /* unfortunately the ":" is necessary for the empty xml namespace!
-         * please see Util.getValueOfXpath() */
-        String xpathStr = "//:script";
-        try
-        {
-            code = util.getValueOfXpath(xpathStr, typeConfig);
-        }
-        catch (Exception e)
-        {
-            log.error("Caught exception while parsing configuration: "
-                    + elementListToString(typeConfig), e);
-        }
+    @Override
+    public void passArguments(List<Element> typeConfig, Util util)
+    {
+        code = getConfigString("script", typeConfig, util);
         logBadConfiguration(code != null, typeConfig);
-	}
+    }
 
     @Override
     public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
@@ -72,7 +61,7 @@ public class Js extends AbstractType
     }
 
     public static Js getInstance()
-	{
-		return new Js();
-	}
+    {
+        return new Js();
+    }
 }
