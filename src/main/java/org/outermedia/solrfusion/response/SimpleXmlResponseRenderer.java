@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.FusionRequest;
+import org.outermedia.solrfusion.FusionResponse;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.FusionField;
@@ -43,7 +44,8 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request)
+    public String getResponseString(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
+        FusionResponse fusionResponse)
     {
         String query = request.getQuery();
         String filterQueryStr = request.getFilterQuery();

@@ -181,7 +181,7 @@ public class FusionController implements FusionControllerIfc
                     fusionRequest.getResponseType());
                 // TODO better to pass in a Writer in order to avoid building of very big String
                 String responseString = responseRenderer.getResponseString(configuration, responseMapped,
-                    fusionRequest);
+                    fusionRequest, fusionResponse);
                 fusionResponse.setOkResponse(responseString);
                 response.close();
             }
@@ -227,7 +227,8 @@ public class FusionController implements FusionControllerIfc
                 ClosableIterator<Document, SearchServerResponseInfo> response = consolidator.getResponseIterator(
                     configuration, fusionRequest);
                 // TODO better to pass in a Writer in order to avoid building of very big String
-                String responseString = responseRenderer.getResponseString(configuration, response, fusionRequest);
+                String responseString = responseRenderer.getResponseString(configuration, response, fusionRequest,
+                    fusionResponse);
                 fusionResponse.setOkResponse(responseString);
                 response.close();
             }

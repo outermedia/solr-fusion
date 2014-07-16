@@ -11,13 +11,15 @@ import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by ballmann on 04.06.14.
  */
 @Slf4j
-@ToString(exclude = {"serverConfig", "doc", "config"})
+@ToString(exclude = {"serverConfig", "doc", "config", "unmappedFields"})
 public class ResponseMapper implements ResponseMapperIfc
 {
     protected static final boolean MISSING_MAPPING_POLICY_IGNORE = true;
@@ -29,6 +31,7 @@ public class ResponseMapper implements ResponseMapperIfc
     protected Configuration config;
     protected List<String> searchServerFieldNamesToMap;
     protected int numberOfMappedFields;
+    protected Set<String> unmappedFields;
 
     /**
      * Factory creates instances only.
@@ -65,10 +68,15 @@ public class ResponseMapper implements ResponseMapperIfc
         this.config = config;
         this.searchServerFieldNamesToMap = searchServerFieldNamesToMap;
         env.setConfiguration(config);
+        unmappedFields = new HashSet<>();
         numberOfMappedFields = 0;
         setFusionDocId(config, doc);
         correctScore(doc);
         doc.accept(this, env);
+        if(!unmappedFields.isEmpty())
+        {
+            log.warn("Please fix the fusion schema. Found no mapping for fields: {}", unmappedFields);
+        }
         return numberOfMappedFields;
     }
 
@@ -132,7 +140,8 @@ public class ResponseMapper implements ResponseMapperIfc
             }
             else
             {
-                log.warn("Found no mapping for field '{}'", searchServerFieldName);
+                // collect unmapped fields; log message will be written later
+                unmappedFields.add(searchServerFieldName);
             }
         }
         return mappings;

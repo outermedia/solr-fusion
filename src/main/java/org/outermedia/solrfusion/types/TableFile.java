@@ -32,12 +32,9 @@ public class TableFile extends Table
     @Override
     public void passArguments(List<Element> typeConfig, Util util)
     {
-        /* unfortunately the ":" is necessary for the empty xml namespace!
-         * please see Util.getValueOfXpath() */
-        String xpathStr = "//:file";
         try
         {
-            String fileName = util.getValueOfXpath(xpathStr, typeConfig);
+            String fileName = getConfigString("file", typeConfig, util);
             Element rootElem = util.parseXmlFromFile(fileName);
             List<Element> entries = util.filterElements(rootElem.getChildNodes());
             super.passArguments(entries, util);

@@ -20,6 +20,12 @@
     <str name="rows">${responseHeader.rows}</str>
   </lst>
 </lst>
+<#if responseError.error>
+<lst name="error">
+    <str name="msg"><![CDATA[${responseError.msg}]]></str>
+    <int name="code">${responseError.code}</int>
+</lst>
+</#if>
 <result name="response" numFound="${response.totalHitNumber}" start="0">
     <#list response.documents as document>
         <doc>

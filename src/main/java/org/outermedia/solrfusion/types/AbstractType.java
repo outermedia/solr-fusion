@@ -130,7 +130,7 @@ public abstract class AbstractType implements Initiable<ScriptType>
         if (!configOk)
         {
             log.error("{}: Missing or invalid configuration. Please fix it: {}", getClass().getName(),
-                    elementListToString(typeConfig));
+                elementListToString(typeConfig));
         }
     }
 
@@ -173,5 +173,27 @@ public abstract class AbstractType implements Initiable<ScriptType>
             sb.append("]");
         }
         return sb.toString();
+    }
+
+    public String getConfigString(String elementName, List<Element> typeConfig, Util util)
+    {
+        return getConfigString(elementName, typeConfig, util, true);
+    }
+
+    public String getConfigString(String elementName, List<Element> typeConfig, Util util, boolean trim)
+    {
+        String result = null;
+        try
+        {
+            /* unfortunately the ":" is necessary for the empty xml namespace!
+             * please see Util.getValueOfXpath() */
+            result = util.getValueOfXpath("//:" + elementName, typeConfig, trim);
+        }
+        catch (Exception e)
+        {
+            log.error("Can't get config option '{}'. Caught exception while parsing configuration: {}", elementName,
+                elementListToString(typeConfig), e);
+        }
+        return result;
     }
 }

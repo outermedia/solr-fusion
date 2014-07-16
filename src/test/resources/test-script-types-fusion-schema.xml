@@ -18,6 +18,9 @@
         <om:field name="text2"/>
         <om:field name="text3"/>
         <om:field name="text4"/>
+        <om:field name="text6"/>
+        <om:field name="text7"/>
+        <om:field name="text8"/>
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile"/>
@@ -29,6 +32,7 @@
     <om:script-type name="static-table-file" class="org.outermedia.solrfusion.types.TableFile"/>
     <om:script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/>
     <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
+    <om:script-type name="merge-multi-value" class="org.outermedia.solrfusion.types.MultiValueMerger"/>
 
     <om:default-search-field>title</om:default-search-field>
 
@@ -262,6 +266,34 @@
                 <om:drop>
                     <om:query />
                 </om:drop>
+            </om:field>
+
+            <!-- only a response has multi values, but not a query -->
+            <om:field name="s6" fusion-name="text6">
+                <om:change>
+                    <om:response type="merge-multi-value">
+                        <range>1</range>
+                        <separator> </separator>
+                    </om:response>
+                </om:change>
+            </om:field>
+
+            <om:field name="s7" fusion-name="text7">
+                <om:change>
+                    <om:response type="merge-multi-value">
+                        <range>2</range>
+                        <separator>,</separator>
+                    </om:response>
+                </om:change>
+            </om:field>
+
+            <om:field name="s8" fusion-name="text8">
+                <om:change>
+                    <om:response type="merge-multi-value">
+                        <range>all</range>
+                        <separator> || </separator>
+                    </om:response>
+                </om:change>
             </om:field>
 
         </om:solr-server>

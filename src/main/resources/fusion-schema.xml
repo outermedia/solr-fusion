@@ -28,6 +28,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <om:script-type name="static-table-file" class="org.outermedia.solrfusion.types.TableFile"/>
     <om:script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/>
     <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
+    <om:script-type name="merge-multi-value" class="org.outermedia.solrfusion.types.MultiValueMerger"/>
 
     <om:default-search-field>title</om:default-search-field>
 

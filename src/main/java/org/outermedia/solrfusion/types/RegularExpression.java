@@ -40,36 +40,25 @@ public class RegularExpression extends AbstractType
      *  <replacement>text</replacement>
      * }
      *  </pre>
+     *
      * @param typeConfig a list of XML elements
      * @param util       helper which simplifies to apply xpaths
      */
     @Override
     public void passArguments(List<Element> typeConfig, Util util)
     {
-        /* unfortunately the ":" is necessary for the empty xml namespace!
-         * please see Util.getValueOfXpath() */
         try
         {
-            String xpathStr = "//:pattern";
-            String patternStr = util.getValueOfXpath(xpathStr, typeConfig);
+            String patternStr = getConfigString("pattern", typeConfig, util);
             pattern = Pattern.compile(patternStr, Pattern.DOTALL);
         }
         catch (Exception e)
         {
-            log.error("Caught exception while parsing configuration: "
-                    + typeConfig, e);
+            log.error("Caught exception while parsing configuration: " + typeConfig, e);
         }
 
-        try
-        {
-            String xpathStr = "//:replacement";
-            replacement = util.getValueOfXpath(xpathStr, typeConfig);
-        }
-        catch (Exception e)
-        {
-            log.error("Caught exception while parsing configuration: "
-                    + elementListToString(typeConfig), e);
-        }
+        replacement = getConfigString("replacement", typeConfig, util);
+
         logBadConfiguration(pattern != null && replacement != null, typeConfig);
     }
 

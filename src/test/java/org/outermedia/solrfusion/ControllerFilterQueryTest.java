@@ -92,7 +92,7 @@ public class ControllerFilterQueryTest
     {
         cfg = spy(helper.readFusionSchemaWithoutValidation(fusionSchema));
         when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class),
-            any(FusionRequest.class))).thenReturn("<xml>42</xml>");
+            any(FusionRequest.class), any(FusionResponse.class))).thenReturn("<xml>42</xml>");
         when(cfg.getResponseRendererByType(any(ResponseRendererType.class))).thenReturn(testRenderer);
         List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
         if (searchServerConfigs != null && !searchServerConfigs.isEmpty())

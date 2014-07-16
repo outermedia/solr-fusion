@@ -43,30 +43,19 @@ public class Bsh extends AbstractType
      *  </script>
      * }
      * </pre>
+     *
      * @param typeConfig a list of XML elements
      * @param util       helper which simplifies to apply xpaths
      */
     @Override
     public void passArguments(List<Element> typeConfig, Util util)
     {
-        /* unfortunately the ":" is necessary for the empty xml namespace!
-         * please see Util.getValueOfXpath() */
-        String xpathStr = "//:script";
-        try
-        {
-            code = util.getValueOfXpath(xpathStr, typeConfig);
-        }
-        catch (Exception e)
-        {
-            log.error("Caught exception while parsing configuration: "
-                    + elementListToString(typeConfig), e);
-        }
+        code = getConfigString("script", typeConfig, util);
         logBadConfiguration(code != null, typeConfig);
     }
 
     /**
      * Returns either null or a String of the evaluated expression's result.
-     *
      *
      * @param values
      * @param env

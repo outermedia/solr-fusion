@@ -63,14 +63,17 @@ public class FreemarkerDocument  implements FieldVisitor
         if (field == null)
             return true;
 
-        if (field.isSingleValue())
+        FreemarkerMultiValuedField freemarkerField = FreemarkerMultiValuedField.fromSolrField(sf);
+
+        List<String> values = null;
+        if(freemarkerField != null) values = freemarkerField.getValues();
+        if (field.isSingleValue() && values != null && values.size() > 1)
         {
-            // error in mapping. will ne logged and nothing is rendered
+            // error in mapping. will be logged and nothing is rendered
             log.error("Unable to render multiple values in single valued field {}", field.getFieldName());
             return true;
         }
 
-        FreemarkerMultiValuedField freemarkerField = FreemarkerMultiValuedField.fromSolrField(sf);
         addMultiValuedField(freemarkerField);
         return true;
     }
