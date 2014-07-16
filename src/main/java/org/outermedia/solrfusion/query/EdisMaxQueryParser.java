@@ -53,28 +53,30 @@ public class EdisMaxQueryParser implements QueryParserIfc
 	public Query parse(Configuration config, Map<String, Float> boosts, String queryString, Locale locale)
 	{
 		Query result = null;
-		String defaultOpStr = config.getDefaultOperator();
-		Operator defaultOp = QueryParser.Operator.AND;
-		try
-		{
-			defaultOp = QueryParser.Operator.valueOf(defaultOpStr);
-		}
-		catch (Exception e)
-		{
-			log.error(
-				"Found illegal default operator '{}'. Expected either 'or' or 'and'. Using {}.",
-				defaultOpStr, defaultOp, e);
-		}
-		QueryParser parser = new QueryParser(config.getDefaultSearchField(), config, boosts, defaultOp);
-        parser.setLocale(locale);
-		try
-		{
-			result = parser.parse(queryString);
-		}
-		catch (ParseException e)
-		{
-			log.error("Couldn't parse query: {}", queryString, e);
-		}
+        if(queryString != null && queryString.trim().length() > 0)
+        {
+            String defaultOpStr = config.getDefaultOperator();
+            Operator defaultOp = QueryParser.Operator.AND;
+            try
+            {
+                defaultOp = QueryParser.Operator.valueOf(defaultOpStr);
+            }
+            catch (Exception e)
+            {
+                log.error("Found illegal default operator '{}'. Expected either 'or' or 'and'. Using {}.", defaultOpStr,
+                    defaultOp, e);
+            }
+            QueryParser parser = new QueryParser(config.getDefaultSearchField(), config, boosts, defaultOp);
+            parser.setLocale(locale);
+            try
+            {
+                result = parser.parse(queryString);
+            }
+            catch (ParseException e)
+            {
+                log.error("Couldn't parse query: {}", queryString, e);
+            }
+        }
 		return result;
 	}
 }

@@ -12,10 +12,8 @@ import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.query.parser.Query;
-import org.outermedia.solrfusion.response.ClosableIterator;
-import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
-import org.outermedia.solrfusion.response.ResponseParserIfc;
-import org.outermedia.solrfusion.response.ResponseRendererIfc;
+import org.outermedia.solrfusion.query.parser.TermQuery;
+import org.outermedia.solrfusion.response.*;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -70,7 +68,8 @@ public class FusionController implements FusionControllerIfc
         {
             fusionResponse.setResponseForQueryParseError(queryStr);
         }
-        else if (filterQueryStr != null && fusionRequest.getParsedFilterQuery() == null)
+        else if (filterQueryStr != null && filterQueryStr.trim().length() > 0 &&
+            fusionRequest.getParsedFilterQuery() == null)
         {
             fusionResponse.setResponseForQueryParseError(filterQueryStr);
         }
@@ -86,6 +85,10 @@ public class FusionController implements FusionControllerIfc
         if (configuredSearchServers == null || configuredSearchServers.isEmpty())
         {
             fusionResponse.setResponseForNoSearchServerConfiguredError();
+        }
+        else if (isIdQuery(fusionRequest.getParsedQuery()))
+        {
+            processIdQuery(fusionRequest, fusionResponse);
         }
         else
         {
@@ -108,6 +111,89 @@ public class FusionController implements FusionControllerIfc
             {
                 fusionResponse.setResponseForException(lastException);
             }
+        }
+    }
+
+    /**
+     * Ensures that processIdQuery() can send an id query. "q" has to be a TermQuery (subclass) with the id field name
+     * configured in the fusion schema. The query must have only one value where the id generator must be able to
+     * extract the search server's name and doc id. The fusion schema contains a section for the extract search server.
+     *
+     * @param q the query being tested
+     * @return true if q is really an id query, otherwise false.
+     */
+    protected boolean isIdQuery(Query q)
+    {
+        boolean ok = false;
+        if (q instanceof TermQuery)
+        {
+            TermQuery tq = (TermQuery) q;
+            try
+            {
+                IdGeneratorIfc idGenerator = configuration.getIdGenerator();
+                if (idGenerator.getFusionIdField().equals(tq.getFusionFieldName()))
+                {
+                    List<String> vals = tq.getFusionFieldValue();
+                    if (vals != null && vals.size() == 1)
+                    {
+                        String fusionId = vals.get(0);
+                        String serverName = idGenerator.getSearchServerIdFromFusionId(fusionId);
+                        idGenerator.getSearchServerDocIdFromFusionId(fusionId);
+                        ok = configuration.getSearchServerConfigByName(serverName) != null;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // NOP
+            }
+        }
+        return ok;
+    }
+
+    protected void processIdQuery(FusionRequest fusionRequest, FusionResponse fusionResponse)
+    {
+        log.debug("Detected id query: {}", fusionRequest.getQuery());
+        // isIdQuery() ensures that the query is a TermQuery with one value and the id field
+        TermQuery query = (TermQuery) fusionRequest.getParsedQuery();
+        try
+        {
+            List<String> idVals = query.getTerm().getFusionFieldValue();
+            String solrfusionDocId = idVals.get(0);
+            IdGeneratorIfc idGen = configuration.getIdGenerator();
+            String searchServerName = idGen.getSearchServerIdFromFusionId(solrfusionDocId);
+            SearchServerConfig searchServerConfig = configuration.getSearchServerConfigByName(searchServerName);
+            String searchServerDocId = idGen.getSearchServerDocIdFromFusionId(solrfusionDocId);
+            // set id for search server
+            idVals.set(0, searchServerDocId);
+            ScriptEnv env = getNewScriptEnv();
+            configuration.getQueryMapper().mapQuery(configuration, searchServerConfig, query, env);
+            XmlResponse result = sendAndReceive(fusionRequest, searchServerConfig);
+            Exception se = result.getErrorReason();
+            if (se == null)
+            {
+                SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound());
+                ClosableIterator<Document, SearchServerResponseInfo> response = new ClosableListIterator<>(
+                    result.getDocuments(), info);
+                MappingClosableIterator responseMapped = new MappingClosableIterator(response, configuration,
+                    searchServerConfig, null);
+                ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(
+                    fusionRequest.getResponseType());
+                // TODO better to pass in a Writer in order to avoid building of very big String
+                String responseString = responseRenderer.getResponseString(configuration, responseMapped,
+                    fusionRequest);
+                fusionResponse.setOkResponse(responseString);
+                response.close();
+            }
+            else
+            {
+                fusionResponse.setResponseForException(se);
+            }
+        }
+        catch (Exception e)
+        {
+            log.error("Caught exception while processing id query {}", fusionRequest.getQuery(), e);
+            fusionResponse.setResponseForException(e);
         }
     }
 
@@ -156,6 +242,7 @@ public class FusionController implements FusionControllerIfc
     protected void requestAllSearchServers(FusionRequest fusionRequest,
         List<SearchServerConfig> configuredSearchServers, ResponseConsolidatorIfc consolidator)
     {
+        log.debug("Requesting all configured servers for query: {}", fusionRequest.getQuery());
         ScriptEnv env = getNewScriptEnv();
         Query query = fusionRequest.getParsedQuery();
         Query filterQuery = fusionRequest.getParsedFilterQuery();
@@ -163,7 +250,20 @@ public class FusionController implements FusionControllerIfc
         {
             if (mapQuery(query, env, searchServerConfig) && mapQuery(filterQuery, env, searchServerConfig))
             {
-                sendAndReceive(fusionRequest, consolidator, searchServerConfig);
+                XmlResponse result = sendAndReceive(fusionRequest, searchServerConfig);
+                Exception se = result.getErrorReason();
+                if (se == null)
+                {
+                    SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound());
+                    ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
+                        result.getDocuments(), info);
+
+                    consolidator.addResultStream(configuration, searchServerConfig, docIterator, fusionRequest);
+                }
+                else
+                {
+                    consolidator.addErrorResponse(se);
+                }
             }
             getNewResetQueryState().reset(query);
             if (filterQuery != null)
@@ -183,8 +283,7 @@ public class FusionController implements FusionControllerIfc
         return new ResetQueryState();
     }
 
-    protected void sendAndReceive(FusionRequest fusionRequest, ResponseConsolidatorIfc consolidator,
-        SearchServerConfig searchServerConfig)
+    protected XmlResponse sendAndReceive(FusionRequest fusionRequest, SearchServerConfig searchServerConfig)
     {
         try
         {
@@ -197,10 +296,12 @@ public class FusionController implements FusionControllerIfc
                 configuration.getDefaultResponseParser());
             XmlResponse result = responseParser.parse(is);
             log.debug("Received from {}: {}", searchServerConfig.getSearchServerName(), result.toString());
-            SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound());
-            ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
-                result.getDocuments(), info);
-            consolidator.addResultStream(configuration, searchServerConfig, docIterator, fusionRequest);
+            if (result == null)
+            {
+                result = new XmlResponse();
+                result.setErrorReason(new RuntimeException("Solr response parsing failed."));
+            }
+            return result;
         }
         catch (SearchServerResponseException se)
         {
@@ -213,6 +314,8 @@ public class FusionController implements FusionControllerIfc
                 if (responseError != null)
                 {
                     se.setResponseError(responseError.getResponseErrors());
+                    responseError.setErrorReason(se);
+                    return responseError;
                 }
             }
             catch (Exception e)
@@ -220,12 +323,17 @@ public class FusionController implements FusionControllerIfc
                 // depending on solr's version, a well formed error message is provided or not
                 log.warn("Couldn't parse error response", e);
             }
-            consolidator.addErrorResponse(se);
+            XmlResponse responseError = new XmlResponse();
+            responseError.setErrorReason(se);
+            return responseError;
         }
         catch (Exception e)
         {
             log.error("Caught exception while communicating with server {}", searchServerConfig.getSearchServerName(),
                 e);
+            XmlResponse responseError = new XmlResponse();
+            responseError.setErrorReason(e);
+            return responseError;
         }
     }
 

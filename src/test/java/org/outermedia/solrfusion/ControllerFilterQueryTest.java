@@ -175,7 +175,7 @@ public class ControllerFilterQueryTest
         result.put(PAGE_SIZE.getRequestParamName(), "10");
         result.put(START.getRequestParamName(), "0");
         result.put(SORT.getRequestParamName(), "score desc");
-        result.put(FIELDS_TO_RETURN.getRequestParamName(), "score");
+        result.put(FIELDS_TO_RETURN.getRequestParamName(), "* score");
         return result;
     }
 

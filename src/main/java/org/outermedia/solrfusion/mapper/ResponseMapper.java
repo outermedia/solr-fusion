@@ -114,6 +114,7 @@ public class ResponseMapper implements ResponseMapperIfc
         {
             if (scoreTerm == null || !scoreTerm.isProcessed())
             {
+                // TODO only if score was requested (fl)
                 log.warn("Can't correct score in documents, because document contains no value (any more).");
             }
         }
@@ -149,24 +150,27 @@ public class ResponseMapper implements ResponseMapperIfc
         {
             IdGeneratorIfc idGenerator = config.getIdGenerator();
             Term idTerm = doc.getFieldTermByName(serverConfig.getIdFieldName());
-            if (idTerm == null || idTerm.getSearchServerFieldValue() == null)
+            if (idTerm != null && idTerm.getSearchServerFieldValue() != null)
             {
-                throw new RuntimeException(
-                    "Found no id (" + serverConfig.getIdFieldName() + ") in response of server '" +
-                        serverConfig.getSearchServerName() + "'");
+                if (!idTerm.isProcessed())
+                {
+                    String id = idGenerator.computeId(serverConfig.getSearchServerName(),
+                        idTerm.getSearchServerFieldValue().get(0));
+                    idTerm.setFusionFieldName(idGenerator.getFusionIdField());
+                    List<String> newId = new ArrayList<>();
+                    newId.add(id);
+                    idTerm.setFusionFieldValue(newId);
+                    idTerm.setProcessed(true);
+                    idTerm.setWasMapped(true);
+                    idTerm.setFusionField(config.findFieldByName(config.getIdGenerator().getFusionIdField()));
+                    numberOfMappedFields++;
+                }
             }
-            if (!idTerm.isProcessed())
+            else
             {
-                String id = idGenerator.computeId(serverConfig.getSearchServerName(),
-                    idTerm.getSearchServerFieldValue().get(0));
-                idTerm.setFusionFieldName(idGenerator.getFusionIdField());
-                List<String> newId = new ArrayList<>();
-                newId.add(id);
-                idTerm.setFusionFieldValue(newId);
-                idTerm.setProcessed(true);
-                idTerm.setWasMapped(true);
-                idTerm.setFusionField(config.findFieldByName(config.getIdGenerator().getFusionIdField()));
-                numberOfMappedFields++;
+                // TODO only if id was requested (fl)
+                log.warn("Found no id (" + serverConfig.getIdFieldName() + ") in response of server '" +
+                    serverConfig.getSearchServerName() + "'");
             }
         }
         catch (Exception e)

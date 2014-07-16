@@ -76,7 +76,7 @@ public class SolrFusionServlet extends HttpServlet
         response.setCharacterEncoding("UTF-8");
         Map<String, Object> headerValues = collectHeader(request);
         Map<String, String[]> parameterMap = request.getParameterMap();
-        if(log.isDebugEnabled())
+        if (log.isDebugEnabled())
         {
             log.debug("Received request:\nHeader:\n{}\nParams:\n{}", buildPrintableParamMap(headerValues),
                 buildPrintableParamMap(parameterMap));
@@ -99,10 +99,18 @@ public class SolrFusionServlet extends HttpServlet
         PrintWriter pw = response.getWriter();
         FusionResponse fusionResponse = getNewFusionResponse();
         String responseStr = process(fusionRequest, fusionResponse);
-        response.setStatus(200);
 
-        log.debug("Returning:\n{}", responseStr);
-        
+        if (fusionResponse.isOk())
+        {
+            response.setStatus(200);
+            log.debug("Returning:\n{}", responseStr);
+        }
+        else
+        {
+            response.setStatus(400);
+            log.error("Returning error:\n{}", fusionResponse.getErrorMessage());
+        }
+
         pw.println(responseStr);
     }
 
@@ -110,16 +118,18 @@ public class SolrFusionServlet extends HttpServlet
     {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
-        if(params != null)
+        if (params != null)
         {
-            for(String paramName : params.keySet())
+            for (String paramName : params.keySet())
             {
                 Object paramValue = params.get(paramName);
                 String s;
-                if(paramValue.getClass().isArray())
+                if (paramValue.getClass().isArray())
                 {
                     s = Arrays.toString((Object[]) paramValue);
-                } else {
+                }
+                else
+                {
                     s = String.valueOf(paramValue);
                 }
                 sb.append("\t");
@@ -248,7 +258,8 @@ public class SolrFusionServlet extends HttpServlet
         fusionRequest.setSortAsc(sortAsc);
         String fieldsToReturn = getOptionalSingleSearchParamValue(requestParams, FIELDS_TO_RETURN, null);
         fusionRequest.setFieldsToReturn(fieldsToReturn);
-        String highLightFieldsToReturn = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_FIELDS_TO_RETURN, null);
+        String highLightFieldsToReturn = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_FIELDS_TO_RETURN,
+            null);
         fusionRequest.setHighlightingFieldsToReturn(highLightFieldsToReturn);
 
         return fusionRequest;

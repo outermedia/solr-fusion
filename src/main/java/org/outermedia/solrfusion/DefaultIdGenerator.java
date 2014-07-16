@@ -3,6 +3,7 @@ package org.outermedia.solrfusion;
 import lombok.Getter;
 import lombok.ToString;
 
+import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.IdGeneratorFactory;
 
 /**
@@ -12,14 +13,16 @@ import org.outermedia.solrfusion.configuration.IdGeneratorFactory;
  */
 
 /**
- * This class creates for a given server name and a solr document id a unique fusion document id.
- * Don't use "#" in server names.
+ * This class creates for a given server name and a solr document id a unique fusion document id. Don't use "#" in
+ * server names.
  */
 @ToString
 @Getter
+@Slf4j
 public class DefaultIdGenerator implements IdGeneratorIfc
 {
     private final static String SEPARATOR = "#";
+    private final static String SPACE_REPLACEMENT = "_";
     private String fusionIdField;
 
     /**
@@ -34,21 +37,33 @@ public class DefaultIdGenerator implements IdGeneratorIfc
     {
         if (serverName.contains(SEPARATOR))
         {
-            throw new RuntimeException(
-                "Can't handle server names containing '" + SEPARATOR + "': '" + serverName);
+            throw new RuntimeException("Can't handle server names containing '" + SEPARATOR + "': '" + serverName);
         }
-        return serverName + SEPARATOR + searchServerDocId;
+        if (serverName.contains(SPACE_REPLACEMENT))
+        {
+            throw new RuntimeException(
+                "Can't handle server names containing '" + SPACE_REPLACEMENT + "': '" + serverName);
+        }
+        return serverName.replace(" ", SPACE_REPLACEMENT) + SEPARATOR + searchServerDocId;
     }
 
     @Override public String getSearchServerIdFromFusionId(String fusionDocId)
     {
         int hashPos = fusionDocId.indexOf(SEPARATOR);
-        return fusionDocId.substring(0, hashPos);
+        if (hashPos < 0)
+        {
+            log.warn("Wrong id field value: '{}'", fusionDocId);
+        }
+        return fusionDocId.substring(0, hashPos).replace(SPACE_REPLACEMENT, " ");
     }
 
     @Override public String getSearchServerDocIdFromFusionId(String fusionDocId)
     {
         int hashPos = fusionDocId.indexOf(SEPARATOR);
+        if (hashPos < 0)
+        {
+            log.warn("Wrong id field value: '{}'", fusionDocId);
+        }
         return fusionDocId.substring(hashPos + 1);
     }
 

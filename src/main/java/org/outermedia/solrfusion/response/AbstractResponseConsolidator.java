@@ -1,7 +1,5 @@
 package org.outermedia.solrfusion.response;
 
-import org.outermedia.solrfusion.adapter.SearchServerResponseException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,14 +8,14 @@ import java.util.List;
  */
 public abstract class AbstractResponseConsolidator implements ResponseConsolidatorIfc
 {
-    protected List<SearchServerResponseException> errorResponses;
+    protected List<Exception> errorResponses;
 
     public AbstractResponseConsolidator()
     {
         errorResponses = new ArrayList<>();
     }
 
-    @Override public void addErrorResponse(SearchServerResponseException se)
+    @Override public void addErrorResponse(Exception se)
     {
         errorResponses.add(se);
     }
@@ -27,7 +25,7 @@ public abstract class AbstractResponseConsolidator implements ResponseConsolidat
         StringBuilder sb = new StringBuilder();
         if(errorResponses != null)
         {
-            for(SearchServerResponseException ex : errorResponses)
+            for(Exception ex : errorResponses)
             {
                 sb.append(ex.getMessage());
                 sb.append('\n');

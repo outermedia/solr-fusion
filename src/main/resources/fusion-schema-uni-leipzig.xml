@@ -13,6 +13,10 @@
         <om:field name="title_short" />
         <om:field name="author"/>
         <om:field name="score" type="float"/>
+        <om:field name="source_id" />
+        <om:field name="record_id" />
+        <om:field name="purchase" />
+        <om:field name="format" />
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js"/>
@@ -88,6 +92,10 @@
             <om:field name="title_short" fusion-name="title_short"/>
             <om:field name="author" fusion-name="author"/>
             <om:field name="language" fusion-name="language"/>
+            <om:field name="format" fusion-name="format"/>
+            <om:field name="purchase" fusion-name="purchase"/>
+            <om:field name="record_id" fusion-name="record_id"/>
+            <om:field name="source_id" fusion-name="source_id"/>
 
         </om:solr-server>
 
@@ -110,6 +118,14 @@
             <om:field name="title_short" fusion-name="title_short"/>
             <om:field name="author" fusion-name="author"/>
             <om:field name="language_de" fusion-name="language"/>
+            <om:field name="format_facet" fusion-name="format"/>
+            <om:field name="purchase" fusion-name="purchase">
+		<om:drop><om:query/></om:drop>
+	    </om:field>
+            <om:field name="id" fusion-name="record_id"/>
+            <om:field name="source_id" fusion-name="source_id">
+		<om:drop><om:query/></om:drop>
+	    </om:field>
 
         </om:solr-server>
 

@@ -1,6 +1,7 @@
 package org.outermedia.solrfusion;
 
 import com.google.common.io.Files;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,23 +14,21 @@ import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.mapper.Term;
+import org.outermedia.solrfusion.query.parser.NumericRangeQuery;
+import org.outermedia.solrfusion.query.parser.PhraseQuery;
 import org.outermedia.solrfusion.query.parser.TermQuery;
 import org.outermedia.solrfusion.response.ClosableIterator;
+import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
+import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.anyMapOf;
@@ -39,6 +38,7 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 /**
  * Created by ballmann on 6/6/14.
  */
+@Slf4j
 @SuppressWarnings("unchecked")
 public class ControllerTest
 {
@@ -254,7 +254,7 @@ public class ControllerTest
         result.put(PAGE_SIZE.getRequestParamName(), "10");
         result.put(START.getRequestParamName(), "0");
         result.put(SORT.getRequestParamName(), "score desc");
-        result.put(FIELDS_TO_RETURN.getRequestParamName(), "score");
+        result.put(FIELDS_TO_RETURN.getRequestParamName(), "* score");
         return result;
     }
 
@@ -405,5 +405,112 @@ public class ControllerTest
         throws InvocationTargetException, IllegalAccessException
     {
         return request.mapFusionFieldToSearchServerField(field, cfg, serverConfig).iterator().next();
+    }
+
+    @Test
+    public void testIsIdQuery() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+        InvocationTargetException, IllegalAccessException
+    {
+        FusionController controller = (FusionController) FusionController.Factory.getInstance();
+        cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
+        controller.configuration = cfg;
+        IdGeneratorIfc idGenerator = cfg.getIdGenerator();
+        String fusionIdField = idGenerator.getFusionIdField();
+
+        PhraseQuery pq = new PhraseQuery(
+            Term.newFusionTerm(fusionIdField, idGenerator.computeId("Bibliothek 9000", "v1")));
+        Assert.assertTrue("Phrase query should an id query", controller.isIdQuery(pq));
+
+        pq = new PhraseQuery(Term.newFusionTerm(fusionIdField, idGenerator.computeId("unknown server", "v1")));
+        Assert.assertFalse("Phrase query with unknown server shouldn't be an id query", controller.isIdQuery(pq));
+
+        pq = new PhraseQuery(Term.newFusionTerm(fusionIdField, "v1"));
+        Assert.assertFalse("Phrase query with wrong id value shouldn't be an id query", controller.isIdQuery(pq));
+
+        pq = new PhraseQuery(Term.newFusionTerm("xid", idGenerator.computeId("Bibliothek 9000", "v1")));
+        Assert.assertFalse("Phrase query with non id field shouldn't be an id query", controller.isIdQuery(pq));
+
+        NumericRangeQuery rq = NumericRangeQuery.newLongRange(fusionIdField, 1L, 10L, true, true);
+        Assert.assertFalse("Non term query shouldn't be an id query", controller.isIdQuery(rq));
+    }
+
+    @Test
+    public void testRequestOneSearchServer()
+        throws InvocationTargetException, IllegalAccessException, FileNotFoundException, ParserConfigurationException,
+        SAXException, JAXBException
+    {
+        FusionController controller = spy((FusionController) FusionController.Factory.getInstance());
+        cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
+        controller.configuration = cfg;
+        SearchServerConfig searchServerConfig = cfg.getSearchServerConfigByName("Bibliothek 9000");
+        ResponseParserIfc responseParser = searchServerConfig.getResponseParser(cfg.getDefaultResponseParser());
+        String xmlResponseStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<response>\n" +
+            "<lst name=\"responseHeader\">\n" +
+            "  <int name=\"status\">0</int>\n" +
+            "  <int name=\"QTime\">0</int>\n" +
+            "  <lst name=\"params\">\n" +
+            "    <str name=\"indent\">on</str>\n" +
+            "    <str name=\"start\">0</str>\n" +
+            "    <str name=\"q\"><![CDATA[id:...]]></str>\n" +
+            "    <str name=\"version\">2.2</str>\n" +
+            "    <str name=\"rows\">2</str>\n" +
+            "  </lst>\n" +
+            "</lst>\n" +
+            "<result name=\"response\" numFound=\"1\" start=\"0\">\n" +
+            "  <doc>\n" +
+            "    <str name=\"id\"><![CDATA[1]]></str>\n" +
+            "    <str name=\"title\"><![CDATA[abc]]></str>\n" +
+            "    <float name=\"score\"><![CDATA[0.6750762040000001]]></float>\n" +
+            "  </doc>\n" +
+            "</result>\n" +
+            "</response>";
+        XmlResponse xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponseStr));
+        doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
+        FusionRequest request = new FusionRequest();
+        request.setQuery("id:\"Bibliothek_9000#1\"");
+        request.setResponseType(ResponseRendererType.XML);
+        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN));
+        FusionResponse response = new FusionResponse();
+
+        controller.processIdQuery(request, response);
+        Assert.assertTrue("Expected no error", response.isOk());
+        String expected = "  <doc>\n" +
+            "    <str name=\"id\"><![CDATA[Bibliothek_9000#1]]></str>\n" +
+            "    <str name=\"title\"><![CDATA[abc]]></str>\n" +
+            "    <float name=\"score\"><![CDATA[0.8100914448000002]]></float>\n" +
+            "  </doc>";
+        Assert.assertTrue("Response doesn't contain doc: " + response.getResponseAsString(),
+            response.getResponseAsString().contains(expected));
+
+        // exception occurred
+        xmlResponse.setErrorReason(new RuntimeException("Error1"));
+        response = new FusionResponse();
+        // reset modified query object
+        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN));
+        controller.processIdQuery(request, response);
+        Assert.assertEquals("Expected error", "Internal processing error. Reason: Error1", response.getErrorMessage());
+
+        // vufind id query after click on a book
+        log.info("--- vufind test ---");
+        xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponseStr));
+        doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
+        response = new FusionResponse();
+        request.setQuery("id:Bibliothek_9000#512785457");
+        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN));
+        request.setFilterQuery("");
+        request.setParsedFilterQuery(controller.parseQuery(request.getFilterQuery(), null, Locale.GERMAN));
+        request.setResponseType(ResponseRendererType.XML);
+        controller.process(cfg,request,response);
+        String responseStr = response.getResponseAsString();
+        if (response.isOk())
+        {
+            log.debug("Returning:\n{}", responseStr);
+        }
+        else
+        {
+            log.error("Returning error:\n{}", response.getErrorMessage());
+        }
+        Assert.assertTrue("Expected no error: " + response.getErrorMessage(), response.isOk());
     }
 }

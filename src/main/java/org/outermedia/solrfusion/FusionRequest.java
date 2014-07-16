@@ -99,7 +99,7 @@ public class FusionRequest
         String fusionFieldsToReturn = fieldsToReturn;
         if (fusionFieldsToReturn == null)
         {
-            fusionFieldsToReturn = "";
+            fusionFieldsToReturn = "*";
         }
         fusionFieldsToReturn += " " + getSolrFusionSortField();
         // TODO still necessary when highlighting is supported?

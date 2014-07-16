@@ -2,6 +2,7 @@ package org.outermedia.solrfusion;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.Message;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 
@@ -10,6 +11,7 @@ import org.outermedia.solrfusion.configuration.ResponseRendererType;
  */
 @Getter
 @Setter
+@Slf4j
 public class FusionResponse
 {
     private String responseBody;
@@ -32,6 +34,7 @@ public class FusionResponse
 
     protected void setError(String message)
     {
+        log.error("Error while processing query: {}", message);
         ok = false;
         this.errorMessage = message;
     }

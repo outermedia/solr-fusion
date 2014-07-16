@@ -1,5 +1,7 @@
 package org.outermedia.solrfusion.response.parser;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.xml.bind.annotation.*;
@@ -22,6 +24,11 @@ public class XmlResponse
 
     @XmlElement(name = "result", required = true)
     private Result result;
+
+    @XmlTransient
+    @Getter
+    @Setter
+    private Exception errorReason;
 
     public ResponseSection getResponseHeader()
     {
