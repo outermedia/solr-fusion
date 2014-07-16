@@ -5,6 +5,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.outermedia.solrfusion.FusionRequest;
+import org.outermedia.solrfusion.FusionResponse;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
@@ -24,8 +25,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by stephan on 17.06.14.
@@ -74,12 +74,12 @@ public class FreemarkerResponseRendererTest
 
         FusionRequest req = new FusionRequest();
         req.setQuery("steak");
-        String xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, req);
+        String xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, req, new FusionResponse());
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
         Assert.assertFalse("xml response should not contain filter query in header", xmlResponse.contains("<str name=\"fq\">"));
 
         req.setFilterQuery("salat");
-        xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, req);
+        xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, req, new FusionResponse());
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
         Assert.assertTrue("xml response should contain filter query in header",
             xmlResponse.contains("<str name=\"fq\"><![CDATA[salat]]></str>"));
@@ -119,7 +119,9 @@ public class FreemarkerResponseRendererTest
         FusionRequest req = new FusionRequest();
         req.setQuery("Shakespeares");
 
-        String jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req);
+        FusionResponse res = new FusionResponse();
+        res.setOk(true);
+        String jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req, res);
 //        System.out.println(jsonResponse);
 
         try
@@ -143,9 +145,16 @@ public class FreemarkerResponseRendererTest
         Assert.assertFalse("json response should not contain filter query in header", jsonResponse.contains("\"fq\":"));
 
         req.setFilterQuery("salat");
-        jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req);
+        res = new FusionResponse();
+        res.setOk(true);
+        jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req, res);
         // System.out.println(jsonResponse);
         Assert.assertTrue("json response should contain filter query in header", jsonResponse.contains("\"fq\":\"salat\","));
+
+        res.setResponseForException(new Exception("An\nerror\noccurred."));
+        jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req, res);
+        // System.out.println(jsonResponse);
+        Assert.assertTrue("json response should contain error header", jsonResponse.contains("\"msg\":\"Internal processing error. Reason: An\\nerror\\noccurred.\","));
     }
 
 }

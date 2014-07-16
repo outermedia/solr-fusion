@@ -1,12 +1,15 @@
 package org.outermedia.solrfusion.response;
 
 import freemarker.template.*;
+import freemarker.template.Configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.FusionRequest;
+import org.outermedia.solrfusion.FusionResponse;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
-import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
+import org.outermedia.solrfusion.configuration.*;
+import org.outermedia.solrfusion.response.freemarker.FreemarkerErrorHeader;
 import org.outermedia.solrfusion.response.freemarker.FreemarkerResponse;
 import org.outermedia.solrfusion.response.freemarker.FreemarkerResponseHeader;
 import org.outermedia.solrfusion.response.parser.Document;
@@ -62,15 +65,19 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(org.outermedia.solrfusion.configuration.Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request)
+    public String getResponseString(org.outermedia.solrfusion.configuration.Configuration configuration,
+        ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
+        FusionResponse fusionResponse)
     {
         // prepare the template input:
         Map<String, Object> input = new HashMap<String, Object>();
 
         FreemarkerResponse freemarkerResponse = new FreemarkerResponse(configuration, docStream);
         FreemarkerResponseHeader freemarkerResponseHeader = new FreemarkerResponseHeader(docStream, request);
+        FreemarkerErrorHeader freemarkerErrorHeader = new FreemarkerErrorHeader(fusionResponse);
 
         input.put("responseHeader", freemarkerResponseHeader);
+        input.put("responseError", freemarkerErrorHeader);
         input.put("response", freemarkerResponse);
 
         // Get the template

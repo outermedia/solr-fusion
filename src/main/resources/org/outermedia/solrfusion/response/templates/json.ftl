@@ -18,6 +18,11 @@
       "wt":"json",
       "version":"2.2",
       "rows":"${responseHeader.rows}"}},
+  <#if responseError.error>
+  "error":{
+      "msg":"${responseError.msg?json_string}",
+      "code":${responseError.code}},
+  </#if>
   "response":{"numFound":${response.totalHitNumber?string("0")},"start":0,"docs":[
   <#list response.documents as document>
   {
