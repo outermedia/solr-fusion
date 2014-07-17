@@ -133,7 +133,7 @@ public class FreemarkerResponseRendererTest
             jsonResponse = gson.toJson(el); // done
 //            System.out.println(jsonResponse);
 
-            String expected = "{\"responseHeader\":{\"status\":0,\"QTime\":0,\"params\":{\"indent\":\"on\",\"start\":\"0\",\"q\":\"Shakespeares\",\"wt\":\"json\",\"version\":\"2.2\",\"rows\":\"1\"}},\"response\":{\"numFound\":1,\"start\":0,\"docs\":[{\"singlevalueAsMultivalue\":[\"Shakespeare\"],\"multivalueAsMultivalueWithOneValue\":[\"Poe\"],\"multivalueAsSinglevalueWithOneValue\":[\"Poe\"],\"multivalueAsMultivalueWithTwoValue\":[\"Poe\",\"Morgenstern\"],\"singlevalueAsSingleValue\":\"Shakespeare\"}]}}";
+            String expected = "{\"responseHeader\":{\"status\":0,\"QTime\":0,\"params\":{\"indent\":\"on\",\"start\":\"0\",\"q\":\"Shakespeares\",\"wt\":\"json\",\"version\":\"2.2\",\"rows\":\"1\"}},\"response\":{\"numFound\":1,\"start\":0,\"docs\":[{\"singlevalueAsMultivalue\":[\"Shakespeare\"],\"multivalueAsMultivalueWithOneValue\":[\"Poe\"],\"multivalueAsMultivalueWithTwoValue\":[\"Poe\",\"Morgenstern\"],\"singlevalueAsSingleValue\":\"Shakespeare\",\"multivalueAsSinglevalueWithOneValue\":\"Poe\"}]}}";
             Assert.assertEquals("Got different json response than expected", expected, jsonResponse);
 
         }

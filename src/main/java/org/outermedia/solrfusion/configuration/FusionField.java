@@ -1,5 +1,6 @@
 package org.outermedia.solrfusion.configuration;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -34,6 +35,8 @@ public class FusionField
     @XmlAttribute(name = "format", required = false)
     private String format;
 
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     @XmlAttribute(name = "multi-value", required = false)
     private Boolean multiValue;
 

@@ -73,9 +73,10 @@ public class ResponseMapper implements ResponseMapperIfc
         setFusionDocId(config, doc);
         correctScore(doc);
         doc.accept(this, env);
-        if(!unmappedFields.isEmpty())
+        if (!unmappedFields.isEmpty())
         {
-            log.warn("Please fix the fusion schema. Found no mapping for fields: {}", unmappedFields);
+            log.warn("Please fix the fusion schema of server '{}'. Found no mapping for fields: {}",
+                serverConfig.getSearchServerName(), unmappedFields);
         }
         return numberOfMappedFields;
     }

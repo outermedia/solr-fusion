@@ -26,7 +26,7 @@ public class FusionResponse
         errorMessage = "Unknown";
     }
 
-    protected void setOk()
+    public void setOk()
     {
         ok = true;
         errorMessage = null;

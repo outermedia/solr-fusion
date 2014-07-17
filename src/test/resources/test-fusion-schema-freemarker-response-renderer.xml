@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://solrfusion.outermedia.org/configuration/ ../../main/resources/configuration.xsd ">
 
     <om:fusion-schema-fields default-type="text">
-        <om:field name="singlevalueAsSingleValue" multi-value="false"/>
+        <om:field name="singlevalueAsSingleValue" />
         <om:field name="singlevalueAsMultivalue" multi-value="true"/>
         <om:field name="multivalueAsMultivalueWithOneValue" multi-value="true"/>
-        <om:field name="multivalueAsSinglevalueWithOneValue" multi-value="false"/>
+        <om:field name="multivalueAsSinglevalueWithOneValue" />
         <om:field name="multivalueAsMultivalueWithTwoValue" multi-value="true"/>
     </om:fusion-schema-fields>
 

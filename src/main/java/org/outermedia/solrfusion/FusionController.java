@@ -179,6 +179,8 @@ public class FusionController implements FusionControllerIfc
                     searchServerConfig, null);
                 ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(
                     fusionRequest.getResponseType());
+                // set state BEFORE response is rendered, because their the status is read out!
+                fusionResponse.setOk();
                 // TODO better to pass in a Writer in order to avoid building of very big String
                 String responseString = responseRenderer.getResponseString(configuration, responseMapped,
                     fusionRequest, fusionResponse);
@@ -226,6 +228,8 @@ public class FusionController implements FusionControllerIfc
             {
                 ClosableIterator<Document, SearchServerResponseInfo> response = consolidator.getResponseIterator(
                     configuration, fusionRequest);
+                // set state BEFORE response is rendered, because their the status is read out!
+                fusionResponse.setOk();
                 // TODO better to pass in a Writer in order to avoid building of very big String
                 String responseString = responseRenderer.getResponseString(configuration, response, fusionRequest,
                     fusionResponse);

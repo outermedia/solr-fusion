@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.response.freemarker;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.FusionField;
+import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.response.parser.FieldVisitor;
 import org.outermedia.solrfusion.response.parser.SolrMultiValuedField;
 import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
@@ -45,6 +46,7 @@ public class FreemarkerDocument  implements FieldVisitor
             // fusion-field is configured as multivalue, but solr server gave a single valued field
             FreemarkerMultiValuedField freemarkerField = FreemarkerMultiValuedField.fromSolrField(sf);
             addMultiValuedField(freemarkerField);
+            // log.debug("MULTI FIELD {}: {}", sf.getTerm().getFusionFieldName(), sf);
         }
         else
         {
@@ -63,10 +65,10 @@ public class FreemarkerDocument  implements FieldVisitor
         if (field == null)
             return true;
 
-        FreemarkerMultiValuedField freemarkerField = FreemarkerMultiValuedField.fromSolrField(sf);
-
+        Term t = null;
         List<String> values = null;
-        if(freemarkerField != null) values = freemarkerField.getValues();
+        if(sf != null) t = sf.getTerm();
+        if(t != null && t.isWasMapped() && !t.isRemoved()) values = t.getFusionFieldValue();
         if (field.isSingleValue() && values != null && values.size() > 1)
         {
             // error in mapping. will be logged and nothing is rendered
@@ -74,7 +76,15 @@ public class FreemarkerDocument  implements FieldVisitor
             return true;
         }
 
-        addMultiValuedField(freemarkerField);
+        if (field.isSingleValue())
+        {
+            FreemarkerSingleValuedField freemarkerField = FreemarkerSingleValuedField.fromSolrField(sf);
+            addSingleValuedField(freemarkerField);
+        } else
+        {
+            FreemarkerMultiValuedField freemarkerField = FreemarkerMultiValuedField.fromSolrField(sf);
+            addMultiValuedField(freemarkerField);
+        }
         return true;
     }
 
