@@ -376,7 +376,7 @@
 
             <om:max-docs>30</om:max-docs>
 
-            <om:field name="access_facet" fusion-name="format_facet">
+            <om:field name="format_facet" fusion-name="access_facet">
             </om:field>
             <om:field name="allfields" fusion-name="allfields">
             </om:field>
@@ -391,29 +391,30 @@
             </om:field>
             <om:field name="author_browse" fusion-name="author_browse">
             </om:field>
-            <om:field name="author_corp" fusion-name="author2">
+            <om:field name="author2" fusion-name="author_corp">
             </om:field>
-            <om:field name="author_corp_orig" fusion-name="author2">
+            <om:field name="author2" fusion-name="author_corp_orig">
             </om:field>
             <om:field name="author_corp_ref" fusion-name="author_corp_ref">
                 <om:drop>
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field name="author_corp2" fusion-name="author2">
+            <om:field name="author2" fusion-name="author_corp2">
             </om:field>
-            <om:field name="author_corp2_orig" fusion-name="author2">
+            <om:field name="author2" fusion-name="author_corp2_orig">
             </om:field>
-            <om:field name="author_facet" fusion-name="author">
+            <!-- TODO -->
+            <om:field name="author" fusion-name="author_facet">
             </om:field>
             <om:field name="author_id" fusion-name="author_id">
                 <om:drop>
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field name="author_letter" fusion-name="author-letter">
+            <om:field name="author-letter" fusion-name="author_letter">
             </om:field>
-            <om:field name="author_orig" fusion-name="author">
+            <om:field name="author" fusion-name="author_orig">
             </om:field>
             <om:field name="author_ref" fusion-name="author_ref">
                 <om:drop>
@@ -422,7 +423,7 @@
             </om:field>
             <om:field name="author2" fusion-name="author2">
             </om:field>
-            <om:field name="author2_orig" fusion-name="author2">
+            <om:field name="author2" fusion-name="author2_orig">
             </om:field>
             <om:field name="author2-role" fusion-name="author2-role">
             </om:field>
@@ -538,21 +539,21 @@
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field name="finc_class_facet" fusion-name="dewey-tens">
+            <om:field name="dewey-tens" fusion-name="finc_class_facet">
             </om:field>
             <om:field name="footnote" fusion-name="footnote">
                 <om:drop>
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field name="format" fusion-name="format_facet">
+            <om:field name="format_facet" fusion-name="format">
             </om:field>
             <om:field name="format_de105" fusion-name="format_de105">
                 <om:drop>
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field name="format_de15" fusion-name="format_facet">
+            <om:field name="format_facet" fusion-name="format_de15">
             </om:field>
             <om:field name="format_de520" fusion-name="format_de520">
                 <om:drop>
@@ -630,7 +631,7 @@
             </om:field>
             <om:field name="isbn" fusion-name="isbn">
             </om:field>
-            <om:field name="isbn_canc" fusion-name="isbn">
+            <om:field name="isbn" fusion-name="isbn_canc">
             </om:field>
             <om:field name="ismn" fusion-name="ismn">
                 <om:drop>
@@ -639,7 +640,7 @@
             </om:field>
             <om:field name="issn" fusion-name="issn">
             </om:field>
-            <om:field name="issn_canc" fusion-name="issn">
+            <om:field name="issn" fusion-name="issn_canc">
             </om:field>
             <om:field name="itemdata" fusion-name="itemdata">
                 <om:drop>
@@ -678,7 +679,7 @@
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field name="mega_collection" fusion-name="collection_details">
+            <om:field name="collection_details" fusion-name="mega_collection">
             </om:field>
             <om:field name="mega_toplevel" fusion-name="mega_toplevel">
                 <om:drop>
@@ -760,7 +761,7 @@
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field name="record_id" fusion-name="id">
+            <om:field name="id" fusion-name="record_id">
             </om:field>
             <om:field name="recordtype" fusion-name="recordtype">
             </om:field>
@@ -793,7 +794,7 @@
             </om:field>
             <om:field name="series2" fusion-name="series2">
             </om:field>
-            <om:field name="signatur" fusion-name="signature">
+            <om:field name="signature" fusion-name="signatur">
             </om:field>
             <om:field name="source_id" fusion-name="source_id">
                 <om:drop>
@@ -809,7 +810,7 @@
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field name="title" fusion-name="title_auth">
+            <om:field name="title_auth" fusion-name="title">
             </om:field>
             <om:field name="title_alt" fusion-name="title_alt">
             </om:field>
@@ -886,7 +887,6 @@
             </om:field>
             <om:field name="url" fusion-name="url">
             </om:field>
-
         </om:solr-server>
 
         <!--
