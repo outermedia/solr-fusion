@@ -21,8 +21,9 @@ import org.outermedia.solrfusion.configuration.IdGeneratorFactory;
 @Slf4j
 public class DefaultIdGenerator implements IdGeneratorIfc
 {
-    private final static String SEPARATOR = "#";
-    private final static String SPACE_REPLACEMENT = "_";
+    // "-" and "_" are valid chars in html ids and css class names
+    public final static String SEPARATOR = "-";
+    public final static String SPACE_REPLACEMENT = "_";
     private String fusionIdField;
 
     /**

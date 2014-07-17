@@ -468,7 +468,7 @@ public class ControllerTest
         XmlResponse xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponseStr));
         doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
         FusionRequest request = new FusionRequest();
-        request.setQuery("id:\"Bibliothek_9000#1\"");
+        request.setQuery("id:\"Bibliothek_9000-1\"");
         request.setResponseType(ResponseRendererType.XML);
         request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN));
         FusionResponse response = new FusionResponse();
@@ -476,7 +476,7 @@ public class ControllerTest
         controller.processIdQuery(request, response);
         Assert.assertTrue("Expected no error", response.isOk());
         String expected = "  <doc>\n" +
-            "    <str name=\"id\"><![CDATA[Bibliothek_9000#1]]></str>\n" +
+            "    <str name=\"id\"><![CDATA[Bibliothek_9000-1]]></str>\n" +
             "    <str name=\"title\"><![CDATA[abc]]></str>\n" +
             "    <float name=\"score\"><![CDATA[0.8100914448000002]]></float>\n" +
             "  </doc>";

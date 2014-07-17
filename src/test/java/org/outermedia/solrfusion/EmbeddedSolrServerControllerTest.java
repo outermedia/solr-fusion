@@ -155,12 +155,12 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "</lst>\n" +
             "<result name=\"response\" numFound=\"2\" start=\"0\">\n" +
             "  <doc>\n" +
-            "    <str name=\"id\"><![CDATA[Bibliothek_9002#1]]></str>\n" +
+            "    <str name=\"id\"><![CDATA[Bibliothek_9002-1]]></str>\n" +
             "    <str name=\"title\"><![CDATA[abc]]></str>\n" +
             "    <float name=\"score\"><![CDATA[0.6750762040000001]]></float>\n" +
             "  </doc>\n" +
             "  <doc>\n" +
-            "    <str name=\"id\"><![CDATA[Bibliothek_9000#1]]></str>\n" +
+            "    <str name=\"id\"><![CDATA[Bibliothek_9000-1]]></str>\n" +
             "    <float name=\"score\"><![CDATA[0.36822338400000004]]></float>\n" +
             "    <arr name=\"title\">\n" +
             "      <str><![CDATA[abc]]></str>\n" +
