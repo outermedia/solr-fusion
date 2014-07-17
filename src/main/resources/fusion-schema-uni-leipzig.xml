@@ -72,8 +72,8 @@
         <om:field name="udk_raw_del189" multi-value="true"/>
         <om:field name="finc_class_facet" multi-value="true"/>
         <om:field name="zdb" multi-value="false"/>
-        <om:field name="format"/>
-        <om:field name="language"/>
+        <om:field name="format" multi-value="true"/>
+        <om:field name="language" multi-value="true"/>
         <om:field name="author"/>
         <om:field name="author_orig" multi-value="false"/>
         <om:field name="authorStr"/>
@@ -279,22 +279,8 @@
             <om:field name="udk_raw_del189" fusion-name="udk_raw_del189"/>
             <om:field name="finc_class_facet" fusion-name="finc_class_facet"/>
             <om:field name="zdb" fusion-name="zdb"/>
-            <om:field name="language" fusion-name="language">
-                <om:change>
-                    <om:response type="merge-multi-value">
-                        <range>all</range>
-                        <separator>;</separator>
-                    </om:response>
-                </om:change>
-            </om:field>
-            <om:field name="format" fusion-name="format">
-                <om:change>
-                    <om:response type="merge-multi-value">
-                        <range>all</range>
-                        <separator>;</separator>
-                    </om:response>
-                </om:change>
-            </om:field>
+            <om:field name="language" fusion-name="language" />
+            <om:field name="format" fusion-name="format"/>
             <om:field name="author" fusion-name="author"/>
             <om:field name="author_orig" fusion-name="author_orig"/>
             <om:field name="authorStr" fusion-name="authorStr"/>

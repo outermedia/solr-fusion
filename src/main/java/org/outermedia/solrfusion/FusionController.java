@@ -182,8 +182,8 @@ public class FusionController implements FusionControllerIfc
                 // set state BEFORE response is rendered, because their the status is read out!
                 fusionResponse.setOk();
                 // TODO better to pass in a Writer in order to avoid building of very big String
-                String responseString = responseRenderer.getResponseString(configuration, responseMapped,
-                    fusionRequest, fusionResponse);
+                String responseString = responseRenderer.getResponseString(configuration, responseMapped, fusionRequest,
+                    fusionResponse);
                 fusionResponse.setOkResponse(responseString);
                 response.close();
             }
@@ -300,12 +300,17 @@ public class FusionController implements FusionControllerIfc
             ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
                 configuration.getDefaultResponseParser());
             XmlResponse result = responseParser.parse(is);
-            log.debug("Received from {}: {}", searchServerConfig.getSearchServerName(), result.toString());
             if (result == null)
             {
                 result = new XmlResponse();
                 result.setErrorReason(new RuntimeException("Solr response parsing failed."));
             }
+            if(log.isDebugEnabled())
+            {
+                log.debug("Received from {}: {}", searchServerConfig.getSearchServerName(),
+                    (result.getDocuments() != null) ? result.getDocuments().size() : -1);
+            }
+            log.trace("Received from {}: {}", searchServerConfig.getSearchServerName(), result.toString());
             return result;
         }
         catch (SearchServerResponseException se)
