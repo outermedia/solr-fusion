@@ -5,18 +5,144 @@
          xsi:schemaLocation="http://solrfusion.outermedia.org/configuration/ ../../main/resources/configuration.xsd ">
 
     <om:fusion-schema-fields default-type="text">
+        <om:field name="recordtype"/>
         <om:field name="id"/>
-        <om:field name="language" />
-        <om:field name="title" />
-        <om:field name="title_full" />
-        <om:field name="title_fullStr" />
-        <om:field name="title_short" />
+        <om:field name="mrc0007"/>
+        <om:field name="mrc0070"/>
+        <om:field name="fullrecord"/>
+        <om:field name="itemdata"/>
+        <om:field name="marc_error" multi-value="true"/>
+        <om:field name="allfields"/>
+        <om:field name="allfields_unstemmed"/>
+        <om:field name="fulltext" multi-value="false"/>
+        <om:field name="spelling"/>
+        <om:field name="spellingShingle" multi-value="true"/>
+        <om:field name="mega_collection" multi-value="true"/>
+        <om:field name="mega_toplevel" multi-value="true"/>
+        <om:field name="record_id" multi-value="false"/>
+        <om:field name="source_id" multi-value="false"/>
+        <om:field name="authorized_mode" multi-value="false"/>
+        <om:field name="institution" multi-value="true"/>
+        <om:field name="signatur" multi-value="true"/>
+        <om:field name="barcode" multi-value="true"/>
+        <om:field name="rsn" multi-value="true"/>
+        <om:field name="access_facet" multi-value="false"/>
+        <om:field name="author_id" multi-value="true"/>
+        <om:field name="topic_id" multi-value="true"/>
+        <om:field name="author_ref" multi-value="true"/>
+        <om:field name="author_corp_ref" multi-value="true"/>
+        <om:field name="topic_ref" multi-value="true"/>
+        <om:field name="multipart_set" multi-value="false"/>
+        <om:field name="multipart_link" multi-value="true"/>
+        <om:field name="multipart_part" multi-value="true"/>
+        <om:field name="purchase" multi-value="true"/>
+        <om:field name="timecode" multi-value="true"/>
+        <om:field name="misc_dech1" multi-value="true"/>
+        <om:field name="misc_del152" multi-value="true"/>
+        <om:field name="misc_de105" multi-value="true"/>
+        <om:field name="branch_de15" multi-value="true"/>
+        <om:field name="branch_dech1" multi-value="true"/>
+        <om:field name="branch_de105" multi-value="true"/>
+        <om:field name="branch_de520" multi-value="true"/>
+        <om:field name="branch_dezwi2" multi-value="true"/>
+        <om:field name="branch_dezi4" multi-value="true"/>
+        <om:field name="collcode_de15" multi-value="true"/>
+        <om:field name="collcode_dech1" multi-value="true"/>
+        <om:field name="collcode_de105" multi-value="true"/>
+        <om:field name="collcode_de520" multi-value="true"/>
+        <om:field name="collcode_dezwi2" multi-value="true"/>
+        <om:field name="collcode_dezi4" multi-value="true"/>
+        <om:field name="format_de15" multi-value="true"/>
+        <om:field name="format_del152" multi-value="true"/>
+        <om:field name="format_dech1" multi-value="true"/>
+        <om:field name="format_de105" multi-value="true"/>
+        <om:field name="format_de520" multi-value="true"/>
+        <om:field name="format_del189" multi-value="true"/>
+        <om:field name="format_dezwi2" multi-value="true"/>
+        <om:field name="format_dezi4" multi-value="true"/>
+        <om:field name="format_de540" multi-value="true"/>
+        <om:field name="format_ded117" multi-value="true"/>
+        <om:field name="local_heading_facet_del152" multi-value="true"/>
+        <om:field name="local_heading_dezwi2" multi-value="true"/>
+        <om:field name="local_heading_facet_dezwi2" multi-value="true"/>
+        <om:field name="local_heading_del242" multi-value="true"/>
+        <om:field name="local_class_del242" multi-value="true"/>
+        <om:field name="udk_raw_de105" multi-value="true"/>
+        <om:field name="udk_facet_de105" multi-value="true"/>
+        <om:field name="udk_raw_del189" multi-value="true"/>
+        <om:field name="finc_class_facet" multi-value="true"/>
+        <om:field name="zdb" multi-value="false"/>
+        <om:field name="format"/>
+        <om:field name="language"/>
         <om:field name="author"/>
+        <om:field name="author_orig" multi-value="false"/>
+        <om:field name="authorStr"/>
+        <om:field name="author2" multi-value="true"/>
+        <om:field name="author2_orig" multi-value="true"/>
+        <om:field name="author_corp"/>
+        <om:field name="author_corp_orig" multi-value="false"/>
+        <om:field name="author_corp2" multi-value="true"/>
+        <om:field name="author_corp2_orig" multi-value="true"/>
+        <om:field name="author2-role" multi-value="true"/>
+        <om:field name="author_letter"/>
+        <om:field name="author_facet" multi-value="true"/>
+        <om:field name="author_browse" multi-value="true"/>
+        <om:field name="title"/>
+        <om:field name="title_part"/>
+        <om:field name="title_sub"/>
+        <om:field name="title_short"/>
+        <om:field name="title_full"/>
+        <om:field name="title_full_unstemmed"/>
+        <om:field name="title_fullStr"/>
+        <om:field name="title_alt" multi-value="true"/>
+        <om:field name="title_uniform" multi-value="false"/>
+        <om:field name="title_old" multi-value="true"/>
+        <om:field name="title_new" multi-value="true"/>
+        <om:field name="title_sort"/>
+        <om:field name="title_orig" multi-value="false"/>
+        <om:field name="series" multi-value="true"/>
+        <om:field name="series2" multi-value="true"/>
+        <om:field name="series_orig" multi-value="true"/>
+        <om:field name="edition"/>
+        <om:field name="publisher" multi-value="true"/>
+        <om:field name="publishDate" multi-value="true"/>
+        <om:field name="publishDateSort"/>
+        <om:field name="imprint" multi-value="false"/>
+        <om:field name="dateSpan" multi-value="true"/>
+        <om:field name="publishPlace" multi-value="true"/>
+        <om:field name="physical" multi-value="true"/>
+        <om:field name="footnote" multi-value="true"/>
+        <om:field name="dissertation_note" multi-value="true"/>
+        <om:field name="performer_note" multi-value="true"/>
+        <om:field name="illustrated" multi-value="false"/>
+        <om:field name="contents" multi-value="true"/>
+        <om:field name="url" multi-value="true"/>
+        <om:field name="isbn" multi-value="true"/>
+        <om:field name="issn" multi-value="true"/>
+        <om:field name="isbn_canc" multi-value="true"/>
+        <om:field name="ismn" multi-value="true"/>
+        <om:field name="issn_canc" multi-value="true"/>
+        <om:field name="oclc_num" type="long" multi-value="true"/>
+        <om:field name="topic" multi-value="true"/>
+        <om:field name="topic_unstemmed" multi-value="true"/>
+        <om:field name="topic_facet" multi-value="true"/>
+        <om:field name="geogr_code" multi-value="true"/>
+        <om:field name="geogr_code_person" multi-value="true"/>
+        <om:field name="music_heading" multi-value="true"/>
+        <om:field name="music_heading_browse" multi-value="true"/>
+        <om:field name="film_heading" multi-value="true"/>
+        <om:field name="dewey-hundreds" multi-value="true"/>
+        <om:field name="dewey-tens" multi-value="true"/>
+        <om:field name="dewey-ones" multi-value="true"/>
+        <om:field name="dewey-full" multi-value="true"/>
+        <om:field name="dewey-sort"/>
+        <om:field name="dewey-raw"/>
+        <om:field name="rvk_facet" multi-value="true"/>
+        <om:field name="rvk_label" multi-value="true"/>
+        <om:field name="rvk_path" multi-value="true"/>
+        <om:field name="attached_de15" type="date" multi-value="false"/>
+
         <om:field name="score" type="float"/>
-        <om:field name="source_id" />
-        <om:field name="record_id" />
-        <om:field name="purchase" />
-        <om:field name="format" />
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js"/>
@@ -34,13 +160,13 @@
 
     <om:response-consolidator class="org.outermedia.solrfusion.response.PagingResponseConsolidator$Factory"/>
 
-    <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory" ignore-missing-mappings="true" />
+    <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory" ignore-missing-mappings="true"/>
 
     <!-- The fusion query is transformed into a specific search server query -->
-    <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory" />
+    <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory"/>
 
     <!-- This component controls the whole processing. -->
-    <om:controller class="org.outermedia.solrfusion.FusionController$Factory" />
+    <om:controller class="org.outermedia.solrfusion.FusionController$Factory"/>
 
     <om:solr-servers>
         <om:timeout>4000</om:timeout>
@@ -72,7 +198,7 @@
         <om:response-renderer type="php"
                               class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory"/>
 
-        <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory" />
+        <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
 
         <om:solr-server name="UBL" version="3.5"
                         class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
@@ -86,18 +212,156 @@
 
             <om:max-docs>30</om:max-docs>
 
+            <om:field name="recordtype" fusion-name="recordtype"/>
             <om:field name="id" fusion-name="id"/>
-            <om:field name="title" fusion-name="title"/>
-            <om:field name="title_full" fusion-name="title_full"/>
-            <om:field name="title_fullStr" fusion-name="title_fullStr"/>
-            <om:field name="title_short" fusion-name="title_short"/>
-            <om:field name="author" fusion-name="author"/>
-            <om:field name="language" fusion-name="language"/>
-            <om:field name="format" fusion-name="format"/>
-            <om:field name="purchase" fusion-name="purchase"/>
+            <om:field name="mrc0007" fusion-name="mrc0007"/>
+            <om:field name="mrc0070" fusion-name="mrc0070"/>
+            <om:field name="fullrecord" fusion-name="fullrecord"/>
+            <om:field name="itemdata" fusion-name="itemdata"/>
+            <om:field name="marc_error" fusion-name="marc_error"/>
+            <om:field name="allfields" fusion-name="allfields"/>
+            <om:field name="allfields_unstemmed" fusion-name="allfields_unstemmed"/>
+            <om:field name="fulltext" fusion-name="fulltext"/>
+            <om:field name="spelling" fusion-name="spelling"/>
+            <om:field name="spellingShingle" fusion-name="spellingShingle"/>
+            <om:field name="mega_collection" fusion-name="mega_collection"/>
+            <om:field name="mega_toplevel" fusion-name="mega_toplevel"/>
             <om:field name="record_id" fusion-name="record_id"/>
             <om:field name="source_id" fusion-name="source_id"/>
-
+            <om:field name="authorized_mode" fusion-name="authorized_mode"/>
+            <om:field name="institution" fusion-name="institution"/>
+            <om:field name="signatur" fusion-name="signatur"/>
+            <om:field name="barcode" fusion-name="barcode"/>
+            <om:field name="rsn" fusion-name="rsn"/>
+            <om:field name="access_facet" fusion-name="access_facet"/>
+            <om:field name="author_id" fusion-name="author_id"/>
+            <om:field name="topic_id" fusion-name="topic_id"/>
+            <om:field name="author_ref" fusion-name="author_ref"/>
+            <om:field name="author_corp_ref" fusion-name="author_corp_ref"/>
+            <om:field name="topic_ref" fusion-name="topic_ref"/>
+            <om:field name="multipart_set" fusion-name="multipart_set"/>
+            <om:field name="multipart_link" fusion-name="multipart_link"/>
+            <om:field name="multipart_part" fusion-name="multipart_part"/>
+            <om:field name="purchase" fusion-name="purchase"/>
+            <om:field name="timecode" fusion-name="timecode"/>
+            <om:field name="misc_dech1" fusion-name="misc_dech1"/>
+            <om:field name="misc_del152" fusion-name="misc_del152"/>
+            <om:field name="misc_de105" fusion-name="misc_de105"/>
+            <om:field name="branch_de15" fusion-name="branch_de15"/>
+            <om:field name="branch_dech1" fusion-name="branch_dech1"/>
+            <om:field name="branch_de105" fusion-name="branch_de105"/>
+            <om:field name="branch_de520" fusion-name="branch_de520"/>
+            <om:field name="branch_dezwi2" fusion-name="branch_dezwi2"/>
+            <om:field name="branch_dezi4" fusion-name="branch_dezi4"/>
+            <om:field name="collcode_de15" fusion-name="collcode_de15"/>
+            <om:field name="collcode_dech1" fusion-name="collcode_dech1"/>
+            <om:field name="collcode_de105" fusion-name="collcode_de105"/>
+            <om:field name="collcode_de520" fusion-name="collcode_de520"/>
+            <om:field name="collcode_dezwi2" fusion-name="collcode_dezwi2"/>
+            <om:field name="collcode_dezi4" fusion-name="collcode_dezi4"/>
+            <om:field name="format_de15" fusion-name="format_de15"/>
+            <om:field name="format_del152" fusion-name="format_del152"/>
+            <om:field name="format_dech1" fusion-name="format_dech1"/>
+            <om:field name="format_de105" fusion-name="format_de105"/>
+            <om:field name="format_de520" fusion-name="format_de520"/>
+            <om:field name="format_del189" fusion-name="format_del189"/>
+            <om:field name="format_dezwi2" fusion-name="format_dezwi2"/>
+            <om:field name="format_dezi4" fusion-name="format_dezi4"/>
+            <om:field name="format_de540" fusion-name="format_de540"/>
+            <om:field name="format_ded117" fusion-name="format_ded117"/>
+            <om:field name="local_heading_facet_del152" fusion-name="local_heading_facet_del152"/>
+            <om:field name="local_heading_dezwi2" fusion-name="local_heading_dezwi2"/>
+            <om:field name="local_heading_facet_dezwi2" fusion-name="local_heading_facet_dezwi2"/>
+            <om:field name="local_heading_del242" fusion-name="local_heading_del242"/>
+            <om:field name="local_class_del242" fusion-name="local_class_del242"/>
+            <om:field name="udk_raw_de105" fusion-name="udk_raw_de105"/>
+            <om:field name="udk_facet_de105" fusion-name="udk_facet_de105"/>
+            <om:field name="udk_raw_del189" fusion-name="udk_raw_del189"/>
+            <om:field name="finc_class_facet" fusion-name="finc_class_facet"/>
+            <om:field name="zdb" fusion-name="zdb"/>
+            <om:field name="language" fusion-name="language">
+                <om:change>
+                    <om:response type="merge-multi-value">
+                        <range>all</range>
+                        <separator>;</separator>
+                    </om:response>
+                </om:change>
+            </om:field>
+            <om:field name="format" fusion-name="format">
+                <om:change>
+                    <om:response type="merge-multi-value">
+                        <range>all</range>
+                        <separator>;</separator>
+                    </om:response>
+                </om:change>
+            </om:field>
+            <om:field name="author" fusion-name="author"/>
+            <om:field name="author_orig" fusion-name="author_orig"/>
+            <om:field name="authorStr" fusion-name="authorStr"/>
+            <om:field name="author2" fusion-name="author2"/>
+            <om:field name="author2_orig" fusion-name="author2_orig"/>
+            <om:field name="author_corp" fusion-name="author_corp"/>
+            <om:field name="author_corp_orig" fusion-name="author_corp_orig"/>
+            <om:field name="author_corp2" fusion-name="author_corp2"/>
+            <om:field name="author_corp2_orig" fusion-name="author_corp2_orig"/>
+            <om:field name="author2-role" fusion-name="author2-role"/>
+            <om:field name="author_letter" fusion-name="author_letter"/>
+            <om:field name="author_facet" fusion-name="author_facet"/>
+            <om:field name="author_browse" fusion-name="author_browse"/>
+            <om:field name="title" fusion-name="title"/>
+            <om:field name="title_part" fusion-name="title_part"/>
+            <om:field name="title_sub" fusion-name="title_sub"/>
+            <om:field name="title_short" fusion-name="title_short"/>
+            <om:field name="title_full" fusion-name="title_full"/>
+            <om:field name="title_full_unstemmed" fusion-name="title_full_unstemmed"/>
+            <om:field name="title_fullStr" fusion-name="title_fullStr"/>
+            <om:field name="title_alt" fusion-name="title_alt"/>
+            <om:field name="title_uniform" fusion-name="title_uniform"/>
+            <om:field name="title_old" fusion-name="title_old"/>
+            <om:field name="title_new" fusion-name="title_new"/>
+            <om:field name="title_sort" fusion-name="title_sort"/>
+            <om:field name="title_orig" fusion-name="title_orig"/>
+            <om:field name="series" fusion-name="series"/>
+            <om:field name="series2" fusion-name="series2"/>
+            <om:field name="series_orig" fusion-name="series_orig"/>
+            <om:field name="edition" fusion-name="edition"/>
+            <om:field name="publisher" fusion-name="publisher"/>
+            <om:field name="publishDate" fusion-name="publishDate"/>
+            <om:field name="publishDateSort" fusion-name="publishDateSort"/>
+            <om:field name="imprint" fusion-name="imprint"/>
+            <om:field name="dateSpan" fusion-name="dateSpan"/>
+            <om:field name="publishPlace" fusion-name="publishPlace"/>
+            <om:field name="physical" fusion-name="physical"/>
+            <om:field name="footnote" fusion-name="footnote"/>
+            <om:field name="dissertation_note" fusion-name="dissertation_note"/>
+            <om:field name="performer_note" fusion-name="performer_note"/>
+            <om:field name="illustrated" fusion-name="illustrated"/>
+            <om:field name="contents" fusion-name="contents"/>
+            <om:field name="url" fusion-name="url"/>
+            <om:field name="isbn" fusion-name="isbn"/>
+            <om:field name="issn" fusion-name="issn"/>
+            <om:field name="isbn_canc" fusion-name="isbn_canc"/>
+            <om:field name="ismn" fusion-name="ismn"/>
+            <om:field name="issn_canc" fusion-name="issn_canc"/>
+            <om:field name="oclc_num" fusion-name="oclc_num"/>
+            <om:field name="topic" fusion-name="topic"/>
+            <om:field name="topic_unstemmed" fusion-name="topic_unstemmed"/>
+            <om:field name="topic_facet" fusion-name="topic_facet"/>
+            <om:field name="geogr_code" fusion-name="geogr_code"/>
+            <om:field name="geogr_code_person" fusion-name="geogr_code_person"/>
+            <om:field name="music_heading" fusion-name="music_heading"/>
+            <om:field name="music_heading_browse" fusion-name="music_heading_browse"/>
+            <om:field name="film_heading" fusion-name="film_heading"/>
+            <om:field name="dewey-hundreds" fusion-name="dewey-hundreds"/>
+            <om:field name="dewey-tens" fusion-name="dewey-tens"/>
+            <om:field name="dewey-ones" fusion-name="dewey-ones"/>
+            <om:field name="dewey-full" fusion-name="dewey-full"/>
+            <om:field name="dewey-sort" fusion-name="dewey-sort"/>
+            <om:field name="dewey-raw" fusion-name="dewey-raw"/>
+            <om:field name="rvk_facet" fusion-name="rvk_facet"/>
+            <om:field name="rvk_label" fusion-name="rvk_label"/>
+            <om:field name="rvk_path" fusion-name="rvk_path"/>
+            <om:field name="attached_de15" fusion-name="attached_de15"/>
         </om:solr-server>
 
         <om:solr-server name="GBV" version="3.6"
@@ -112,60 +376,555 @@
 
             <om:max-docs>30</om:max-docs>
 
-            <om:field name="id" fusion-name="id"/>
-            <om:field name="title" fusion-name="title"/>
-            <om:field name="title_full" fusion-name="title_full"/>
-            <om:field name="title_fullStr" fusion-name="title_fullStr"/>
-            <om:field name="title_short" fusion-name="title_short"/>
-            <om:field name="author" fusion-name="author"/>
-            <om:field name="language_de" fusion-name="language"/>
-            <om:field name="format_facet" fusion-name="format"/>
+            <om:field name="format_facet" fusion-name="access_facet">
+            </om:field>
+            <om:field name="allfields" fusion-name="allfields">
+            </om:field>
+            <om:field name="allfields_unstemmed" fusion-name="allfields_unstemmed">
+            </om:field>
+            <om:field name="attached_de15" fusion-name="attached_de15">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="author" fusion-name="author">
+            </om:field>
+            <om:field name="author_browse" fusion-name="author_browse">
+            </om:field>
+            <om:field name="author2" fusion-name="author_corp">
+            </om:field>
+            <om:field name="author2" fusion-name="author_corp_orig">
+            </om:field>
+            <om:field name="author_corp_ref" fusion-name="author_corp_ref">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="author2" fusion-name="author_corp2">
+            </om:field>
+            <om:field name="author2" fusion-name="author_corp2_orig">
+            </om:field>
+            <!-- TODO -->
+            <om:field name="author" fusion-name="author_facet">
+            </om:field>
+            <om:field name="author_id" fusion-name="author_id">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="author-letter" fusion-name="author_letter">
+            </om:field>
+            <om:field name="author" fusion-name="author_orig">
+            </om:field>
+            <om:field name="author_ref" fusion-name="author_ref">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="author2" fusion-name="author2">
+            </om:field>
+            <om:field name="author2" fusion-name="author2_orig">
+            </om:field>
+            <om:field name="author2-role" fusion-name="author2-role">
+            </om:field>
+            <om:field name="authorized_mode" fusion-name="authorized_mode">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="authorStr" fusion-name="authorStr">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="barcode" fusion-name="barcode">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="branch_de105" fusion-name="branch_de105">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="branch_de15" fusion-name="branch_de15">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="branch_de520" fusion-name="branch_de520">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="branch_dech1" fusion-name="branch_dech1">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="branch_dezi4" fusion-name="branch_dezi4">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="branch_dezwi2" fusion-name="branch_dezwi2">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="collcode_de105" fusion-name="collcode_de105">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="collcode_de15" fusion-name="collcode_de15">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="collcode_de520" fusion-name="collcode_de520">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="collcode_dech1" fusion-name="collcode_dech1">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="collcode_dezi4" fusion-name="collcode_dezi4">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="collcode_dezwi2" fusion-name="collcode_dezwi2">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="contents" fusion-name="contents">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="dateSpan" fusion-name="dateSpan">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="dewey-full" fusion-name="dewey-full">
+            </om:field>
+            <om:field name="dewey-hundreds" fusion-name="dewey-hundreds">
+            </om:field>
+            <om:field name="dewey-ones" fusion-name="dewey-ones">
+            </om:field>
+            <om:field name="dewey-raw" fusion-name="dewey-raw">
+            </om:field>
+            <om:field name="dewey-sort" fusion-name="dewey-sort">
+            </om:field>
+            <om:field name="dewey-tens" fusion-name="dewey-tens">
+            </om:field>
+            <om:field name="dissertation_note" fusion-name="dissertation_note">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="edition" fusion-name="edition">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="film_heading" fusion-name="film_heading">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="dewey-tens" fusion-name="finc_class_facet">
+            </om:field>
+            <om:field name="footnote" fusion-name="footnote">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="format_facet" fusion-name="format">
+            </om:field>
+            <om:field name="format_de105" fusion-name="format_de105">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="format_facet" fusion-name="format_de15">
+            </om:field>
+            <om:field name="format_de520" fusion-name="format_de520">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="format_de540" fusion-name="format_de540">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="format_dech1" fusion-name="format_dech1">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name=" " fusion-name=" ">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="format_del152" fusion-name="format_del152">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="format_del189" fusion-name="format_del189">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="format_dezi4" fusion-name="format_dezi4">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="format_dezwi2" fusion-name="format_dezwi2">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="fullrecord" fusion-name="fullrecord">
+            </om:field>
+            <om:field name="fulltext" fusion-name="fulltext">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="geogr_code" fusion-name="geogr_code">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="geogr_code_person" fusion-name="geogr_code_person">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="id" fusion-name="id">
+            </om:field>
+            <om:field name="illustrated" fusion-name="illustrated">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="imprint" fusion-name="imprint">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="institution" fusion-name="institution">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="isbn" fusion-name="isbn">
+            </om:field>
+            <om:field name="isbn" fusion-name="isbn_canc">
+            </om:field>
+            <om:field name="ismn" fusion-name="ismn">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="issn" fusion-name="issn">
+            </om:field>
+            <om:field name="issn" fusion-name="issn_canc">
+            </om:field>
+            <om:field name="itemdata" fusion-name="itemdata">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="language" fusion-name="language">
+            </om:field>
+            <om:field name="local_class_del242" fusion-name="local_class_del242">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="local_heading_del242" fusion-name="local_heading_del242">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="local_heading_dezwi2" fusion-name="local_heading_dezwi2">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="local_heading_facet_del152" fusion-name="local_heading_facet_del152">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="local_heading_facet_dezwi2" fusion-name="local_heading_facet_dezwi2">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="marc_error" fusion-name="marc_error">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="collection_details" fusion-name="mega_collection">
+            </om:field>
+            <om:field name="mega_toplevel" fusion-name="mega_toplevel">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="misc_de105" fusion-name="misc_de105">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="misc_dech1" fusion-name="misc_dech1">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="misc_del152" fusion-name="misc_del152">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="mrc0007" fusion-name="mrc0007">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="mrc0070" fusion-name="mrc0070">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="multipart_link" fusion-name="multipart_link">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="multipart_part" fusion-name="multipart_part">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="multipart_set" fusion-name="multipart_set">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="music_heading" fusion-name="music_heading">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="music_heading_browse" fusion-name="music_heading_browse">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="oclc_num" fusion-name="oclc_num">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="performer_note" fusion-name="performer_note">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="physical" fusion-name="physical">
+            </om:field>
+            <om:field name="publishDate" fusion-name="publishDate">
+            </om:field>
+            <om:field name="publishDateSort" fusion-name="publishDateSort">
+            </om:field>
+            <om:field name="publisher" fusion-name="publisher">
+            </om:field>
+            <om:field name="publishPlace" fusion-name="publishPlace">
+            </om:field>
             <om:field name="purchase" fusion-name="purchase">
-		<om:drop><om:query/></om:drop>
-	    </om:field>
-            <om:field name="id" fusion-name="record_id"/>
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="id" fusion-name="record_id">
+            </om:field>
+            <om:field name="recordtype" fusion-name="recordtype">
+            </om:field>
+            <om:field name="rsn" fusion-name="rsn">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="rvk_facet" fusion-name="rvk_facet">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="rvk_label" fusion-name="rvk_label">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="rvk_path" fusion-name="rvk_path">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="series" fusion-name="series">
+            </om:field>
+            <om:field name="series_orig" fusion-name="series_orig">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="series2" fusion-name="series2">
+            </om:field>
+            <om:field name="signature" fusion-name="signatur">
+            </om:field>
             <om:field name="source_id" fusion-name="source_id">
-		<om:drop><om:query/></om:drop>
-	    </om:field>
-
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="spelling" fusion-name="spelling">
+            </om:field>
+            <om:field name="spellingShingle" fusion-name="spellingShingle">
+            </om:field>
+            <om:field name="timecode" fusion-name="timecode">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="title_auth" fusion-name="title">
+            </om:field>
+            <om:field name="title_alt" fusion-name="title_alt">
+            </om:field>
+            <om:field name="title_full" fusion-name="title_full">
+            </om:field>
+            <om:field name="title_full_unstemmed" fusion-name="title_full_unstemmed">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="title_fullStr" fusion-name="title_fullStr">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="title_new" fusion-name="title_new">
+            </om:field>
+            <om:field name="title_old" fusion-name="title_old">
+            </om:field>
+            <om:field name="title_orig" fusion-name="title_orig">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="title_part" fusion-name="title_part">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="title_short" fusion-name="title_short">
+            </om:field>
+            <om:field name="title_sort" fusion-name="title_sort">
+            </om:field>
+            <om:field name="title_sub" fusion-name="title_sub">
+            </om:field>
+            <om:field name="title_uniform" fusion-name="title_uniform">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="topic" fusion-name="topic">
+            </om:field>
+            <om:field name="topic_facet" fusion-name="topic_facet">
+            </om:field>
+            <om:field name="topic_id" fusion-name="topic_id">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="topic_ref" fusion-name="topic_ref">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="topic_unstemmed" fusion-name="topic_unstemmed">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="udk_facet_de105" fusion-name="udk_facet_de105">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="udk_raw_de105" fusion-name="udk_raw_de105">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="udk_raw_del189" fusion-name="udk_raw_del189">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="url" fusion-name="url">
+            </om:field>
         </om:solr-server>
 
-<!-- 
-        <om:solr-server name="DBoD1" version="3.6"
-                        class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+        <!--
+                <om:solr-server name="DBoD1" version="3.6"
+                                class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
-            <om:url>http://findex.gbv.de:9002/te/select</om:url>
+                    <om:url>http://findex.gbv.de:9002/te/select</om:url>
 
-            <om:score factor="1.0"
-                      class="org.outermedia.solrfusion.DefaultScore$Factory"/>
+                    <om:score factor="1.0"
+                              class="org.outermedia.solrfusion.DefaultScore$Factory"/>
 
-            <om:query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory" />
+                    <om:query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory" />
 
-            <om:unique-key>id</om:unique-key>
+                    <om:unique-key>id</om:unique-key>
 
-            <om:field name="id" fusion-name="id"/>
-            <om:field name="dbName" fusion-name="title"/>
+                    <om:field name="id" fusion-name="id"/>
+                    <om:field name="dbName" fusion-name="title"/>
 
-        </om:solr-server>
+                </om:solr-server>
 
-        <om:solr-server name="DBoD1" version="3.6"
-                        class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+                <om:solr-server name="DBoD1" version="3.6"
+                                class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
-            <om:url>http://findex.gbv.de:9003/solr/select</om:url>
+                    <om:url>http://findex.gbv.de:9003/solr/select</om:url>
 
-            <om:score factor="1.0"
-                      class="org.outermedia.solrfusion.DefaultScore$Factory"/>
+                    <om:score factor="1.0"
+                              class="org.outermedia.solrfusion.DefaultScore$Factory"/>
 
-            <om:query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory" />
+                    <om:query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory" />
 
-            <om:unique-key>id</om:unique-key>
+                    <om:unique-key>id</om:unique-key>
 
-            <om:field name="id" fusion-name="id"/>
-            <om:field name="dbName" fusion-name="title"/>
+                    <om:field name="id" fusion-name="id"/>
+                    <om:field name="dbName" fusion-name="title"/>
 
-        </om:solr-server>
+                </om:solr-server>
 
--->
+        -->
 
     </om:solr-servers>
 </om:core>
