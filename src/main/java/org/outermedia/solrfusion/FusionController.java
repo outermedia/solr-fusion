@@ -61,17 +61,17 @@ public class FusionController implements FusionControllerIfc
 
         Map<String, Float> boosts = fusionRequest.getBoosts();
         Locale locale = fusionRequest.getLocale();
-        fusionRequest.setParsedQuery(parseQuery(queryStr, boosts, locale));
-        fusionRequest.setParsedFilterQuery(parseQuery(filterQueryStr, boosts, locale));
+        fusionRequest.setParsedQuery(parseQuery(queryStr, boosts, locale, fusionRequest));
+        fusionRequest.setParsedFilterQuery(parseQuery(filterQueryStr, boosts, locale, fusionRequest));
 
         if (fusionRequest.getParsedQuery() == null)
         {
-            fusionResponse.setResponseForQueryParseError(queryStr);
+            fusionResponse.setResponseForQueryParseError(queryStr, fusionRequest.buildErrorMessage());
         }
         else if (filterQueryStr != null && filterQueryStr.trim().length() > 0 &&
             fusionRequest.getParsedFilterQuery() == null)
         {
-            fusionResponse.setResponseForQueryParseError(filterQueryStr);
+            fusionResponse.setResponseForQueryParseError(filterQueryStr, fusionRequest.buildErrorMessage());
         }
         else
         {
@@ -305,7 +305,7 @@ public class FusionController implements FusionControllerIfc
                 result = new XmlResponse();
                 result.setErrorReason(new RuntimeException("Solr response parsing failed."));
             }
-            if(log.isDebugEnabled())
+            if (log.isDebugEnabled())
             {
                 log.debug("Received from {}: {}", searchServerConfig.getSearchServerName(),
                     (result.getDocuments() != null) ? result.getDocuments().size() : -1);
@@ -366,7 +366,7 @@ public class FusionController implements FusionControllerIfc
         return result;
     }
 
-    protected Query parseQuery(String query, Map<String, Float> boosts, Locale locale)
+    protected Query parseQuery(String query, Map<String, Float> boosts, Locale locale, FusionRequest fusionRequest)
     {
         Query queryObj = null;
         if (query != null)
@@ -380,12 +380,16 @@ public class FusionController implements FusionControllerIfc
                 }
                 catch (Exception e)
                 {
-                    log.error("Parsing of queryStr {} failed.", query, e);
+                    String msg = "Parsing of query " + query + " failed.";
+                    log.error(msg, e);
+                    fusionRequest.addError(msg, e);
                 }
             }
             catch (Exception e)
             {
-                log.error("Caught exception while parsing queryStr: {}", query, e);
+                String msg = "Caught exception while parsing query: " + query;
+                log.error(msg, e);
+                fusionRequest.addError(msg, e);
             }
         }
         return queryObj;

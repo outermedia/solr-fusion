@@ -32,21 +32,26 @@ public class FusionResponse
         errorMessage = null;
     }
 
-    protected void setError(String message)
+    protected void setError(String message, String cause)
     {
         log.error("Error while processing query: {}", message);
         ok = false;
         this.errorMessage = message;
+        if(cause != null && cause.length() > 0)
+        {
+            this.errorMessage += "\nCause: " + cause;
+        }
     }
 
     /**
      * Parsing of the fusion query failed.
      *
      * @param query
+     * @param cause
      */
-    public void setResponseForQueryParseError(String query)
+    public void setResponseForQueryParseError(String query, String cause)
     {
-        setError("Query parsing failed: " + query);
+        setError("Query parsing failed: " + query, cause);
     }
 
     /**
@@ -54,7 +59,7 @@ public class FusionResponse
      */
     public void setResponseForNoSearchServerConfiguredError()
     {
-        setError("No search server configured at all.");
+        setError("No search server configured at all.", null);
     }
 
     /**
@@ -65,7 +70,7 @@ public class FusionResponse
      */
     public void setResponseForTooLessServerAnsweredError(Message disasterMessage, String errorMsg)
     {
-        setError(disasterMessage.getText() + "\n" + errorMsg);
+        setError(disasterMessage.getText(), errorMsg);
     }
 
     /**
@@ -76,10 +81,6 @@ public class FusionResponse
      */
     public String getResponseAsString()
     {
-        if (!ok)
-        {
-            return null;
-        }
         return responseBody;
     }
 
@@ -95,12 +96,17 @@ public class FusionResponse
         {
             type = requestedType.toString();
         }
-        setError("Found no configuration for response renderer: " + type);
+        setError("Found no configuration for response renderer: " + type, null);
     }
 
     public void setOkResponse(String responseBody)
     {
         setOk();
+        this.responseBody = responseBody;
+    }
+
+    public void setErrorResponse(String responseBody)
+    {
         this.responseBody = responseBody;
     }
 
@@ -116,6 +122,6 @@ public class FusionResponse
         {
             reason = lastException.getMessage();
         }
-        setError("Internal processing error. Reason: " + reason);
+        setError("Internal processing error. Reason: " + reason, null);
     }
 }

@@ -25,7 +25,8 @@ public class FreemarkerResponse
 
     public FreemarkerResponse(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream)
     {
-        this.totalHitNumber = docStream.getExtraInfo().getTotalNumberOfHits();
+        this.totalHitNumber = 0;
+        if(docStream != null) totalHitNumber = docStream.getExtraInfo().getTotalNumberOfHits();
         this.documents = new ArrayList<>();
 
         Document d;
@@ -33,14 +34,16 @@ public class FreemarkerResponse
         ScriptEnv env = new ScriptEnv();
         env.setConfiguration(configuration);
 
-        while (docStream.hasNext())
+        if(docStream != null)
         {
-            freemarkerDocument = new FreemarkerDocument();
-            d = docStream.next();
-            d.accept(freemarkerDocument, env);
-            documents.add(freemarkerDocument);
+            while (docStream.hasNext())
+            {
+                freemarkerDocument = new FreemarkerDocument();
+                d = docStream.next();
+                d.accept(freemarkerDocument, env);
+                documents.add(freemarkerDocument);
+            }
         }
-
     }
 
 }

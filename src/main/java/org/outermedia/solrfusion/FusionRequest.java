@@ -12,7 +12,6 @@ import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 import org.outermedia.solrfusion.query.parser.Query;
 
-import javax.servlet.ServletException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
@@ -53,10 +52,12 @@ public class FusionRequest
     // otherwise desc
     private boolean sortAsc;
 
+    private List<String> errors;
 
     public FusionRequest()
     {
-        responseType = ResponseRendererType.XML;
+        responseType = ResponseRendererType.JSON;
+        errors = new ArrayList<>();
     }
 
     public Map<String, Float> getBoosts()
@@ -64,7 +65,7 @@ public class FusionRequest
         return new HashMap<>(); // TODO from request params
     }
 
-    public void setResponseTypeFromString(String responseTypeStr) throws ServletException
+    public void setResponseTypeFromString(String responseTypeStr, FusionRequest fusionRequest)
     {
         if (responseTypeStr != null)
         {
@@ -75,7 +76,8 @@ public class FusionRequest
             }
             catch (Exception e)
             {
-                throw new ServletException("Found no renderer for given type '" + trimmedResponseTypeStr + "'", e);
+                fusionRequest.addError(
+                    "Found no renderer for given type '" + trimmedResponseTypeStr + "'. Cause: " + e.getMessage());
             }
         }
     }
@@ -219,4 +221,50 @@ public class FusionRequest
         }
     }
 
+    public void addError(String msg)
+    {
+        errors.add(msg);
+    }
+
+    public boolean hasErrors()
+    {
+        return errors.size() > 0;
+    }
+
+    public String buildErrorMessage()
+    {
+        StringBuilder sb = new StringBuilder();
+        for(String s : errors)
+        {
+            sb.append("ERROR: ");
+            sb.append(s);
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    public void addError(String msg, Exception e)
+    {
+        if(e != null)
+        {
+            String cause = collectCauses(e);
+            if(cause.length() > 0)
+            {
+                msg += "\n" + cause;
+            }
+        }
+        addError(msg);
+    }
+
+    protected String collectCauses(Throwable e)
+    {
+        StringBuilder sb = new StringBuilder();
+        while(e != null)
+        {
+            sb.append(e.getMessage());
+            sb.append("\n");
+            e = e.getCause();
+        }
+        return sb.toString();
+    }
 }

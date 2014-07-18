@@ -16,9 +16,8 @@ import java.util.Map;
 
 /**
  * A common solr query parser.
- * 
+ *
  * @author ballmann
- * 
  */
 
 @ToString
@@ -28,32 +27,34 @@ import java.util.Map;
 public class EdisMaxQueryParser implements QueryParserIfc
 {
 
-	/**
-	 * Factory creates instances only.
-	 */
-	private EdisMaxQueryParser()
-	{}
+    /**
+     * Factory creates instances only.
+     */
+    private EdisMaxQueryParser()
+    {
+    }
 
-	public static class Factory
-	{
-		public static EdisMaxQueryParser getInstance()
-		{
-			return new EdisMaxQueryParser();
-		}
-	}
+    public static class Factory
+    {
+        public static EdisMaxQueryParser getInstance()
+        {
+            return new EdisMaxQueryParser();
+        }
+    }
 
-	@Override
-	public void init(QueryParserFactory config)
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void init(QueryParserFactory config)
+    {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public Query parse(Configuration config, Map<String, Float> boosts, String queryString, Locale locale)
-	{
-		Query result = null;
-        if(queryString != null && queryString.trim().length() > 0)
+    @Override
+    public Query parse(Configuration config, Map<String, Float> boosts, String queryString, Locale locale)
+        throws ParseException
+    {
+        Query result = null;
+        if (queryString != null && queryString.trim().length() > 0)
         {
             String defaultOpStr = config.getDefaultOperator();
             Operator defaultOp = QueryParser.Operator.AND;
@@ -68,15 +69,8 @@ public class EdisMaxQueryParser implements QueryParserIfc
             }
             QueryParser parser = new QueryParser(config.getDefaultSearchField(), config, boosts, defaultOp);
             parser.setLocale(locale);
-            try
-            {
-                result = parser.parse(queryString);
-            }
-            catch (ParseException e)
-            {
-                log.error("Couldn't parse query: {}", queryString, e);
-            }
+            result = parser.parse(queryString);
         }
-		return result;
-	}
+        return result;
+    }
 }

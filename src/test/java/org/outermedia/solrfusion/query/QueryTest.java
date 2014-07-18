@@ -27,22 +27,20 @@ public class QueryTest
     }
 
     @Test
-    public void parseWordQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void parseWordQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
-        Configuration cfg = helper
-            .readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
         String query = "Schiller";
         Query o = parseQuery(cfg, query);
         String expected = "TermQuery(super=Query(boostValue=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null, newResponseValues=null))";
-        Assert.assertEquals("Got different query object than expected",
-            expected, o.toString());
+        Assert.assertEquals("Got different query object than expected", expected, o.toString());
 
         checkBoost(cfg, "Schiller^0.75", 0.75f);
     }
 
-    protected Query checkBoost(Configuration cfg, String qs, float expectedBoost)
+    protected Query checkBoost(Configuration cfg, String qs, float expectedBoost) throws ParseException
     {
         Query q = parseQuery(cfg, qs);
         Assert.assertNotNull("Expected to get query object for " + qs, q);
@@ -51,16 +49,14 @@ public class QueryTest
     }
 
     @Test
-    public void parseTermQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void parseTermQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
-        Configuration cfg = helper
-            .readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
         Query o = parseQuery(cfg, "title:Schiller");
         String expected = "TermQuery(super=Query(boostValue=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null, newResponseValues=null))";
-        Assert.assertEquals("Got different query object than expected",
-            expected, o.toString());
+        Assert.assertEquals("Got different query object than expected", expected, o.toString());
 
         String query = "+title:Schiller";
         o = parseQuery(cfg, query);
@@ -95,7 +91,7 @@ public class QueryTest
             bq.getClauses().get(2).isRequired());
     }
 
-    protected Query parseQuery(Configuration cfg, String query)
+    protected Query parseQuery(Configuration cfg, String query) throws ParseException
     {
         EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
         p.init(new QueryParserFactory());
@@ -110,8 +106,15 @@ public class QueryTest
         EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
         p.init(new QueryParserFactory());
         Map<String, Float> boosts = new HashMap<String, Float>();
-        Query o = p.parse(cfg, boosts, query, Locale.GERMAN);
-        Assert.assertNull(msg, o);
+        try
+        {
+            Query o = p.parse(cfg, boosts, query, Locale.GERMAN);
+            Assert.fail("Expected exception");
+        }
+        catch (ParseException e)
+        {
+            // NOP
+        }
     }
 
     protected void isTermQuery(Query q, String fieldName, String value)
@@ -123,25 +126,22 @@ public class QueryTest
     }
 
     @Test
-    public void parseTermConjunctionQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void parseTermConjunctionQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
-        Configuration cfg = helper
-            .readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
         String query = "title:Schiller title:Müller";
         Query o = parseQuery(cfg, query);
         String expected = "BooleanQuery(super=Query(boostValue=null), clauses=[BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null, newResponseValues=null))), BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null), term=Term(fusionFieldName=title, fusionFieldValue=[Müller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null, newResponseValues=null)))])";
-        Assert.assertEquals("Got different query object than expected",
-            expected, o.toString());
+        Assert.assertEquals("Got different query object than expected", expected, o.toString());
     }
 
     @Test
-    public void parseBooleanQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void parseBooleanQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
-        Configuration cfg = helper
-            .readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
         String query = "title:Tag AND city:Berlin";
         Query o = parseQuery(cfg, query);
@@ -186,8 +186,8 @@ public class QueryTest
     }
 
     @Test
-    public void testParseDateRangeQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void testParseDateRangeQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
@@ -223,8 +223,8 @@ public class QueryTest
     }
 
     @Test
-    public void testParseIntRangeQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void testParseIntRangeQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
@@ -248,8 +248,8 @@ public class QueryTest
     }
 
     @Test
-    public void testParseLongRangeQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void testParseLongRangeQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
@@ -273,8 +273,8 @@ public class QueryTest
     }
 
     @Test
-    public void testParseFloatRangeQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void testParseFloatRangeQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
@@ -302,8 +302,8 @@ public class QueryTest
     }
 
     @Test
-    public void testParseDoubleRangeQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void testParseDoubleRangeQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
@@ -331,8 +331,8 @@ public class QueryTest
     }
 
     @Test
-    public void testParseFuzzyQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void testParseFuzzyQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
         Query q;
@@ -352,8 +352,8 @@ public class QueryTest
     }
 
     @Test
-    public void testParseMatchAllDocsQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void testParseMatchAllDocsQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
         Query q;
@@ -364,8 +364,8 @@ public class QueryTest
     }
 
     @Test
-    public void testParsePrefixQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void testParsePrefixQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
         Query q;
@@ -378,8 +378,8 @@ public class QueryTest
     }
 
     @Test
-    public void testParseWildcardQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void testParseWildcardQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
         Query q;
@@ -392,8 +392,8 @@ public class QueryTest
     }
 
     @Test
-    public void testParsePhraseQuery() throws FileNotFoundException, JAXBException,
-        SAXException, ParserConfigurationException
+    public void testParsePhraseQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
         Query q;
@@ -407,15 +407,14 @@ public class QueryTest
         checkBoost(cfg, query + "^0.75", 0.75f);
     }
 
-    protected PhraseQuery checkPhraseQuery(Configuration cfg, String query, String expectedValue)
+    protected PhraseQuery checkPhraseQuery(Configuration cfg, String query, String expectedValue) throws ParseException
     {
         Query q;
         q = parseQuery(cfg, query);
         Assert.assertTrue("Expected phrase query for \"...\"", q instanceof PhraseQuery);
         PhraseQuery pq = (PhraseQuery) q;
         Assert.assertEquals("Found different field name", "title", pq.getFusionFieldName());
-        Assert.assertEquals("Found different field value", Arrays.asList(
-            expectedValue), pq.getFusionFieldValue());
+        Assert.assertEquals("Found different field value", Arrays.asList(expectedValue), pq.getFusionFieldValue());
         return pq;
     }
 

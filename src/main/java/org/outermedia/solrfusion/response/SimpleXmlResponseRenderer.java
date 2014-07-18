@@ -44,7 +44,8 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
+    public String getResponseString(Configuration configuration,
+        ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
         FusionResponse fusionResponse)
     {
         String query = request.getQuery();
@@ -62,23 +63,43 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
         sb.append("    <str name=\"indent\">on</str>\n");
         sb.append("    <str name=\"start\">0</str>\n");
         sb.append("    <str name=\"q\"><![CDATA[" + query + "]]></str>\n");
-        if(filterQueryStr != null)
+        if (filterQueryStr != null)
         {
             sb.append("    <str name=\"fq\"><![CDATA[" + filterQueryStr + "]]></str>\n");
         }
-        if(sort != null)
+        if (sort != null)
         {
             sb.append("    <str name=\"sort\"><![CDATA[" + sort + "]]></str>\n");
         }
-        if(fields != null)
+        if (fields != null)
         {
             sb.append("    <str name=\"fl\"><![CDATA[" + fields + "]]></str>\n");
         }
         sb.append("    <str name=\"version\">2.2</str>\n");
-        sb.append("    <str name=\"rows\">" + docStream.size() + "</str>\n");
+        int rows = 0;
+        if (docStream != null)
+        {
+            rows = docStream.size();
+        }
+        sb.append("    <str name=\"rows\">" + rows + "</str>\n");
         sb.append("  </lst>\n");
         sb.append("</lst>\n");
-        int totalHitNumber = docStream.getExtraInfo().getTotalNumberOfHits();
+        if (!fusionResponse.isOk())
+        {
+            sb.append("<lst name=\"error\">\n");
+            sb.append("<str name=\"msg\"><![CDATA[");
+            sb.append(fusionResponse.getErrorMessage());
+            sb.append("]]></str>\n");
+            sb.append("<int name=\"code\">");
+            sb.append(400);
+            sb.append("</int>\n");
+            sb.append("</lst>\n");
+        }
+        int totalHitNumber = 0;
+        if (docStream != null && docStream.getExtraInfo() != null)
+        {
+            totalHitNumber = docStream.getExtraInfo().getTotalNumberOfHits();
+        }
         sb.append("<result name=\"response\" numFound=\"" + totalHitNumber + "\" start=\"0\">\n");
         Document d;
         FieldVisitor xmlVisitor = new FieldVisitor()
@@ -98,7 +119,7 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
             }
 
             private void writeTerm(String indent, boolean wasMapped, boolean wasRemoved, String fusionFieldName,
-                    String fusionValue, FusionField fusionField)
+                String fusionValue, FusionField fusionField)
             {
                 if (wasMapped && !wasRemoved && fusionValue != null)
                 {
@@ -107,8 +128,8 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
                     {
                         typeTag = "str";
                         log.error(
-                                "Please define a response key for fusion type '{}' (fusion field: {}) in the configuration of {}.",
-                                fusionField.getType(), fusionField.getFieldName(), getClass().getName());
+                            "Please define a response key for fusion type '{}' (fusion field: {}) in the configuration of {}.",
+                            fusionField.getType(), fusionField.getFieldName(), getClass().getName());
                     }
                     sb.append(indent);
                     sb.append("<");
@@ -159,12 +180,15 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
             }
         };
 
-        while (docStream.hasNext())
+        if(docStream != null)
         {
-            sb.append("  <doc>\n");
-            d = docStream.next();
-            d.accept(xmlVisitor, null);
-            sb.append("  </doc>\n");
+            while (docStream.hasNext())
+            {
+                sb.append("  <doc>\n");
+                d = docStream.next();
+                d.accept(xmlVisitor, null);
+                sb.append("  </doc>\n");
+            }
         }
         sb.append("</result>\n");
         sb.append("</response>\n");
@@ -192,7 +216,7 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
                 else
                 {
                     log.error("{}: Please specify a fusion-type ({}) and a key ({})", getClass().getName(), fusionType,
-                            key);
+                        key);
                 }
             }
         }

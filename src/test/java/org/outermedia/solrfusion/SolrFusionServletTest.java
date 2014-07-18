@@ -3,6 +3,7 @@ package org.outermedia.solrfusion;
 import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.output.StringBuilderWriter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -11,11 +12,18 @@ import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.GlobalSearchServerConfig;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
+import org.xml.sax.SAXException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -29,6 +37,9 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 @Slf4j
 public class SolrFusionServletTest
 {
+
+    private SolrFusionServlet servlet;
+
     static class TestSolrFusionServlet extends SolrFusionServlet
     {
         protected long currentTime;
@@ -42,15 +53,18 @@ public class SolrFusionServletTest
     @Mock ServletConfig servletConfig;
 
     @Before
-    public void setup()
+    public void setup() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
     {
         MockitoAnnotations.initMocks(this);
+        TestHelper helper = new TestHelper();
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
+        servlet = new SolrFusionServlet();
+        servlet.setCfg(cfg);
     }
 
     @Test
     public void testInit()
     {
-        SolrFusionServlet servlet = new SolrFusionServlet();
         doReturn("test-fusion-schema-9000-9002.xml").when(servletConfig).getInitParameter(
             SolrFusionServlet.INIT_PARAM_FUSION_SCHEMA);
         doReturn("configuration.xsd").when(servletConfig).getInitParameter(
@@ -68,7 +82,6 @@ public class SolrFusionServletTest
     @Test
     public void testInitNoXsd()
     {
-        SolrFusionServlet servlet = new SolrFusionServlet();
         doReturn("test-fusion-schema-9000-9002.xml").when(servletConfig).getInitParameter(
             SolrFusionServlet.INIT_PARAM_FUSION_SCHEMA);
         doReturn(null).when(servletConfig).getInitParameter(SolrFusionServlet.INIT_PARAM_FUSION_SCHEMA_XSD);
@@ -85,7 +98,6 @@ public class SolrFusionServletTest
     @Test
     public void testInitNoFusionSchema()
     {
-        SolrFusionServlet servlet = new SolrFusionServlet();
         doReturn(null).when(servletConfig).getInitParameter(SolrFusionServlet.INIT_PARAM_FUSION_SCHEMA);
         doReturn(null).when(servletConfig).getInitParameter(SolrFusionServlet.INIT_PARAM_FUSION_SCHEMA_XSD);
         try
@@ -108,7 +120,7 @@ public class SolrFusionServletTest
 
     protected void testBuildFusionRequestImpl(String fq)
     {
-        SolrFusionServlet servlet = spy(new SolrFusionServlet());
+        SolrFusionServlet servlet = spy(this.servlet);
         Configuration cfg = mock(Configuration.class);
         doReturn(10).when(cfg).getDefaultPageSize();
         doReturn("score desc").when(cfg).getDefaultSortField();
@@ -122,101 +134,62 @@ public class SolrFusionServletTest
         }
         String fieldsToReturn = "* score";
         requestParams.put(FIELDS_TO_RETURN.getRequestParamName(), new String[]{fieldsToReturn});
-        try
-        {
-            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
-            Assert.assertNotNull("Expected request object", req);
-            Assert.assertEquals("Got different query", q, req.getQuery());
-            Assert.assertEquals("Got different filter query", fq, req.getFilterQuery());
-            Assert.assertEquals("Got different renderer type than expected", ResponseRendererType.XML,
-                req.getResponseType());
-            Assert.assertEquals("Got different fields", fieldsToReturn, req.getFieldsToReturn());
-        }
-        catch (ServletException e)
-        {
-            Assert.fail("Expected no exception, but got " + e);
-        }
+        FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
+        Assert.assertNotNull("Expected request object", req);
+        Assert.assertEquals("Got different query", q, req.getQuery());
+        Assert.assertEquals("Got different filter query", fq, req.getFilterQuery());
+        Assert.assertEquals("Got different renderer type than expected", ResponseRendererType.JSON,
+            req.getResponseType());
+        Assert.assertEquals("Got different fields", fieldsToReturn, req.getFieldsToReturn());
+        Assert.assertFalse("Expected no exception, but got " + req.buildErrorMessage(), req.hasErrors());
     }
 
     @Test
     public void testBuildFusionRequestWithoutQuery()
     {
-        SolrFusionServlet servlet = new SolrFusionServlet();
         Map<String, String[]> requestParams = new HashMap<>();
-        try
-        {
-            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
-            Assert.fail("Expected exception, but got none");
-        }
-        catch (ServletException e)
-        {
-            match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_NO_QUERY_PARAMETER,
-                SolrFusionRequestParams.QUERY.getRequestParamName());
-        }
+        FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
+        match(req.buildErrorMessage(), SolrFusionServlet.ERROR_MSG_FOUND_NO_QUERY_PARAMETER,
+            SolrFusionRequestParams.QUERY.getRequestParamName());
     }
 
     @Test
     public void testBuildFusionRequestWithTooManyQueries()
     {
-        SolrFusionServlet servlet = new SolrFusionServlet();
         Map<String, String[]> requestParams = new HashMap<>();
         requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{"schiller", "goethe"});
-        try
-        {
-            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
-            Assert.fail("Expected exception, but got none");
-        }
-        catch (ServletException e)
-        {
-            match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
-                SolrFusionRequestParams.QUERY.getRequestParamName(), "2");
-        }
+        FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
+        match(req.buildErrorMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
+            SolrFusionRequestParams.QUERY.getRequestParamName(), "2");
     }
 
     @Test
     public void testBuildFusionRequestWithTooManyFilterQueries()
     {
-        SolrFusionServlet servlet = new SolrFusionServlet();
         Map<String, String[]> requestParams = new HashMap<>();
         requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{"schiller"});
         requestParams.put(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(),
             new String[]{"schiller", "goethe"});
-        try
-        {
-            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
-            Assert.fail("Expected exception, but got none");
-        }
-        catch (ServletException e)
-        {
-            match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
-                SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(), "2");
-        }
+        FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
+        match(req.buildErrorMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
+            SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(), "2");
     }
-
 
     @Test
     public void testBuildFusionRequestWithTooManyWt()
     {
-        SolrFusionServlet servlet = new SolrFusionServlet();
         Map<String, String[]> requestParams = new HashMap<>();
         requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{"schiller"});
         requestParams.put(SolrFusionRequestParams.WRITER_TYPE.getRequestParamName(), new String[]{"xml", "json"});
-        try
-        {
-            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
-            Assert.fail("Expected exception, but got none");
-        }
-        catch (ServletException e)
-        {
-            match(e.getMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
-                SolrFusionRequestParams.WRITER_TYPE.getRequestParamName(), "2");
-        }
+        FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
+        match(req.buildErrorMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
+            SolrFusionRequestParams.WRITER_TYPE.getRequestParamName(), "2");
     }
 
     @Test
     public void testBuildFusionRequestWithKnownRenderer()
     {
-        SolrFusionServlet servlet = spy(new SolrFusionServlet());
+        SolrFusionServlet servlet = spy(this.servlet);
         Configuration cfg = mock(Configuration.class);
         doReturn(10).when(cfg).getDefaultPageSize();
         doReturn("score desc").when(cfg).getDefaultSortField();
@@ -228,39 +201,26 @@ public class SolrFusionServletTest
         for (String f : formats)
         {
             requestParams.put(SolrFusionRequestParams.WRITER_TYPE.getRequestParamName(), new String[]{f});
-            try
-            {
-                FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
-                Assert.assertNotNull("Expected request object", req);
-                Assert.assertEquals("Got different different", q, req.getQuery());
-                Assert.assertEquals("Got different renderer type than expected",
-                    ResponseRendererType.valueOf(f.toUpperCase()), req.getResponseType());
-            }
-            catch (ServletException e)
-            {
-                Assert.fail("Expected no exception, but got " + e);
-            }
+            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
+            Assert.assertNotNull("Expected request object", req);
+            Assert.assertEquals("Got different different", q, req.getQuery());
+            Assert.assertEquals("Got different renderer type than expected",
+                ResponseRendererType.valueOf(f.toUpperCase()), req.getResponseType());
+            Assert.assertFalse("Expected no exception, but got " + req.buildErrorMessage(), req.hasErrors());
         }
     }
 
     @Test
     public void testBuildFusionRequestWithUnknownRenderer()
     {
-        SolrFusionServlet servlet = new SolrFusionServlet();
         Map<String, String[]> requestParams = new HashMap<>();
         String q = "title:schiller";
         requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{q});
         requestParams.put(SolrFusionRequestParams.WRITER_TYPE.getRequestParamName(), new String[]{"xyz"});
-        try
-        {
-            FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
-            Assert.fail("Expected exception, but got none");
-        }
-        catch (ServletException e)
-        {
-            Assert.assertEquals("Found different error message than expected", "Found no renderer for given type 'XYZ'",
-                e.getMessage());
-        }
+        FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
+        Assert.assertEquals("Found different error message than expected",
+            "ERROR: Found no renderer for given type 'XYZ'. Cause: No enum constant org.outermedia.solrfusion.configuration.ResponseRendererType.XYZ\n",
+            req.buildErrorMessage());
     }
 
     protected void match(String actual, String format, Object... args)
@@ -329,7 +289,6 @@ public class SolrFusionServletTest
     @Test
     public void testPageSizeSortDefaulting() throws ServletException
     {
-        SolrFusionServlet servlet = new SolrFusionServlet();
         Configuration cfg = new Configuration();
         servlet.setCfg(cfg);
         cfg.setDefaultSortField("auto asc");
@@ -356,7 +315,6 @@ public class SolrFusionServletTest
     @Test
     public void testBuildPrintableParams()
     {
-        SolrFusionServlet servlet = new SolrFusionServlet();
         Configuration cfg = new Configuration();
         servlet.setCfg(cfg);
         Map<String, Object> map = new HashMap<>();
@@ -367,5 +325,54 @@ public class SolrFusionServletTest
             "\tk1=[v1]\n" +
             "\tk2=v2\n" +
             "}", s);
+    }
+
+    @Test
+    public void testErrorHandling()
+        throws ServletException, IOException, ParserConfigurationException, JAXBException, SAXException
+    {
+        SolrFusionServlet servlet = spy(this.servlet);
+        doNothing().when(servlet).loadSolrFusionConfig(anyString(), anyBoolean());
+        HttpServletRequest req = mock(HttpServletRequest.class);
+
+        // no q param
+        String outStr = runRequest(new HashMap<String, String[]>(), servlet, req);
+        // System.out.println("OUT " + outStr);
+        Assert.assertTrue("Expected error message. but got:\n" + outStr,
+            outStr.contains("\"msg\":\"ERROR: Found no query parameter (q)\\n\","));
+
+        // unknown field in qm in json
+        Map<String, String[]> reqParams = new HashMap<>();
+        reqParams.put("q", new String[]{"xyz:3"});
+        outStr = runRequest(reqParams, servlet, req);
+        // System.out.println("OUT " + outStr);
+        Assert.assertTrue("Expected error message. but got:\n" + outStr, outStr.contains(
+            "\"msg\":\"Query parsing failed: xyz:3\\nCause: ERROR: Parsing of query xyz:3 failed.\\nCannot interpret query 'xyz:3': Didn't find field 'xyz' in fusion schema. Please define it there.\\nDidn't find field 'xyz' in fusion schema. Please define it there.\\n\\n\","));
+
+        // unknown field in qm in xml
+        reqParams = new HashMap<>();
+        reqParams.put("q", new String[]{"xyz:3"});
+        reqParams.put("wt", new String[]{"xml"});
+        outStr = runRequest(reqParams, servlet, req);
+        System.out.println("OUT " + outStr);
+        Assert.assertTrue("Expected error message. but got:\n" + outStr,
+            outStr.contains("<str name=\"msg\"><![CDATA[Query parsing failed: xyz:3\n" +
+                "Cause: ERROR: Parsing of query xyz:3 failed.\n" +
+                "Cannot interpret query 'xyz:3': Didn't find field 'xyz' in fusion schema. Please define it there.\n" +
+                "Didn't find field 'xyz' in fusion schema. Please define it there.\n" +
+                "\n]]></str>"));
+    }
+
+    protected String runRequest(Map<String, String[]> reqParams, SolrFusionServlet servlet, HttpServletRequest req)
+        throws IOException
+    {
+        doReturn(new HashMap<>()).when(servlet).collectHeader(req);
+        doReturn(reqParams).when(req).getParameterMap();
+        HttpServletResponse res = mock(HttpServletResponse.class);
+        StringBuilderWriter out = new StringBuilderWriter();
+        PrintWriter pw = new PrintWriter(out);
+        doReturn(pw).when(res).getWriter();
+        servlet.doGet(req, res);
+        return out.toString();
     }
 }

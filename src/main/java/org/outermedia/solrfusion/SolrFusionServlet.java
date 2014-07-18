@@ -8,6 +8,7 @@ import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
+import org.outermedia.solrfusion.response.ResponseRendererIfc;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -68,7 +69,7 @@ public class SolrFusionServlet extends HttpServlet
      * @param response the answer is a typical solr response.
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         // check for modifications
         loadSolrFusionConfig(fusionSchemaFileName, request.getParameter("forceSchemaReload") != null);
@@ -83,35 +84,67 @@ public class SolrFusionServlet extends HttpServlet
         }
         FusionRequest fusionRequest = buildFusionRequest(parameterMap, headerValues);
         ResponseRendererType rendererType = fusionRequest.getResponseType();
-        if (rendererType == ResponseRendererType.JSON)
-        {
-            response.setContentType("application/json;charset=UTF-8");
-        }
-        else if (rendererType == ResponseRendererType.PHP)
-        {
-            response.setContentType("text/x-php;charset=UTF-8");
-        }
-        else
-        {
-            response.setContentType("text/xml;charset=UTF-8");
-        }
+        log.debug("Sending back response in {}", rendererType.toString());
+        response.setContentType(rendererType.getMimeType());
 
         PrintWriter pw = response.getWriter();
         FusionResponse fusionResponse = getNewFusionResponse();
-        String responseStr = process(fusionRequest, fusionResponse);
-
-        if (fusionResponse.isOk())
+        processRequest(response, fusionRequest, fusionResponse, rendererType);
+        String responseStr = fusionResponse.getResponseAsString();
+        if (responseStr != null && fusionResponse.isOk())
         {
-            response.setStatus(200);
             log.debug("Returning:\n{}", responseStr);
+            response.setStatus(200);
+            pw.println(responseStr);
         }
         else
         {
-            response.setStatus(400);
-            log.error("Returning error:\n{}", fusionResponse.getErrorMessage());
+            if (responseStr == null)
+            {
+                String errorMessage = fusionResponse.getErrorMessage();
+                if (errorMessage == null)
+                {
+                    errorMessage = "unknown";
+                }
+                log.error("Returning error, but no response:\n{}", errorMessage);
+                response.sendError(400, errorMessage);
+            }
+            else
+            {
+                log.error("Returning error:\n{}", responseStr);
+                response.setStatus(400);
+                pw.println(responseStr);
+            }
         }
+    }
 
-        pw.println(responseStr);
+    private void processRequest(HttpServletResponse response, FusionRequest fusionRequest,
+        FusionResponse fusionResponse, ResponseRendererType rendererType) throws IOException
+    {
+        if (!fusionRequest.hasErrors())
+        {
+            callController(fusionRequest, fusionResponse);
+        }
+        else
+        {
+            fusionResponse.setError(fusionRequest.buildErrorMessage(), null);
+        }
+        if (!fusionResponse.isOk() && fusionResponse.getResponseAsString() == null)
+        {
+            try
+            {
+                ResponseRendererIfc responseRenderer = cfg.getResponseRendererByType(rendererType);
+                if (responseRenderer != null)
+                {
+                    String responseStr = responseRenderer.getResponseString(cfg, null, fusionRequest, fusionResponse);
+                    fusionResponse.setErrorResponse(responseStr);
+                }
+            }
+            catch (Exception e)
+            {
+                log.error("Caught exception while creating error response", e);
+            }
+        }
     }
 
     protected String buildPrintableParamMap(Map<String, ?> params)
@@ -189,7 +222,7 @@ public class SolrFusionServlet extends HttpServlet
         loadSolrFusionConfig(fusionSchemaFileName, false);
     }
 
-    protected void loadSolrFusionConfig(String fusionSchemaFileName, boolean force) throws ServletException
+    protected void loadSolrFusionConfig(String fusionSchemaFileName, boolean force)
     {
         Util xmlUtil = new Util();
         try
@@ -214,7 +247,6 @@ public class SolrFusionServlet extends HttpServlet
         catch (Exception e)
         {
             log.error("Caught exception while reading '{}'", fusionSchemaFileName, e);
-            throw new ServletException(e);
         }
     }
 
@@ -229,37 +261,39 @@ public class SolrFusionServlet extends HttpServlet
     }
 
     protected FusionRequest buildFusionRequest(Map<String, String[]> requestParams, Map<String, Object> headerValues)
-        throws ServletException
     {
         FusionRequest fusionRequest = getNewFusionRequest();
 
-        fusionRequest.setQuery(getRequiredSingleSearchParamValue(requestParams, QUERY));
-        fusionRequest.setFilterQuery(getOptionalSingleSearchParamValue(requestParams, FILTER_QUERY, null));
+        fusionRequest.setQuery(getRequiredSingleSearchParamValue(requestParams, QUERY, fusionRequest));
+        fusionRequest.setFilterQuery(
+            getOptionalSingleSearchParamValue(requestParams, FILTER_QUERY, null, fusionRequest));
         // TODO configure default response type in solrfusion schema?
-        fusionRequest.setResponseTypeFromString(getOptionalSingleSearchParamValue(requestParams, WRITER_TYPE, "xml"));
+        fusionRequest.setResponseTypeFromString(
+            getOptionalSingleSearchParamValue(requestParams, WRITER_TYPE, "json", fusionRequest), fusionRequest);
         Locale sentLocale = (Locale) headerValues.get(HEADER_LOCALE);
         if (sentLocale == null)
         {
             sentLocale = Locale.GERMAN;
         }
         fusionRequest.setLocale(sentLocale);
-        String startStr = getOptionalSingleSearchParamValue(requestParams, START, "0");
+        String startStr = getOptionalSingleSearchParamValue(requestParams, START, "0", fusionRequest);
         fusionRequest.setStart(parseInt(startStr, 0));
         int defaultPageSize = cfg.getDefaultPageSize();
         String pageSizeStr = getOptionalSingleSearchParamValue(requestParams, PAGE_SIZE,
-            String.valueOf(defaultPageSize));
+            String.valueOf(defaultPageSize), fusionRequest);
         fusionRequest.setPageSize(parseInt(pageSizeStr, defaultPageSize));
-        String sortStr = getOptionalSingleSearchParamValue(requestParams, SORT, cfg.getDefaultSortField());
+        String sortStr = getOptionalSingleSearchParamValue(requestParams, SORT, cfg.getDefaultSortField(),
+            fusionRequest);
         // "<SPACE> desc" in the case a field's name contains "desc" too
         // because sortStr is trimmed a single "desc" would be treated right
         boolean sortAsc = !sortStr.contains(" desc");
         StringTokenizer st = new StringTokenizer(sortStr, " ");
         fusionRequest.setSolrFusionSortField(st.nextToken());
         fusionRequest.setSortAsc(sortAsc);
-        String fieldsToReturn = getOptionalSingleSearchParamValue(requestParams, FIELDS_TO_RETURN, null);
+        String fieldsToReturn = getOptionalSingleSearchParamValue(requestParams, FIELDS_TO_RETURN, null, fusionRequest);
         fusionRequest.setFieldsToReturn(fieldsToReturn);
         String highLightFieldsToReturn = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_FIELDS_TO_RETURN,
-            null);
+            null, fusionRequest);
         fusionRequest.setHighlightingFieldsToReturn(highLightFieldsToReturn);
 
         return fusionRequest;
@@ -286,24 +320,26 @@ public class SolrFusionServlet extends HttpServlet
     }
 
     protected String getRequiredSingleSearchParamValue(Map<String, String[]> requestParams,
-        SolrFusionRequestParams searchParamName) throws ServletException
+        SolrFusionRequestParams searchParamName, FusionRequest fusionRequest)
     {
         String requestParamName = searchParamName.getRequestParamName();
         String[] qs = requestParams.get(requestParamName);
         if (qs == null || qs.length == 0)
         {
-            throw new ServletException(buildErrorMessage(ERROR_MSG_FOUND_NO_QUERY_PARAMETER, requestParamName));
+            fusionRequest.addError(buildErrorMessage(ERROR_MSG_FOUND_NO_QUERY_PARAMETER, requestParamName));
+            return null;
         }
         if (qs.length > 1)
         {
-            throw new ServletException(
+            fusionRequest.addError(
                 buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, requestParamName, qs.length));
+            return null;
         }
         return qs[0].trim();
     }
 
     protected String getOptionalSingleSearchParamValue(Map<String, String[]> requestParams,
-        SolrFusionRequestParams searchParamName, String defaultValue) throws ServletException
+        SolrFusionRequestParams searchParamName, String defaultValue, FusionRequest fusionRequest)
     {
         String s = defaultValue;
         String requestParamName = searchParamName.getRequestParamName();
@@ -316,8 +352,9 @@ public class SolrFusionServlet extends HttpServlet
             }
             else if (qs.length > 1)
             {
-                throw new ServletException(
+                fusionRequest.addError(
                     buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, requestParamName, qs.length));
+                return null;
             }
         }
         return s;
@@ -334,7 +371,7 @@ public class SolrFusionServlet extends HttpServlet
         return new FusionRequest();
     }
 
-    protected String process(FusionRequest fusionRequest, FusionResponse fusionResponse)
+    protected void callController(FusionRequest fusionRequest, FusionResponse fusionResponse)
     {
         try
         {
@@ -344,8 +381,8 @@ public class SolrFusionServlet extends HttpServlet
         catch (Exception e)
         {
             log.error("Caught exception while processing request: " + fusionRequest, e);
-            fusionResponse.setError(e.getMessage());
+            // TODO collect causes too!
+            fusionResponse.setError(e.getMessage(), null);
         }
-        return fusionResponse.getResponseAsString();
     }
 }

@@ -122,8 +122,10 @@ public class ControllerFilterQueryTest
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
         Assert.assertFalse("Expected processing error for bad query", fusionResponse.isOk());
-        Assert.assertEquals("Found different error message than expected", "Query parsing failed: author:*:Schiller",
-            fusionResponse.getErrorMessage());
+        Assert.assertEquals("Found different error message than expected",
+            "Query parsing failed: author:*:Schiller\nCause: ERROR: Parsing of query author:*:Schiller failed.\n" +
+                "Cannot interpret query 'author:*:Schiller': '*' or '?' not allowed as first character in WildcardQuery\n" +
+                "'*' or '?' not allowed as first character in WildcardQuery", fusionResponse.getErrorMessage().trim());
     }
 
     @Test

@@ -31,8 +31,13 @@ public class FreemarkerResponseHeader
 
     public FreemarkerResponseHeader(ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request)
     {
-        this.rows = docStream.size();
+        this.rows = 0;
+        if(docStream != null)
+        {
+            rows = docStream.size();
+        }
         this.query = request.getQuery();
+        if(this.query == null) this.query = "";
         this.filterQuery = request.getFilterQuery();
         this.sort = request.getSolrFusionSortField();
         this.fields = request.getFieldsToReturn();

@@ -203,8 +203,10 @@ public class ControllerTest
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
         Assert.assertFalse("Expected processing error for bad query", fusionResponse.isOk());
-        Assert.assertEquals("Found different error message than expected", "Query parsing failed: author:*:Schiller",
-            fusionResponse.getErrorMessage());
+        Assert.assertEquals("Found different error message than expected",
+            "Query parsing failed: author:*:Schiller\nCause: ERROR: Parsing of query author:*:Schiller failed.\n" +
+                "Cannot interpret query 'author:*:Schiller': '*' or '?' not allowed as first character in WildcardQuery\n" +
+                "'*' or '?' not allowed as first character in WildcardQuery", fusionResponse.getErrorMessage().trim());
     }
 
     @Test
@@ -470,7 +472,7 @@ public class ControllerTest
         FusionRequest request = new FusionRequest();
         request.setQuery("id:\"Bibliothek_9000-1\"");
         request.setResponseType(ResponseRendererType.XML);
-        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN));
+        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
         FusionResponse response = new FusionResponse();
 
         controller.processIdQuery(request, response);
@@ -487,7 +489,7 @@ public class ControllerTest
         xmlResponse.setErrorReason(new RuntimeException("Error1"));
         response = new FusionResponse();
         // reset modified query object
-        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN));
+        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
         controller.processIdQuery(request, response);
         Assert.assertEquals("Expected error", "Internal processing error. Reason: Error1", response.getErrorMessage());
 
@@ -497,11 +499,11 @@ public class ControllerTest
         doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
         response = new FusionResponse();
         request.setQuery("id:Bibliothek_9000#512785457");
-        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN));
+        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
         request.setFilterQuery("");
-        request.setParsedFilterQuery(controller.parseQuery(request.getFilterQuery(), null, Locale.GERMAN));
+        request.setParsedFilterQuery(controller.parseQuery(request.getFilterQuery(), null, Locale.GERMAN, request));
         request.setResponseType(ResponseRendererType.XML);
-        controller.process(cfg,request,response);
+        controller.process(cfg, request, response);
         String responseStr = response.getResponseAsString();
         if (response.isOk())
         {

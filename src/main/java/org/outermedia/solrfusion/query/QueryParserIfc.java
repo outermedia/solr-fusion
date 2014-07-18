@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.query;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.QueryParserFactory;
+import org.outermedia.solrfusion.query.parser.ParseException;
 import org.outermedia.solrfusion.query.parser.Query;
 
 import java.util.Locale;
@@ -24,5 +25,6 @@ public interface QueryParserIfc extends Initiable<QueryParserFactory>
      * @param query  the fusion query string
      * @return null when parsing fails otherwise an object
      */
-    public Query parse(Configuration config, Map<String, Float> boosts, String query, Locale locale);
+    public Query parse(Configuration config, Map<String, Float> boosts, String query, Locale locale)
+        throws ParseException;
 }
