@@ -1,15 +1,19 @@
 package org.outermedia.solrfusion.configuration;
 
+
+import com.sun.xml.bind.annotation.XmlLocation;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.types.ScriptEnv;
+import org.xml.sax.Locator;
 
 import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -27,7 +31,7 @@ import java.util.regex.Pattern;
         })
 @Getter
 @Setter
-@ToString(exclude = {"searchServersNameRegExp", "fusionNameRegExp"})
+@ToString(exclude = {"searchServersNameRegExp", "fusionNameRegExp", "locator"})
 @Slf4j
 public class FieldMapping
 {
@@ -57,6 +61,9 @@ public class FieldMapping
 
     @XmlTransient
     protected MappingType mappingType;
+
+    @XmlTransient
+    @XmlLocation Locator locator;
 
     /**
      * This field is set, when {@link #applicableToSearchServerField(String)} has been called.
@@ -266,5 +273,44 @@ public class FieldMapping
     public boolean isSearchServerFieldOnlyMapping()
     {
         return mappingType.isSearchServerFieldOnly();
+    }
+
+    public int geStartLineNumberInSchema()
+    {
+        int atLine = -1;
+        if(locator != null)
+        {
+            atLine = locator.getLineNumber();
+        }
+        return atLine;
+    }
+
+    public List<Target> getAllAddQueryMappings()
+    {
+        List<Target> result = new ArrayList<>();
+        for(Operation o : operations)
+        {
+            if(o instanceof AddOperation)
+            {
+                result.addAll(o.getQueryTargets());
+            }
+        }
+        return result;
+    }
+
+    public List<Target> getAllAddResponseMappings()
+    {
+        List<Target> result = new ArrayList<>();
+        if(operations != null)
+        {
+            for (Operation o : operations)
+            {
+                if (o instanceof AddOperation)
+                {
+                    result.addAll(o.getResponseTargets());
+                }
+            }
+        }
+        return result;
     }
 }

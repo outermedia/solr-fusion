@@ -225,7 +225,7 @@
                 <om:drop>
                     <om:query/>
                 </om:drop>
-                <om:add>
+                <om:add level="outside">
                     <!-- <om:query> not valid, because field is dropped -->
                     <om:response type="beanshell-file">
                         <file>Pfad.bsh</file>

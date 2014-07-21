@@ -34,7 +34,7 @@ public class QueryTest
 
         String query = "Schiller";
         Query o = parseQuery(cfg, query);
-        String expected = "TermQuery(super=Query(boostValue=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null, newResponseValues=null))";
+        String expected = "TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null))";
         Assert.assertEquals("Got different query object than expected", expected, o.toString());
 
         checkBoost(cfg, "Schiller^0.75", 0.75f);
@@ -55,7 +55,7 @@ public class QueryTest
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
         Query o = parseQuery(cfg, "title:Schiller");
-        String expected = "TermQuery(super=Query(boostValue=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null, newResponseValues=null))";
+        String expected = "TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null))";
         Assert.assertEquals("Got different query object than expected", expected, o.toString());
 
         String query = "+title:Schiller";
@@ -133,7 +133,7 @@ public class QueryTest
 
         String query = "title:Schiller title:Müller";
         Query o = parseQuery(cfg, query);
-        String expected = "BooleanQuery(super=Query(boostValue=null), clauses=[BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null, newResponseValues=null))), BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null), term=Term(fusionFieldName=title, fusionFieldValue=[Müller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null, newResponseValues=null)))])";
+        String expected = "BooleanQuery(super=Query(boostValue=null, addInside=null), clauses=[BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null))), BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Müller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null)))])";
         Assert.assertEquals("Got different query object than expected", expected, o.toString());
     }
 

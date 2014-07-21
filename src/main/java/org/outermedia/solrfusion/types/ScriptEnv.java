@@ -5,6 +5,7 @@ import org.outermedia.solrfusion.configuration.Configuration;
 
 import javax.script.Bindings;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -38,6 +39,7 @@ public class ScriptEnv
     public final static String ENV_FUSION_SCHEMA = "fusionSchema"; // a Configuration
     public final static String ENV_VALUES = "values"; // a List of String
     public final static String ENV_CONVERSION = "conversion"; // a ConversionDirection
+    public final static String ENV_LOCALE = "locale"; // a Locale
 
     public ScriptEnv()
     {
@@ -88,5 +90,15 @@ public class ScriptEnv
     public Configuration getConfiguration()
     {
         return (Configuration) getBinding(ENV_FUSION_SCHEMA);
+    }
+
+    public void setLocale(Locale l)
+    {
+        setBinding(ENV_LOCALE, l);
+    }
+
+    public Locale getLocale()
+    {
+        return (Locale) getBinding(ENV_LOCALE);
     }
 }

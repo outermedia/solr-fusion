@@ -166,7 +166,7 @@ public class FusionController implements FusionControllerIfc
             String searchServerDocId = idGen.getSearchServerDocIdFromFusionId(solrfusionDocId);
             // set id for search server
             idVals.set(0, searchServerDocId);
-            ScriptEnv env = getNewScriptEnv();
+            ScriptEnv env = getNewScriptEnv(fusionRequest.getLocale());
             configuration.getQueryMapper().mapQuery(configuration, searchServerConfig, query, env);
             XmlResponse result = sendAndReceive(fusionRequest, searchServerConfig);
             Exception se = result.getErrorReason();
@@ -248,7 +248,7 @@ public class FusionController implements FusionControllerIfc
         List<SearchServerConfig> configuredSearchServers, ResponseConsolidatorIfc consolidator)
     {
         log.debug("Requesting all configured servers for query: {}", fusionRequest.getQuery());
-        ScriptEnv env = getNewScriptEnv();
+        ScriptEnv env = getNewScriptEnv(fusionRequest.getLocale());
         Query query = fusionRequest.getParsedQuery();
         Query filterQuery = fusionRequest.getParsedFilterQuery();
         for (SearchServerConfig searchServerConfig : configuredSearchServers)
@@ -278,9 +278,11 @@ public class FusionController implements FusionControllerIfc
         }
     }
 
-    protected ScriptEnv getNewScriptEnv()
+    protected ScriptEnv getNewScriptEnv(Locale locale)
     {
-        return new ScriptEnv();
+        ScriptEnv env = new ScriptEnv();
+        env.setConfiguration(configuration);
+        return env;
     }
 
     protected ResetQueryState getNewResetQueryState()

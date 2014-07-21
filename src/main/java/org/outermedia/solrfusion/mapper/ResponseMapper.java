@@ -10,10 +10,7 @@ import org.outermedia.solrfusion.response.parser.SolrMultiValuedField;
 import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by ballmann on 04.06.14.
@@ -70,15 +67,60 @@ public class ResponseMapper implements ResponseMapperIfc
         env.setConfiguration(config);
         unmappedFields = new HashSet<>();
         numberOfMappedFields = 0;
+
         setFusionDocId(config, doc);
+
         correctScore(doc);
+
         doc.accept(this, env);
         if (!unmappedFields.isEmpty())
         {
             log.warn("Please fix the fusion schema of server '{}'. Found no mapping for fields: {}",
                 serverConfig.getSearchServerName(), unmappedFields);
         }
-        return numberOfMappedFields;
+
+        int addedFieldCounter = addResponseFields(serverConfig, doc);
+
+        return numberOfMappedFields + addedFieldCounter;
+    }
+
+    protected int addResponseFields(SearchServerConfig serverConfig, Document doc)
+    {
+        int addedFieldCounter = 0;
+        AddOperation addOp = new AddOperation();
+        Map<String, List<Target>> allAddResponseTargets = serverConfig.findAllAddResponseMappings();
+        for (Map.Entry<String, List<Target>> entry : allAddResponseTargets.entrySet())
+        {
+            String fusionFieldName = entry.getKey();
+            FusionField fusionField = config.findFieldByName(fusionFieldName);
+            if (fusionField != null)
+            {
+                List<Target> targets = entry.getValue();
+                boolean added = false;
+                for (Target t : targets)
+                {
+                    if (addOp.addToResponse(doc, fusionFieldName, fusionField, t))
+                    {
+                        added = true;
+                    }
+                }
+                if (added)
+                {
+                    addedFieldCounter++;
+                }
+                Term term = doc.getFieldTermByFusionName(fusionFieldName);
+                if (term != null)
+                {
+                    term.setWasMapped(true);
+                    term.setProcessed(true);
+                }
+            }
+            else
+            {
+                log.error("Can't add value for unknown fusion field '{}'.", fusionFieldName);
+            }
+        }
+        return addedFieldCounter;
     }
 
     protected void correctScore(Document doc)
@@ -124,7 +166,7 @@ public class ResponseMapper implements ResponseMapperIfc
             if (scoreTerm == null || !scoreTerm.isProcessed())
             {
                 // TODO only if score was requested (fl)
-                log.warn("Can't correct score in documents, because document contains no value (any more).");
+                log.warn("Can't correct score in documents, because document contains no value.");
             }
         }
     }
@@ -136,7 +178,7 @@ public class ResponseMapper implements ResponseMapperIfc
         {
             if (missingMappingPolicy == MISSING_MAPPING_POLICY_THROW_EXCEPTION)
             {
-                String message = "Found no mapping for fusion field '" + searchServerFieldName + "'";
+                String message = "Found no mapping for search server field '" + searchServerFieldName + "'";
                 throw new MissingSearchServerFieldMapping(message);
             }
             else
@@ -215,7 +257,7 @@ public class ResponseMapper implements ResponseMapperIfc
 
     protected void mapField(String fieldName, Term t, ScriptEnv env)
     {
-        if (processField(fieldName, t))
+        if (fieldName != null && processField(fieldName, t))
         {
             List<FieldMapping> mappings = getFieldMappings(fieldName);
             if (mappings.size() > 0)

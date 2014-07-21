@@ -21,6 +21,10 @@
         <om:field name="text6"/>
         <om:field name="text7"/>
         <om:field name="text8"/>
+        <om:field name="text9"/>
+        <om:field name="text10"/>
+        <om:field name="text11"/>
+        <om:field name="text12"/>
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile"/>
@@ -266,6 +270,34 @@
                 <om:drop>
                     <om:query />
                 </om:drop>
+            </om:field>
+
+            <!-- for bad drop queries -->
+            <om:field name="t9" fusion-name="text9">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <om:field name="t10" fusion-name="text10">
+                <om:drop>
+                    <om:response/>
+                </om:drop>
+            </om:field>
+
+            <!-- for bad add queries -->
+            <om:field name="t11" fusion-name="text11">
+                <om:add level="outside">
+                    <om:query type="static-value">
+                        <value>+t11:"searched text"^15~0.4</value>
+                    </om:query>
+                </om:add>
+            </om:field>
+            <om:field name="t12" fusion-name="text12">
+                <om:add level="outside">
+                    <om:response type="static-value">
+                        <value>1</value>
+                    </om:response>
+                </om:add>
             </om:field>
 
             <!-- only a response has multi values, but not a query -->

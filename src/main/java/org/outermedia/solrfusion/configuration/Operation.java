@@ -121,6 +121,27 @@ public abstract class Operation
         return result;
     }
 
+    /**
+     * Get all targets which are applicable to a query and response.
+     *
+     * @return a list of target object, perhaps empty. The objects are of class Response.
+     */
+    protected List<QueryResponse> getQueryResponseOnlyTargets()
+    {
+        List<QueryResponse> result = new ArrayList<>();
+        if (targets != null)
+        {
+            for (Target t : targets)
+            {
+                if (t instanceof QueryResponse)
+                {
+                    result.add((QueryResponse) t);
+                }
+            }
+        }
+        return result;
+    }
+
     public void applyAllQueryOperations(Term term, ScriptEnv env)
     {
         ScriptEnv newEnv = new ScriptEnv(env);

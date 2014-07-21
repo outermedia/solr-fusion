@@ -3,15 +3,13 @@ package org.outermedia.solrfusion.mapper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.FusionField;
+import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.query.parser.Query;
-import org.outermedia.solrfusion.query.parser.TermQuery;
-import org.outermedia.solrfusion.response.parser.SolrField;
-import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Data holder which stores a fusion field name and its value.
@@ -22,6 +20,7 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
+@Slf4j
 public class Term
 {
     private String fusionFieldName;
@@ -40,8 +39,7 @@ public class Term
 
     // added by an add operation
     private List<Query> newQueryTerms;
-    // added by an add operation
-    private List<SolrField> newResponseValues;
+
 
     private Term()
     {
@@ -83,36 +81,14 @@ public class Term
         return fusionFieldName;
     }
 
-    public void addNewSearchServerTerm(String searchServersFieldName, List<String> searchServersFieldValue)
-    {
-        if (newResponseValues == null)
-        {
-            newResponseValues = new ArrayList<>();
-        }
-        SolrSingleValuedField responseField = new SolrSingleValuedField();
-        // TODO maybe already mapped value (newFusionTerm() instead of newSearchServerTerm()) ?!
-        // TODO maybe SolrMultiValueField instead of SolrSingleValuedField?!
-        responseField.setTerm(newSearchServerTerm(searchServersFieldName, searchServersFieldValue));
-        newResponseValues.add(responseField);
-    }
-
-    public void addNewFusionTerm(String fusionFieldName, List<String> fusionFieldValue)
-    {
-        if (newQueryTerms == null)
-        {
-            newQueryTerms = new ArrayList<>();
-        }
-        newQueryTerms.add(new TermQuery(newFusionTerm(fusionFieldName, fusionFieldValue)));
-    }
-
     public void resetQuery()
     {
         searchServerFieldName = null;
         searchServerFieldValue = null;
         removed = false;
         wasMapped = false;
-        newQueryTerms = null;
         processed = false;
+        newQueryTerms = null;
     }
 
     public void resetSearchServerField()
@@ -122,7 +98,6 @@ public class Term
         fusionField = null;
         removed = false;
         wasMapped = false;
-        newResponseValues = null;
         processed = false;
     }
 
@@ -174,4 +149,39 @@ public class Term
         }
     }
 
+    /**
+     * Add a new query part to a search server's query.
+     *
+     * @param inside                 if true or outside (false)
+     * @param searchServerFieldValue one complete search server query
+     */
+    public void addNewSearchServerQuery(boolean inside, List<String> searchServerFieldValue,
+        Configuration configuration, Locale locale)
+    {
+        if (newQueryTerms == null)
+        {
+            newQueryTerms = new ArrayList<>();
+        }
+        // TODO throw exception if searchServerFieldValue.size() == 0
+        for (String qs : searchServerFieldValue)
+        {
+            // qs contains whole query, otherwise it would be difficult to mix-in the field name, because complex
+            // queries are possible here
+            Query q = null;
+            Map<String, Float> boosts = null;
+            try
+            {
+                QueryParserIfc queryParser = configuration.getQueryParser();
+                q = queryParser.parse(configuration, boosts, qs, locale);
+                q.setAddInside(inside);
+                newQueryTerms.add(q);
+            }
+            catch (Exception e)
+            {
+                String msg = "Parsing of query " + qs + " failed.";
+                log.error(msg, e);
+            }
+        }
+        setWasMapped(true);
+    }
 }

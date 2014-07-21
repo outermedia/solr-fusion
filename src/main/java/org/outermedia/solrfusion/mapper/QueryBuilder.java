@@ -16,9 +16,9 @@ import java.util.List;
  */
 public class QueryBuilder implements QueryBuilderIfc
 {
-    protected List<Query> newQueries;
     protected StringBuilder queryBuilder;
     protected Configuration configuration;
+    protected List<Query> newQueriesToAdd;
 
     /**
      * Build the query string for a search server.
@@ -29,10 +29,13 @@ public class QueryBuilder implements QueryBuilderIfc
     @Override
     public String buildQueryString(Query query, Configuration configuration)
     {
-        newQueries = new ArrayList<>();
         queryBuilder = new StringBuilder();
+        newQueriesToAdd = new ArrayList<>();
         this.configuration = configuration;
         query.accept(this, null);
+
+        // TODO process OUTSIDE newQueriesToAdd: AND'ed
+
         return queryBuilder.toString();
     }
 
@@ -74,11 +77,6 @@ public class QueryBuilder implements QueryBuilderIfc
     public boolean visitQuery(Term term, ScriptEnv env, Float boost)
     {
         boolean added = buildSearchServerTermQuery(term, false, boost);
-        List<Query> l = term.getNewQueryTerms();
-        if (l != null)
-        {
-            newQueries.addAll(l);
-        }
         return added;
     }
 
@@ -100,6 +98,22 @@ public class QueryBuilder implements QueryBuilderIfc
                 queryBuilder.append('"');
             }
             handleBoost(boost);
+        }
+        List<Query> newQueries = term.getNewQueryTerms();
+        if (term.isWasMapped() && newQueries != null)
+        {
+            for (Query q : newQueries)
+            {
+                if (q.isOutside())
+                {
+                    this.newQueriesToAdd.add(q);
+                }
+                else
+                {
+                    // inside
+                    // TODO visit query and append the result to queryBuilder (what if term.is not removed?)
+                }
+            }
         }
         return added;
     }
@@ -125,7 +139,7 @@ public class QueryBuilder implements QueryBuilderIfc
                 QueryBuilderIfc newClauseQueryBuilder = newQueryBuilder();
                 newClauseQueryBuilder.buildQueryString(booleanClause.getQuery(), configuration);
                 StringBuilder clauseQueryStr = newClauseQueryBuilder.getQueryBuilderOutput();
-                if(clauseQueryStr.length() > 0)
+                if (clauseQueryStr.length() > 0)
                 {
                     if (boolQueryStringBuilder.length() > 0)
                     {
@@ -154,7 +168,7 @@ public class QueryBuilder implements QueryBuilderIfc
                     boolQueryStringBuilder.append(clauseQueryStr);
                 }
             }
-            if(boolQueryStringBuilder.length() > 0)
+            if (boolQueryStringBuilder.length() > 0)
             {
                 queryBuilder.append("(");
                 queryBuilder.append(boolQueryStringBuilder);

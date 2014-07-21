@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.response.parser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.outermedia.solrfusion.configuration.FusionField;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
@@ -24,13 +25,9 @@ import java.util.List;
 @ToString
 public class Document implements VisitableDocument
 {
-    @XmlElements(value =
-            {
-                    @XmlElement(name = "str"),
-                    @XmlElement(name = "date"),
-                    @XmlElement(name = "float"),
-                    @XmlElement(name = "long"),
-            })
+    @XmlElements(
+        value = {@XmlElement(name = "str"), @XmlElement(name = "date"), @XmlElement(name = "float"), @XmlElement(
+            name = "long"),})
     private List<SolrSingleValuedField> solrSingleValuedFields;
 
     @XmlElement(name = "arr", required = true)
@@ -49,13 +46,13 @@ public class Document implements VisitableDocument
             @Override
             public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
             {
-                return !sf.getFieldName().equals(name);
+                return !name.equals(sf.getFieldName());
             }
 
             @Override
             public boolean visitField(SolrMultiValuedField sf, ScriptEnv env)
             {
-                return !sf.getFieldName().equals(name);
+                return !name.equals(sf.getFieldName());
             }
         }, null);
     }
@@ -112,8 +109,8 @@ public class Document implements VisitableDocument
     }
 
     /**
-     * Get a document's field value by a search server name. Note: An instance of class
-     * Term contains the original and mapped value.
+     * Get a document's field value by a search server name. Note: An instance of class Term contains the original and
+     * mapped value.
      *
      * @param fieldName the field's name for which to return the value
      * @return null if field was not found or the Term of the field
@@ -130,8 +127,8 @@ public class Document implements VisitableDocument
     }
 
     /**
-     * Get a document's field value by a fusion name. Note: An instance of class
-     * Term contains the original and mapped value.
+     * Get a document's field value by a fusion name. Note: An instance of class Term contains the original and mapped
+     * value.
      *
      * @param fusionFieldName the field's name for which to return the value
      * @return null if field was not found or the Term of the field
@@ -156,33 +153,30 @@ public class Document implements VisitableDocument
      */
     public SolrField addField(String name, String... value)
     {
+        return addField(name, Arrays.asList(value));
+    }
+
+    public SolrField addField(String name, List<String> value)
+    {
         SolrField result = null;
-        if (value.length == 1)
+        if (value.size() == 1)
         {
             SolrSingleValuedField f = new SolrSingleValuedField();
             f.setFieldName(name);
-            f.setValue(value[0]);
+            f.setValue(value.get(0));
             f.setTerm(Term.newSearchServerTerm(f.getFieldName(), f.getValue()));
-            if (solrSingleValuedFields == null)
-            {
-                solrSingleValuedFields = new ArrayList<>();
-            }
-            solrSingleValuedFields.add(f);
+            addSingleField(f);
             result = f;
         }
-        else if (value.length > 1)
+        else if (value.size() > 1)
         {
             SolrMultiValuedField f = new SolrMultiValuedField();
             f.setFieldName(name);
             List<String> vals = new ArrayList<>();
-            vals.addAll(Arrays.asList(value));
+            vals.addAll(value);
             f.setValues(vals);
             f.setTerm(Term.newSearchServerTerm(f.getFieldName(), f.getValues()));
-            if (solrMultiValuedFields == null)
-            {
-                solrMultiValuedFields = new ArrayList<>();
-            }
-            solrMultiValuedFields.add(f);
+            addMultiField(f);
             result = f;
         }
         else
@@ -190,6 +184,52 @@ public class Document implements VisitableDocument
             throw new RuntimeException("No value given for field: '" + name + "'");
         }
         return result;
+    }
+
+    protected void addMultiField(SolrMultiValuedField f)
+    {
+        if (solrMultiValuedFields == null)
+        {
+            solrMultiValuedFields = new ArrayList<>();
+        }
+        solrMultiValuedFields.add(f);
+    }
+
+    public SolrField addFusionField(String fusionName, FusionField fusionField, List<String> value)
+    {
+        SolrField result = null;
+        if (value.size() == 1)
+        {
+            SolrSingleValuedField f = new SolrSingleValuedField();
+            Term term = Term.newFusionTerm(fusionName, value);
+            term.setFusionField(fusionField);
+            f.setTerm(term);
+            addSingleField(f);
+            result = f;
+        }
+        else if (value.size() > 1)
+        {
+            SolrMultiValuedField f = new SolrMultiValuedField();
+            Term term = Term.newFusionTerm(fusionName, value);
+            term.setFusionField(fusionField);
+            f.setTerm(term);
+            addMultiField(f);
+            result = f;
+        }
+        else
+        {
+            throw new RuntimeException("No value given for field: '" + fusionName + "'");
+        }
+        return result;
+    }
+
+    protected void addSingleField(SolrSingleValuedField f)
+    {
+        if (solrSingleValuedFields == null)
+        {
+            solrSingleValuedFields = new ArrayList<>();
+        }
+        solrSingleValuedFields.add(f);
     }
 
 }

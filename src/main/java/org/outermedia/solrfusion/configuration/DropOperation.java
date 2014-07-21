@@ -20,10 +20,7 @@ import java.util.List;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "dropOperation", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
-        {
-                "targets"
-        })
+@XmlType(name = "dropOperation", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder = {"targets"})
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -57,47 +54,43 @@ public class DropOperation extends Operation
     {
         String msg = null;
 
-        // public void applyAllQueryOperations(Term term, ScriptEnv env)
+        // checks for public void applyAllQueryOperations(Term term, ScriptEnv env)
         if (fieldMapping.isFusionFieldOnlyMapping())
         {
             List<Response> responseTargets = getResponseOnlyTargets();
             if (responseTargets.size() > 0)
             {
                 msg = "Invalid configuration: It is impossible to remove a fusion field from a search server's " +
-                        "response (<om:field fusion-name=\"...\"><om:drop><om:response/>). Use <om:query/> instead or " +
-                        "change the fusion-name attribute to name. Please fix the fusion schema:\n" + fieldMapping;
-                log.error(msg);
+                    "response (<om:field fusion-name=\"...\"><om:drop><om:response/>). Use <om:query/> instead or " +
+                    "change the fusion-name attribute to name. Please fix the fusion schema.";
             }
             List<Target> queryTargets = getQueryTargets();
             if (queryTargets.isEmpty())
             {
-                msg = "Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target:\n" +
-                        fieldMapping;
-                log.error(msg);
+                msg = "Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target.";
             }
         }
 
-        // public void applyAllResponseOperations(Term term, ScriptEnv env)
+        // checks for public void applyAllResponseOperations(Term term, ScriptEnv env)
         if (fieldMapping.isSearchServerFieldOnlyMapping())
         {
             List<Query> queries = getQueryOnlyTargets();
             if (queries.size() > 0)
             {
                 msg = "Invalid configuration: It is impossible to remove a search server field " +
-                        "from a fusion query (<om:field name=\"...\"><om:drop><om:query/>). Use <om:response/> instead " +
-                        "or change the name attribute to fusion-name. Please fix the fusion schema:\n" + fieldMapping;
-                log.error(msg);
+                    "from a fusion query (<om:field name=\"...\"><om:drop><om:query/>). Use <om:response/> instead " +
+                    "or change the name attribute to fusion-name. Please fix the fusion schema.";
             }
             List<Target> targets = getResponseTargets();
             if (targets.isEmpty())
             {
-                msg = "Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target:\n" +
-                        fieldMapping;
-                log.error(msg);
+                msg = "Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target.";
             }
         }
         if (msg != null)
         {
+            msg = "In fusion schema at line " + fieldMapping.geStartLineNumberInSchema() + ": " + msg;
+            log.error(msg);
             throw new UnmarshalException(msg);
         }
     }

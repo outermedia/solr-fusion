@@ -11,7 +11,9 @@ import org.outermedia.solrfusion.response.ResponseParserIfc;
 import javax.xml.bind.annotation.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Data holder keeping one search server's configuration.
@@ -20,16 +22,12 @@ import java.util.List;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "searchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
-    {
-        "url", "scoreFactory", "responseParserFactory", "queryBuilderFactory", "idFieldName", "maxDocs",
-        "fieldMappings"
-    })
+@XmlType(name = "searchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/",
+    propOrder = {"url", "scoreFactory", "responseParserFactory", "queryBuilderFactory", "idFieldName", "maxDocs", "fieldMappings"})
 @Getter
 @Setter
-@ToString(callSuper = true)
-public class SearchServerConfig extends
-    ConfiguredFactory<SearchServerAdapterIfc, SearchServerConfig>
+@ToString(callSuper = true, exclude = {"allAddQueryMappingsCache", "allAddResponseMappingsCache"})
+public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc, SearchServerConfig>
 {
     @XmlAttribute(name = "name", required = true)
     private String searchServerName;
@@ -58,6 +56,13 @@ public class SearchServerConfig extends
 
     @XmlElement(name = "field", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private List<FieldMapping> fieldMappings;
+
+    @XmlTransient
+    private Map<String, List<Target>> allAddQueryMappingsCache;
+
+    @XmlTransient
+    private Map<String, List<Target>> allAddResponseMappingsCache;
+
 
     /**
      * Get all mappings for a given fusion field name.
@@ -120,6 +125,54 @@ public class SearchServerConfig extends
         if (queryBuilderFactory != null)
         {
             result = queryBuilderFactory.getInstance();
+        }
+        return result;
+    }
+
+    /**
+     * Get all query mappings which add something.
+     *
+     * @return a perhaps empty table of all query parts to add.
+     */
+    public Map<String, List<Target>> findAllAddQueryMappings()
+    {
+        Map<String, List<Target>> result = allAddQueryMappingsCache;
+        if (result == null)
+        {
+            result = new HashMap<>();
+            for (FieldMapping m : fieldMappings)
+            {
+                List<Target> queryTargets = m.getAllAddQueryMappings();
+                if (queryTargets.size() > 0)
+                {
+                    result.put(m.getSearchServersName(), queryTargets);
+                }
+            }
+            allAddQueryMappingsCache = result;
+        }
+        return result;
+    }
+
+    /**
+     * Get all response mappings which add something.
+     *
+     * @return a perhaps empty table of all response parts to add.
+     */
+    public Map<String, List<Target>> findAllAddResponseMappings()
+    {
+        Map<String, List<Target>> result = allAddResponseMappingsCache;
+        if (result == null)
+        {
+            result = new HashMap<>();
+            for (FieldMapping m : fieldMappings)
+            {
+                List<Target> responseTargets = m.getAllAddResponseMappings();
+                if (responseTargets.size() > 0)
+                {
+                    result.put(m.getFusionName(), responseTargets);
+                }
+            }
+            allAddResponseMappingsCache = result;
         }
         return result;
     }

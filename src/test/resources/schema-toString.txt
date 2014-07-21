@@ -127,7 +127,8 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  name=beanshell-file),
  name=null, fusionName=null, typeConfig=[
  [
- file: null]]))]))]),
+ file: null]]))]),
+ level=OUTSIDE)]),
  FieldMapping(searchServersName=w,h,d, fusionName=measure, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=EXACT_NAME_AND_FUSION_NAME, specificFusionName=null, specificSearchServerName=null, operations=[
  ChangeOperation(super=Operation(targets=[
  Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),

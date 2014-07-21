@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.mapper.UndeclaredFusionField;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -26,6 +27,7 @@ import javax.xml.bind.annotation.XmlType;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@Slf4j
 public class ChangeOperation extends Operation
 {
     @Override
@@ -42,7 +44,24 @@ public class ChangeOperation extends Operation
     @Override
     protected void check(FieldMapping fieldMapping) throws UnmarshalException
     {
-        // NOP
+        String msg = null;
+
+        if(fieldMapping.getFusionName() == null)
+        {
+            msg = "A change operation requires a field name in attribute 'name' and 'fusion-name'.";
+        }
+
+        if(fieldMapping.getSearchServersName() == null)
+        {
+            msg = "A change operation requires a field name in attribute 'name' and 'fusion-name'.";
+        }
+
+        if (msg != null)
+        {
+            msg = "In fusion schema at line " + fieldMapping.geStartLineNumberInSchema() + ": " + msg;
+            log.error(msg);
+            throw new UnmarshalException(msg);
+        }
     }
 
     @Override

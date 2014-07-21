@@ -63,7 +63,7 @@ public enum MatchType
         switch (this)
         {
             case LITERAL:
-                if (searchServerFieldName.equals(fieldMapping.getSearchServersName()))
+                if (fieldMapping.getSearchServersName().equals(searchServerFieldName))
                 {
                     destinationField = fieldMapping.getFusionName();
                     // even is destination field is empty e.g. for a <drop>, but the field was mapped
@@ -71,16 +71,19 @@ public enum MatchType
                 }
                 break;
             case REG_EXP:
-                Matcher matcher = fieldMapping.getSearchServersNameRegExp().matcher(searchServerFieldName);
-                if (matcher.find())
+                if(searchServerFieldName != null)
                 {
-                    // no replacement for <drop>
-                    if (fieldMapping.getFusionNameReplacement() != null)
+                    Matcher matcher = fieldMapping.getSearchServersNameRegExp().matcher(searchServerFieldName);
+                    if (matcher.find())
                     {
-                        destinationField = matcher.replaceAll(fieldMapping.getFusionNameReplacement());
+                        // no replacement for <drop>
+                        if (fieldMapping.getFusionNameReplacement() != null)
+                        {
+                            destinationField = matcher.replaceAll(fieldMapping.getFusionNameReplacement());
+                        }
+                        // even is destination field is empty e.g. for a <drop>, but the field was mapped
+                        result = new ApplicableResult(destinationField);
                     }
-                    // even is destination field is empty e.g. for a <drop>, but the field was mapped
-                    result = new ApplicableResult(destinationField);
                 }
                 break;
             case WILDCARD:

@@ -6,9 +6,7 @@ import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.FusionResponse;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
-import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.FieldMapping;
-import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.query.parser.BooleanClause;
 import org.outermedia.solrfusion.query.parser.BooleanQuery;
 import org.outermedia.solrfusion.query.parser.Query;
@@ -22,6 +20,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -36,8 +35,8 @@ public class DropTest extends AbstractTypeTest
 {
     @Test
     public void testDropResponse()
-            throws IOException, ParserConfigurationException, SAXException, JAXBException,
-            InvocationTargetException, IllegalAccessException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
         ResponseMapperIfc rm = ResponseMapper.Factory.getInstance();
@@ -70,14 +69,14 @@ public class DropTest extends AbstractTypeTest
         req.setQuery("a:dummy");
         String ds = renderer.getResponseString(cfg, docStream, req, new FusionResponse());
         String expectedField = "    <arr name=\"text4\">\n" +
-                "      <str><![CDATA[something]]></str>\n" +
-                "      <str><![CDATA[other]]></str>\n" +
-                "    </arr>";
+            "      <str><![CDATA[something]]></str>\n" +
+            "      <str><![CDATA[other]]></str>\n" +
+            "    </arr>";
         Assert.assertFalse("Field f8 was mapped unexpectedly", ds.contains(expectedField));
 
         // remove <drop> for f8
         sourceField.resetSearchServerField();
-        FieldMapping fm = findByName("f8",serverConfig.getFieldMappings());
+        FieldMapping fm = findByName("f8", serverConfig.getFieldMappings());
         Assert.assertEquals("Found different mapping than expected", "f8", fm.getSearchServersName());
         fm.setFusionName("text4");
         fm.getOperations().clear();
@@ -92,26 +91,32 @@ public class DropTest extends AbstractTypeTest
 
     protected FieldMapping findByName(String s, List<FieldMapping> mappings)
     {
-        for(FieldMapping fm : mappings)
+        for (FieldMapping fm : mappings)
         {
-            if(s.equals(fm.getSearchServersName())) return fm;
+            if (s.equals(fm.getSearchServersName()))
+            {
+                return fm;
+            }
         }
         return null;
     }
 
     protected FieldMapping findByFusionName(String s, List<FieldMapping> mappings)
     {
-        for(FieldMapping fm : mappings)
+        for (FieldMapping fm : mappings)
         {
-            if(s.equals(fm.getFusionName())) return fm;
+            if (s.equals(fm.getFusionName()))
+            {
+                return fm;
+            }
         }
         return null;
     }
 
     @Test
     public void testDropQuery()
-            throws IOException, ParserConfigurationException, SAXException, JAXBException,
-            InvocationTargetException, IllegalAccessException
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
         QueryMapperIfc rm = QueryMapper.Factory.getInstance();
@@ -150,4 +155,47 @@ public class DropTest extends AbstractTypeTest
         Assert.assertEquals("Found different query than expected", "f8:bla1", s);
     }
 
+    @Test
+    public void testBadDropMapping()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
+        SearchServerConfig searchServerConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
+
+        // make bad drop query
+        FieldMapping text9Mapping = searchServerConfig.findAllMappingsForFusionField("text9").get(0);
+        text9Mapping.setFusionName(null);
+        text9Mapping.setMappingType(MappingType.EXACT_NAME_ONLY);
+        // System.out.println("BAD DROP " + text9Mapping);
+        DropOperation drop = (DropOperation) text9Mapping.getOperations().get(0);
+        try
+        {
+            drop.check(text9Mapping);
+            Assert.fail("Expected exception for bad drop query.");
+        }
+        catch (Exception e)
+        {
+            Assert.assertEquals("Got other error message than expected",
+                "In fusion schema at line 276: Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target.",
+                e.getMessage());
+        }
+
+        // make bad drop query
+        FieldMapping text10Mapping = searchServerConfig.findAllMappingsForFusionField("text10").get(0);
+        text10Mapping.setSearchServersName(null);
+        text10Mapping.setMappingType(MappingType.EXACT_FUSION_NAME_ONLY);
+        // System.out.println("BAD DROP " + text10Mapping);
+        drop = (DropOperation) text10Mapping.getOperations().get(0);
+        try
+        {
+            drop.check(text10Mapping);
+            Assert.fail("Expected exception for bad drop query.");
+        }
+        catch (Exception e)
+        {
+            Assert.assertEquals("Got other error message than expected",
+                "In fusion schema at line 281: Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target.",
+                e.getMessage());
+        }
+    }
 }

@@ -74,11 +74,6 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     public boolean visitQuery(Term term, ScriptEnv env, Float boost)
     {
         boolean added = buildSearchServerTermQuery(term, false, boost);
-        List<Query> l = term.getNewQueryTerms();
-        if (l != null)
-        {
-            newQueries.addAll(l);
-        }
         return added;
     }
 
