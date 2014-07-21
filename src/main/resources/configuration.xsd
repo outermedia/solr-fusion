@@ -184,7 +184,7 @@
         <xs:element name="query-response" type="tns:queryResponse"/>
       </xs:choice>
     </xs:sequence>
-    <xs:attribute name="level" type="tns:addLevel" use="required"/>
+    <xs:attribute name="level" type="tns:addLevel"/>
   </xs:complexType>
 
   <xs:complexType name="dropOperation">
@@ -236,9 +236,9 @@
 
   <xs:simpleType name="responseRendererType">
     <xs:restriction base="xs:string">
+      <xs:enumeration value="json"/>
       <xs:enumeration value="xml"/>
       <xs:enumeration value="php"/>
-      <xs:enumeration value="json"/>
     </xs:restriction>
   </xs:simpleType>
 

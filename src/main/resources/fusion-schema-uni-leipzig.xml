@@ -148,6 +148,7 @@
     <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js"/>
     <om:script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh"/>
     <om:script-type name="merge-multi-value" class="org.outermedia.solrfusion.types.MultiValueMerger"/>
+    <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
 
     <om:default-search-field>title</om:default-search-field>
 
@@ -228,7 +229,12 @@
             <om:field name="mega_toplevel" fusion-name="mega_toplevel"/>
             <om:field name="record_id" fusion-name="record_id"/>
             <om:field name="source_id" fusion-name="source_id"/>
-            <om:field name="authorized_mode" fusion-name="authorized_mode"/>
+	    <!-- dropped, because user is not logged in -->
+            <om:field name="authorized_mode" fusion-name="authorized_mode">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
             <om:field name="institution" fusion-name="institution"/>
             <om:field name="signatur" fusion-name="signatur"/>
             <om:field name="barcode" fusion-name="barcode"/>
@@ -783,9 +789,11 @@
             <om:field name="signature" fusion-name="signatur">
             </om:field>
             <om:field name="source_id" fusion-name="source_id">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
+                <om:add>
+                    <om:response type="static-value">
+			            <value>37</value>
+                    </om:response>
+                </om:add>
             </om:field>
             <om:field name="spelling" fusion-name="spelling">
             </om:field>

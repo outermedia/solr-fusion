@@ -100,8 +100,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         String fieldsToReturn = params.get(FIELDS_TO_RETURN.getRequestParamName());
         ub.setParameter(FIELDS_TO_RETURN_PARAMETER, fieldsToReturn);
 
-        log.debug("Sending query to host {}: q={} fq={} start={} rows={} sort={} fl={}", url, q, fq, start, rows,
-            sortField, fieldsToReturn);
+        log.debug("Sending query {}", ub.build());
 
         return ub;
     }

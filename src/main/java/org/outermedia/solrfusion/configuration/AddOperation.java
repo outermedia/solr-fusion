@@ -29,8 +29,8 @@ import java.util.List;
 @Slf4j
 public class AddOperation extends Operation
 {
-
-    @XmlAttribute(required = true)
+    // responses don't need a level
+    @XmlAttribute(required = false)
     private AddLevel level;
 
     @Override
