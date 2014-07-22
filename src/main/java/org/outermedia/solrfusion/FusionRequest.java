@@ -217,7 +217,7 @@ public class FusionRequest
         {
             QueryBuilderIfc queryBuilder = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
             searchServerParams.put(paramName.getRequestParamName(),
-                queryBuilder.buildQueryString(query, configuration));
+                queryBuilder.buildQueryString(query, configuration, searchServerConfig, locale));
         }
     }
 

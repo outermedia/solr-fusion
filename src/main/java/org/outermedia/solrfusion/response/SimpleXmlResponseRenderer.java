@@ -102,83 +102,7 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
         }
         sb.append("<result name=\"response\" numFound=\"" + totalHitNumber + "\" start=\"0\">\n");
         Document d;
-        FieldVisitor xmlVisitor = new FieldVisitor()
-        {
-            @Override
-            public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
-            {
-                Term t = sf.getTerm();
-                String v = null;
-                List<String> fusionFieldValues = t.getFusionFieldValue();
-                if (fusionFieldValues != null && !fusionFieldValues.isEmpty())
-                {
-                    v = fusionFieldValues.get(0);
-                }
-                writeTerm("    ", t.isWasMapped(), t.isRemoved(), t.getFusionFieldName(), v, t.getFusionField());
-                return true;
-            }
-
-            private void writeTerm(String indent, boolean wasMapped, boolean wasRemoved, String fusionFieldName,
-                String fusionValue, FusionField fusionField)
-            {
-                if (wasMapped && !wasRemoved && fusionValue != null)
-                {
-                    String typeTag = fusionTypeToResponseKey.get(fusionField.getType());
-                    if (typeTag == null)
-                    {
-                        typeTag = "str";
-                        log.error(
-                            "Please define a response key for fusion type '{}' (fusion field: {}) in the configuration of {}.",
-                            fusionField.getType(), fusionField.getFieldName(), getClass().getName());
-                    }
-                    sb.append(indent);
-                    sb.append("<");
-                    sb.append(typeTag);
-                    if (fusionFieldName != null)
-                    {
-                        sb.append(" name=\"");
-                        sb.append(fusionFieldName);
-                        sb.append("\"");
-                    }
-                    sb.append("><![CDATA[");
-                    sb.append(fusionValue);
-                    sb.append("]]>");
-                    sb.append("</");
-                    sb.append(typeTag);
-                    sb.append(">\n");
-                }
-                // TODO sf.getTerm().getNewResponseValues();
-            }
-
-            @Override
-            public boolean visitField(SolrMultiValuedField msf, ScriptEnv env)
-            {
-                Term t = msf.getTerm();
-                if (t != null)
-                {
-                    boolean printNone = true;
-                    if (t.isWasMapped() && !t.isRemoved())
-                    {
-                        printNone = false;
-                    }
-                    if (!printNone)
-                    {
-                        String fusionFieldName = t.getFusionFieldName();
-                        sb.append("    <");
-                        sb.append(multiValueKey);
-                        sb.append(" name=\"" + fusionFieldName + "\">\n");
-                        for (String v : t.getFusionFieldValue())
-                        {
-                            writeTerm("      ", t.isWasMapped(), t.isRemoved(), null, v, t.getFusionField());
-                        }
-                        sb.append("    </");
-                        sb.append(multiValueKey);
-                        sb.append(">\n");
-                    }
-                }
-                return true;
-            }
-        };
+        FieldVisitor xmlVisitor = getDocumentFieldVisitor(sb);
 
         if(docStream != null)
         {
@@ -195,6 +119,87 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
         String result = sb + "\n";
         log.trace("Created response:\n{}", result);
         return result;
+    }
+
+    public FieldVisitor getDocumentFieldVisitor(final StringBuilder sb)
+    {
+        return new FieldVisitor()
+            {
+                @Override
+                public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
+                {
+                    Term t = sf.getTerm();
+                    String v = null;
+                    List<String> fusionFieldValues = t.getFusionFieldValue();
+                    if (fusionFieldValues != null && !fusionFieldValues.isEmpty())
+                    {
+                        v = fusionFieldValues.get(0);
+                    }
+                    writeTerm("    ", t.isWasMapped(), t.isRemoved(), t.getFusionFieldName(), v, t.getFusionField());
+                    return true;
+                }
+
+                private void writeTerm(String indent, boolean wasMapped, boolean wasRemoved, String fusionFieldName,
+                    String fusionValue, FusionField fusionField)
+                {
+                    if (wasMapped && !wasRemoved && fusionValue != null)
+                    {
+                        String typeTag = fusionTypeToResponseKey.get(fusionField.getType());
+                        if (typeTag == null)
+                        {
+                            typeTag = "str";
+                            log.error(
+                                "Please define a response key for fusion type '{}' (fusion field: {}) in the configuration of {}.",
+                                fusionField.getType(), fusionField.getFieldName(), getClass().getName());
+                        }
+                        sb.append(indent);
+                        sb.append("<");
+                        sb.append(typeTag);
+                        if (fusionFieldName != null)
+                        {
+                            sb.append(" name=\"");
+                            sb.append(fusionFieldName);
+                            sb.append("\"");
+                        }
+                        sb.append("><![CDATA[");
+                        sb.append(fusionValue);
+                        sb.append("]]>");
+                        sb.append("</");
+                        sb.append(typeTag);
+                        sb.append(">\n");
+                    }
+                    // TODO sf.getTerm().getNewResponseValues();
+                }
+
+                @Override
+                public boolean visitField(SolrMultiValuedField msf, ScriptEnv env)
+                {
+                    Term t = msf.getTerm();
+                    if (t != null)
+                    {
+                        boolean printNone = true;
+                        if (t.isWasMapped() && !t.isRemoved())
+                        {
+                            printNone = false;
+                        }
+                        if (!printNone)
+                        {
+                            String fusionFieldName = t.getFusionFieldName();
+                            sb.append("    <");
+                            sb.append(multiValueKey);
+                            sb.append(" name=\"" + fusionFieldName + "\">\n");
+                            for (String v : t.getFusionFieldValue())
+                            {
+                                writeTerm("      ", t.isWasMapped(), t.isRemoved(), null, v, t.getFusionField());
+                            }
+                            sb.append("    </");
+                            sb.append(multiValueKey);
+                            sb.append(">\n");
+                        }
+                    }
+                    return true;
+                }
+            };
     }
 
     @Override

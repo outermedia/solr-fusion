@@ -68,11 +68,10 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     @Override
     public void visitQuery(TermQuery t, ScriptEnv env)
     {
-        t.visitTerm(this, env);
+        visitQuery(t.getTerm(), env, t.getBoostValue());
     }
 
-    @Override
-    public boolean visitQuery(Term t, ScriptEnv env, Float boost)
+    protected boolean visitQuery(Term t, ScriptEnv env, Float boost)
     {
         String fusionFieldName = t.getFusionFieldName();
         List<FieldMapping> mappings = serverConfig.findAllMappingsForFusionField(fusionFieldName);

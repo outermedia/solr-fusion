@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.mapper.Term;
+import org.outermedia.solrfusion.mapper.UndeclaredFusionField;
 import org.outermedia.solrfusion.types.ScriptEnv;
 import org.xml.sax.Locator;
 
@@ -25,10 +26,8 @@ import java.util.regex.Pattern;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "fieldMapping", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
-        {
-                "operations"
-        })
+@XmlType(name = "fieldMapping", namespace = "http://solrfusion.outermedia.org/configuration/",
+    propOrder = {"operations"})
 @Getter
 @Setter
 @ToString(exclude = {"searchServersNameRegExp", "fusionNameRegExp", "locator"})
@@ -62,8 +61,7 @@ public class FieldMapping
     @XmlTransient
     protected MappingType mappingType;
 
-    @XmlTransient
-    @XmlLocation Locator locator;
+    @XmlTransient @XmlLocation Locator locator;
 
     /**
      * This field is set, when {@link #applicableToSearchServerField(String)} has been called.
@@ -77,15 +75,12 @@ public class FieldMapping
     @XmlTransient
     private String specificSearchServerName;
 
-    @XmlElements(value =
-            {
-                    @XmlElement(name = "add", type = AddOperation.class,
-                            namespace = "http://solrfusion.outermedia.org/configuration/"),
-                    @XmlElement(name = "drop", type = DropOperation.class,
-                            namespace = "http://solrfusion.outermedia.org/configuration/"),
-                    @XmlElement(name = "change", type = ChangeOperation.class,
-                            namespace = "http://solrfusion.outermedia.org/configuration/")
-            })
+    @XmlElements(value = {@XmlElement(name = "add", type = AddOperation.class,
+        namespace = "http://solrfusion.outermedia.org/configuration/"), @XmlElement(name = "drop",
+        type = DropOperation.class,
+        namespace = "http://solrfusion.outermedia.org/configuration/"), @XmlElement(name = "change",
+        type = ChangeOperation.class,
+        namespace = "http://solrfusion.outermedia.org/configuration/")})
     private List<Operation> operations;
 
     /**
@@ -130,7 +125,15 @@ public class FieldMapping
         {
             for (Operation o : operations)
             {
-                o.applyAllQueryOperations(term, newEnv);
+                try
+                {
+                    o.applyAllQueryOperations(term, newEnv);
+                }
+                catch (UndeclaredFusionField e)
+                {
+                    int line = locator.getLineNumber();
+                    throw new UndeclaredFusionField("Fusion schema at line " + line + ": " + e.getMessage());
+                }
             }
         }
     }
@@ -202,8 +205,7 @@ public class FieldMapping
      * @param parent
      * @throws UnmarshalException
      */
-    protected void afterUnmarshal(Unmarshaller u, Object parent)
-            throws UnmarshalException
+    protected void afterUnmarshal(Unmarshaller u, Object parent) throws UnmarshalException
     {
         boolean nameSet = searchServersName != null;
         boolean fusionSet = fusionName != null;
@@ -213,7 +215,7 @@ public class FieldMapping
         boolean fusionPatSet = fusionNamePattern != null;
 
         mappingType = MappingType.getMappingType(nameSet, fusionSet, namePatSet, fusionReplSet, nameReplSet,
-                fusionPatSet);
+            fusionPatSet);
         int case1 = (mappingType == MappingType.EXACT_NAME_ONLY) ? 1 : 0;
         int case2 = (mappingType == MappingType.EXACT_FUSION_NAME_ONLY) ? 1 : 0;
         int case3 = (mappingType == MappingType.EXACT_NAME_AND_FUSION_NAME) ? 1 : 0;
@@ -228,9 +230,9 @@ public class FieldMapping
         if (noCaseIsTrue || moreThanOneCaseIsTrue)
         {
             log.error(
-                    "Invalid attribute combination: name={}, fusion-name={}, name-pattern={}, fusion-name-replacement={}, name-replacement={}, fusion-name-pattern={}",
-                    searchServersName, fusionName, searchServersNamePattern, fusionNameReplacement,
-                    searchServersNameReplacement, fusionNamePattern);
+                "Invalid attribute combination: name={}, fusion-name={}, name-pattern={}, fusion-name-replacement={}, name-replacement={}, fusion-name-pattern={}",
+                searchServersName, fusionName, searchServersNamePattern, fusionNameReplacement,
+                searchServersNameReplacement, fusionNamePattern);
             throw new UnmarshalException("Invalid attribute combination");
         }
         if (case5 == 1 || case4 == 1)
@@ -242,9 +244,9 @@ public class FieldMapping
             fusionNameRegExp = parseRegExp(fusionNamePattern);
         }
 
-        if(operations != null)
+        if (operations != null)
         {
-            for(Operation o: operations)
+            for (Operation o : operations)
             {
                 o.check(this);
             }
@@ -278,21 +280,27 @@ public class FieldMapping
     public int geStartLineNumberInSchema()
     {
         int atLine = -1;
-        if(locator != null)
+        if (locator != null)
         {
             atLine = locator.getLineNumber();
         }
         return atLine;
     }
 
-    public List<Target> getAllAddQueryMappings()
+    public List<Target> getAllAddQueryMappings(AddLevel level)
     {
         List<Target> result = new ArrayList<>();
-        for(Operation o : operations)
+        if (operations != null)
         {
-            if(o instanceof AddOperation)
+            for (Operation o : operations)
             {
-                result.addAll(o.getQueryTargets());
+                if (o instanceof AddOperation)
+                {
+                    if (((AddOperation) o).getLevel() == level)
+                    {
+                        result.addAll(o.getQueryTargets());
+                    }
+                }
             }
         }
         return result;
@@ -301,7 +309,7 @@ public class FieldMapping
     public List<Target> getAllAddResponseMappings()
     {
         List<Target> result = new ArrayList<>();
-        if(operations != null)
+        if (operations != null)
         {
             for (Operation o : operations)
             {

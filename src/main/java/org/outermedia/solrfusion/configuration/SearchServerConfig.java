@@ -10,10 +10,7 @@ import org.outermedia.solrfusion.response.ResponseParserIfc;
 
 import javax.xml.bind.annotation.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Data holder keeping one search server's configuration.
@@ -133,19 +130,29 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
      * Get all query mappings which add something.
      *
      * @return a perhaps empty table of all query parts to add.
+     * @param level
      */
-    public Map<String, List<Target>> findAllAddQueryMappings()
+    public Map<String, List<Target>> findAllAddQueryMappings(AddLevel level)
     {
         Map<String, List<Target>> result = allAddQueryMappingsCache;
         if (result == null)
         {
-            result = new HashMap<>();
+            // preserve order
+            result = new LinkedHashMap<>();
             for (FieldMapping m : fieldMappings)
             {
-                List<Target> queryTargets = m.getAllAddQueryMappings();
+                List<Target> queryTargets = m.getAllAddQueryMappings(level);
                 if (queryTargets.size() > 0)
                 {
-                    result.put(m.getSearchServersName(), queryTargets);
+                    List<Target> existingQueryTargets = result.get(m.getSearchServersName());
+                    if (existingQueryTargets == null)
+                    {
+                        result.put(m.getSearchServersName(), queryTargets);
+                    }
+                    else
+                    {
+                        existingQueryTargets.addAll(queryTargets);
+                    }
                 }
             }
             allAddQueryMappingsCache = result;
@@ -163,13 +170,22 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
         Map<String, List<Target>> result = allAddResponseMappingsCache;
         if (result == null)
         {
-            result = new HashMap<>();
+            // preserve order
+            result = new LinkedHashMap<>();
             for (FieldMapping m : fieldMappings)
             {
                 List<Target> responseTargets = m.getAllAddResponseMappings();
                 if (responseTargets.size() > 0)
                 {
-                    result.put(m.getFusionName(), responseTargets);
+                    List<Target> existingTargets = result.get(m.getFusionName());
+                    if (existingTargets == null)
+                    {
+                        result.put(m.getFusionName(), responseTargets);
+                    }
+                    else
+                    {
+                        existingTargets.addAll(responseTargets);
+                    }
                 }
             }
             allAddResponseMappingsCache = result;

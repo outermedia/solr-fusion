@@ -144,15 +144,21 @@ public abstract class Operation
 
     public void applyAllQueryOperations(Term term, ScriptEnv env)
     {
-        ScriptEnv newEnv = new ScriptEnv(env);
-        newEnv.setBinding(ScriptEnv.ENV_FUSION_VALUE, term.getFusionFieldValue());
-        newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_VALUE, term.getSearchServerFieldValue());
-        newEnv.setBinding(ScriptEnv.ENV_CONVERSION, ConversionDirection.FUSION_TO_SEARCH);
+        ScriptEnv newEnv = getQueryScriptEnv(term, env);
         List<Target> queryTargets = getQueryTargets();
         for (Target t : queryTargets)
         {
             applyOneQueryOperation(term, newEnv, t);
         }
+    }
+
+    public ScriptEnv getQueryScriptEnv(Term term, ScriptEnv env)
+    {
+        ScriptEnv newEnv = new ScriptEnv(env);
+        newEnv.setBinding(ScriptEnv.ENV_FUSION_VALUE, term.getFusionFieldValue());
+        newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_VALUE, term.getSearchServerFieldValue());
+        newEnv.setBinding(ScriptEnv.ENV_CONVERSION, ConversionDirection.FUSION_TO_SEARCH);
+        return newEnv;
     }
 
     protected void applyOneQueryOperation(Term term, ScriptEnv newEnv, Target t)
@@ -167,15 +173,21 @@ public abstract class Operation
 
     public void applyAllResponseOperations(Term term, ScriptEnv env)
     {
-        ScriptEnv newEnv = new ScriptEnv(env);
-        newEnv.setBinding(ScriptEnv.ENV_FUSION_VALUE, term.getFusionFieldValue());
-        newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_VALUE, term.getSearchServerFieldValue());
-        newEnv.setBinding(ScriptEnv.ENV_CONVERSION, ConversionDirection.SEARCH_TO_FUSION);
+        ScriptEnv newEnv = getResponseScriptEnv(term, env);
         List<Target> queryTargets = getResponseTargets();
         for (Target t : queryTargets)
         {
             applyOneResponseOperation(term, newEnv, t);
         }
+    }
+
+    public ScriptEnv getResponseScriptEnv(Term term, ScriptEnv env)
+    {
+        ScriptEnv newEnv = new ScriptEnv(env);
+        newEnv.setBinding(ScriptEnv.ENV_FUSION_VALUE, term.getFusionFieldValue());
+        newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_VALUE, term.getSearchServerFieldValue());
+        newEnv.setBinding(ScriptEnv.ENV_CONVERSION, ConversionDirection.SEARCH_TO_FUSION);
+        return newEnv;
     }
 
     protected void applyOneResponseOperation(Term term, ScriptEnv newEnv, Target t)

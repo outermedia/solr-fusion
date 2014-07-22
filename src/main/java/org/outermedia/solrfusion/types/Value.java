@@ -33,7 +33,8 @@ public class Value extends AbstractType
      *  <value>valn</value>
      * }
      *  </pre>
-     *  n is &gt;= 1.
+     * n is &gt;= 1.
+     *
      * @param typeConfig a list of XML elements
      * @param util       helper which simplifies to apply xpaths
      */
@@ -55,8 +56,7 @@ public class Value extends AbstractType
         }
         catch (Exception e)
         {
-            log.error("Caught exception while parsing configuration: "
-                    + elementListToString(typeConfig), e);
+            log.error("Caught exception while parsing configuration: " + elementListToString(typeConfig), e);
         }
         if (values.isEmpty())
         {
@@ -68,6 +68,8 @@ public class Value extends AbstractType
     @Override
     public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
     {
+//        log.debug("VALUE {} sees fusion-value={} search-server-value={}", this.values,
+//            env.getBinding(ScriptEnv.ENV_FUSION_VALUE), env.getBinding(ScriptEnv.ENV_SEARCH_SERVER_VALUE));
         return this.values;
     }
 

@@ -2,16 +2,19 @@ package org.outermedia.solrfusion.mapper;
 
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryBuilderFactory;
+import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Map a fusion query to a solr request.
  * <p/>
+ *
  * @author stephan
  */
 public class DisMaxQueryBuilder implements QueryBuilderIfc
@@ -23,22 +26,27 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     /**
      * Build the query string for a search server.
      *
-     * @param query the query to map to process
+     * @param query              the query to map to process
      * @param configuration
+     * @param searchServerConfig
+     * @param locale
      */
     @Override
-    public String buildQueryString(Query query, Configuration configuration)
+    public String buildQueryString(Query query, Configuration configuration, SearchServerConfig searchServerConfig,
+        Locale locale)
+    {
+        // TODO implement <om:add> see QueryBuilder
+        return buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale);
+    }
+
+    @Override public String buildQueryStringWithoutNew(Query query, Configuration configuration,
+        SearchServerConfig searchServerConfig, Locale locale)
     {
         newQueries = new ArrayList<>();
         queryBuilder = new StringBuilder();
         this.configuration = configuration;
         query.accept(this, null);
         return queryBuilder.toString();
-    }
-
-    @Override public StringBuilder getQueryBuilderOutput()
-    {
-        return queryBuilder;
     }
 
     @Override
@@ -67,11 +75,10 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(TermQuery t, ScriptEnv env)
     {
-        t.visitTerm(this, env);
+        visitQuery(t.getTerm(), env, t.getBoostValue());
     }
 
-    @Override
-    public boolean visitQuery(Term term, ScriptEnv env, Float boost)
+    protected boolean visitQuery(Term term, ScriptEnv env, Float boost)
     {
         boolean added = buildSearchServerTermQuery(term, false, boost);
         return added;
@@ -92,7 +99,7 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
             {
                 queryBuilder.append('"');
             }
-            if(boost != null)
+            if (boost != null)
             {
                 queryBuilder.append("^");
                 queryBuilder.append(boost);

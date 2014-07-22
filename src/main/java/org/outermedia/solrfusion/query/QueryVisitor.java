@@ -1,6 +1,5 @@
 package org.outermedia.solrfusion.query;
 
-import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
@@ -24,5 +23,4 @@ public interface QueryVisitor
     public void visitQuery(PrefixQuery t, ScriptEnv env);
     public void visitQuery(WildcardQuery t, ScriptEnv env);
     public void visitQuery(BooleanClause booleanClause, ScriptEnv env);
-    public boolean visitQuery(Term term, ScriptEnv env, Float boost);
 }

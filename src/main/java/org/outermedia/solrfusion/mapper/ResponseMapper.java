@@ -65,6 +65,7 @@ public class ResponseMapper implements ResponseMapperIfc
         this.config = config;
         this.searchServerFieldNamesToMap = searchServerFieldNamesToMap;
         env.setConfiguration(config);
+        env.setDocument(doc);
         unmappedFields = new HashSet<>();
         numberOfMappedFields = 0;
 

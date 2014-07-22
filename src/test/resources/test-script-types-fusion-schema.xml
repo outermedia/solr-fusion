@@ -25,6 +25,9 @@
         <om:field name="text10"/>
         <om:field name="text11"/>
         <om:field name="text12"/>
+        <om:field name="text13"/>
+        <om:field name="text14"/>
+        <om:field name="text15"/>
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile"/>
@@ -288,16 +291,91 @@
             <om:field name="t11" fusion-name="text11">
                 <om:add level="outside">
                     <om:query type="static-value">
-                        <value>+t11:"searched text"^15~0.4</value>
+                        <value>+t11:"searched text"~2^75</value>
                     </om:query>
                 </om:add>
             </om:field>
             <om:field name="t12" fusion-name="text12">
-                <om:add level="outside">
+                <om:add>
                     <om:response type="static-value">
-                        <value>1</value>
+                        <value>42</value>
                     </om:response>
                 </om:add>
+            </om:field>
+            <!-- second rule modifies value of first rule -->
+            <om:field fusion-name="text12">
+                <om:add>
+                    <om:response type="javascript">
+                        <script>
+                            println("fusionValue="+fusionValue);
+                            // in JS all numbers are float!
+                            (fusionValue.get(0)-41).toFixed()
+                        </script>
+                    </om:response>
+                </om:add>
+            </om:field>
+            <om:field fusion-name="text13">
+                <om:add>
+                    <om:response type="static-value">
+                        <value>1</value>
+                        <value>2</value>
+                        <value>3</value>
+                    </om:response>
+                </om:add>
+            </om:field>
+            <!-- add second query outside -->
+            <om:field name="t13">
+                <om:add level="outside">
+                    <om:query type="static-value">
+                        <value>t13:hello</value>
+                    </om:query>
+                </om:add>
+            </om:field>
+
+            <!-- split and change -->
+            <om:field name="t14a" fusion-name="text14">
+                <om:change>
+                    <om:query type="static-value">
+                        <value>YES</value>
+                    </om:query>
+                </om:change>
+                <om:add level="inside">
+                    <om:query type="static-value">
+                        <value>t14a:helloA</value>
+                    </om:query>
+                </om:add>
+            </om:field>
+            <om:field name="t14b" fusion-name="text14">
+                <om:add level="inside">
+                    <om:query type="static-value">
+                        <value>t14b:helloB</value>
+                    </om:query>
+                </om:add>
+            </om:field>
+            <!-- finally change the split query text14 -->
+            <om:field name="t14" fusion-name="text14">
+                <om:change>
+                    <om:query type="static-value">
+                        <value>hello0</value>
+                    </om:query>
+                </om:change>
+            </om:field>
+
+            <!-- split and drop -->
+            <om:field name="t15a" fusion-name="text15">
+                <om:add level="inside">
+                    <om:query type="static-value">
+                        <value>t15a:helloA</value>
+                    </om:query>
+                </om:add>
+            </om:field>
+            <om:field name="t15b" fusion-name="text15">
+                <om:add level="inside">
+                    <om:query type="static-value">
+                        <value>t15b:helloB</value>
+                    </om:query>
+                </om:add>
+                <om:drop><om:query /></om:drop>
             </om:field>
 
             <!-- only a response has multi values, but not a query -->

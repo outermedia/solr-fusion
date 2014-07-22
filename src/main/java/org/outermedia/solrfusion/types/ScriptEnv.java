@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.types;
 
 import lombok.ToString;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.response.parser.Document;
 
 import javax.script.Bindings;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ public class ScriptEnv
     public final static String ENV_VALUES = "values"; // a List of String
     public final static String ENV_CONVERSION = "conversion"; // a ConversionDirection
     public final static String ENV_LOCALE = "locale"; // a Locale
+    public final static String ENV_DOCUMENT = "responseDocument"; // a Document
 
     public ScriptEnv()
     {
@@ -100,5 +102,15 @@ public class ScriptEnv
     public Locale getLocale()
     {
         return (Locale) getBinding(ENV_LOCALE);
+    }
+
+    public void setDocument(Document doc)
+    {
+        setBinding(ENV_DOCUMENT, doc);
+    }
+
+    public Document getDocument()
+    {
+        return (Document) getBinding(ENV_DOCUMENT);
     }
 }

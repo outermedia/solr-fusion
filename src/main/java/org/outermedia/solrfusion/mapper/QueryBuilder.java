@@ -1,47 +1,93 @@
 package org.outermedia.solrfusion.mapper;
 
-import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.QueryBuilderFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.query.parser.*;
+import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Map a fusion query to a solr request which is parsable by an edismax parser.
  * <p/>
  * Created by ballmann on 03.06.14.
  */
+@Slf4j
 public class QueryBuilder implements QueryBuilderIfc
 {
     protected StringBuilder queryBuilder;
     protected Configuration configuration;
-    protected List<Query> newQueriesToAdd;
+    protected SearchServerConfig searchServerConfig;
+    protected Locale locale;
 
     /**
      * Build the query string for a search server.
      *
-     * @param query         the query to map to process
+     * @param query              the query to process
      * @param configuration
+     * @param searchServerConfig
+     * @param locale
      */
     @Override
-    public String buildQueryString(Query query, Configuration configuration)
+    public String buildQueryString(Query query, Configuration configuration, SearchServerConfig searchServerConfig,
+        Locale locale)
     {
-        queryBuilder = new StringBuilder();
-        newQueriesToAdd = new ArrayList<>();
-        this.configuration = configuration;
-        query.accept(this, null);
+        String result = buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale);
 
-        // TODO process OUTSIDE newQueriesToAdd: AND'ed
+        // inside add queried have been processed, now add the outside queries
+        List<Query> newQueriesToAdd = new ArrayList<>();
+        AddOperation addOp = new AddOperation();
+        Map<String, List<Target>> allAddQueryTargets = searchServerConfig.findAllAddQueryMappings(AddLevel.OUTSIDE);
+        for (Map.Entry<String, List<Target>> entry : allAddQueryTargets.entrySet())
+        {
+            String searchServerFieldName = entry.getKey();
+            List<Target> addQuery = entry.getValue();
+            for (Target t : addQuery)
+            {
+                newQueriesToAdd.addAll(addOp.addToQuery(configuration, searchServerFieldName, t, locale));
+            }
+        }
+        if (newQueriesToAdd.size() > 0)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (result.length() > 0)
+            {
+                sb.append('(');
+                sb.append(result);
+                sb.append(')');
+            }
+            for (Query q : newQueriesToAdd)
+            {
+                QueryBuilderIfc newClauseQueryBuilder = newQueryBuilder();
+                String qs = newClauseQueryBuilder.buildQueryStringWithoutNew(q, configuration, searchServerConfig,
+                    locale);
+                if (sb.length() > 0)
+                {
+                    sb.append(" AND ");
+                }
+                sb.append(qs);
+            }
+            result = sb.toString();
+        }
 
-        return queryBuilder.toString();
+        return result;
     }
 
-    public StringBuilder getQueryBuilderOutput()
+    @Override
+    public String buildQueryStringWithoutNew(Query query, Configuration configuration,
+        SearchServerConfig searchServerConfig, Locale locale)
     {
-        return queryBuilder;
+        queryBuilder = new StringBuilder();
+        this.configuration = configuration;
+        this.searchServerConfig = searchServerConfig;
+        this.locale = locale;
+        query.accept(this, null);
+        return queryBuilder.toString();
     }
 
     @Override
@@ -70,20 +116,36 @@ public class QueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(TermQuery t, ScriptEnv env)
     {
-        t.visitTerm(this, env);
+        buildSearchServerTermQuery(t.getTerm(), false, t.getBoostValue(), t);
     }
 
-    @Override
-    public boolean visitQuery(Term term, ScriptEnv env, Float boost)
-    {
-        boolean added = buildSearchServerTermQuery(term, false, boost);
-        return added;
-    }
-
-    protected boolean buildSearchServerTermQuery(Term term, boolean quoted, Float boost)
+    protected boolean buildSearchServerTermQuery(Term term, boolean quoted, Float boost, Query origQuery)
     {
         boolean added = false;
-        if (term.isWasMapped() && !term.isRemoved() && term.getSearchServerFieldValue() != null)
+        List<Query> newQueries = term.getNewQueryTerms();
+        if (term.isWasMapped() && newQueries != null)
+        {
+            List<BooleanClause> insideClauses = new ArrayList<>();
+            if (!term.isRemoved())
+            {
+                // avoid endless recursion
+                term.setNewQueryTerms(null);
+                addInside(insideClauses, origQuery);
+            }
+            for (Query q : newQueries)
+            {
+                // inside only
+                addInside(insideClauses, q);
+            }
+            if (insideClauses.size() > 0)
+            {
+                added = true;
+                queryBuilder.append("(");
+                queryBuilder.append(handleBoolClauses(insideClauses));
+                queryBuilder.append(")");
+            }
+        }
+        else if (term.isWasMapped() && !term.isRemoved() && term.getSearchServerFieldValue() != null)
         {
             added = true;
             queryBuilder.append(term.getSearchServerFieldName());
@@ -99,23 +161,27 @@ public class QueryBuilder implements QueryBuilderIfc
             }
             handleBoost(boost);
         }
-        List<Query> newQueries = term.getNewQueryTerms();
-        if (term.isWasMapped() && newQueries != null)
+
+        return added;
+    }
+
+    private void addInside(List<BooleanClause> insideClauses, Query q)
+    {
+        boolean addedInside = false;
+        if (q instanceof BooleanQuery)
         {
-            for (Query q : newQueries)
+            BooleanQuery bq = (BooleanQuery) q;
+            if (bq.getClauses().size() == 1)
             {
-                if (q.isOutside())
-                {
-                    this.newQueriesToAdd.add(q);
-                }
-                else
-                {
-                    // inside
-                    // TODO visit query and append the result to queryBuilder (what if term.is not removed?)
-                }
+                addedInside = true;
+                insideClauses.add(bq.getClauses().get(0));
             }
         }
-        return added;
+        if (!addedInside)
+        {
+            BooleanClause bc = new BooleanClause(q, BooleanClause.Occur.OCCUR_SHOULD);
+            insideClauses.add(bc);
+        }
     }
 
     private void handleBoost(Float boost)
@@ -133,41 +199,7 @@ public class QueryBuilder implements QueryBuilderIfc
         List<BooleanClause> clauses = t.getClauses();
         if (clauses != null)
         {
-            StringBuilder boolQueryStringBuilder = new StringBuilder();
-            for (BooleanClause booleanClause : clauses)
-            {
-                QueryBuilderIfc newClauseQueryBuilder = newQueryBuilder();
-                newClauseQueryBuilder.buildQueryString(booleanClause.getQuery(), configuration);
-                StringBuilder clauseQueryStr = newClauseQueryBuilder.getQueryBuilderOutput();
-                if (clauseQueryStr.length() > 0)
-                {
-                    if (boolQueryStringBuilder.length() > 0)
-                    {
-                        switch (booleanClause.getOccur())
-                        {
-                            // -X (must not) makes no sense in combination with OR
-                            case OCCUR_MUST_NOT:
-                            case OCCUR_MUST:
-                                boolQueryStringBuilder.append(" AND ");
-                                break;
-                            case OCCUR_SHOULD:
-                                boolQueryStringBuilder.append(" OR ");
-                                break;
-                        }
-                    }
-                    // "+" is redundant for AND, but in the case that all previous clauses were deleted, it
-                    // is not possible to decide whether to print out a "+" or not
-                    if (booleanClause.getOccur() == BooleanClause.Occur.OCCUR_MUST)
-                    {
-                        boolQueryStringBuilder.append("+");
-                    }
-                    if (booleanClause.getOccur() == BooleanClause.Occur.OCCUR_MUST_NOT)
-                    {
-                        boolQueryStringBuilder.append("-");
-                    }
-                    boolQueryStringBuilder.append(clauseQueryStr);
-                }
-            }
+            StringBuilder boolQueryStringBuilder = handleBoolClauses(clauses);
             if (boolQueryStringBuilder.length() > 0)
             {
                 queryBuilder.append("(");
@@ -175,6 +207,47 @@ public class QueryBuilder implements QueryBuilderIfc
                 queryBuilder.append(")");
             }
         }
+    }
+
+    protected StringBuilder handleBoolClauses(List<BooleanClause> clauses)
+    {
+        StringBuilder boolQueryStringBuilder = new StringBuilder();
+        for (BooleanClause booleanClause : clauses)
+        {
+            QueryBuilderIfc newClauseQueryBuilder = newQueryBuilder();
+            String clauseQueryStr = newClauseQueryBuilder.buildQueryStringWithoutNew(booleanClause.getQuery(),
+                configuration, searchServerConfig, locale);
+            if (clauseQueryStr.length() > 0)
+            {
+                if (boolQueryStringBuilder.length() > 0)
+                {
+                    switch (booleanClause.getOccur())
+                    {
+                        // -X (must not) makes no sense in combination with OR
+                        case OCCUR_MUST_NOT:
+                        case OCCUR_MUST:
+                            boolQueryStringBuilder.append(" AND ");
+                            break;
+                        case OCCUR_SHOULD:
+                            boolQueryStringBuilder.append(" OR ");
+                            break;
+                    }
+                }
+                // "+" is redundant for AND, but in the case that all previous clauses were deleted, it
+                // is not possible to decide whether to print out a "+" or not
+                if (booleanClause.getOccur() == BooleanClause.Occur.OCCUR_MUST)
+                {
+                    boolQueryStringBuilder.append("+");
+                }
+                if (booleanClause.getOccur() == BooleanClause.Occur.OCCUR_MUST_NOT)
+                {
+                    boolQueryStringBuilder.append("-");
+                }
+                boolQueryStringBuilder.append(clauseQueryStr);
+            }
+        }
+
+        return boolQueryStringBuilder;
     }
 
     protected QueryBuilderIfc newQueryBuilder()
@@ -185,7 +258,7 @@ public class QueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(FuzzyQuery fq, ScriptEnv env)
     {
-        if (buildSearchServerTermQuery(fq.getTerm(), false, fq.getBoostValue()))
+        if (buildSearchServerTermQuery(fq.getTerm(), false, fq.getBoostValue(), fq))
         {
             handleFuzzySlop(fq.getMaxEdits(), true);
         }
@@ -209,7 +282,7 @@ public class QueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(PhraseQuery pq, ScriptEnv env)
     {
-        if (buildSearchServerTermQuery(pq.getTerm(), true, pq.getBoostValue()))
+        if (buildSearchServerTermQuery(pq.getTerm(), true, pq.getBoostValue(), pq))
         {
             handleFuzzySlop(pq.getMaxEdits(), false);
         }
@@ -218,13 +291,13 @@ public class QueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(PrefixQuery pq, ScriptEnv env)
     {
-        buildSearchServerTermQuery(pq.getTerm(), false, pq.getBoostValue());
+        buildSearchServerTermQuery(pq.getTerm(), false, pq.getBoostValue(), pq);
     }
 
     @Override
     public void visitQuery(WildcardQuery wq, ScriptEnv env)
     {
-        buildSearchServerTermQuery(wq.getTerm(), false, wq.getBoostValue());
+        buildSearchServerTermQuery(wq.getTerm(), false, wq.getBoostValue(), wq);
     }
 
     @Override

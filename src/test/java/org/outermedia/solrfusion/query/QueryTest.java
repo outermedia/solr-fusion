@@ -96,7 +96,7 @@ public class QueryTest
         EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
         p.init(new QueryParserFactory());
         Map<String, Float> boosts = new HashMap<String, Float>();
-        Query o = p.parse(cfg, boosts, query, Locale.GERMAN);
+        Query o = p.parse(cfg, boosts, query, Locale.GERMAN, null);
         Assert.assertNotNull("Expected query object, but couldn't parse query string '" + query + "'", o);
         return o;
     }
@@ -108,7 +108,7 @@ public class QueryTest
         Map<String, Float> boosts = new HashMap<String, Float>();
         try
         {
-            Query o = p.parse(cfg, boosts, query, Locale.GERMAN);
+            Query o = p.parse(cfg, boosts, query, Locale.GERMAN, null);
             Assert.fail("Expected exception");
         }
         catch (ParseException e)

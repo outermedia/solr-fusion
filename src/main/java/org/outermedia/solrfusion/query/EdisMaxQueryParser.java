@@ -50,8 +50,8 @@ public class EdisMaxQueryParser implements QueryParserIfc
     }
 
     @Override
-    public Query parse(Configuration config, Map<String, Float> boosts, String queryString, Locale locale)
-        throws ParseException
+    public Query parse(Configuration config, Map<String, Float> boosts, String queryString, Locale locale,
+        Boolean allTermsAreProcessed) throws ParseException
     {
         Query result = null;
         if (queryString != null && queryString.trim().length() > 0)
@@ -67,7 +67,8 @@ public class EdisMaxQueryParser implements QueryParserIfc
                 log.error("Found illegal default operator '{}'. Expected either 'or' or 'and'. Using {}.", defaultOpStr,
                     defaultOp, e);
             }
-            QueryParser parser = new QueryParser(config.getDefaultSearchField(), config, boosts, defaultOp);
+            QueryParser parser = new QueryParser(config.getDefaultSearchField(), config, boosts, defaultOp,
+                allTermsAreProcessed);
             parser.setLocale(locale);
             result = parser.parse(queryString);
         }

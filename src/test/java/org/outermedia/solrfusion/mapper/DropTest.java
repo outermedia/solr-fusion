@@ -23,10 +23,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by ballmann on 6/19/14.
@@ -119,6 +116,7 @@ public class DropTest extends AbstractTypeTest
         IllegalAccessException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
+        SearchServerConfig searchServerConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
         QueryMapperIfc rm = QueryMapper.Factory.getInstance();
         Document doc = buildResponseDocument();
 
@@ -138,8 +136,9 @@ public class DropTest extends AbstractTypeTest
         Assert.assertTrue("Expected that field text4 was removed", term.isRemoved());
         Assert.assertTrue("Expected that field text5-abc was removed", term2.isRemoved());
         QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
-        String ds = qb.buildQueryString(query, cfg);
-        Assert.assertEquals("Expected no query", "", ds);
+        String ds = qb.buildQueryString(query, cfg, searchServerConfig, Locale.GERMAN);
+        // the original query was removed, but two queries are added!
+        Assert.assertEquals("Expected no query", "(+t11:\"searched text\"^75.0~) AND t13:hello", ds);
 
         // remove <drop> for text4
         term.resetQuery();
@@ -151,8 +150,8 @@ public class DropTest extends AbstractTypeTest
         qm.mapQuery(cfg, serverConfig, query, env);
         // System.out.println(term.toString());
         Assert.assertFalse("Expected that field text4 was not removed", term.isRemoved());
-        String s = qb.buildQueryString(query, cfg);
-        Assert.assertEquals("Found different query than expected", "f8:bla1", s);
+        String s = qb.buildQueryString(query, cfg, searchServerConfig, Locale.GERMAN);
+        Assert.assertEquals("Found different query than expected", "(f8:bla1) AND (+t11:\"searched text\"^75.0~) AND t13:hello", s);
     }
 
     @Test
@@ -176,7 +175,7 @@ public class DropTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 276: Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target.",
+                "In fusion schema at line 279: Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target.",
                 e.getMessage());
         }
 
@@ -194,7 +193,7 @@ public class DropTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 281: Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target.",
+                "In fusion schema at line 284: Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target.",
                 e.getMessage());
         }
     }

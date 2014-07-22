@@ -79,6 +79,7 @@ public class QueryParser {
 
   boolean lowercaseExpandedTerms = true;
   boolean allowLeadingWildcard = false;
+  Boolean allTermsAreProcessed;
 
   String field;
   int phraseSlop = 0;
@@ -101,12 +102,13 @@ public class QueryParser {
    *  @param configuration  contains the defaults.
    *  @param boosts a field x boost value map
    */
-  public QueryParser(String f, Configuration configuration, Map<String, Float> boosts, Operator defaultOperator) {
+  public QueryParser(String f, Configuration configuration, Map<String, Float> boosts, Operator defaultOperator, Boolean allTermsAreProcessed) {
     this(new StringReader(""));
     field = f;
     this.boosts = boosts;
     this.configuration = configuration;
     this.operator = defaultOperator;
+    this.allTermsAreProcessed = allTermsAreProcessed;
   }
 
   /** Parses a query string, returning a {@link org.apache.lucene.search.Query}.
@@ -313,7 +315,7 @@ public class QueryParser {
 
   protected PhraseQuery getPhraseQuery(String field, String queryText, Integer slop)
         throws ParseException {
-    PhraseQuery pq = new PhraseQuery(Term.newFusionTerm(field,queryText));
+    PhraseQuery pq = new PhraseQuery(newTerm(field,queryText));
     if(slop != null) pq.setMaxEdits(slop);
     return pq;
   }
@@ -362,13 +364,21 @@ public class QueryParser {
 
   protected Term newTerm(String field, String value) throws ParseException
   {
-    FusionField fusionField = configuration.findFieldByName(field);
-    if(fusionField == null)
-    {
-      throw new ParseException("Didn't find field '"+field+"' in fusion schema. Please define it there.");
-    }
     Term t = Term.newFusionTerm(field,value);
-    t.setFusionField(fusionField);
+    if(allTermsAreProcessed != null && allTermsAreProcessed)
+    {
+        t.setProcessed(true);
+        t.setWasMapped(true);
+        t.setSearchServerFieldName(field);
+        t.setSearchServerFieldValue(t.getFusionFieldValue());
+    } else {
+        FusionField fusionField = configuration.findFieldByName(field);
+        if(fusionField == null)
+        {
+          throw new ParseException("Didn't find field '"+field+"' in fusion schema. Please define it there.");
+        }
+        t.setFusionField(fusionField);
+    }
     return t;
   }
 

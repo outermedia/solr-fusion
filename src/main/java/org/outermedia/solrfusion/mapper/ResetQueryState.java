@@ -22,11 +22,10 @@ public class ResetQueryState implements QueryVisitor
     @Override
     public void visitQuery(TermQuery t, ScriptEnv env)
     {
-        t.visitTerm(this, env);
+        visitQuery(t.getTerm(), env, null);
     }
 
-    @Override
-    public boolean visitQuery(Term t, ScriptEnv env, Float boost)
+    protected boolean visitQuery(Term t, ScriptEnv env, Float boost)
     {
         t.resetQuery();
         return true;

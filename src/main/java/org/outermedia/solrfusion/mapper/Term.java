@@ -172,7 +172,7 @@ public class Term
             try
             {
                 QueryParserIfc queryParser = configuration.getQueryParser();
-                q = queryParser.parse(configuration, boosts, qs, locale);
+                q = queryParser.parse(configuration, boosts, qs, locale, Boolean.TRUE);
                 q.setAddInside(inside);
                 newQueryTerms.add(q);
             }

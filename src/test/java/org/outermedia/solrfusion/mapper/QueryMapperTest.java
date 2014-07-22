@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 import org.xml.sax.SAXException;
@@ -13,10 +14,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by ballmann on 04.06.14.
@@ -25,13 +23,16 @@ public class QueryMapperTest
 {
     protected TestHelper helper;
     protected Configuration cfg;
+    protected SearchServerConfig searchServerConfig;
     protected ScriptEnv env;
+    protected Locale locale = Locale.GERMAN;
 
     @Before
     public void setup() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
     {
         helper = new TestHelper();
         cfg = helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml");
+        searchServerConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
         env = new ScriptEnv();
     }
 
@@ -48,7 +49,7 @@ public class QueryMapperTest
         Assert.assertEquals("Got different mapping than expected", expected, q.getTerm().toString());
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String s = qb.buildQueryString(q, cfg);
+        String s = qb.buildQueryString(q, cfg, searchServerConfig, locale);
         Assert.assertEquals("Found wrong search server term query mapping", "Autor:Schiller", s);
     }
 
@@ -72,7 +73,7 @@ public class QueryMapperTest
         Assert.assertEquals("Didn't find mapped title.", expectedTitle, q2.getTerm().toString());
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String s = qb.buildQueryString(bq, cfg);
+        String s = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
         Assert.assertEquals("Found wrong search server bool query mapping", "(+Autor:Schiller AND +Titel:Ein_langer_Weg)",
                 s.trim());
     }
@@ -97,7 +98,7 @@ public class QueryMapperTest
         Assert.assertEquals("Didn't find mapped title.", expectedTitle, q2.getTerm().toString());
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String s = qb.buildQueryString(bq, cfg);
+        String s = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
         Assert.assertEquals("Found wrong search server bool query mapping", "(-Autor:Schiller AND -Titel:Ein_langer_Weg)",
                 s.trim());
 
@@ -139,7 +140,7 @@ public class QueryMapperTest
         qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), wq, env);
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String s = qb.buildQueryString(wq, cfg);
+        String s = qb.buildQueryString(wq, cfg, searchServerConfig, locale);
         Assert.assertEquals("Expected match all docs query", "*:*", s);
     }
 

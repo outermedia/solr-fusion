@@ -70,7 +70,7 @@ public class ChangeOperation extends Operation
         if (term.getFusionField() == null)
         {
             throw new UndeclaredFusionField("Didn't find field '" + term.getFusionFieldName()
-                    + "' in fusion schema. Please define it ther.");
+                    + "' in fusion schema. Please define it there.");
         }
         super.applyAllQueryOperations(term, env);
     }

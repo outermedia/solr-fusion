@@ -6,6 +6,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.types.ConversionDirection;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import javax.xml.bind.UnmarshalException;
@@ -14,6 +15,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Data holder to store add operation configurations.
@@ -36,9 +38,16 @@ public class AddOperation extends Operation
     @Override
     protected void applyOneQueryOperation(Term term, ScriptEnv env, Target t)
     {
-        super.applyOneQueryOperation(term, env, t);
-        term.addNewSearchServerQuery(level == AddLevel.INSIDE, term.getSearchServerFieldValue(), env.getConfiguration(),
-            env.getLocale());
+        // outside added queries will be handled later
+        if (level == AddLevel.INSIDE)
+        {
+            // the super call would overwrite the search server field value which is initialized with the fusion field
+            // value either the field is dropped or changed
+            // super.applyOneQueryOperation(term, env, t);
+            List<String> newSearchServerValue = t.apply(term.getSearchServerFieldValue(), env,
+                ConversionDirection.FUSION_TO_SEARCH);
+            term.addNewSearchServerQuery(true, newSearchServerValue, env.getConfiguration(), env.getLocale());
+        }
     }
 
     @Override
@@ -57,13 +66,25 @@ public class AddOperation extends Operation
             term = Term.newFusionTerm(fusionFieldName);
             isNew = true;
         }
-        super.applyOneResponseOperation(term, new ScriptEnv(), t);
+        ScriptEnv env = getResponseScriptEnv(term, new ScriptEnv());
+        super.applyOneResponseOperation(term, env, t);
         if (isNew)
         {
             doc.addFusionField(fusionFieldName, fusionField, term.getFusionFieldValue());
             added = true;
         }
         return added;
+    }
+
+    public List<org.outermedia.solrfusion.query.parser.Query> addToQuery(Configuration configuration,
+        String searchServerFieldName, Target t, Locale locale)
+    {
+        Term term = Term.newSearchServerTerm(searchServerFieldName);
+        ScriptEnv env = getQueryScriptEnv(term, new ScriptEnv());
+        super.applyOneQueryOperation(term, env, t);
+        term.addNewSearchServerQuery(false, term.getSearchServerFieldValue(), configuration, locale);
+        List<org.outermedia.solrfusion.query.parser.Query> newQueries = term.getNewQueryTerms();
+        return newQueries;
     }
 
     @Override
