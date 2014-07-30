@@ -14,9 +14,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by ballmann on 04.06.14.
@@ -58,7 +56,8 @@ public class ResponseMapperTest
         ScriptEnv env = new ScriptEnv();
 
         // map one field only
-        List<String> mapFields = Arrays.asList("Titel");
+        Set<String> mapFields = new HashSet<>();
+        mapFields.add("Titel");
         int mappedNr = rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, mapFields);
         // id is mapped automatically
         Assert.assertEquals("Wrong number of mapped fields", 2, mappedNr);

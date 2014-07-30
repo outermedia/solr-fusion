@@ -8,7 +8,7 @@ import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by ballmann on 6/11/14.
@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 public class MappingClosableIterator implements ClosableIterator<Document, SearchServerResponseInfo>
 {
-    private List<String> fieldsToMap;
+    private Set<String> fieldsToMap;
     private Configuration config;
     private SearchServerConfig searchServerConfig;
     private ClosableIterator<Document, SearchServerResponseInfo> documents;
@@ -33,7 +33,7 @@ public class MappingClosableIterator implements ClosableIterator<Document, Searc
      * @throws IllegalAccessException
      */
     public MappingClosableIterator(ClosableIterator<Document, SearchServerResponseInfo> documents, Configuration config,
-        SearchServerConfig searchServerConfig, List<String> fieldsToMap)
+        SearchServerConfig searchServerConfig, Set<String> fieldsToMap)
         throws InvocationTargetException, IllegalAccessException
     {
         this.config = config;

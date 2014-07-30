@@ -94,8 +94,18 @@ public class FusionRequest
         searchServerParams.put(PAGE_SIZE.getRequestParamName(), String.valueOf(rows));
         // TODO handle 1:n mapping i.e. 1 solrfusion field is mapped to several search server fields?
         // does it mean to sort by several search server fields?
-        String searchServerSortField = mapFusionFieldToSearchServerField(getSolrFusionSortField(), configuration,
-            searchServerConfig).iterator().next();
+        Set<String> searchServerFieldSet = mapFusionFieldToSearchServerField(getSolrFusionSortField(), configuration,
+            searchServerConfig);
+        if (searchServerFieldSet.isEmpty())
+        {
+            log.error("Found not mapping for sort field '{}'", getSolrFusionSortField());
+        }
+        String searchServerSortField = searchServerFieldSet.iterator().next();
+        if (searchServerFieldSet.size() > 1)
+        {
+            log.error("Found ambiguous mapping for sort field '{}'. Using: {}", getSolrFusionSortField(),
+                searchServerSortField);
+        }
         setSearchServerSortField(searchServerSortField);
         searchServerParams.put(SORT.getRequestParamName(), searchServerSortField + (isSortAsc() ? " asc" : " desc"));
         String fusionFieldsToReturn = fieldsToReturn;
@@ -162,7 +172,7 @@ public class FusionRequest
         return sb.toString();
     }
 
-    protected Set<String> mapFusionFieldToSearchServerField(String fusionField, Configuration configuration,
+    public Set<String> mapFusionFieldToSearchServerField(String fusionField, Configuration configuration,
         SearchServerConfig searchServerConfig) throws InvocationTargetException, IllegalAccessException
     {
         // preserve insertion order
@@ -234,7 +244,7 @@ public class FusionRequest
     public String buildErrorMessage()
     {
         StringBuilder sb = new StringBuilder();
-        for(String s : errors)
+        for (String s : errors)
         {
             sb.append("ERROR: ");
             sb.append(s);
@@ -245,10 +255,10 @@ public class FusionRequest
 
     public void addError(String msg, Exception e)
     {
-        if(e != null)
+        if (e != null)
         {
             String cause = collectCauses(e);
-            if(cause.length() > 0)
+            if (cause.length() > 0)
             {
                 msg += "\n" + cause;
             }
@@ -259,7 +269,7 @@ public class FusionRequest
     protected String collectCauses(Throwable e)
     {
         StringBuilder sb = new StringBuilder();
-        while(e != null)
+        while (e != null)
         {
             sb.append(e.getMessage());
             sb.append("\n");

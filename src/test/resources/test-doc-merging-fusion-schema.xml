@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<om:core xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:om="http://solrfusion.outermedia.org/configuration/"
+    xmlns="http://solrfusion.outermedia.org/configuration/type/"
+    xsi:schemaLocation="http://solrfusion.outermedia.org/configuration/ ../../main/resources/configuration.xsd ">
+
+    <om:fusion-schema-fields default-type="text">
+        <om:field name="id"/>
+        <om:field name="title"/>
+        <om:field name="score" type="double"/>
+        <om:field name="isbn"/>
+        <om:field name="author"/>
+        <om:field name="other1"/>
+        <om:field name="other2"/>
+        <om:field name="other3"/>
+    </om:fusion-schema-fields>
+
+    <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile"/>
+    <om:script-type name="beanshell-file" class="org.outermedia.solrfusion.types.BshFile"/>
+    <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js"/>
+    <om:script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh"/>
+    <om:script-type name="java-class" class="org.outermedia.solrfusion.types.Java"/>
+    <om:script-type name="regexp" class="org.outermedia.solrfusion.types.RegularExpression"/>
+    <om:script-type name="static-table-file" class="org.outermedia.solrfusion.types.TableFile"/>
+    <om:script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/>
+    <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
+    <om:script-type name="merge-multi-value" class="org.outermedia.solrfusion.types.MultiValueMerger"/>
+
+    <om:default-search-field>title</om:default-search-field>
+
+    <om:default-sort-field>score desc</om:default-sort-field>
+
+    <om:default-operator>AND</om:default-operator>
+
+    <om:id-generator fusion-name="id"
+        class="org.outermedia.solrfusion.DefaultIdGenerator$Factory"/>
+
+    <om:response-consolidator class="org.outermedia.solrfusion.response.PagingResponseConsolidator$Factory"/>
+
+    <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory"/>
+
+    <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory"/>
+
+    <om:controller class="org.outermedia.solrfusion.FusionController$Factory"/>
+
+    <om:solr-servers>
+        <om:timeout>4000</om:timeout>
+        <om:disaster-limit>1</om:disaster-limit>
+        <om:error key="disaster-limit">Please try later again.</om:error>
+
+        <om:query-parser
+            class="org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory"/>
+
+        <om:response-parser
+            class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory"/>
+
+        <om:response-renderer type="xml"
+            class="org.outermedia.solrfusion.response.SimpleXmlResponseRenderer" >
+            <map-type fusion-type="float" key="float"/>
+            <map-type fusion-type="double" key="float"/>
+            <map-type fusion-type="int" key="int"/>
+            <map-type fusion-type="long" key="int"/>
+            <map-type fusion-type="boolean" key="bool"/>
+            <map-type fusion-type="date" key="date"/>
+            <map-type fusion-type="text" key="str"/>
+            <map-multi-value-type key="arr"/>
+        </om:response-renderer>
+
+        <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
+
+        <om:merge fusion-name="isbn"
+            class="org.outermedia.solrfusion.DefaultMergeStrategy$Factory">
+            <om:target prio="200" target-name="Bibliothek D"/>
+            <om:target prio="1" target-name="Bibliothek A"/>
+            <om:target prio="3" target-name="Bibliothek C"/>
+            <om:target prio="2" target-name="Bibliothek B"/>
+        </om:merge>
+
+        <om:solr-server name="Bibliothek A" version="3.6"
+            class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+
+            <om:url>http://host:port/solr/xyz</om:url>
+
+            <om:score factor="1.2"
+                class="org.outermedia.solrfusion.DefaultScore$Factory"/>
+
+            <om:unique-key>Id</om:unique-key>
+
+            <om:max-docs>100</om:max-docs>
+
+            <om:field name="Id" fusion-name="id"/>
+            <om:field name="Title" fusion-name="title"/>
+            <om:field name="ISBN" fusion-name="isbn"/>
+            <om:field name="Author" fusion-name="author"/>
+            <om:field name="Other1" fusion-name="other1"/>
+            <om:field name="Other2" fusion-name="other2"/>
+            <om:field name="Other3" fusion-name="other3"/>
+        </om:solr-server>
+
+        <om:solr-server name="Bibliothek B" version="3.6"
+            class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+
+            <om:url>http://host:port/solr/xyz</om:url>
+
+            <om:score factor="1.2"
+                class="org.outermedia.solrfusion.DefaultScore$Factory"/>
+
+            <om:unique-key>Id</om:unique-key>
+
+            <om:max-docs>100</om:max-docs>
+
+            <om:field name="Id" fusion-name="id"/>
+            <om:field name="Title" fusion-name="title"/>
+            <om:field name="ISBN" fusion-name="isbn"/>
+            <om:field name="Author" fusion-name="author"/>
+            <om:field name="Other1" fusion-name="other1"/>
+            <om:field name="Other2" fusion-name="other2"/>
+            <om:field name="Other3" fusion-name="other3"/>
+        </om:solr-server>
+
+        <om:solr-server name="Bibliothek C" version="3.6"
+            class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+
+            <om:url>http://host:port/solr/xyz</om:url>
+
+            <om:score factor="1.2"
+                class="org.outermedia.solrfusion.DefaultScore$Factory"/>
+
+            <om:unique-key>Id</om:unique-key>
+
+            <om:max-docs>100</om:max-docs>
+
+            <om:field name="Id" fusion-name="id"/>
+            <om:field name="Title" fusion-name="title"/>
+            <om:field name="ISBN" fusion-name="isbn"/>
+            <om:field name="Author" fusion-name="author"/>
+            <om:field name="Other1" fusion-name="other1"/>
+            <om:field name="Other2" fusion-name="other2"/>
+            <om:field name="Other3" fusion-name="other3"/>
+            <om:field name="Unknown">
+                <om:drop>
+                    <om:response />
+                </om:drop>
+            </om:field>
+        </om:solr-server>
+
+        <om:solr-server name="Bibliothek D" version="3.6"
+            class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+
+            <om:url>http://host:port/solr/xyz</om:url>
+
+            <om:score factor="1.2"
+                class="org.outermedia.solrfusion.DefaultScore$Factory"/>
+
+            <om:unique-key>Id</om:unique-key>
+
+            <om:max-docs>100</om:max-docs>
+
+            <om:field name="Id" fusion-name="id"/>
+            <om:field name="Title" fusion-name="title"/>
+            <om:field name="ISBN" fusion-name="isbn"/>
+            <om:field name="Author" fusion-name="author"/>
+            <om:field name="Other1" fusion-name="other1"/>
+            <om:field name="Other2" fusion-name="other2"/>
+            <om:field name="Other3" fusion-name="other3"/>
+        </om:solr-server>
+
+    </om:solr-servers>
+</om:core>

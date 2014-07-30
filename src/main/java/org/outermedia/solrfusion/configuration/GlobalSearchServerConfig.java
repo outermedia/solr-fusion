@@ -19,19 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Data holder class keeping the global search server configuration and all
- * search server specific settings.
+ * Data holder class keeping the global search server configuration and all search server specific settings.
  *
  * @author ballmann
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "globalSearchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
-        {
-                "timeout", "disasterLimit", "disasterMessage", "defaultPageSize", "queryParserFactory",
-                "defaultResponseParserFactory", "responseRendererFactories", "queryBuilderFactory", "merge",
-                "searchServerConfigs"
-        })
+@XmlType(name = "globalSearchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/",
+    propOrder = {"timeout", "disasterLimit", "disasterMessage", "defaultPageSize", "queryParserFactory", "defaultResponseParserFactory", "responseRendererFactories", "queryBuilderFactory", "merge", "searchServerConfigs"})
 @Getter
 @Setter
 @ToString
@@ -52,10 +47,12 @@ public class GlobalSearchServerConfig
     @XmlElement(name = "query-parser", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private QueryParserFactory queryParserFactory;
 
-    @XmlElement(name = "response-parser", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @XmlElement(name = "response-parser", namespace = "http://solrfusion.outermedia.org/configuration/",
+        required = true)
     private ResponseParserFactory defaultResponseParserFactory;
 
-    @XmlElement(name = "response-renderer", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @XmlElement(name = "response-renderer", namespace = "http://solrfusion.outermedia.org/configuration/",
+        required = true)
     private List<ResponseRendererFactory> responseRendererFactories;
 
     @XmlElement(name = "query-builder", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
@@ -73,8 +70,8 @@ public class GlobalSearchServerConfig
      * @param type is either PHP, JSON or XML (see {@link ResponseRendererType})
      * @return null for an error or an instance of {@link ResponseRendererIfc}
      */
-    public ResponseRendererIfc getResponseRendererByType(
-            ResponseRendererType type) throws InvocationTargetException, IllegalAccessException
+    public ResponseRendererIfc getResponseRendererByType(ResponseRendererType type)
+        throws InvocationTargetException, IllegalAccessException
     {
         ResponseRendererIfc result = null;
         if (responseRendererFactories != null && type != null)
@@ -101,8 +98,8 @@ public class GlobalSearchServerConfig
     }
 
     /**
-     * Get the default response parser. Please note that
-     * {@link SearchServerAdapterIfc} can use a special response parser.
+     * Get the default response parser. Please note that {@link SearchServerAdapterIfc} can use a special response
+     * parser.
      *
      * @return an instance of ResponseParserIfc.
      */
@@ -128,13 +125,16 @@ public class GlobalSearchServerConfig
      */
     public MergeStrategyIfc getMerger() throws InvocationTargetException, IllegalAccessException
     {
+        if (merge == null)
+        {
+            return null;
+        }
         return merge.getInstance();
     }
 
     /**
-     * Get all configured search servers. Every call of this method returns a
-     * new list object, but the {@link SearchServerAdapterIfc} instances are
-     * re-used.
+     * Get all configured search servers. Every call of this method returns a new list object, but the {@link
+     * SearchServerAdapterIfc} instances are re-used.
      *
      * @return a list of SearchServerAdapterIfc
      */
@@ -164,13 +164,13 @@ public class GlobalSearchServerConfig
         {
             for (SearchServerConfig config : searchServerConfigs)
             {
-                if(searchServerId.equals(config.getSearchServerName()))
+                if (searchServerId.equals(config.getSearchServerName()))
                 {
                     result = config;
                     break;
                 }
             }
         }
-        return  result;
+        return result;
     }
 }

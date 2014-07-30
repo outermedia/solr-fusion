@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.Message;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 
+import java.util.List;
+
 /**
  * Created by ballmann on 04.06.14.
  */
@@ -37,7 +39,7 @@ public class FusionResponse
         log.error("Error while processing query: {}", message);
         ok = false;
         this.errorMessage = message;
-        if(cause != null && cause.length() > 0)
+        if (cause != null && cause.length() > 0)
         {
             this.errorMessage += "\nCause: " + cause;
         }
@@ -124,4 +126,24 @@ public class FusionResponse
         }
         setError("Internal processing error. Reason: " + reason, null);
     }
+
+    public void setResponseForException(List<Throwable> exceptions)
+    {
+        String reason = "unknown";
+        if (exceptions != null)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (Throwable t : exceptions)
+            {
+                if (sb.length() > 0)
+                {
+                    sb.append("; ");
+                }
+                sb.append(t.getMessage());
+            }
+            reason = sb.toString();
+        }
+        setError("Internal processing error. Reason: " + reason, null);
+    }
+
 }

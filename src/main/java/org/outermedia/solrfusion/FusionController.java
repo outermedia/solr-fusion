@@ -20,9 +20,7 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by ballmann on 04.06.14.
@@ -137,6 +135,8 @@ public class FusionController implements FusionControllerIfc
                     if (vals != null && vals.size() == 1)
                     {
                         String fusionId = vals.get(0);
+                        // perhaps fusionId consists of several fusion doc ids when the doc was merged
+                        // but it is sufficient to check the first fusion doc only
                         String serverName = idGenerator.getSearchServerIdFromFusionId(fusionId);
                         idGenerator.getSearchServerDocIdFromFusionId(fusionId);
                         ok = configuration.getSearchServerConfigByName(serverName) != null;
@@ -159,37 +159,58 @@ public class FusionController implements FusionControllerIfc
         try
         {
             List<String> idVals = query.getTerm().getFusionFieldValue();
-            String solrfusionDocId = idVals.get(0);
+            String solrfusionMergedDocId = idVals.get(0);
             IdGeneratorIfc idGen = configuration.getIdGenerator();
-            String searchServerName = idGen.getSearchServerIdFromFusionId(solrfusionDocId);
-            SearchServerConfig searchServerConfig = configuration.getSearchServerConfigByName(searchServerName);
-            String searchServerDocId = idGen.getSearchServerDocIdFromFusionId(solrfusionDocId);
-            // set id for search server
-            idVals.set(0, searchServerDocId);
-            ScriptEnv env = getNewScriptEnv(fusionRequest.getLocale());
-            configuration.getQueryMapper().mapQuery(configuration, searchServerConfig, query, env);
-            XmlResponse result = sendAndReceive(fusionRequest, searchServerConfig);
-            Exception se = result.getErrorReason();
-            if (se == null)
+            List<Throwable> collectedExceptions = new ArrayList<>();
+            List<Document> collectedDocuments = new ArrayList<>();
+
+            List<String> allServers = idGen.splitMergedId(solrfusionMergedDocId);
+            for (String solrfusionDocId : allServers)
             {
-                SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound());
-                ClosableIterator<Document, SearchServerResponseInfo> response = new ClosableListIterator<>(
-                    result.getDocuments(), info);
-                MappingClosableIterator responseMapped = new MappingClosableIterator(response, configuration,
-                    searchServerConfig, null);
-                ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(
-                    fusionRequest.getResponseType());
-                // set state BEFORE response is rendered, because their the status is read out!
-                fusionResponse.setOk();
-                // TODO better to pass in a Writer in order to avoid building of very big String
-                String responseString = responseRenderer.getResponseString(configuration, responseMapped, fusionRequest,
-                    fusionResponse);
-                fusionResponse.setOkResponse(responseString);
-                response.close();
+                String searchServerName = idGen.getSearchServerIdFromFusionId(solrfusionDocId);
+                SearchServerConfig searchServerConfig = configuration.getSearchServerConfigByName(searchServerName);
+                String searchServerDocId = idGen.getSearchServerDocIdFromFusionId(solrfusionDocId);
+                // set id for search server
+                idVals.set(0, searchServerDocId);
+                ScriptEnv env = getNewScriptEnv(fusionRequest.getLocale());
+                configuration.getQueryMapper().mapQuery(configuration, searchServerConfig, query, env);
+                XmlResponse result = sendAndReceive(fusionRequest, searchServerConfig);
+                Exception se = result.getErrorReason();
+                if (se == null)
+                {
+                    Document doc = result.getDocuments().get(0);
+                    // map id, because completelyMapMergedDoc() depends on it
+                    configuration.getResponseMapper().mapResponse(configuration, searchServerConfig, doc, env,
+                        Arrays.asList(searchServerConfig.getIdFieldName()));
+                    collectedDocuments.add(doc);
+                }
+                else
+                {
+                    collectedExceptions.add(se);
+                }
+                getNewResetQueryState().reset(query);
+            }
+
+            if (collectedDocuments.isEmpty())
+            {
+                fusionResponse.setResponseForException(collectedExceptions);
             }
             else
             {
-                fusionResponse.setResponseForException(se);
+                Document mergedDoc = configuration.getResponseConsolidator().completelyMapMergedDoc(configuration,
+                    idGen.getFusionIdField(), collectedDocuments);
+                SearchServerResponseInfo info = new SearchServerResponseInfo(1);
+                ClosableIterator<Document, SearchServerResponseInfo> response = new ClosableListIterator<>(
+                    Arrays.asList(mergedDoc), info);
+                ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(
+                    fusionRequest.getResponseType());
+                // set state BEFORE response is rendered, because then the status is read out!
+                fusionResponse.setOk();
+                // TODO better to pass in a Writer in order to avoid building of very big String
+                String responseString = responseRenderer.getResponseString(configuration, response, fusionRequest,
+                    fusionResponse);
+                fusionResponse.setOkResponse(responseString);
+                response.close();
             }
         }
         catch (Exception e)

@@ -201,6 +201,15 @@
 
         <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
 
+        <om:merge fusion-name="isbn"
+            class="org.outermedia.solrfusion.DefaultMergeStrategy$Factory">
+            <om:target prio="1" target-name="UBL"/>
+            <om:target prio="2" target-name="GBV"/>
+            <!--
+            <om:target prio="3" target-name="DBoD1"/>
+            -->
+        </om:merge>
+
         <om:solr-server name="UBL" version="3.5"
                         class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 

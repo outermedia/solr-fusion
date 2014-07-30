@@ -47,20 +47,4 @@ public class SolrMultiValuedField extends SolrField
         setTerm(t);
     }
 
-    @Override
-    public String getFirstSearchServerFieldValue()
-    {
-        String result = null;
-        if (values != null && !values.isEmpty())
-        {
-            result = values.get(0);
-        }
-        return result;
-    }
-
-    @Override
-    public List<String> getAllSearchServerFieldValue()
-    {
-        return values;
-    }
 }

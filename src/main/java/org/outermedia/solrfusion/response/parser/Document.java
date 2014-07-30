@@ -3,6 +3,8 @@ package org.outermedia.solrfusion.response.parser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.IdGeneratorIfc;
 import org.outermedia.solrfusion.configuration.FusionField;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -23,6 +25,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Slf4j
 public class Document implements VisitableDocument
 {
     @XmlElements(
@@ -61,7 +64,7 @@ public class Document implements VisitableDocument
      * Find a field of any type by fusion name.
      *
      * @param fusionName fusion name of the field
-     * @return null or an instance of {@link SolrSingleValuedField}
+     * @return null or an instance of {@link SolrField}
      */
     public SolrField findFieldByFusionName(final String fusionName)
     {
@@ -232,4 +235,156 @@ public class Document implements VisitableDocument
         solrSingleValuedFields.add(f);
     }
 
+    public void addUnsetFusionFieldsOf(Document toMerge, IdGeneratorIfc idHandler)
+    {
+        List<SolrSingleValuedField> solrSingleValuedFieldsToMerge = toMerge.getSolrSingleValuedFields();
+        if (solrSingleValuedFieldsToMerge != null)
+        {
+            for (SolrSingleValuedField singleField : solrSingleValuedFieldsToMerge)
+            {
+                if (singleField.getTerm().isWasMapped() && !singleField.getTerm().isRemoved())
+                {
+                    String fusionFieldName = singleField.getTerm().getFusionFieldName();
+                    SolrField sf = findFieldByFusionName(fusionFieldName);
+                    if (sf == null)
+                    {
+                        addSingleField(singleField);
+                    }
+                }
+            }
+        }
+
+        List<SolrMultiValuedField> solrMultiValuedFieldsToMerge = toMerge.getSolrMultiValuedFields();
+        if (solrMultiValuedFieldsToMerge != null)
+        {
+            for (SolrMultiValuedField multiField : solrMultiValuedFieldsToMerge)
+            {
+                if (multiField.getTerm().isWasMapped() && !multiField.getTerm().isRemoved())
+                {
+                    SolrField sf = findFieldByFusionName(multiField.getTerm().getFusionFieldName());
+                    if (sf == null)
+                    {
+                        addMultiField(multiField);
+                    }
+                }
+            }
+        }
+
+        // always merge ids, so that subsequent queries can request the complete set of fields
+        mergeDocIds(toMerge, idHandler);
+    }
+
+
+    protected void mergeDocIds(Document toMerge, IdGeneratorIfc idHandler)
+    {
+        String fusionIdField = idHandler.getFusionIdField();
+        String thisId = getFusionDocId(fusionIdField);
+        String otherId = toMerge.getFusionDocId(fusionIdField);
+        if (thisId != null && otherId != null)
+        {
+            String mergedThisIdStr = idHandler.mergeIds(thisId, otherId);
+            setFusionDocId(fusionIdField, mergedThisIdStr);
+        }
+        else
+        {
+            if (log.isWarnEnabled())
+            {
+                log.warn("Can't merge document ids, because either this document ({}) or the document to merge ({}) " +
+                        "contains no fusion id. The documents are merged nevertheless on the merge field.",
+                    buildFusionDocStr(), toMerge.buildFusionDocStr());
+            }
+        }
+    }
+
+    public String buildFusionDocStr()
+    {
+        final StringBuilder sb = new StringBuilder();
+        accept(new FieldVisitor()
+        {
+            protected void add(boolean isMultiple, Term t)
+            {
+                if (!t.isWasMapped())
+                {
+                    sb.append("UNMAP: ");
+                    sb.append(t.getSearchServerFieldName());
+                    if (isMultiple)
+                    {
+                        sb.append("[" + t.getSearchServerFieldValue().size() + "]");
+                    }
+                    sb.append("=");
+                    sb.append(t.mergeSearchServerValues());
+                }
+                else
+                {
+                    sb.append(t.getFusionFieldName());
+                    if (isMultiple)
+                    {
+                        sb.append("[" + t.getFusionFieldValue().size() + "]");
+                    }
+                    sb.append("=");
+                    sb.append(t.mergeFusionValues());
+                }
+                sb.append("\n");
+            }
+
+            @Override public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
+            {
+                add(false, sf.getTerm());
+                return true;
+            }
+
+            @Override public boolean visitField(SolrMultiValuedField msf, ScriptEnv env)
+            {
+                add(true, msf.getTerm());
+                return true;
+            }
+        }, new ScriptEnv());
+        return sb.toString();
+    }
+
+    public String getFusionDocId(String fusionIdField)
+    {
+        String fusionDocId = null;
+        Term idTerm = getFieldTermByFusionName(fusionIdField);
+        if (idTerm != null)
+        {
+            // id is always a single value
+            fusionDocId = idTerm.getFusionFieldValue().get(0);
+        }
+        return fusionDocId;
+    }
+
+    public void setFusionDocId(String fusionIdField, String fusionDocId)
+    {
+        Term idTerm = getFieldTermByFusionName(fusionIdField);
+        if (idTerm != null)
+        {
+            // id is always a single value
+            idTerm.getFusionFieldValue().set(0, fusionDocId);
+        }
+    }
+
+    public String getMergedFusionValue(String field)
+    {
+        String mergedValue = null;
+
+        Term mergeFieldValueTerm = getFieldTermByFusionName(field);
+        if (mergeFieldValueTerm != null)
+        {
+            mergedValue = mergeFieldValueTerm.mergeFusionValues();
+        }
+        return mergedValue;
+    }
+
+    public List<String> getFusionValuesOf(String field)
+    {
+        List<String> result = null;
+
+        Term fieldValueTerm = getFieldTermByFusionName(field);
+        if (fieldValueTerm != null)
+        {
+            result = fieldValueTerm.getFusionFieldValue();
+        }
+        return result;
+    }
 }

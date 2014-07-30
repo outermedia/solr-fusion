@@ -1,5 +1,6 @@
 package org.outermedia.solrfusion.mapper;
 
+import com.google.common.base.Joiner;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -184,4 +185,25 @@ public class Term
         }
         setWasMapped(true);
     }
+
+    public String mergeFusionValues()
+    {
+        String result = null;
+        if (fusionFieldValue != null)
+        {
+            result = Joiner.on(",").join(fusionFieldValue);
+        }
+        return result;
+    }
+
+    public String mergeSearchServerValues()
+    {
+        String result = null;
+        if (searchServerFieldValue != null)
+        {
+            result = Joiner.on(",").join(searchServerFieldValue);
+        }
+        return result;
+    }
+
 }

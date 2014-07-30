@@ -35,10 +35,8 @@ public class FusionField
     @XmlAttribute(name = "format", required = false)
     private String format;
 
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @XmlAttribute(name = "multi-value", required = false)
-    private Boolean multiValue;
+    @Setter(AccessLevel.NONE) @Getter(AccessLevel.NONE) @XmlAttribute(name = "multi-value", required = false)
+    protected Boolean multiValue;
 
 
     /**
@@ -63,8 +61,7 @@ public class FusionField
         return result;
     }
 
-    protected void afterUnmarshal(Unmarshaller u, Object parent)
-        throws UnmarshalException
+    protected void afterUnmarshal(Unmarshaller u, Object parent) throws UnmarshalException
     {
         FusionFieldList list = (FusionFieldList) parent;
         if (type == null)
@@ -81,5 +78,15 @@ public class FusionField
     public boolean isMultiValue()
     {
         return Boolean.TRUE.equals(multiValue);
+    }
+
+    public void asSingleValue()
+    {
+        multiValue = null;
+    }
+
+    public void asMultiValue()
+    {
+        multiValue = Boolean.TRUE;
     }
 }

@@ -9,6 +9,7 @@ import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.parser.Document;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 
 /**
  * Created by ballmann on 04.06.14.
@@ -29,4 +30,8 @@ public interface ResponseConsolidatorIfc extends Initiable<ResponseConsolidatorF
     public void addErrorResponse(Exception se);
 
     public String getErrorMsg();
+
+    public Document completelyMapMergedDoc(Configuration config, String fusionIdField,
+        Collection<Document> sameDocuments)
+        throws InvocationTargetException, IllegalAccessException;
 }

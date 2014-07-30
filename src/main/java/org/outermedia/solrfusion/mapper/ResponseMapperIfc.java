@@ -8,7 +8,7 @@ import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.response.parser.FieldVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by ballmann on 6/11/14.
@@ -19,7 +19,7 @@ public interface ResponseMapperIfc extends FieldVisitor, Initiable<ResponseMappe
     public String FUSION_FIELD_NAME_SCORE = "score";
 
     public int mapResponse(Configuration config, SearchServerConfig serverConfig, Document doc, ScriptEnv env,
-        List<String> searchServerFieldNamesToMap);
+        Collection<String> searchServerFieldNamesToMap);
 
     public void ignoreMissingMappings();
 }

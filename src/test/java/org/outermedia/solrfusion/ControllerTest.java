@@ -9,9 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
-import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.ResponseRendererType;
-import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.query.parser.NumericRangeQuery;
@@ -24,6 +22,8 @@ import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.UnmarshalException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -58,6 +58,14 @@ public class ControllerTest
 
     @Mock
     private SearchServerConfig testSearchConfig;
+
+    static class TestMerger extends Merge
+    {
+        public void afterUnmarshal(Unmarshaller u, Object parent) throws UnmarshalException
+        {
+            super.afterUnmarshal(u, parent);
+        }
+    }
 
     @Before
     public void setup() throws IOException, ParserConfigurationException, JAXBException, SAXException
@@ -475,6 +483,7 @@ public class ControllerTest
         request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
         FusionResponse response = new FusionResponse();
 
+        log.info("--- without merger test ---");
         controller.processIdQuery(request, response);
         Assert.assertTrue("Expected no error", response.isOk());
         String expected = "  <doc>\n" +
@@ -485,7 +494,35 @@ public class ControllerTest
         Assert.assertTrue("Response doesn't contain doc: " + response.getResponseAsString(),
             response.getResponseAsString().contains(expected));
 
+        // with document merger
+        log.info("--- with merger test ---");
+        TestMerger merger = new TestMerger();
+        merger.setFusionName("isbn");
+        merger.setClassFactory("org.outermedia.solrfusion.DefaultMergeStrategy$Factory");
+        List<MergeTarget> targets = new ArrayList<>();
+        MergeTarget mt1 = new MergeTarget();
+        mt1.setPrio(1);
+        mt1.setTargetName("Bibliothek 9000");
+        targets.add(mt1);
+        MergeTarget mt2 = new MergeTarget();
+        mt2.setPrio(2);
+        mt2.setTargetName("Bibliothek 9002");
+        targets.add(mt2);
+        merger.setTargets(targets);
+        merger.afterUnmarshal(null, null);
+        cfg.getSearchServerConfigs().setMerge(merger);
+        xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponseStr));
+        doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
+        response = new FusionResponse();
+        // reset modified query object
+        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
+        controller.processIdQuery(request, response);
+        Assert.assertTrue("Expected no error", response.isOk());
+        Assert.assertTrue("Response doesn't contain doc: " + response.getResponseAsString(),
+            response.getResponseAsString().contains(expected));
+
         // exception occurred
+        log.info("--- exception test ---");
         xmlResponse.setErrorReason(new RuntimeException("Error1"));
         response = new FusionResponse();
         // reset modified query object
@@ -494,25 +531,28 @@ public class ControllerTest
         Assert.assertEquals("Expected error", "Internal processing error. Reason: Error1", response.getErrorMessage());
 
         // vufind id query after click on a book
-        log.info("--- vufind test ---");
+        log.info("--- vufind test without merger ---");
+        cfg.getSearchServerConfigs().setMerge(null);
         xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponseStr));
         doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
         response = new FusionResponse();
-        request.setQuery("id:Bibliothek_9000#512785457");
+        request.setQuery("id:Bibliothek_9000-1");
         request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
         request.setFilterQuery("");
         request.setParsedFilterQuery(controller.parseQuery(request.getFilterQuery(), null, Locale.GERMAN, request));
         request.setResponseType(ResponseRendererType.XML);
         controller.process(cfg, request, response);
-        String responseStr = response.getResponseAsString();
-        if (response.isOk())
-        {
-            log.debug("Returning:\n{}", responseStr);
-        }
-        else
-        {
-            log.error("Returning error:\n{}", response.getErrorMessage());
-        }
         Assert.assertTrue("Expected no error: " + response.getErrorMessage(), response.isOk());
+        log.debug("Returning:\n{}", response.getResponseAsString());
+
+        log.info("--- vufind test with merger ---");
+        cfg.getSearchServerConfigs().setMerge(merger);
+        xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponseStr));
+        doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
+        response = new FusionResponse();
+        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
+        controller.process(cfg, request, response);
+        Assert.assertTrue("Expected no error: " + response.getErrorMessage(), response.isOk());
+        log.debug("Returning:\n{}", response.getResponseAsString());
     }
 }

@@ -6,9 +6,10 @@ import lombok.ToString;
 import org.outermedia.solrfusion.mapper.Term;
 
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
 
 /**
  * Data holder class keeping the field information of a solr response document.
@@ -23,11 +24,8 @@ import java.util.List;
 @ToString(callSuper = true)
 public class SolrSingleValuedField extends SolrField
 {
-
     @XmlValue
     private String value;
-
-
 
     /**
      * Hook up unmarshalling in order to create an instance of
@@ -41,17 +39,4 @@ public class SolrSingleValuedField extends SolrField
         setTerm(Term.newSearchServerTerm(fieldName, value));
     }
 
-    @Override
-    public String getFirstSearchServerFieldValue()
-    {
-        return value;
-    }
-
-    @Override
-    public List<String> getAllSearchServerFieldValue()
-    {
-        List<String> result = new ArrayList<>(1);
-        result.add(value);
-        return result;
-    }
 }

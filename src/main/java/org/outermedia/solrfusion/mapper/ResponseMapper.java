@@ -26,7 +26,7 @@ public class ResponseMapper implements ResponseMapperIfc
     protected Document doc;
     protected boolean missingMappingPolicy;
     protected Configuration config;
-    protected List<String> searchServerFieldNamesToMap;
+    protected Collection<String> searchServerFieldNamesToMap;
     protected int numberOfMappedFields;
     protected Set<String> unmappedFields;
 
@@ -54,11 +54,11 @@ public class ResponseMapper implements ResponseMapperIfc
      * @param serverConfig                the currently used server's configuration
      * @param doc                         one response document to process
      * @param env                         the environment needed by the scripts which transform values
-     * @param searchServerFieldNamesToMap either null (for all) or a list of searchServerFieldName fields to map
+     * @param searchServerFieldNamesToMap either null (for all) or a set of searchServerFieldName fields to map
      * @return number of mapped fields
      */
     public int mapResponse(Configuration config, SearchServerConfig serverConfig, Document doc, ScriptEnv env,
-        List<String> searchServerFieldNamesToMap)
+        Collection<String> searchServerFieldNamesToMap)
     {
         this.serverConfig = serverConfig;
         this.doc = doc;
@@ -179,7 +179,9 @@ public class ResponseMapper implements ResponseMapperIfc
         {
             if (missingMappingPolicy == MISSING_MAPPING_POLICY_THROW_EXCEPTION)
             {
-                String message = "Found no mapping for search server field '" + searchServerFieldName + "'";
+                String message =
+                    "Found no mapping for search server field '" + searchServerFieldName + "' in configuration of '" +
+                        serverConfig.getSearchServerName() + "'";
                 throw new MissingSearchServerFieldMapping(message);
             }
             else
@@ -207,8 +209,8 @@ public class ResponseMapper implements ResponseMapperIfc
             {
                 if (!idTerm.isProcessed())
                 {
-                    String id = idGenerator.computeId(serverConfig.getSearchServerName(),
-                        idTerm.getSearchServerFieldValue().get(0));
+                    String searchServerDocId = idTerm.getSearchServerFieldValue().get(0);
+                    String id = idGenerator.computeId(serverConfig.getSearchServerName(), searchServerDocId);
                     idTerm.setFusionFieldName(idGenerator.getFusionIdField());
                     List<String> newId = new ArrayList<>();
                     newId.add(id);

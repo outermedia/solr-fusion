@@ -11,6 +11,7 @@ import org.outermedia.solrfusion.response.parser.Document;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -76,6 +77,13 @@ public class ResponseConsolidator extends AbstractResponseConsolidator
         FusionRequest fusionRequest)
     {
         return new DefaultClosableIterator(responseStreams);
+    }
+
+    @Override public Document completelyMapMergedDoc(Configuration config, String fusionIdField,
+        Collection<Document> sameDocuments) throws InvocationTargetException, IllegalAccessException
+    {
+        // not supported
+        return null;
     }
 
     public static class Factory
