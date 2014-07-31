@@ -24,6 +24,9 @@ public class MergeStrategyTest
 {
     TestHelper helper;
     Configuration cfg;
+    String sep = DefaultIdGenerator.SEPARATOR;
+    String isep = DefaultIdGenerator.ID_SEPARATOR;
+
 
     @Before
     public void setup() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
@@ -37,10 +40,10 @@ public class MergeStrategyTest
     {
         MergeStrategyIfc merger = cfg.getMerger();
         Set<Document> docs = new HashSet<>();
-        docs.add(buildDocument("id", fusionId("Bibliothek C", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
+        docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
         Document mergedDoc = merger.mergeDocuments(cfg, docs);
         // System.out.println("MD " + mergedDoc.buildFusionDocStr());
-        checkDoc(mergedDoc, "Bibliothek_C-3", "title=t3", "isbn=i1", "author=a2");
+        checkDoc(mergedDoc, "BibliothekC" + sep + "3", "title=t3", "isbn=i1", "author=a2");
     }
 
     @Test
@@ -48,14 +51,15 @@ public class MergeStrategyTest
     {
         MergeStrategyIfc merger = cfg.getMerger();
         Set<Document> docs = new HashSet<>();
-        docs.add(buildDocument("id", fusionId("Bibliothek A", "1"), "title", "t1", "isbn", "i1"));
-        docs.add(buildDocument("id", fusionId("Bibliothek B", "2"), "title", "t2", "isbn", "i1", "author", "a1"));
-        docs.add(buildDocument("id", fusionId("Bibliothek C", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
+        docs.add(buildDocument("id", fusionId("BibliothekA", "1"), "title", "t1", "isbn", "i1"));
+        docs.add(buildDocument("id", fusionId("BibliothekB", "2"), "title", "t2", "isbn", "i1", "author", "a1"));
+        docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
         Document mergedDoc = merger.mergeDocuments(cfg, docs);
         Assert.assertNotNull("Expected merged document", mergedDoc);
         // System.out.println("MD " + mergedDoc.buildFusionDocStr());
-        checkDoc(mergedDoc, "id=Bibliothek_A-1\\u002cBibliothek_B-2\\u002cBibliothek_C-3", "title=t1", "isbn=i1",
-            "author=a1");
+        checkDoc(mergedDoc,
+            "id=BibliothekA" + sep + "1" + isep + "BibliothekB" + sep + "2" + isep + "BibliothekC" + sep + "3",
+            "title=t1", "isbn=i1", "author=a1");
     }
 
     @Test
@@ -63,12 +67,13 @@ public class MergeStrategyTest
     {
         MergeStrategyIfc merger = cfg.getMerger();
         Set<Document> docs = new HashSet<>();
-        docs.add(buildDocument("id", fusionId("Bibliothek A", "1"), "title", "t1", "isbn", "i1"));
-        docs.add(buildDocument("id", fusionId("Bibliothek C", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
+        docs.add(buildDocument("id", fusionId("BibliothekA", "1"), "title", "t1", "isbn", "i1"));
+        docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
         Document mergedDoc = merger.mergeDocuments(cfg, docs);
         Assert.assertNotNull("Expected merged document", mergedDoc);
         // System.out.println("MD " + mergedDoc.buildFusionDocStr());
-        checkDoc(mergedDoc, "id=Bibliothek_A-1\\u002cBibliothek_C-3", "title=t1", "isbn=i1", "author=a2");
+        checkDoc(mergedDoc, "id=BibliothekA" + sep + "1" + isep + "BibliothekC" + sep + "3", "title=t1", "isbn=i1",
+            "author=a2");
     }
 
     @Test
@@ -76,12 +81,15 @@ public class MergeStrategyTest
     {
         MergeStrategyIfc merger = cfg.getMerger();
         Set<Document> docs = new HashSet<>();
-        docs.add(buildDocument("id", fusionId("Bibliothek B", "2"), "isbn", "i1", "author", "a1"));
-        docs.add(buildDocument("id", fusionId("Bibliothek C", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
+        docs.add(buildDocument("id", fusionId("BibliothekB", "2"), "isbn", "i1", "author", "a1"));
+        docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
         Document mergedDoc = merger.mergeDocuments(cfg, docs);
         Assert.assertNotNull("Expected merged document", mergedDoc);
         // System.out.println("MD " + mergedDoc.buildFusionDocStr());
-        checkDoc(mergedDoc, "Bibliothek_B-2\\u002cBibliothek_C-3", "title=t3", "isbn=i1", "author=a1");
+        String sep = DefaultIdGenerator.SEPARATOR;
+        String isep = DefaultIdGenerator.ID_SEPARATOR;
+        checkDoc(mergedDoc, "BibliothekB" + sep + "2" + isep + "BibliothekC" + sep + "3", "title=t3", "isbn=i1",
+            "author=a1");
     }
 
     private void checkDoc(Document mergedDoc, String... fields)

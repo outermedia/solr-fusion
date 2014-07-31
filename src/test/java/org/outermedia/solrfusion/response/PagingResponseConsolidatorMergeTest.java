@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.response;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.outermedia.solrfusion.DefaultIdGenerator;
 import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.IdGeneratorIfc;
 import org.outermedia.solrfusion.TestHelper;
@@ -48,9 +49,9 @@ public class PagingResponseConsolidatorMergeTest
         Document d4 = (buildDocument("Id", "4", "Title", "t4", "Other1", "o1x", "Other3", "o3x"));
 
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
-        addAnswerFromServer("Bibliothek A", consolidator, Arrays.asList(d1, d4));
-        addAnswerFromServer("Bibliothek B", consolidator, Arrays.asList(d2));
-        addAnswerFromServer("Bibliothek C", consolidator, Arrays.asList(d3));
+        addAnswerFromServer("BibliothekA", consolidator, Arrays.asList(d1, d4));
+        addAnswerFromServer("BibliothekB", consolidator, Arrays.asList(d2));
+        addAnswerFromServer("BibliothekC", consolidator, Arrays.asList(d3));
 
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setSolrFusionSortField("id");
@@ -59,8 +60,10 @@ public class PagingResponseConsolidatorMergeTest
         fusionRequest.setPageSize(100);
         ClosableIterator<Document, SearchServerResponseInfo> docs = consolidator.getResponseIterator(cfg,
             fusionRequest);
+        String sep = DefaultIdGenerator.SEPARATOR;
+        String isep = DefaultIdGenerator.ID_SEPARATOR;
         String expectedDoc1 = "score=0.42719999999999997\n" +
-            "id=Bibliothek_A-1\\u002cBibliothek_B-2\\u002cBibliothek_C-3\n" +
+            "id=BibliothekA" + sep + "1" + isep + "BibliothekB" + sep + "2" + isep + "BibliothekC" + sep + "3\n" +
             "title=t1\n" +
             "isbn=i1\n" +
             "other1=o1\n" +
@@ -68,7 +71,7 @@ public class PagingResponseConsolidatorMergeTest
             "other2=o2\n" +
             "other3=o3\n";
         String expectedDoc2 = "score=0.42719999999999997\n" +
-            "id=Bibliothek_A-4\n" +
+            "id=BibliothekA" + sep + "4\n" +
             "title=t4\n" +
             "other1=o1x\n" +
             "other3=o3x\n";
@@ -98,15 +101,15 @@ public class PagingResponseConsolidatorMergeTest
         Document d2 = buildDocument("Id", "2", "Title", "t2", "ISBN", Arrays.asList("j1", "i1"), "Author", "a1",
             "Other2", "o2");
         // d3 contains deleted field, which should stay deleted after merging
-        Document d3 = buildDocument("Id", "3", "Title", "t3", "ISBN", Arrays.asList("j1"), "Author", "a2",
-            "Unknown", "u1", "Other3", "o3");
+        Document d3 = buildDocument("Id", "3", "Title", "t3", "ISBN", Arrays.asList("j1"), "Author", "a2", "Unknown",
+            "u1", "Other3", "o3");
         // d4 contains no merge field; d4 must not be merged
         Document d4 = (buildDocument("Id", "4", "Title", "t4", "Other1", "o1x", "Other3", "o3x"));
 
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
-        addAnswerFromServer("Bibliothek B", consolidator, Arrays.asList(d2));
-        addAnswerFromServer("Bibliothek A", consolidator, Arrays.asList(d1, d4));
-        addAnswerFromServer("Bibliothek C", consolidator, Arrays.asList(d3));
+        addAnswerFromServer("BibliothekB", consolidator, Arrays.asList(d2));
+        addAnswerFromServer("BibliothekA", consolidator, Arrays.asList(d1, d4));
+        addAnswerFromServer("BibliothekC", consolidator, Arrays.asList(d3));
 
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setSolrFusionSortField("id");
@@ -115,8 +118,10 @@ public class PagingResponseConsolidatorMergeTest
         fusionRequest.setPageSize(100);
         ClosableIterator<Document, SearchServerResponseInfo> docs = consolidator.getResponseIterator(cfg,
             fusionRequest);
+        String sep = DefaultIdGenerator.SEPARATOR;
+        String isep = DefaultIdGenerator.ID_SEPARATOR;
         String expectedDoc1 = "score=0.42719999999999997\n" +
-            "id=Bibliothek_A-1\\u002cBibliothek_B-2\\u002cBibliothek_C-3\n" +
+            "id=BibliothekA" + sep + "1" + isep + "BibliothekB" + sep + "2" + isep + "BibliothekC" + sep + "3\n" +
             "title=t1\n" +
             "other1=o1\n" +
             "author=a1\n" +
@@ -124,7 +129,7 @@ public class PagingResponseConsolidatorMergeTest
             "other3=o3\n" +
             "isbn[2]=i1,j1\n";
         String expectedDoc2 = "score=0.42719999999999997\n" +
-            "id=Bibliothek_A-4\n" +
+            "id=BibliothekA" + sep + "4\n" +
             "title=t4\n" +
             "other1=o1x\n" +
             "other3=o3x\n";

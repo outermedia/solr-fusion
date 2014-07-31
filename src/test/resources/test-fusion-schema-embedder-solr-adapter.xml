@@ -62,7 +62,7 @@
 
         <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
 
-        <om:solr-server name="Bibliothek 9000" version="3.6"
+        <om:solr-server name="Bibliothek9000" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.EmbeddedSolrAdapter$Factory">
 
             <om:url>src/test/resources/solr/solr-home-1</om:url>
@@ -79,7 +79,7 @@
 
         </om:solr-server>
 
-        <om:solr-server name="Bibliothek 9002" version="3.6"
+        <om:solr-server name="Bibliothek9002" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.EmbeddedSolrAdapter$Factory">
 
             <om:url>src/test/resources/solr/solr-home-2</om:url>

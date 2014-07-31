@@ -179,9 +179,17 @@ public class FusionController implements FusionControllerIfc
                 if (se == null)
                 {
                     Document doc = result.getDocuments().get(0);
-                    // map id, because completelyMapMergedDoc() depends on it
+                    // map id, because completelyMapMergedDoc() call below depends on it
+                    // the doc may not contain the id field, but doc merging needs it
+                    String idFieldName = searchServerConfig.getIdFieldName();
+                    if (doc.getSearchServerDocId(idFieldName) == null)
+                    {
+                        log.debug("Setting id={} in doc, because response of id query didn't contain a value.",
+                            searchServerDocId);
+                        doc.setSearchServerDocId(idFieldName, searchServerDocId);
+                    }
                     configuration.getResponseMapper().mapResponse(configuration, searchServerConfig, doc, env,
-                        Arrays.asList(searchServerConfig.getIdFieldName()));
+                        Arrays.asList(idFieldName));
                     collectedDocuments.add(doc);
                 }
                 else

@@ -70,13 +70,13 @@
 
         <om:merge fusion-name="isbn"
             class="org.outermedia.solrfusion.DefaultMergeStrategy$Factory">
-            <om:target prio="200" target-name="Bibliothek D"/>
-            <om:target prio="1" target-name="Bibliothek A"/>
-            <om:target prio="3" target-name="Bibliothek C"/>
-            <om:target prio="2" target-name="Bibliothek B"/>
+            <om:target prio="200" target-name="BibliothekD"/>
+            <om:target prio="1" target-name="BibliothekA"/>
+            <om:target prio="3" target-name="BibliothekC"/>
+            <om:target prio="2" target-name="BibliothekB"/>
         </om:merge>
 
-        <om:solr-server name="Bibliothek A" version="3.6"
+        <om:solr-server name="BibliothekA" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
             <om:url>http://host:port/solr/xyz</om:url>
@@ -97,7 +97,7 @@
             <om:field name="Other3" fusion-name="other3"/>
         </om:solr-server>
 
-        <om:solr-server name="Bibliothek B" version="3.6"
+        <om:solr-server name="BibliothekB" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
             <om:url>http://host:port/solr/xyz</om:url>
@@ -118,7 +118,7 @@
             <om:field name="Other3" fusion-name="other3"/>
         </om:solr-server>
 
-        <om:solr-server name="Bibliothek C" version="3.6"
+        <om:solr-server name="BibliothekC" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
             <om:url>http://host:port/solr/xyz</om:url>
@@ -144,7 +144,7 @@
             </om:field>
         </om:solr-server>
 
-        <om:solr-server name="Bibliothek D" version="3.6"
+        <om:solr-server name="BibliothekD" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
             <om:url>http://host:port/solr/xyz</om:url>

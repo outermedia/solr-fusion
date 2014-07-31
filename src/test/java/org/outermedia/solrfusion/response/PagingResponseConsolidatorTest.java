@@ -93,8 +93,8 @@ public class PagingResponseConsolidatorTest
 
     protected void createResponses(ResponseConsolidatorIfc consolidator, String[] titles1, String[] titles2)
     {
-        addAnswerFromServer("Bibliothek 9000", consolidator, titles1);
-        addAnswerFromServer("Bibliothek 9002", consolidator, titles2);
+        addAnswerFromServer("Bibliothek9000", consolidator, titles1);
+        addAnswerFromServer("Bibliothek9002", consolidator, titles2);
         Assert.assertEquals("Number of added responses is different", 2, consolidator.numberOfResponseStreams());
     }
 
@@ -135,7 +135,7 @@ public class PagingResponseConsolidatorTest
         FusionRequest fusionRequest, String... titles)
     {
         String titleField = "title";
-        if (serverName.equals("Bibliothek 9002"))
+        if (serverName.equals("Bibliothek9002"))
         {
             titleField = "titleVT_de";
         }

@@ -327,7 +327,7 @@ public class ControllerTest
         FusionController controller = (FusionController) FusionController.Factory.getInstance();
         cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
         controller.configuration = cfg;
-        SearchServerConfig serverConfig = cfg.getSearchServerConfigByName("Bibliothek 9002");
+        SearchServerConfig serverConfig = cfg.getSearchServerConfigByName("Bibliothek9002");
         Assert.assertNotNull("Didn't find server 9002", serverConfig);
         FusionRequest fusionRequest = new FusionRequest();
         Term t = Term.newFusionTerm("title", "abc");
@@ -380,7 +380,7 @@ public class ControllerTest
         FusionController controller = (FusionController) FusionController.Factory.getInstance();
         cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
         controller.configuration = cfg;
-        SearchServerConfig serverConfig = cfg.getSearchServerConfigByName("Bibliothek 9002");
+        SearchServerConfig serverConfig = cfg.getSearchServerConfigByName("Bibliothek9002");
         Assert.assertNotNull("Didn't find server 9002", serverConfig);
 
         FusionRequest request = new FusionRequest();
@@ -428,16 +428,16 @@ public class ControllerTest
         String fusionIdField = idGenerator.getFusionIdField();
 
         PhraseQuery pq = new PhraseQuery(
-            Term.newFusionTerm(fusionIdField, idGenerator.computeId("Bibliothek 9000", "v1")));
+            Term.newFusionTerm(fusionIdField, idGenerator.computeId("Bibliothek9000", "v1")));
         Assert.assertTrue("Phrase query should an id query", controller.isIdQuery(pq));
 
-        pq = new PhraseQuery(Term.newFusionTerm(fusionIdField, idGenerator.computeId("unknown server", "v1")));
+        pq = new PhraseQuery(Term.newFusionTerm(fusionIdField, idGenerator.computeId("unknownserver", "v1")));
         Assert.assertFalse("Phrase query with unknown server shouldn't be an id query", controller.isIdQuery(pq));
 
         pq = new PhraseQuery(Term.newFusionTerm(fusionIdField, "v1"));
         Assert.assertFalse("Phrase query with wrong id value shouldn't be an id query", controller.isIdQuery(pq));
 
-        pq = new PhraseQuery(Term.newFusionTerm("xid", idGenerator.computeId("Bibliothek 9000", "v1")));
+        pq = new PhraseQuery(Term.newFusionTerm("xid", idGenerator.computeId("Bibliothek9000", "v1")));
         Assert.assertFalse("Phrase query with non id field shouldn't be an id query", controller.isIdQuery(pq));
 
         NumericRangeQuery rq = NumericRangeQuery.newLongRange(fusionIdField, 1L, 10L, true, true);
@@ -452,7 +452,7 @@ public class ControllerTest
         FusionController controller = spy((FusionController) FusionController.Factory.getInstance());
         cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
         controller.configuration = cfg;
-        SearchServerConfig searchServerConfig = cfg.getSearchServerConfigByName("Bibliothek 9000");
+        SearchServerConfig searchServerConfig = cfg.getSearchServerConfigByName("Bibliothek9000");
         ResponseParserIfc responseParser = searchServerConfig.getResponseParser(cfg.getDefaultResponseParser());
         String xmlResponseStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<response>\n" +
@@ -478,7 +478,8 @@ public class ControllerTest
         XmlResponse xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponseStr));
         doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
         FusionRequest request = new FusionRequest();
-        request.setQuery("id:\"Bibliothek_9000-1\"");
+        String sep = DefaultIdGenerator.SEPARATOR;
+        request.setQuery("id:\"Bibliothek9000" + sep + "1\"");
         request.setResponseType(ResponseRendererType.XML);
         request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
         FusionResponse response = new FusionResponse();
@@ -487,7 +488,7 @@ public class ControllerTest
         controller.processIdQuery(request, response);
         Assert.assertTrue("Expected no error", response.isOk());
         String expected = "  <doc>\n" +
-            "    <str name=\"id\"><![CDATA[Bibliothek_9000-1]]></str>\n" +
+            "    <str name=\"id\"><![CDATA[Bibliothek9000" + sep + "1]]></str>\n" +
             "    <str name=\"title\"><![CDATA[abc]]></str>\n" +
             "    <float name=\"score\"><![CDATA[0.8100914448000002]]></float>\n" +
             "  </doc>";
@@ -502,11 +503,11 @@ public class ControllerTest
         List<MergeTarget> targets = new ArrayList<>();
         MergeTarget mt1 = new MergeTarget();
         mt1.setPrio(1);
-        mt1.setTargetName("Bibliothek 9000");
+        mt1.setTargetName("Bibliothek9000");
         targets.add(mt1);
         MergeTarget mt2 = new MergeTarget();
         mt2.setPrio(2);
-        mt2.setTargetName("Bibliothek 9002");
+        mt2.setTargetName("Bibliothek9002");
         targets.add(mt2);
         merger.setTargets(targets);
         merger.afterUnmarshal(null, null);
@@ -532,11 +533,32 @@ public class ControllerTest
 
         // vufind id query after click on a book
         log.info("--- vufind test without merger ---");
+        String xmlResponsWithoutIdStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<response>\n" +
+            "<lst name=\"responseHeader\">\n" +
+            "  <int name=\"status\">0</int>\n" +
+            "  <int name=\"QTime\">0</int>\n" +
+            "  <lst name=\"params\">\n" +
+            "    <str name=\"indent\">on</str>\n" +
+            "    <str name=\"start\">0</str>\n" +
+            "    <str name=\"q\"><![CDATA[id:...]]></str>\n" +
+            "    <str name=\"version\">2.2</str>\n" +
+            "    <str name=\"rows\">2</str>\n" +
+            "  </lst>\n" +
+            "</lst>\n" +
+            "<result name=\"response\" numFound=\"1\" start=\"0\">\n" +
+            "  <doc>\n" +
+            "    <str name=\"title\"><![CDATA[abc]]></str>\n" +
+            "    <float name=\"score\"><![CDATA[0.6750762040000001]]></float>\n" +
+            "  </doc>\n" +
+            "</result>\n" +
+            "</response>";
+
         cfg.getSearchServerConfigs().setMerge(null);
-        xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponseStr));
+        xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponsWithoutIdStr));
         doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
         response = new FusionResponse();
-        request.setQuery("id:Bibliothek_9000-1");
+        request.setQuery("id:Bibliothek9000" + sep + "1");
         request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
         request.setFilterQuery("");
         request.setParsedFilterQuery(controller.parseQuery(request.getFilterQuery(), null, Locale.GERMAN, request));
@@ -547,7 +569,7 @@ public class ControllerTest
 
         log.info("--- vufind test with merger ---");
         cfg.getSearchServerConfigs().setMerge(merger);
-        xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponseStr));
+        xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponsWithoutIdStr));
         doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
         response = new FusionResponse();
         request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));

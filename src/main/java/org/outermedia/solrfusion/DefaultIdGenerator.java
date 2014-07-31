@@ -23,10 +23,11 @@ import java.util.List;
 @Slf4j
 public class DefaultIdGenerator implements IdGeneratorIfc
 {
-    // "-" and "_" are valid chars in html ids and css class names. Unicode chars are valid too.
-    public final static String SEPARATOR = "-";
-    public final static String SPACE_REPLACEMENT = "_";
-    public final static String ID_SEPARATOR = "\\u002c"; // comma
+    // "-" and "_" are valid chars in html ids and css class names. Can't use &#92;XXXX, because vufind would
+    // not escape the backslash in queries.
+    public final static String SEPARATOR = "_";
+    public final static String ID_SEPARATOR = "-";
+
     private String fusionIdField;
 
     /**
@@ -43,12 +44,15 @@ public class DefaultIdGenerator implements IdGeneratorIfc
         {
             throw new RuntimeException("Can't handle server names containing '" + SEPARATOR + "': '" + serverName);
         }
-        if (serverName.contains(SPACE_REPLACEMENT))
+        if (serverName.contains(ID_SEPARATOR))
         {
-            throw new RuntimeException(
-                "Can't handle server names containing '" + SPACE_REPLACEMENT + "': '" + serverName);
+            throw new RuntimeException("Can't handle server names containing '" + SEPARATOR + "': '" + serverName);
         }
-        return serverName.replace(" ", SPACE_REPLACEMENT) + SEPARATOR + searchServerDocId;
+        if (serverName.contains(" "))
+        {
+            throw new RuntimeException("Can't handle server names containing SPACE: '" + serverName);
+        }
+        return serverName + SEPARATOR + searchServerDocId;
     }
 
     /**
@@ -65,7 +69,7 @@ public class DefaultIdGenerator implements IdGeneratorIfc
         {
             log.warn("Wrong id field value: '{}'", fusionDocId);
         }
-        return fusionDocId.substring(0, hashPos).replace(SPACE_REPLACEMENT, " ");
+        return fusionDocId.substring(0, hashPos);
     }
 
     /**
@@ -86,7 +90,7 @@ public class DefaultIdGenerator implements IdGeneratorIfc
         {
             log.warn("Wrong id field value: '{}'", fusionDocId);
         }
-        return fusionDocId.substring(hashPos + 1);
+        return fusionDocId.substring(hashPos + SEPARATOR.length());
     }
 
     /**

@@ -387,4 +387,34 @@ public class Document implements VisitableDocument
         }
         return result;
     }
+
+    public String getSearchServerDocId(String searchServerIdField)
+    {
+        String docId = null;
+        Term idTerm = getFieldTermByName(searchServerIdField);
+        if (idTerm != null)
+        {
+            // id is always a single value
+            docId = idTerm.getSearchServerFieldValue().get(0);
+        }
+        return docId;
+    }
+
+    public void setSearchServerDocId(String searchServerIdField, String searchServerDocId)
+    {
+        Term idTerm = getFieldTermByName(searchServerIdField);
+        if (idTerm == null)
+        {
+            SolrSingleValuedField sf = new SolrSingleValuedField();
+            sf.setFieldName(searchServerIdField);
+            sf.setValue(searchServerDocId);
+            sf.afterUnmarshal(null, null);
+            addSingleField(sf);
+        }
+        else
+        {
+            // id is always a single value
+            idTerm.getSearchServerFieldValue().set(0, searchServerDocId);
+        }
+    }
 }

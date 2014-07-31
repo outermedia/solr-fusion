@@ -15,9 +15,10 @@ public class IdGeneratorTest
     public void testExtraction()
     {
         IdGeneratorIfc idGen = DefaultIdGenerator.Factory.getInstance();
-        String serverName = "ab c";
+        String serverName = "abc";
         String searchServerDocId = "3" + DefaultIdGenerator.SEPARATOR + "2";
         String fid = idGen.computeId(serverName, searchServerDocId);
+        System.out.println("CID " + fid);
         Assert.assertEquals("Got wrong server name", serverName, idGen.getSearchServerIdFromFusionId(fid));
         Assert.assertEquals("Got wrong doc id", searchServerDocId, idGen.getSearchServerDocIdFromFusionId(fid));
 
@@ -42,14 +43,19 @@ public class IdGeneratorTest
     public void testMergeSplitIds()
     {
         IdGeneratorIfc idGen = DefaultIdGenerator.Factory.getInstance();
-        String thisId = idGen.computeId("Server A", "1");
-        String otherId1 = idGen.computeId("Server B", "2");
-        String otherId2 = idGen.computeId("Server C", "3");
+        String thisId = idGen.computeId("ServerA", "1");
+        String otherId1 = idGen.computeId("ServerB", "2");
+        String otherId2 = idGen.computeId("ServerC", "3");
         String mergedId = idGen.mergeIds(idGen.mergeIds(thisId, otherId1), otherId2);
-        Assert.assertEquals("Got different merged doc id", "Server_A-1\\u002cServer_B-2\\u002cServer_C-3", mergedId);
+        String sep = DefaultIdGenerator.SEPARATOR;
+        String isep = DefaultIdGenerator.ID_SEPARATOR;
+
+        Assert.assertEquals("Got different merged doc id",
+            "ServerA" + sep + "1" + isep + "ServerB" + sep + "2" + isep + "ServerC" + sep + "3", mergedId);
 
         List<String> splitIds = idGen.splitMergedId(mergedId);
-        List<String> expectedList = Arrays.asList("Server_A-1", "Server_B-2", "Server_C-3");
+        List<String> expectedList = Arrays.asList("ServerA" + sep + "1", "ServerB" + sep + "2",
+            "ServerC" + sep + "3");
         Assert.assertEquals("Got different split doc ids", expectedList, splitIds);
     }
 }
