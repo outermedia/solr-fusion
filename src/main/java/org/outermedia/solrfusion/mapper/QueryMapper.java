@@ -31,7 +31,7 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     /**
      * Only factory creates instances.
      */
-    private QueryMapper()
+    protected QueryMapper()
     {
     }
 

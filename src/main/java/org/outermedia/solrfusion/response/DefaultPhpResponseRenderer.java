@@ -22,7 +22,7 @@ public class DefaultPhpResponseRenderer implements ResponseRendererIfc
 	/**
 	 * Factory creates instances only.
 	 */
-	private DefaultPhpResponseRenderer()
+	protected DefaultPhpResponseRenderer()
 	{}
 
     @Override

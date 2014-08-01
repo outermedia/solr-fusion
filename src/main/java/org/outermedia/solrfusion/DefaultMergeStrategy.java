@@ -26,7 +26,7 @@ public class DefaultMergeStrategy implements MergeStrategyIfc
     /**
      * Factory creates instances only.
      */
-    private DefaultMergeStrategy()
+    protected DefaultMergeStrategy()
     {
     }
 

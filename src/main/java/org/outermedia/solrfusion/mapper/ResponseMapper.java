@@ -33,7 +33,7 @@ public class ResponseMapper implements ResponseMapperIfc
     /**
      * Factory creates instances only.
      */
-    private ResponseMapper()
+    protected ResponseMapper()
     {
         missingMappingPolicy = MISSING_MAPPING_POLICY_THROW_EXCEPTION;
     }

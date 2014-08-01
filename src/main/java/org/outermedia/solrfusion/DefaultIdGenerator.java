@@ -33,7 +33,7 @@ public class DefaultIdGenerator implements IdGeneratorIfc
     /**
      * Factory creates instances only.
      */
-    private DefaultIdGenerator()
+    protected DefaultIdGenerator()
     {
     }
 

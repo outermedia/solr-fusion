@@ -23,7 +23,7 @@ public class DefaultJsonResponseRenderer implements ResponseRendererIfc
     /**
      * Factory creates instances only.
      */
-    private DefaultJsonResponseRenderer()
+    protected DefaultJsonResponseRenderer()
     {
         freemarkerResponseRenderer = new FreemarkerResponseRenderer();
     }

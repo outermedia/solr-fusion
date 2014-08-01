@@ -32,21 +32,20 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 @Slf4j
 public class DefaultSolrAdapter implements SearchServerAdapterIfc
 {
-    public final static String QUERY_PARAMETER = "q";
-    public final static String FILTER_QUERY_PARAMETER = "fq";
-    public final static String WRITER_TYPE_PARAMETER = "wt";
-    public final static String DEFAULT_WRITER_TYPE_PARAMETER = "xml";
-    public final static String START_PARAMETER = "start";
-    public final static String ROWS_PARAMETER = "rows";
-    public final static String SORT_PARAMETER = "sort";
-    public final static String FIELDS_TO_RETURN_PARAMETER = "fl";
+    public String QUERY_PARAMETER = "q";
+    public String FILTER_QUERY_PARAMETER = "fq";
+    public String WRITER_TYPE_PARAMETER = "wt";
+    public String START_PARAMETER = "start";
+    public String ROWS_PARAMETER = "rows";
+    public String SORT_PARAMETER = "sort";
+    public String FIELDS_TO_RETURN_PARAMETER = "fl";
 
     private String url;
 
     /**
      * Factory creates instances only.
      */
-    private DefaultSolrAdapter()
+    protected DefaultSolrAdapter()
     {
     }
 
@@ -123,7 +122,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
 
     public static class Factory
     {
-        public static DefaultSolrAdapter getInstance()
+        public static SearchServerAdapterIfc getInstance()
         {
             return new DefaultSolrAdapter();
         }

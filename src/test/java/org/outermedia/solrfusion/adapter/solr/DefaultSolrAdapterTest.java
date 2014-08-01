@@ -119,7 +119,7 @@ public class DefaultSolrAdapterTest
     @Test
     public void testErrorCase() throws URISyntaxException, IOException
     {
-        DefaultSolrAdapter adapter = spy(DefaultSolrAdapter.Factory.getInstance());
+        DefaultSolrAdapter adapter = spy((DefaultSolrAdapter)DefaultSolrAdapter.Factory.getInstance());
         SearchServerConfig sc = new SearchServerConfig();
         sc.setUrl("http://localhost");
         adapter.init(sc);
@@ -171,7 +171,7 @@ public class DefaultSolrAdapterTest
     public void testHttpClientParamBuilding()
         throws URISyntaxException, FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
     {
-        DefaultSolrAdapter adapter = DefaultSolrAdapter.Factory.getInstance();
+        DefaultSolrAdapter adapter = (DefaultSolrAdapter)DefaultSolrAdapter.Factory.getInstance();
         SearchServerConfig serverConfig = mock(SearchServerConfig.class);
         doReturn("http://unit.test.com/").when(serverConfig).getUrl();
         adapter.init(serverConfig);

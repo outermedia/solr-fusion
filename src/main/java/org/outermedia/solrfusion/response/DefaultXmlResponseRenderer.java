@@ -24,7 +24,7 @@ public class DefaultXmlResponseRenderer implements ResponseRendererIfc
 	/**
 	 * Factory creates instances only.
 	 */
-	private DefaultXmlResponseRenderer()
+	protected DefaultXmlResponseRenderer()
 	{
         freemarkerResponseRenderer = new FreemarkerResponseRenderer();
     }

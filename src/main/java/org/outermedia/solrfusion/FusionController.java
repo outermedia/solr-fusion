@@ -35,7 +35,7 @@ public class FusionController implements FusionControllerIfc
     /**
      * Only factory creates instances.
      */
-    private FusionController()
+    protected FusionController()
     {
         util = new Util();
     }

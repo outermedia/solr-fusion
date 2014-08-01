@@ -19,7 +19,7 @@ public class DefaultScore implements ScoreCorrectorIfc
     /**
      * Factory creates instances only.
      */
-    private DefaultScore()
+    protected DefaultScore()
     {
     }
 

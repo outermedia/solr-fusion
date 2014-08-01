@@ -35,7 +35,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
     /**
      * Factory creates instances only.
      */
-    private PagingResponseConsolidator()
+    protected PagingResponseConsolidator()
     {
         super();
         allDocs = new ArrayList<>();

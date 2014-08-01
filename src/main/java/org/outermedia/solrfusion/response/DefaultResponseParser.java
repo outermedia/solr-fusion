@@ -29,7 +29,7 @@ public class DefaultResponseParser implements ResponseParserIfc
     /**
      * Factory creates instances only.
      */
-    private DefaultResponseParser()
+    protected DefaultResponseParser()
     {
         xmlUtil = new Util();
     }

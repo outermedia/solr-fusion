@@ -29,7 +29,7 @@ public class ResponseConsolidator extends AbstractResponseConsolidator
     /**
      * Factory creates instances only.
      */
-    private ResponseConsolidator()
+    protected ResponseConsolidator()
     {
         super();
         responseStreams = new ArrayList<>();

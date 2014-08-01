@@ -38,7 +38,7 @@ public class SimpleXmlResponseRenderer implements ResponseRendererIfc
     /**
      * Factory creates instances only.
      */
-    private SimpleXmlResponseRenderer()
+    protected SimpleXmlResponseRenderer()
     {
         fusionTypeToResponseKey = new HashMap<>();
     }

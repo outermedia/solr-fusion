@@ -19,7 +19,6 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import static org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter.*;
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 /**
@@ -31,6 +30,8 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 @Slf4j
 public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
 {
+
+    protected String WRITER_TYPE_PARAMETER = "wt";
 
     @Setter @Getter private SolrTestServer testServer;
 

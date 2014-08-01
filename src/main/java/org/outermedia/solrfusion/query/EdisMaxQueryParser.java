@@ -30,7 +30,7 @@ public class EdisMaxQueryParser implements QueryParserIfc
     /**
      * Factory creates instances only.
      */
-    private EdisMaxQueryParser()
+    protected EdisMaxQueryParser()
     {
     }
 

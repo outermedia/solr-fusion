@@ -99,7 +99,7 @@ public class QueryBuilder implements QueryBuilderIfc
     /**
      * Factory creates instances only.
      */
-    private QueryBuilder()
+    protected QueryBuilder()
     {
     }
 
