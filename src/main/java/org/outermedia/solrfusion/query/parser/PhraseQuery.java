@@ -19,10 +19,18 @@ public class PhraseQuery extends TermQuery
         super(term);
     }
 
+    protected PhraseQuery() {}
+
     @Override
     public void accept(QueryVisitor visitor, ScriptEnv env)
     {
         visitor.visitQuery(this, env);
+    }
+
+    @Override
+    public PhraseQuery shallowClone()
+    {
+        return shallowCloneImpl(new PhraseQuery());
     }
 
 }

@@ -48,11 +48,15 @@ public class MultiValueMerger extends AbstractType
         }
         for (int i = 0; i < limit && i < values.size(); i++)
         {
-            if (i > 0)
+            String s = values.get(i);
+            if (s != null)
             {
-                sb.append(separator);
+                if (i > 0)
+                {
+                    sb.append(separator);
+                }
+                sb.append(s);
             }
-            sb.append(values.get(i));
         }
         if (sb.length() > 0)
         {

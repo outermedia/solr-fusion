@@ -91,17 +91,12 @@ public class ResetQueryStateTest
         for (NumericRangeQuery<?> nq : queryObjects)
         {
             ResetQueryState qb = new ResetQueryState();
-            Term min = nq.getMin();
-            min.setWasMapped(true);
-            min.setSearchServerFieldName("title");
-            min.setSearchServerFieldValue(min.getFusionFieldValue());
-            Term max = nq.getMax();
-            max.setWasMapped(true);
-            max.setSearchServerFieldName("title");
-            max.setSearchServerFieldValue(max.getFusionFieldValue());
+            Term minMax = nq.getTerm();
+            minMax.setWasMapped(true);
+            minMax.setSearchServerFieldName("title");
+            minMax.setSearchServerFieldValue(minMax.getFusionFieldValue());
             qb.reset(nq);
-            Assert.assertFalse("min term not cleaned", min.isWasMapped());
-            Assert.assertFalse("max term not cleaned", max.isWasMapped());
+            Assert.assertFalse("minMax term not cleaned", minMax.isWasMapped());
         }
     }
 

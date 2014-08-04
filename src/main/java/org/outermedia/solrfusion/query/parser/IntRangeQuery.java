@@ -16,9 +16,19 @@ public class IntRangeQuery extends NumericRangeQuery<Integer>
         super(field, minInclusive, maxInclusive, min, max);
     }
 
+    protected IntRangeQuery()
+    {
+    }
+
     @Override
     public void accept(QueryVisitor visitor, ScriptEnv env)
     {
         visitor.visitQuery(this, env);
+    }
+
+    @Override
+    public IntRangeQuery shallowClone()
+    {
+        return shallowCloneImpl(new IntRangeQuery());
     }
 }

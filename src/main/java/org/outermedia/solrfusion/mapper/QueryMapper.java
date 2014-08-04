@@ -46,7 +46,9 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     {
         this.serverConfig = serverConfig;
         env.setConfiguration(config);
-        query.accept(this, env);
+        ScriptEnv newEnv = new ScriptEnv(env);
+        newEnv.setSearchServerConfig(serverConfig);
+        query.accept(this, newEnv);
     }
 
     @Override
@@ -68,27 +70,30 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     @Override
     public void visitQuery(TermQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, t.getBoostValue());
+        visitQuery(t.getTerm(), env, t.getBoostValue(), t);
     }
 
-    protected boolean visitQuery(Term t, ScriptEnv env, Float boost)
+    protected boolean visitQuery(Term t, ScriptEnv env, Float boost, TermQuery tq)
     {
         String fusionFieldName = t.getFusionFieldName();
         List<FieldMapping> mappings = serverConfig.findAllMappingsForFusionField(fusionFieldName);
         if (mappings.isEmpty())
         {
-            if(noMappingPolicy.equals(NO_MAPPING_THROW_EXCEPTION))
+            if (noMappingPolicy.equals(NO_MAPPING_THROW_EXCEPTION))
             {
                 throw new MissingFusionFieldMapping("Found no mapping for fusion field '" + fusionFieldName + "'");
-            } else if(noMappingPolicy.equals(NO_MAPPING_DELETE))
+            }
+            else if (noMappingPolicy.equals(NO_MAPPING_DELETE))
             {
                 t.setRemoved(true);
                 log.warn("Found no mapping for fusion field '{}'. Deleting query part.", fusionFieldName);
             }
         }
+        ScriptEnv newEnv = new ScriptEnv(env);
+        newEnv.setBinding(ScriptEnv.ENV_TERM_QUERY_PART, tq);
         for (FieldMapping m : mappings)
         {
-            m.applyQueryMappings(t, env);
+            m.applyQueryMappings(t, newEnv);
         }
         t.setProcessed(true);
         return true;
@@ -103,7 +108,7 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     @Override
     public void visitQuery(FuzzyQuery t, ScriptEnv env)
     {
-        visitQuery((TermQuery) t, env);
+        visitQuery(t.getTerm(), env, null, t);
     }
 
     @Override
@@ -115,19 +120,19 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     @Override
     public void visitQuery(PhraseQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null);
+        visitQuery(t.getTerm(), env, null, t);
     }
 
     @Override
     public void visitQuery(PrefixQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null);
+        visitQuery(t.getTerm(), env, null, t);
     }
 
     @Override
     public void visitQuery(WildcardQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null);
+        visitQuery(t.getTerm(), env, null, t);
     }
 
     @Override
@@ -136,39 +141,33 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
         booleanClause.accept(this, env);
     }
 
-    protected void mapNumericRangeQuery(NumericRangeQuery<?> rq, ScriptEnv env)
-    {
-        visitQuery(rq.getMin(), env, null);
-        visitQuery(rq.getMax(), env, null);
-    }
-
     @Override
     public void visitQuery(IntRangeQuery t, ScriptEnv env)
     {
-        mapNumericRangeQuery(t, env);
+        visitQuery(t.getTerm(), env, null, t);
     }
 
     @Override
     public void visitQuery(LongRangeQuery t, ScriptEnv env)
     {
-        mapNumericRangeQuery(t, env);
+        visitQuery(t.getTerm(), env, null, t);
     }
 
     @Override
     public void visitQuery(FloatRangeQuery t, ScriptEnv env)
     {
-        mapNumericRangeQuery(t, env);
+        visitQuery(t.getTerm(), env, null, t);
     }
 
     @Override
     public void visitQuery(DoubleRangeQuery t, ScriptEnv env)
     {
-        mapNumericRangeQuery(t, env);
+        visitQuery(t.getTerm(), env, null, t);
     }
 
     @Override
     public void visitQuery(DateRangeQuery t, ScriptEnv env)
     {
-        mapNumericRangeQuery(t, env);
+        visitQuery(t.getTerm(), env, null, t);
     }
 }

@@ -28,6 +28,8 @@
         <om:field name="text13"/>
         <om:field name="text14"/>
         <om:field name="text15"/>
+        <om:field name="text16"/>
+        <om:field name="text17"/>
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile"/>
@@ -40,6 +42,8 @@
     <om:script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/>
     <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
     <om:script-type name="merge-multi-value" class="org.outermedia.solrfusion.types.MultiValueMerger"/>
+    <!--<om:script-type name="copy-term-query-for-search-server"-->
+    <!--class="org.outermedia.solrfusion.types.CopyFusionTermQueryToSearchServerQuery"/>-->
 
     <om:default-search-field>title</om:default-search-field>
 
@@ -71,7 +75,7 @@
             class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory"/>
 
         <om:response-renderer type="xml"
-            class="org.outermedia.solrfusion.response.SimpleXmlResponseRenderer" >
+            class="org.outermedia.solrfusion.response.SimpleXmlResponseRenderer">
             <map-type fusion-type="float" key="float"/>
             <map-type fusion-type="double" key="float"/>
             <map-type fusion-type="int" key="int"/>
@@ -253,25 +257,25 @@
 
             <om:field name="f8">
                 <om:drop>
-                    <om:response />
+                    <om:response/>
                 </om:drop>
             </om:field>
 
             <om:field fusion-name="text4">
                 <om:drop>
-                    <om:query />
+                    <om:query/>
                 </om:drop>
             </om:field>
 
             <om:field name-pattern="f9.*">
                 <om:drop>
-                    <om:response />
+                    <om:response/>
                 </om:drop>
             </om:field>
 
             <om:field fusion-name-pattern="text5.*">
                 <om:drop>
-                    <om:query />
+                    <om:query/>
                 </om:drop>
             </om:field>
 
@@ -375,7 +379,9 @@
                         <value>t15b:helloB</value>
                     </om:query>
                 </om:add>
-                <om:drop><om:query /></om:drop>
+                <om:drop>
+                    <om:query/>
+                </om:drop>
             </om:field>
 
             <!-- only a response has multi values, but not a query -->
@@ -383,7 +389,7 @@
                 <om:change>
                     <om:response type="merge-multi-value">
                         <range>1</range>
-                        <separator> </separator>
+                        <separator></separator>
                     </om:response>
                 </om:change>
             </om:field>
@@ -401,9 +407,34 @@
                 <om:change>
                     <om:response type="merge-multi-value">
                         <range>all</range>
-                        <separator> || </separator>
+                        <separator><![CDATA[ || ]]></separator>
                     </om:response>
                 </om:change>
+            </om:field>
+
+            <!-- simply replace in query without modification -->
+            <om:field name="s16" fusion-name="text16">
+                <om:add level="inside">
+                    <om:query/>
+                </om:add>
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+
+            <!-- two additions in query without modifications -->
+            <om:field name="s17" fusion-name="text17">
+                <om:add level="inside">
+                    <om:query/>
+                </om:add>
+            </om:field>
+            <om:field name="s18" fusion-name="text17">
+                <om:add level="inside">
+                    <om:query/>
+                </om:add>
+                <om:drop>
+                    <om:query/>
+                </om:drop>
             </om:field>
 
         </om:solr-server>

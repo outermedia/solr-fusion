@@ -68,9 +68,16 @@ public class RegularExpression extends AbstractType
         List<String> result = new ArrayList<>();
         for (String v : values)
         {
-            Matcher matcher = pattern.matcher(v);
-            String rv = matcher.replaceAll(replacement);
-            result.add(rv);
+            if (v != null)
+            {
+                Matcher matcher = pattern.matcher(v);
+                String rv = matcher.replaceAll(replacement);
+                result.add(rv);
+            }
+            else
+            {
+                result.add(null);
+            }
         }
         if (values.isEmpty())
         {

@@ -7,10 +7,11 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.FusionField;
-import org.outermedia.solrfusion.query.QueryParserIfc;
-import org.outermedia.solrfusion.query.parser.Query;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Data holder which stores a fusion field name and its value.
@@ -39,7 +40,7 @@ public class Term
     private boolean processed;
 
     // added by an add operation
-    private List<Query> newQueryTerms;
+    private List<String> newQueries;
 
 
     private Term()
@@ -89,7 +90,7 @@ public class Term
         removed = false;
         wasMapped = false;
         processed = false;
-        newQueryTerms = null;
+        newQueries = null;
     }
 
     public void resetSearchServerField()
@@ -159,29 +160,16 @@ public class Term
     public void addNewSearchServerQuery(boolean inside, List<String> searchServerFieldValue,
         Configuration configuration, Locale locale)
     {
-        if (newQueryTerms == null)
+        if (newQueries == null)
         {
-            newQueryTerms = new ArrayList<>();
+            newQueries = new ArrayList<>();
         }
         // TODO throw exception if searchServerFieldValue.size() == 0
         for (String qs : searchServerFieldValue)
         {
             // qs contains whole query, otherwise it would be difficult to mix-in the field name, because complex
             // queries are possible here
-            Query q = null;
-            Map<String, Float> boosts = null;
-            try
-            {
-                QueryParserIfc queryParser = configuration.getQueryParser();
-                q = queryParser.parse(configuration, boosts, qs, locale, Boolean.TRUE);
-                q.setAddInside(inside);
-                newQueryTerms.add(q);
-            }
-            catch (Exception e)
-            {
-                String msg = "Parsing of query " + qs + " failed.";
-                log.error(msg, e);
-            }
+            newQueries.add(qs);
         }
         setWasMapped(true);
     }
@@ -206,4 +194,18 @@ public class Term
         return result;
     }
 
+    public Term shallowClone()
+    {
+        Term newTerm = new Term();
+        newTerm.fusionFieldName = fusionFieldName;
+        newTerm.fusionFieldValue = fusionFieldValue;
+        newTerm.fusionField = fusionField;
+        newTerm.searchServerFieldName = searchServerFieldName;
+        newTerm.searchServerFieldValue = searchServerFieldValue;
+        newTerm.removed = removed;
+        newTerm.wasMapped = wasMapped;
+        newTerm.processed = processed;
+        newTerm.newQueries = null;
+        return newTerm;
+    }
 }

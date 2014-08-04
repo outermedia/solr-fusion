@@ -22,10 +22,10 @@ public class ResetQueryState implements QueryVisitor
     @Override
     public void visitQuery(TermQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null);
+        visitQuery(t.getTerm());
     }
 
-    protected boolean visitQuery(Term t, ScriptEnv env, Float boost)
+    protected boolean visitQuery(Term t)
     {
         t.resetQuery();
         return true;
@@ -40,7 +40,7 @@ public class ResetQueryState implements QueryVisitor
     @Override
     public void visitQuery(FuzzyQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null);
+        visitQuery(t.getTerm());
     }
 
     @Override
@@ -49,58 +49,52 @@ public class ResetQueryState implements QueryVisitor
         // NOP
     }
 
-    protected void resetNumericRangeQuery(NumericRangeQuery<?> rq, ScriptEnv env)
-    {
-        visitQuery(rq.getMin(), env, null);
-        visitQuery(rq.getMax(), env, null);
-    }
-
     @Override
     public void visitQuery(IntRangeQuery t, ScriptEnv env)
     {
-        resetNumericRangeQuery(t, env);
+        visitQuery(t.getTerm());
     }
 
     @Override
     public void visitQuery(LongRangeQuery t, ScriptEnv env)
     {
-        resetNumericRangeQuery(t, env);
+        visitQuery(t.getTerm());
     }
 
     @Override
     public void visitQuery(FloatRangeQuery t, ScriptEnv env)
     {
-        resetNumericRangeQuery(t, env);
+        visitQuery(t.getTerm());
     }
 
     @Override
     public void visitQuery(DoubleRangeQuery t, ScriptEnv env)
     {
-        resetNumericRangeQuery(t, env);
+        visitQuery(t.getTerm());
     }
 
     @Override
     public void visitQuery(DateRangeQuery t, ScriptEnv env)
     {
-        resetNumericRangeQuery(t, env);
+        visitQuery(t.getTerm());
     }
 
     @Override
     public void visitQuery(PhraseQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null);
+        visitQuery(t.getTerm());
     }
 
     @Override
     public void visitQuery(PrefixQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null);
+        visitQuery(t.getTerm());
     }
 
     @Override
     public void visitQuery(WildcardQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null);
+        visitQuery(t.getTerm());
     }
 
     @Override

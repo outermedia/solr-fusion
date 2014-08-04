@@ -21,6 +21,10 @@ public class DateRangeQuery extends NumericRangeQuery<Calendar>
         super(field, minInclusive, maxInclusive, min, max);
     }
 
+    protected DateRangeQuery()
+    {
+    }
+
     @Override
     public void accept(QueryVisitor visitor, ScriptEnv env)
     {
@@ -37,5 +41,11 @@ public class DateRangeQuery extends NumericRangeQuery<Calendar>
             result = format.format(v.getTime());
         }
         return result;
+    }
+
+    @Override
+    public DateRangeQuery shallowClone()
+    {
+        return shallowCloneImpl(new DateRangeQuery());
     }
 }

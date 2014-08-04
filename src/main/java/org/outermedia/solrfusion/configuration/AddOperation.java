@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.types.ConversionDirection;
+import org.outermedia.solrfusion.types.CopyFusionTermQueryToSearchServerQuery;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import javax.xml.bind.UnmarshalException;
@@ -44,7 +45,7 @@ public class AddOperation extends Operation
             // the super call would overwrite the search server field value which is initialized with the fusion field
             // value either the field is dropped or changed
             // super.applyOneQueryOperation(term, env, t);
-            List<String> newSearchServerValue = t.apply(term.getSearchServerFieldValue(), env,
+            List<String> newSearchServerValue = t.apply(term.getFusionFieldValue(), env,
                 ConversionDirection.FUSION_TO_SEARCH);
             term.addNewSearchServerQuery(true, newSearchServerValue, env.getConfiguration(), env.getLocale());
         }
@@ -76,14 +77,13 @@ public class AddOperation extends Operation
         return added;
     }
 
-    public List<org.outermedia.solrfusion.query.parser.Query> addToQuery(Configuration configuration,
-        String searchServerFieldName, Target t, Locale locale)
+    public List<String> addToQuery(Configuration configuration, String searchServerFieldName, Target t, Locale locale)
     {
         Term term = Term.newSearchServerTerm(searchServerFieldName);
         ScriptEnv env = getQueryScriptEnv(term, new ScriptEnv());
         super.applyOneQueryOperation(term, env, t);
         term.addNewSearchServerQuery(false, term.getSearchServerFieldValue(), configuration, locale);
-        List<org.outermedia.solrfusion.query.parser.Query> newQueries = term.getNewQueryTerms();
+        List<String> newQueries = term.getNewQueries();
         return newQueries;
     }
 
@@ -109,18 +109,36 @@ public class AddOperation extends Operation
         }
 
         List<Target> queries = getQueryTargets();
-        if (fieldMapping.getSearchServersName() == null)
+        if (queries.size() > 0)
         {
-            if (queries.size() > 0)
+            if (level == AddLevel.INSIDE && fieldMapping.getFusionName() == null)
+            {
+                msg = "Please specify a search server field when you want to add a new query part inside of the current " +
+                    "query, because the search server field specifies the place.";
+            }
+            if (fieldMapping.getSearchServersName() == null)
             {
                 msg = "Please specify a field for attribute 'name' in order to add something to a query.";
             }
-        }
-        for (Target t : queries)
-        {
-            if (t.getType() == null)
+            else
             {
-                msg = "Please specify a value for the 'type' attribute in the '<om:add>' '<om:query>' operation.";
+                ScriptType scriptType = new ScriptType();
+                scriptType.setClassFactory(CopyFusionTermQueryToSearchServerQuery.class.getName());
+                scriptType.afterUnmarshal(null, null);
+
+                for (Target t : queries)
+                {
+                    boolean hasFusionName = fieldMapping.getFusionName() != null;
+                    if (!hasFusionName && t.getType() == null)
+                    {
+                        msg = "Please specify a value for the 'type' attribute in the '<om:add>' '<om:query>' operation.";
+                    }
+                    // set default script type
+                    if (hasFusionName && t.getType() == null)
+                    {
+                        t.setType(scriptType);
+                    }
+                }
             }
         }
 

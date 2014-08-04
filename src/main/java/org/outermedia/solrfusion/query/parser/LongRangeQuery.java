@@ -16,9 +16,19 @@ public class LongRangeQuery extends NumericRangeQuery<Long>
         super(field, minInclusive, maxInclusive, min, max);
     }
 
+    protected LongRangeQuery()
+    {
+    }
+
     @Override
     public void accept(QueryVisitor visitor, ScriptEnv env)
     {
         visitor.visitQuery(this, env);
+    }
+
+    @Override
+    public LongRangeQuery shallowClone()
+    {
+        return shallowCloneImpl(new LongRangeQuery());
     }
 }

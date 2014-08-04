@@ -40,7 +40,7 @@ public class QueryBuilder implements QueryBuilderIfc
         String result = buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale);
 
         // inside add queried have been processed, now add the outside queries
-        List<Query> newQueriesToAdd = new ArrayList<>();
+        List<String> newQueriesToAdd = new ArrayList<>();
         AddOperation addOp = new AddOperation();
         Map<String, List<Target>> allAddQueryTargets = searchServerConfig.findAllAddQueryMappings(AddLevel.OUTSIDE);
         for (Map.Entry<String, List<Target>> entry : allAddQueryTargets.entrySet())
@@ -61,11 +61,8 @@ public class QueryBuilder implements QueryBuilderIfc
                 sb.append(result);
                 sb.append(')');
             }
-            for (Query q : newQueriesToAdd)
+            for (String qs : newQueriesToAdd)
             {
-                QueryBuilderIfc newClauseQueryBuilder = newQueryBuilder();
-                String qs = newClauseQueryBuilder.buildQueryStringWithoutNew(q, configuration, searchServerConfig,
-                    locale);
                 if (sb.length() > 0)
                 {
                     sb.append(" AND ");
@@ -122,28 +119,19 @@ public class QueryBuilder implements QueryBuilderIfc
     protected boolean buildSearchServerTermQuery(Term term, boolean quoted, Float boost, Query origQuery)
     {
         boolean added = false;
-        List<Query> newQueries = term.getNewQueryTerms();
+        List<String> newQueries = term.getNewQueries();
+        // avoid endless recursion
+        term.setNewQueries(null);
         if (term.isWasMapped() && newQueries != null)
         {
-            List<BooleanClause> insideClauses = new ArrayList<>();
+            List<String> insideClauses = new ArrayList<>();
             if (!term.isRemoved())
             {
-                // avoid endless recursion
-                term.setNewQueryTerms(null);
-                addInside(insideClauses, origQuery);
+                String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(origQuery, configuration,
+                    searchServerConfig, locale);
+                insideClauses.add(clauseQueryStr);
             }
-            for (Query q : newQueries)
-            {
-                // inside only
-                addInside(insideClauses, q);
-            }
-            if (insideClauses.size() > 0)
-            {
-                added = true;
-                queryBuilder.append("(");
-                queryBuilder.append(handleBoolClauses(insideClauses));
-                queryBuilder.append(")");
-            }
+            added = handleNewQueries(newQueries, insideClauses);
         }
         else if (term.isWasMapped() && !term.isRemoved() && term.getSearchServerFieldValue() != null)
         {
@@ -165,23 +153,31 @@ public class QueryBuilder implements QueryBuilderIfc
         return added;
     }
 
-    private void addInside(List<BooleanClause> insideClauses, Query q)
+    private boolean handleNewQueries(List<String> newQueries, List<String> insideClauses)
     {
-        boolean addedInside = false;
-        if (q instanceof BooleanQuery)
+        boolean added = false;
+        for (String qs : newQueries)
         {
-            BooleanQuery bq = (BooleanQuery) q;
-            if (bq.getClauses().size() == 1)
+            // inside only
+            insideClauses.add(qs);
+        }
+        if (insideClauses.size() > 0)
+        {
+            added = true;
+            queryBuilder.append("(");
+            // queryBuilder.append(handleBoolClauses(insideClauses));
+            for (int i = 0; i < insideClauses.size(); i++)
             {
-                addedInside = true;
-                insideClauses.add(bq.getClauses().get(0));
+                String qs = insideClauses.get(i);
+                if (i > 0)
+                {
+                    queryBuilder.append(" OR ");
+                }
+                queryBuilder.append(qs);
             }
+            queryBuilder.append(")");
         }
-        if (!addedInside)
-        {
-            BooleanClause bc = new BooleanClause(q, BooleanClause.Occur.OCCUR_SHOULD);
-            insideClauses.add(bc);
-        }
+        return added;
     }
 
     private void handleBoost(Float boost)
@@ -308,17 +304,33 @@ public class QueryBuilder implements QueryBuilderIfc
 
     protected void buildSearchServerRangeQuery(NumericRangeQuery<?> rq)
     {
-        Term min = rq.getMin();
-        Term max = rq.getMax();
-        // min and max apply to the same field
-        queryBuilder.append(min.getSearchServerFieldName());
-        queryBuilder.append(":");
-        queryBuilder.append("[");
-        queryBuilder.append(min.getSearchServerFieldValue().get(0));
-        queryBuilder.append(" TO ");
-        queryBuilder.append(max.getSearchServerFieldValue().get(0));
-        queryBuilder.append("]");
-        handleBoost(rq.getBoostValue());
+        Term term = rq.getTerm();
+        List<String> newQueries = term.getNewQueries();
+        // avoid endless recursion
+        term.setNewQueries(null);
+        if (term.isWasMapped() && newQueries != null)
+        {
+            List<String> insideClauses = new ArrayList<>();
+            if (!term.isRemoved())
+            {
+                String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(rq, configuration,
+                    searchServerConfig, locale);
+                insideClauses.add(clauseQueryStr);
+            }
+            handleNewQueries(newQueries, insideClauses);
+        }
+        else if (term.isWasMapped() && !term.isRemoved() && term.getSearchServerFieldValue() != null)
+        {
+            // min and max apply to the same field
+            queryBuilder.append(rq.getSearchServerFieldName());
+            queryBuilder.append(":");
+            queryBuilder.append("[");
+            queryBuilder.append(rq.getMinSearchServerValue());
+            queryBuilder.append(" TO ");
+            queryBuilder.append(rq.getMaxSearchServerValue());
+            queryBuilder.append("]");
+            handleBoost(rq.getBoostValue());
+        }
     }
 
     @Override

@@ -16,9 +16,19 @@ public class DoubleRangeQuery extends NumericRangeQuery<Double>
         super(field, minInclusive, maxInclusive, min, max);
     }
 
+    protected DoubleRangeQuery()
+    {
+    }
+
     @Override
     public void accept(QueryVisitor visitor, ScriptEnv env)
     {
         visitor.visitQuery(this, env);
+    }
+
+    @Override
+    public DoubleRangeQuery shallowClone()
+    {
+        return shallowCloneImpl(new DoubleRangeQuery());
     }
 }

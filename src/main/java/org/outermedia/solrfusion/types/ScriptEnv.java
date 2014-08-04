@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.types;
 
 import lombok.ToString;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.parser.Document;
 
 import javax.script.Bindings;
@@ -13,18 +14,12 @@ import java.util.Map;
  * Environment which is passed to script types. E.g. the current fusion field is contained.
  * <p/>
  * Created by ballmann on 03.06.14.
- *
- * The following env entries are available:
- * <ul>
- *     <li>{@value #ENV_FUSION_FIELD} - a String</li>
- *     <li>{@value #ENV_FUSION_VALUE} - a List of String</li>
- *     <li>{@value #ENV_SEARCH_SERVER_FIELD} - a String</li>
- *     <li>{@value #ENV_SEARCH_SERVER_VALUE} - a List of String</li>
- *     <li>{@value #ENV_FUSION_FIELD_DECLARATION} - a FusionField instance</li>
- *     <li>{@value #ENV_FUSION_SCHEMA} - a Configuration instance</li>
- *     <li>{@value #ENV_VALUES} - a List of String</li>
- *     <li>{@value #ENV_CONVERSION} - a ConversionDirection</li>
- * </ul>
+ * <p/>
+ * The following env entries are available: <ul> <li>{@value #ENV_FUSION_FIELD} - a String</li> <li>{@value
+ * #ENV_FUSION_VALUE} - a List of String</li> <li>{@value #ENV_SEARCH_SERVER_FIELD} - a String</li> <li>{@value
+ * #ENV_SEARCH_SERVER_VALUE} - a List of String</li> <li>{@value #ENV_FUSION_FIELD_DECLARATION} - a FusionField
+ * instance</li> <li>{@value #ENV_FUSION_SCHEMA} - a Configuration instance</li> <li>{@value #ENV_VALUES} - a List of
+ * String</li> <li>{@value #ENV_CONVERSION} - a ConversionDirection</li> </ul>
  */
 @ToString
 public class ScriptEnv
@@ -42,6 +37,8 @@ public class ScriptEnv
     public final static String ENV_CONVERSION = "conversion"; // a ConversionDirection
     public final static String ENV_LOCALE = "locale"; // a Locale
     public final static String ENV_DOCUMENT = "responseDocument"; // a Document
+    public final static String ENV_TERM_QUERY_PART = "termQueryPart"; // a TermQuery
+    public final static String ENV_SEARCH_SERVER_CONFIG = "searchServerConfig"; // a SearchServerConfig
 
     public ScriptEnv()
     {
@@ -113,4 +110,15 @@ public class ScriptEnv
     {
         return (Document) getBinding(ENV_DOCUMENT);
     }
+
+    public SearchServerConfig getSearchServerConfig()
+    {
+        return (SearchServerConfig) getBinding(ENV_SEARCH_SERVER_CONFIG);
+    }
+
+    public void setSearchServerConfig(SearchServerConfig config)
+    {
+        setBinding(ENV_SEARCH_SERVER_CONFIG, config);
+    }
+
 }

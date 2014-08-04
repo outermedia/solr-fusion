@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryParserFactory;
-import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.query.parser.*;
 import org.xml.sax.SAXException;
 
@@ -34,7 +33,7 @@ public class QueryTest
 
         String query = "Schiller";
         Query o = parseQuery(cfg, query);
-        String expected = "TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null))";
+        String expected = "TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueries=null))";
         Assert.assertEquals("Got different query object than expected", expected, o.toString());
 
         checkBoost(cfg, "Schiller^0.75", 0.75f);
@@ -55,7 +54,7 @@ public class QueryTest
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
         Query o = parseQuery(cfg, "title:Schiller");
-        String expected = "TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null))";
+        String expected = "TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueries=null))";
         Assert.assertEquals("Got different query object than expected", expected, o.toString());
 
         String query = "+title:Schiller";
@@ -133,7 +132,7 @@ public class QueryTest
 
         String query = "title:Schiller title:Müller";
         Query o = parseQuery(cfg, query);
-        String expected = "BooleanQuery(super=Query(boostValue=null, addInside=null), clauses=[BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null))), BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Müller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueryTerms=null)))])";
+        String expected = "BooleanQuery(super=Query(boostValue=null, addInside=null), clauses=[BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueries=null))), BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Müller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueries=null)))])";
         Assert.assertEquals("Got different query object than expected", expected, o.toString());
     }
 
@@ -197,19 +196,19 @@ public class QueryTest
         Query q;
         q = parseQuery(cfg, "publicationDate:[01.06.2014 TO 26.06.2014]");
         Assert.assertEquals("Got wrong min value", "20140601",
-            ((DateRangeQuery) q).getMin().getFusionFieldValue().get(0));
+            ((DateRangeQuery) q).getMinFusionValue());
         Assert.assertEquals("Got wrong min value", "20140626",
-            ((DateRangeQuery) q).getMax().getFusionFieldValue().get(0));
+            ((DateRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "publicationDate:[* TO 26.06.2014]");
-        checkNoValue(((DateRangeQuery) q).getMin(), "minimum");
+        checkNoValue(((DateRangeQuery) q).getMinFusionValue(), "minimum");
         Assert.assertEquals("Got wrong min value", "20140626",
-            ((DateRangeQuery) q).getMax().getFusionFieldValue().get(0));
+            ((DateRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "publicationDate:[01.06.2014 TO *]");
         Assert.assertEquals("Got wrong min value", "20140601",
-            ((DateRangeQuery) q).getMin().getFusionFieldValue().get(0));
-        checkNoValue(((DateRangeQuery) q).getMax(), "maximum");
+            ((DateRangeQuery) q).getMinFusionValue());
+        checkNoValue(((DateRangeQuery) q).getMaxFusionValue(), "maximum");
 
         parseQueryException(cfg, "publicationDate:[2014-06-01 TO *]",
             "Expected exception, because of invalid date format");
@@ -217,9 +216,9 @@ public class QueryTest
         checkBoost(cfg, "publicationDate:[01.06.2014 TO *]^0.75", 0.75f);
     }
 
-    protected void checkNoValue(Term t, String ts)
+    protected void checkNoValue(String actual, String ts)
     {
-        Assert.assertEquals("Expected * for unset " + ts, "*", t.getFusionFieldValue().get(0));
+        Assert.assertEquals("Expected * for unset " + ts, "*", actual);
     }
 
     @Test
@@ -233,16 +232,16 @@ public class QueryTest
 
         Query q;
         q = parseQuery(cfg, "numberExample:[-5 TO 26]");
-        Assert.assertEquals("Found different minimum", min, ((IntRangeQuery) q).getMin().getFusionFieldValue().get(0));
-        Assert.assertEquals("Found different maximum", max, ((IntRangeQuery) q).getMax().getFusionFieldValue().get(0));
+        Assert.assertEquals("Found different minimum", min, ((IntRangeQuery) q).getMinFusionValue());
+        Assert.assertEquals("Found different maximum", max, ((IntRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "numberExample:[* TO 26]");
-        checkNoValue(((IntRangeQuery) q).getMin(), "minimum");
-        Assert.assertEquals("Found different maximum", max, ((IntRangeQuery) q).getMax().getFusionFieldValue().get(0));
+        checkNoValue(((IntRangeQuery) q).getMinFusionValue(), "minimum");
+        Assert.assertEquals("Found different maximum", max, ((IntRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "numberExample:[-5 TO *]");
-        Assert.assertEquals("Found different minimum", min, ((IntRangeQuery) q).getMin().getFusionFieldValue().get(0));
-        checkNoValue(((IntRangeQuery) q).getMax(), "maximum");
+        Assert.assertEquals("Found different minimum", min, ((IntRangeQuery) q).getMinFusionValue());
+        checkNoValue(((IntRangeQuery) q).getMaxFusionValue(), "maximum");
 
         checkBoost(cfg, "numberExample:[-5 TO *]^0.75", 0.75f);
     }
@@ -258,16 +257,16 @@ public class QueryTest
 
         Query q;
         q = parseQuery(cfg, "longExample:[-5 TO 26]");
-        Assert.assertEquals("Found different minimum", min, ((LongRangeQuery) q).getMin().getFusionFieldValue().get(0));
-        Assert.assertEquals("Found different maximum", max, ((LongRangeQuery) q).getMax().getFusionFieldValue().get(0));
+        Assert.assertEquals("Found different minimum", min, ((LongRangeQuery) q).getMinFusionValue());
+        Assert.assertEquals("Found different maximum", max, ((LongRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "longExample:[* TO 26]");
-        checkNoValue(((LongRangeQuery) q).getMin(), "minimum");
-        Assert.assertEquals("Found different maximum", max, ((LongRangeQuery) q).getMax().getFusionFieldValue().get(0));
+        checkNoValue(((LongRangeQuery) q).getMinFusionValue(), "minimum");
+        Assert.assertEquals("Found different maximum", max, ((LongRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "longExample:[-5 TO *]");
-        Assert.assertEquals("Found different minimum", min, ((LongRangeQuery) q).getMin().getFusionFieldValue().get(0));
-        checkNoValue(((LongRangeQuery) q).getMax(), "maximum");
+        Assert.assertEquals("Found different minimum", min, ((LongRangeQuery) q).getMinFusionValue());
+        checkNoValue(((LongRangeQuery) q).getMaxFusionValue(), "maximum");
 
         checkBoost(cfg, "longExample:[-5 TO *]^0.75", 0.75f);
     }
@@ -284,19 +283,19 @@ public class QueryTest
         Query q;
         q = parseQuery(cfg, "floatExample:[-4.5 TO 26.3]");
         Assert.assertEquals("Found different minimum", min,
-            ((FloatRangeQuery) q).getMin().getFusionFieldValue().get(0));
+            ((FloatRangeQuery) q).getMinFusionValue());
         Assert.assertEquals("Found different maximum", max,
-            ((FloatRangeQuery) q).getMax().getFusionFieldValue().get(0));
+            ((FloatRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "floatExample:[* TO 26.3]");
-        checkNoValue(((FloatRangeQuery) q).getMin(), "minimum");
+        checkNoValue(((FloatRangeQuery) q).getMinFusionValue(), "minimum");
         Assert.assertEquals("Found different maximum", max,
-            ((FloatRangeQuery) q).getMax().getFusionFieldValue().get(0));
+            ((FloatRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "floatExample:[-4.5 TO *]");
         Assert.assertEquals("Found different minimum", min,
-            ((FloatRangeQuery) q).getMin().getFusionFieldValue().get(0));
-        checkNoValue(((FloatRangeQuery) q).getMax(), "maximum");
+            ((FloatRangeQuery) q).getMinFusionValue());
+        checkNoValue(((FloatRangeQuery) q).getMaxFusionValue(), "maximum");
 
         checkBoost(cfg, "floatExample:[-4.5 TO *]^0.75", 0.75f);
     }
@@ -313,19 +312,19 @@ public class QueryTest
         Query q;
         q = parseQuery(cfg, "doubleExample:[-4.5 TO 26.3]");
         Assert.assertEquals("Found different minimum", min,
-            ((DoubleRangeQuery) q).getMin().getFusionFieldValue().get(0));
+            ((DoubleRangeQuery) q).getMinFusionValue());
         Assert.assertEquals("Found different maximum", max,
-            ((DoubleRangeQuery) q).getMax().getFusionFieldValue().get(0));
+            ((DoubleRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "doubleExample:[* TO 26.3]");
-        checkNoValue(((DoubleRangeQuery) q).getMin(), "minimum");
+        checkNoValue(((DoubleRangeQuery) q).getMinFusionValue(), "minimum");
         Assert.assertEquals("Found different maximum", max,
-            ((DoubleRangeQuery) q).getMax().getFusionFieldValue().get(0));
+            ((DoubleRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "doubleExample:[-4.5 TO *]");
         Assert.assertEquals("Found different minimum", min,
-            ((DoubleRangeQuery) q).getMin().getFusionFieldValue().get(0));
-        checkNoValue(((DoubleRangeQuery) q).getMax(), "maximum");
+            ((DoubleRangeQuery) q).getMinFusionValue());
+        checkNoValue(((DoubleRangeQuery) q).getMaxFusionValue(), "maximum");
 
         checkBoost(cfg, "doubleExample:[-4.5 TO *]^0.75", 0.75f);
     }

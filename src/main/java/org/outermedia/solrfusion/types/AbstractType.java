@@ -43,7 +43,7 @@ public abstract class AbstractType implements Initiable<ScriptType>
      * This method applies 'this' script type to a given value (contained in 'env'). Available env entries described in
      * {@link org.outermedia.solrfusion.types.ScriptEnv}
      *
-     * @param values the values to transform. Not null but berhaps emtpy.
+     * @param values the values to transform. Not null but perhaps emtpy. Elements of the lists are perhaps null.
      * @param env    the environment contains several predefined values (see {@link org.outermedia.solrfusion.types.ScriptEnv}
      * @param dir    is the conversion direction. Either from fusion schema to search server schema or vice versa.
      * @return perhaps null

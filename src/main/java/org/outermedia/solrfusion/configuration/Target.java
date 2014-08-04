@@ -30,8 +30,7 @@ import java.util.List;
 @Slf4j
 public abstract class Target
 {
-    @XmlIDREF
-    @XmlAttribute(name = "type", required = false)
+    @XmlIDREF @XmlAttribute(name = "type", required = false)
     private ScriptType type;
 
     /**
@@ -49,9 +48,7 @@ public abstract class Target
     @XmlAnyElement
     private List<Element> typeConfig;
 
-    @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
+    @XmlTransient @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     private Util util;
 
     public Target()

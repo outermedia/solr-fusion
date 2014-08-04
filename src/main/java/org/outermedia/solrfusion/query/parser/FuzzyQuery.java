@@ -19,9 +19,19 @@ public class FuzzyQuery extends TermQuery
         this.maxEdits = maxEdits;
     }
 
+    protected FuzzyQuery() {}
+
     @Override
     public void accept(QueryVisitor visitor, ScriptEnv env)
     {
         visitor.visitQuery(this, env);
+    }
+
+    @Override
+    public FuzzyQuery shallowClone()
+    {
+        FuzzyQuery fq = shallowCloneImpl(new FuzzyQuery());
+        fq.maxEdits = maxEdits;
+        return fq;
     }
 }

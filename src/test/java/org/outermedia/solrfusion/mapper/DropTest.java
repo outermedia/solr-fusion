@@ -138,7 +138,7 @@ public class DropTest extends AbstractTypeTest
         QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
         String ds = qb.buildQueryString(query, cfg, searchServerConfig, Locale.GERMAN);
         // the original query was removed, but two queries are added!
-        Assert.assertEquals("Expected no query", "(+t11:\"searched text\"^75.0~) AND t13:hello", ds);
+        Assert.assertEquals("Expected no query", "+t11:\"searched text\"~2^75 AND t13:hello", ds);
 
         // remove <drop> for text4
         term.resetQuery();
@@ -151,7 +151,7 @@ public class DropTest extends AbstractTypeTest
         // System.out.println(term.toString());
         Assert.assertFalse("Expected that field text4 was not removed", term.isRemoved());
         String s = qb.buildQueryString(query, cfg, searchServerConfig, Locale.GERMAN);
-        Assert.assertEquals("Found different query than expected", "(f8:bla1) AND (+t11:\"searched text\"^75.0~) AND t13:hello", s);
+        Assert.assertEquals("Found different query than expected", "(f8:bla1) AND +t11:\"searched text\"~2^75 AND t13:hello", s);
     }
 
     @Test
@@ -175,7 +175,7 @@ public class DropTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 279: Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target.",
+                "In fusion schema at line 283: Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target.",
                 e.getMessage());
         }
 
@@ -193,7 +193,7 @@ public class DropTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 284: Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target.",
+                "In fusion schema at line 288: Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target.",
                 e.getMessage());
         }
     }

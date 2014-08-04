@@ -27,6 +27,8 @@ public class TermQuery extends Query
         this.term = term;
     }
 
+    protected TermQuery() {}
+
     @Override
     public void accept(QueryVisitor visitor, ScriptEnv env)
     {
@@ -48,9 +50,25 @@ public class TermQuery extends Query
         return term.getSearchServerFieldName();
     }
 
+    public void setSearchServerFieldName(String s)
+    {
+        term.setSearchServerFieldName(s);
+    }
+
     public List<String> getSearchServerFieldValue()
     {
         return term.getSearchServerFieldValue();
     }
 
+    protected <T extends TermQuery> T shallowCloneImpl(T result)
+    {
+        result.setTerm(getTerm().shallowClone());
+        result.setBoostValue(getBoostValue());
+        return result;
+    }
+
+    public TermQuery shallowClone()
+    {
+        return shallowCloneImpl(new TermQuery());
+    }
 }

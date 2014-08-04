@@ -16,9 +16,19 @@ public class FloatRangeQuery extends NumericRangeQuery<Float>
         super(field, minInclusive, maxInclusive, min, max);
     }
 
+    protected FloatRangeQuery()
+    {
+    }
+
     @Override
     public void accept(QueryVisitor visitor, ScriptEnv env)
     {
         visitor.visitQuery(this, env);
+    }
+
+    @Override
+    public FloatRangeQuery shallowClone()
+    {
+        return shallowCloneImpl(new FloatRangeQuery());
     }
 }

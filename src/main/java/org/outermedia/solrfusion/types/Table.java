@@ -44,7 +44,8 @@ public class Table extends AbstractType
      *  ...
      * }
      *  </pre>
-     *  At least one entry is expected.
+     * At least one entry is expected.
+     *
      * @param typeConfig a list of XML elements
      * @param util       helper which simplifies to apply xpaths
      */
@@ -116,14 +117,21 @@ public class Table extends AbstractType
         }
         for (String v : values)
         {
-            String nv = mapping.get(v);
-            if (nv != null)
+            if (v == null)
             {
-                result.add(nv);
+                result.add(null);
             }
             else
             {
-                log.warn("Can't convert '{}' {}. Please fix your mapping.", v, dir);
+                String nv = mapping.get(v);
+                if (nv != null)
+                {
+                    result.add(nv);
+                }
+                else
+                {
+                    log.warn("Can't convert '{}' {}. Please fix your mapping.", v, dir);
+                }
             }
         }
         if (result.isEmpty())

@@ -153,14 +153,10 @@ public class QueryBuilderTest
         {
             nq.setBoostValue(boost);
             QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
-            Term min = nq.getMin();
-            min.setWasMapped(true);
-            min.setSearchServerFieldName("title");
-            min.setSearchServerFieldValue(min.getFusionFieldValue());
-            Term max = nq.getMax();
-            max.setWasMapped(true);
-            max.setSearchServerFieldName("title");
-            max.setSearchServerFieldValue(max.getFusionFieldValue());
+            Term minMax = nq.getTerm();
+            minMax.setWasMapped(true);
+            minMax.setSearchServerFieldName("title");
+            minMax.setSearchServerFieldValue(minMax.getFusionFieldValue());
             String qs = qb.buildQueryString(nq, cfg, searchServerConfig, locale);
             String expected = expectedMinMax[at++];
             if (boost != null)
