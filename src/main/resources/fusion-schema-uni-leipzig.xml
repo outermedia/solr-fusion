@@ -892,6 +892,7 @@
         </om:solr-server>
 
 
+        <!-- except TODOs below mapping is complete -->
         <om:solr-server name="DBoD1" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.Solr1Adapter$Factory">
 
@@ -906,21 +907,98 @@
 
             <om:unique-key>id</om:unique-key>
 
+            <om:max-docs>30</om:max-docs>
+
             <om:field name="id" fusion-name="id"/>
-            <om:field name="dbName" fusion-name="title"/>
+            <om:field name="dbName" fusion-name="mega_collection"/>
 
             <om:field name="content" fusion-name="allfields">
                 <om:add level="inside"><om:query/></om:add>
             </om:field>
-
+            <om:field name="dbName" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field name="description" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field name="edition" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field name="keywords" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field name="publisher" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field name="subjects" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field name="titleVT_de" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field name="titleVT_eng" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
             <om:field fusion-name="allfields">
                 <om:drop><om:query /></om:drop>
             </om:field>
+            <!-- TODO merge search server response of fields above into one fusion field allfields -->
 
+            <om:field name="subjects" fusion-name="finc_class_facet" />
+
+            <om:field name="content" fusion-name="fulltext">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field name="description" fusion-name="fulltext">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field fusion-name="fulltext">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <!-- TODO merge search server response of fields above into one fusion field fulltext -->
+
+            <om:field name="permission" fusion-name="institution" />
+
+            <!-- TODO merge fusion-names into one search server field
+            <om:field name="edition" fusion-name="publishDate" />
+            <om:field name="edition" fusion-name="publishDateSort" />
+            -->
+
+            <om:field name="publisher" fusion-name="publisher" />
+
+            <om:field name="sourceid" fusion-name="record_id" />
+
+            <om:field name="titleVT_de" fusion-name="title">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field name="titleVT_eng" fusion-name="title">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field fusion-name="title">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <!-- TODO merge search server response of fields above into one fusion field title -->
+
+            <!-- vufind uses title_short to display titles -->
+            <om:field name="titleVT_de" fusion-name="title_short">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field name="titleVT_eng" fusion-name="title_short">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field fusion-name="title_short">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <!-- TODO merge search server response of fields above into one fusion field title_short -->
+
+            <om:field name="keywords" fusion-name="topic" />
+
+            <om:field name="deeplink" fusion-name="url" />
 
         </om:solr-server>
 
-        <om:solr-server name="DBoD1" version="3.6"
+        <!--
+        <om:solr-server name="DBoD2" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.Solr1Adapter$Factory">
 
             <om:url>http://findex.gbv.de:9003/solr/select</om:url>
@@ -928,16 +1006,12 @@
             <om:score factor="1.0"
                       class="org.outermedia.solrfusion.DefaultScore$Factory"/>
 
-            <!-- we use q.alt instead of q which supports the edismax query syntax
-            <om:query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory" />
-            -->
-
             <om:unique-key>id</om:unique-key>
 
-            <om:field name="id" fusion-name="id"/>
-            <om:field name="dbName" fusion-name="title"/>
+            <om:max-docs>30</om:max-docs>
 
         </om:solr-server>
+        -->
 
     </om:solr-servers>
 </om:core>
