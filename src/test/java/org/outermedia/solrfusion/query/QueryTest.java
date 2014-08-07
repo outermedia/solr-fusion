@@ -26,6 +26,20 @@ public class QueryTest
     }
 
     @Test
+    public void parseEmptyQuery()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+
+        String query = "";
+        EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
+        p.init(new QueryParserFactory());
+        Map<String, Float> boosts = new HashMap<String, Float>();
+        Query q = p.parse(cfg, boosts, query, Locale.GERMAN, null);
+        Assert.assertNull("Expected no query object for empty query string", q);
+    }
+
+    @Test
     public void parseWordQuery()
         throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
     {
@@ -195,19 +209,15 @@ public class QueryTest
 
         Query q;
         q = parseQuery(cfg, "publicationDate:[01.06.2014 TO 26.06.2014]");
-        Assert.assertEquals("Got wrong min value", "20140601",
-            ((DateRangeQuery) q).getMinFusionValue());
-        Assert.assertEquals("Got wrong min value", "20140626",
-            ((DateRangeQuery) q).getMaxFusionValue());
+        Assert.assertEquals("Got wrong min value", "20140601", ((DateRangeQuery) q).getMinFusionValue());
+        Assert.assertEquals("Got wrong min value", "20140626", ((DateRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "publicationDate:[* TO 26.06.2014]");
         checkNoValue(((DateRangeQuery) q).getMinFusionValue(), "minimum");
-        Assert.assertEquals("Got wrong min value", "20140626",
-            ((DateRangeQuery) q).getMaxFusionValue());
+        Assert.assertEquals("Got wrong min value", "20140626", ((DateRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "publicationDate:[01.06.2014 TO *]");
-        Assert.assertEquals("Got wrong min value", "20140601",
-            ((DateRangeQuery) q).getMinFusionValue());
+        Assert.assertEquals("Got wrong min value", "20140601", ((DateRangeQuery) q).getMinFusionValue());
         checkNoValue(((DateRangeQuery) q).getMaxFusionValue(), "maximum");
 
         parseQueryException(cfg, "publicationDate:[2014-06-01 TO *]",
@@ -282,19 +292,15 @@ public class QueryTest
 
         Query q;
         q = parseQuery(cfg, "floatExample:[-4.5 TO 26.3]");
-        Assert.assertEquals("Found different minimum", min,
-            ((FloatRangeQuery) q).getMinFusionValue());
-        Assert.assertEquals("Found different maximum", max,
-            ((FloatRangeQuery) q).getMaxFusionValue());
+        Assert.assertEquals("Found different minimum", min, ((FloatRangeQuery) q).getMinFusionValue());
+        Assert.assertEquals("Found different maximum", max, ((FloatRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "floatExample:[* TO 26.3]");
         checkNoValue(((FloatRangeQuery) q).getMinFusionValue(), "minimum");
-        Assert.assertEquals("Found different maximum", max,
-            ((FloatRangeQuery) q).getMaxFusionValue());
+        Assert.assertEquals("Found different maximum", max, ((FloatRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "floatExample:[-4.5 TO *]");
-        Assert.assertEquals("Found different minimum", min,
-            ((FloatRangeQuery) q).getMinFusionValue());
+        Assert.assertEquals("Found different minimum", min, ((FloatRangeQuery) q).getMinFusionValue());
         checkNoValue(((FloatRangeQuery) q).getMaxFusionValue(), "maximum");
 
         checkBoost(cfg, "floatExample:[-4.5 TO *]^0.75", 0.75f);
@@ -311,19 +317,15 @@ public class QueryTest
 
         Query q;
         q = parseQuery(cfg, "doubleExample:[-4.5 TO 26.3]");
-        Assert.assertEquals("Found different minimum", min,
-            ((DoubleRangeQuery) q).getMinFusionValue());
-        Assert.assertEquals("Found different maximum", max,
-            ((DoubleRangeQuery) q).getMaxFusionValue());
+        Assert.assertEquals("Found different minimum", min, ((DoubleRangeQuery) q).getMinFusionValue());
+        Assert.assertEquals("Found different maximum", max, ((DoubleRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "doubleExample:[* TO 26.3]");
         checkNoValue(((DoubleRangeQuery) q).getMinFusionValue(), "minimum");
-        Assert.assertEquals("Found different maximum", max,
-            ((DoubleRangeQuery) q).getMaxFusionValue());
+        Assert.assertEquals("Found different maximum", max, ((DoubleRangeQuery) q).getMaxFusionValue());
 
         q = parseQuery(cfg, "doubleExample:[-4.5 TO *]");
-        Assert.assertEquals("Found different minimum", min,
-            ((DoubleRangeQuery) q).getMinFusionValue());
+        Assert.assertEquals("Found different minimum", min, ((DoubleRangeQuery) q).getMinFusionValue());
         checkNoValue(((DoubleRangeQuery) q).getMaxFusionValue(), "maximum");
 
         checkBoost(cfg, "doubleExample:[-4.5 TO *]^0.75", 0.75f);

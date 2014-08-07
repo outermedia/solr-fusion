@@ -11,6 +11,7 @@ import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
 import org.outermedia.solrfusion.query.QueryParserIfc;
+import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.query.parser.TermQuery;
 import org.outermedia.solrfusion.response.ClosableIterator;
@@ -215,7 +216,8 @@ public class FusionController implements FusionControllerIfc
             }
             else
             {
-                Document mergedDoc = configuration.getResponseConsolidator(configuration).completelyMapMergedDoc(collectedDocuments, null);
+                Document mergedDoc = configuration.getResponseConsolidator(configuration).completelyMapMergedDoc(
+                    collectedDocuments, null);
                 SearchServerResponseInfo info = new SearchServerResponseInfo(1, null);
                 ClosableIterator<Document, SearchServerResponseInfo> response = new ClosableListIterator<>(
                     Arrays.asList(mergedDoc), info);
@@ -315,7 +317,7 @@ public class FusionController implements FusionControllerIfc
             {
                 getNewResetQueryState().reset(filterQuery);
             }
-            if(highlightQuery != null)
+            if (highlightQuery != null)
             {
                 getNewResetQueryState().reset(highlightQuery);
             }
@@ -338,25 +340,40 @@ public class FusionController implements FusionControllerIfc
     {
         try
         {
+            XmlResponse result;
             Map<String, String> searchServerParams = fusionRequest.buildSearchServerQueryParams(configuration,
                 searchServerConfig);
-            int timeout = configuration.getSearchServerConfigs().getTimeout();
-            SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
-            InputStream is = adapter.sendQuery(searchServerParams, timeout);
-            ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
-                configuration.getDefaultResponseParser());
-            XmlResponse result = responseParser.parse(is);
-            if (result == null)
+            String searchServerQuery = searchServerParams.get(SolrFusionRequestParams.QUERY.getRequestParamName());
+            if (fusionRequest.getParsedQuery() != null && searchServerQuery.trim().length() == 0)
             {
+                // the mapped query is empty which would return any documents, so don't ask this server
                 result = new XmlResponse();
-                result.setErrorReason(new RuntimeException("Solr response parsing failed."));
+                log.info("Ignoring server {}, because the mapped query is empty.",
+                    searchServerConfig.getSearchServerName());
             }
-            if (log.isDebugEnabled())
+            else
             {
-                log.debug("Received from {}: {}", searchServerConfig.getSearchServerName(),
-                    (result.getDocuments() != null) ? result.getDocuments().size() : -1);
+                int timeout = configuration.getSearchServerConfigs().getTimeout();
+                SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
+                InputStream is = adapter.sendQuery(searchServerParams, timeout);
+                ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
+                    configuration.getDefaultResponseParser());
+                result = responseParser.parse(is);
+                if (result == null)
+                {
+                    result = new XmlResponse();
+                    result.setErrorReason(new RuntimeException("Solr response parsing failed."));
+                }
+                if (log.isDebugEnabled())
+                {
+                    log.debug("Received from {}: {}", searchServerConfig.getSearchServerName(),
+                        (result.getDocuments() != null) ? result.getDocuments().size() : -1);
+                }
+                if (log.isTraceEnabled())
+                {
+                    log.trace("Received from {}: {}", searchServerConfig.getSearchServerName(), result.toString());
+                }
             }
-            log.trace("Received from {}: {}", searchServerConfig.getSearchServerName(), result.toString());
             return result;
         }
         catch (SearchServerResponseException se)
