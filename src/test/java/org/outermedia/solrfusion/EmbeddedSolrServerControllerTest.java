@@ -104,6 +104,7 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "    <str name=\"fq\"><![CDATA[title:XYZ]]></str>\n" +
             "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"fl\"><![CDATA[id title score]]></str>\n" +
+            "    <str name=\"wt\">wt</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "    <str name=\"rows\">0</str>\n" +
             "  </lst>\n" +
@@ -149,23 +150,22 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "    <str name=\"fq\"><![CDATA[title:abc]]></str>\n" +
             "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"fl\"><![CDATA[id title score]]></str>\n" +
+            "    <str name=\"wt\">wt</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "    <str name=\"rows\">2</str>\n" +
             "  </lst>\n" +
             "</lst>\n" +
             "<result name=\"response\" numFound=\"2\" start=\"0\">\n" +
-            "  <doc>\n" +
-            "    <str name=\"id\"><![CDATA[Bibliothek9002" + sep + "1]]></str>\n" +
-            "    <str name=\"title\"><![CDATA[abc]]></str>\n" +
-            "    <float name=\"score\"><![CDATA[0.6750762040000001]]></float>\n" +
-            "  </doc>\n" +
-            "  <doc>\n" +
-            "    <str name=\"id\"><![CDATA[Bibliothek9000" + sep + "1]]></str>\n" +
-            "    <float name=\"score\"><![CDATA[0.36822338400000004]]></float>\n" +
-            "    <arr name=\"title\">\n" +
-            "      <str><![CDATA[abc]]></str>\n" +
-            "    </arr>\n" +
-            "  </doc>\n" +
+            "    <doc>\n" +
+            "        <str name=\"id\">Bibliothek9002" + sep + "1</str>\n" +
+            "        <str name=\"title\">abc</str>\n" +
+            "        <float name=\"score\">0.6750762040000001</float>\n" +
+            "    </doc>\n" +
+            "    <doc>\n" +
+            "        <str name=\"id\">Bibliothek9000" + sep + "1</str>\n" +
+            "        <float name=\"score\">0.36822338400000004</float>\n" +
+            "        <str name=\"title\">abc</str>\n" +
+            "    </doc>\n" +
             "</result>\n" +
             "</response>";
 

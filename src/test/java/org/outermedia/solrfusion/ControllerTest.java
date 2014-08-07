@@ -3,13 +3,12 @@ package org.outermedia.solrfusion;
 import com.google.common.io.Files;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
-import org.outermedia.solrfusion.configuration.*;
+import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.MergeTarget;
+import org.outermedia.solrfusion.configuration.ResponseRendererType;
+import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.query.parser.NumericRangeQuery;
@@ -17,13 +16,10 @@ import org.outermedia.solrfusion.query.parser.PhraseQuery;
 import org.outermedia.solrfusion.query.parser.TermQuery;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
-import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.UnmarshalException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -40,47 +36,8 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
  */
 @Slf4j
 @SuppressWarnings("unchecked")
-public class ControllerTest
+public class ControllerTest extends AbstractControllerTest
 {
-    TestHelper helper;
-
-    @Mock ResponseRendererIfc testRenderer;
-
-    ByteArrayInputStream testResponse;
-
-    @Mock SearchServerAdapterIfc testAdapter;
-
-    @Mock SearchServerAdapterIfc testAdapter9000;
-
-    @Mock SearchServerAdapterIfc testAdapter9002;
-
-    Configuration cfg;
-
-    @Mock
-    private SearchServerConfig testSearchConfig;
-
-    static class TestMerger extends Merge
-    {
-        public void afterUnmarshal(Unmarshaller u, Object parent) throws UnmarshalException
-        {
-            super.afterUnmarshal(u, parent);
-        }
-    }
-
-    @Before
-    public void setup() throws IOException, ParserConfigurationException, JAXBException, SAXException
-    {
-        helper = new TestHelper();
-        MockitoAnnotations.initMocks(this);
-        cfg = null;
-        initTestResponse();
-    }
-
-    protected void initTestResponse() throws IOException
-    {
-        byte[] emptyResponseBytes = Files.toByteArray(new File("target/test-classes/test-empty-xml-response.xml"));
-        testResponse = new ByteArrayInputStream(emptyResponseBytes);
-    }
 
     @Test
     public void testProcess()
@@ -96,27 +53,6 @@ public class ControllerTest
         fc.process(cfg, fusionRequest, fusionResponse);
         // System.out.println("ERROR " + fusionResponse.getErrorMessage());
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
-    }
-
-    protected FusionControllerIfc createTestFusionController(String fusionSchema)
-        throws IOException, JAXBException, SAXException, ParserConfigurationException, InvocationTargetException,
-        IllegalAccessException, URISyntaxException
-    {
-        cfg = spy(helper.readFusionSchemaWithoutValidation(fusionSchema));
-        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class),
-            any(FusionRequest.class), any(FusionResponse.class))).thenReturn("<xml>42</xml>");
-        when(cfg.getResponseRendererByType(any(ResponseRendererType.class))).thenReturn(testRenderer);
-        List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
-        if (searchServerConfigs != null && !searchServerConfigs.isEmpty())
-        {
-            SearchServerConfig searchServerConfig = spy(searchServerConfigs.get(0));
-            searchServerConfigs.clear();
-            searchServerConfigs.add(searchServerConfig);
-            when(searchServerConfig.getInstance()).thenReturn(testAdapter);
-            when(testAdapter.sendQuery(Mockito.anyMapOf(String.class, String.class), Mockito.anyInt())).thenReturn(
-                testResponse);
-        }
-        return cfg.getController();
     }
 
     @Test
@@ -224,8 +160,8 @@ public class ControllerTest
     {
         testMultipleServers("target/test-classes/test-xml-response-9000.xml",
             "target/test-classes/test-xml-response-9002.xml");
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc"), 4000);
-        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc"), 4000);
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", null), 4000);
+        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", null), 4000);
     }
 
     @Test
@@ -245,6 +181,7 @@ public class ControllerTest
             "    <str name=\"start\">0</str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
             "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
+            "    <str name=\"wt\">wt</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "    <str name=\"rows\">0</str>\n" +
             "  </lst>\n" +
@@ -253,19 +190,8 @@ public class ControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc"), 4000);
-        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc"), 4000);
-    }
-
-    protected Map<String, String> buildParams(String q)
-    {
-        Map<String, String> result = new HashMap<>();
-        result.put(QUERY.getRequestParamName(), q);
-        result.put(PAGE_SIZE.getRequestParamName(), "10");
-        result.put(START.getRequestParamName(), "0");
-        result.put(SORT.getRequestParamName(), "score desc");
-        result.put(FIELDS_TO_RETURN.getRequestParamName(), "* score");
-        return result;
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", null), 4000);
+        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", null), 4000);
     }
 
     protected String testMultipleServers(String responseServer1, String responseServer2)
@@ -341,13 +267,38 @@ public class ControllerTest
         fusionRequest.setPageSize(200);
         fusionRequest.setSolrFusionSortField("title");
         fusionRequest.setSortAsc(true);
+        fusionRequest.setFieldsToReturn("id,title");
+        Term hlt = Term.newFusionTerm("title", "abc");
+        hlt.setSearchServerFieldName("titleVT_de");
+        hlt.setSearchServerFieldValue(Arrays.asList("abc"));
+        hlt.setWasMapped(true);
+        hlt.setRemoved(false);
+        TermQuery hlq = new TermQuery(hlt);
+        fusionRequest.setParsedHighlightQuery(hlq);
+        fusionRequest.setHighlight("true");
+        fusionRequest.setHighlightPre("pre");
+        fusionRequest.setHighlightPost("post");
+        fusionRequest.setHighlightingFieldsToReturn("title,id");
         Map<String, String> map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
         Assert.assertEquals("Expected other sort field", "titleVT_de asc", map.get(SORT.getRequestParamName()));
         Assert.assertEquals("Expected other start value", "0", map.get(START.getRequestParamName()));
         int maxDocs = serverConfig.getMaxDocs();
         Assert.assertEquals("Expected other page size", String.valueOf(maxDocs),
             map.get(PAGE_SIZE.getRequestParamName()));
-        Assert.assertEquals("Expected other start value", "titleVT_de:abc", map.get(QUERY.getRequestParamName()));
+        Assert.assertEquals("Expected other search server query", "titleVT_de:abc",
+            map.get(QUERY.getRequestParamName()));
+        Assert.assertEquals("Expected other search server highlight query", "titleVT_de:abc",
+            map.get(HIGHLIGHT_QUERY.getRequestParamName()));
+        Assert.assertEquals("Expected other search server highlight pre", "pre",
+            map.get(HIGHLIGHT_PRE.getRequestParamName()));
+        Assert.assertEquals("Expected other search server highlight post", "post",
+            map.get(HIGHLIGHT_POST.getRequestParamName()));
+        Assert.assertEquals("Expected other search server highlight value", "true",
+            map.get(HIGHLIGHT.getRequestParamName()));
+        Assert.assertEquals("Expected other search server highlight fields", "titleVT_de titleVT_eng id",
+            map.get(HIGHLIGHT_FIELDS_TO_RETURN.getRequestParamName()));
+        System.out.println("MAP " + map);
+        // TODO check HL params
 
         // below server's max limit, return wanted size
         int start = 4;
@@ -487,11 +438,11 @@ public class ControllerTest
         log.info("--- without merger test ---");
         controller.processIdQuery(request, response);
         Assert.assertTrue("Expected no error", response.isOk());
-        String expected = "  <doc>\n" +
-            "    <str name=\"id\"><![CDATA[Bibliothek9000" + sep + "1]]></str>\n" +
-            "    <str name=\"title\"><![CDATA[abc]]></str>\n" +
-            "    <float name=\"score\"><![CDATA[0.8100914448000002]]></float>\n" +
-            "  </doc>";
+        String expected = "<doc>\n" +
+            "        <str name=\"id\">Bibliothek9000" + sep + "1</str>\n" +
+            "        <str name=\"title\">abc</str>\n" +
+            "        <float name=\"score\">0.8100914448000002</float>\n" +
+            "    </doc>";
         Assert.assertTrue("Response doesn't contain doc: " + response.getResponseAsString(),
             response.getResponseAsString().contains(expected));
 

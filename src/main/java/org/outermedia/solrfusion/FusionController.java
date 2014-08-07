@@ -13,7 +13,10 @@ import org.outermedia.solrfusion.mapper.ResetQueryState;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.query.parser.TermQuery;
-import org.outermedia.solrfusion.response.*;
+import org.outermedia.solrfusion.response.ClosableIterator;
+import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
+import org.outermedia.solrfusion.response.ResponseParserIfc;
+import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -56,11 +59,13 @@ public class FusionController implements FusionControllerIfc
 
         String queryStr = fusionRequest.getQuery();
         String filterQueryStr = fusionRequest.getFilterQuery();
+        String highlightQueryStr = fusionRequest.getHighlightQuery();
 
         Map<String, Float> boosts = fusionRequest.getBoosts();
         Locale locale = fusionRequest.getLocale();
         fusionRequest.setParsedQuery(parseQuery(queryStr, boosts, locale, fusionRequest));
         fusionRequest.setParsedFilterQuery(parseQuery(filterQueryStr, boosts, locale, fusionRequest));
+        fusionRequest.setParsedHighlightQuery(parseQuery(highlightQueryStr, boosts, locale, fusionRequest));
 
         if (fusionRequest.getParsedQuery() == null)
         {
@@ -70,6 +75,11 @@ public class FusionController implements FusionControllerIfc
             fusionRequest.getParsedFilterQuery() == null)
         {
             fusionResponse.setResponseForQueryParseError(filterQueryStr, fusionRequest.buildErrorMessage());
+        }
+        else if (highlightQueryStr != null && highlightQueryStr.trim().length() > 0 &&
+            fusionRequest.getParsedHighlightQuery() == null)
+        {
+            fusionResponse.setResponseForQueryParseError(highlightQueryStr, fusionRequest.buildErrorMessage());
         }
         else
         {
@@ -205,9 +215,8 @@ public class FusionController implements FusionControllerIfc
             }
             else
             {
-                Document mergedDoc = configuration.getResponseConsolidator().completelyMapMergedDoc(configuration,
-                    idGen.getFusionIdField(), collectedDocuments);
-                SearchServerResponseInfo info = new SearchServerResponseInfo(1);
+                Document mergedDoc = configuration.getResponseConsolidator(configuration).completelyMapMergedDoc(collectedDocuments, null);
+                SearchServerResponseInfo info = new SearchServerResponseInfo(1, null);
                 ClosableIterator<Document, SearchServerResponseInfo> response = new ClosableListIterator<>(
                     Arrays.asList(mergedDoc), info);
                 ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(
@@ -232,7 +241,7 @@ public class FusionController implements FusionControllerIfc
     {
         try
         {
-            return configuration.getResponseConsolidator();
+            return configuration.getResponseConsolidator(configuration);
         }
         catch (Exception e)
         {
@@ -256,7 +265,7 @@ public class FusionController implements FusionControllerIfc
             else
             {
                 ClosableIterator<Document, SearchServerResponseInfo> response = consolidator.getResponseIterator(
-                    configuration, fusionRequest);
+                    fusionRequest);
                 // set state BEFORE response is rendered, because their the status is read out!
                 fusionResponse.setOk();
                 // TODO better to pass in a Writer in order to avoid building of very big String
@@ -280,19 +289,21 @@ public class FusionController implements FusionControllerIfc
         ScriptEnv env = getNewScriptEnv(fusionRequest.getLocale());
         Query query = fusionRequest.getParsedQuery();
         Query filterQuery = fusionRequest.getParsedFilterQuery();
+        Query highlightQuery = fusionRequest.getParsedHighlightQuery();
         for (SearchServerConfig searchServerConfig : configuredSearchServers)
         {
-            if (mapQuery(query, env, searchServerConfig) && mapQuery(filterQuery, env, searchServerConfig))
+            if (mapQuery(query, env, searchServerConfig) && mapQuery(filterQuery, env, searchServerConfig) &&
+                mapQuery(highlightQuery, env, searchServerConfig))
             {
                 XmlResponse result = sendAndReceive(fusionRequest, searchServerConfig);
                 Exception se = result.getErrorReason();
                 if (se == null)
                 {
-                    SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound());
+                    SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound(), null);
                     ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
                         result.getDocuments(), info);
-
-                    consolidator.addResultStream(configuration, searchServerConfig, docIterator, fusionRequest);
+                    consolidator.addResultStream(searchServerConfig, docIterator, fusionRequest,
+                        result.getHighlighting());
                 }
                 else
                 {
@@ -303,6 +314,10 @@ public class FusionController implements FusionControllerIfc
             if (filterQuery != null)
             {
                 getNewResetQueryState().reset(filterQuery);
+            }
+            if(highlightQuery != null)
+            {
+                getNewResetQueryState().reset(highlightQuery);
             }
         }
     }

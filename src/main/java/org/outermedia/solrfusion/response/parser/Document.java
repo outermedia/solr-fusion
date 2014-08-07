@@ -388,6 +388,18 @@ public class Document implements VisitableDocument
         return result;
     }
 
+    public List<String> getSearchServerValuesOf(String field)
+    {
+        List<String> result = null;
+
+        Term fieldValueTerm = getFieldTermByName(field);
+        if (fieldValueTerm != null)
+        {
+            result = fieldValueTerm.getSearchServerFieldValue();
+        }
+        return result;
+    }
+
     public String getSearchServerDocId(String searchServerIdField)
     {
         String docId = null;

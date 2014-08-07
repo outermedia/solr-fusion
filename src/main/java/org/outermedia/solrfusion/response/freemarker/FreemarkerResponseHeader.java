@@ -11,23 +11,29 @@ import org.outermedia.solrfusion.response.parser.Document;
  *
  * @author stephan
  */
+@Getter
 public class FreemarkerResponseHeader
 {
 
-    @Getter
     private String query;
 
-    @Getter
     private String filterQuery;
 
-    @Getter
     private int rows;
 
-    @Getter
     private String sort;
 
-    @Getter
     private String fields;
+
+    private String highlight;
+
+    private String highlightPre;
+
+    private String highlightPost;
+
+    private String highlightFields;
+
+    private String highlightQuery;
 
     public FreemarkerResponseHeader(ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request)
     {
@@ -41,5 +47,10 @@ public class FreemarkerResponseHeader
         this.filterQuery = request.getFilterQuery();
         this.sort = request.getSolrFusionSortField();
         this.fields = request.getFieldsToReturn();
+        this.highlight = request.getHighlight();
+        this.highlightPre = request.getHighlightPre();
+        this.highlightPost = request.getHighlightPost();
+        this.highlightFields = request.getHighlightingFieldsToReturn();
+        this.highlightQuery = request.getHighlightQuery();
     }
 }

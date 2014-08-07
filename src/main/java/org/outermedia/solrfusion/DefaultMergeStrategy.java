@@ -5,13 +5,14 @@ import lombok.ToString;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Merge;
 import org.outermedia.solrfusion.configuration.MergeTarget;
+import org.outermedia.solrfusion.response.HighlightingMap;
 import org.outermedia.solrfusion.response.parser.Document;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * Identify response documents which represent the same object and merge them.
+ * Identify response documents which represent the same object and merge them and their highlights.
  *
  * @author ballmann
  */
@@ -71,19 +72,29 @@ public class DefaultMergeStrategy implements MergeStrategyIfc
      * Merge several documents of the same book/news paper into one instance.
      *
      * @param config
-     * @param sameDocuments a non null list of documents which describe the same book/news paper
+     * @param sameDocuments      a non null list of documents which describe the same book/news paper
+     * @param allHighlighting    perhaps empty
+     * @param mergedHighlighting perhaps null
      * @return a document instance
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    public Document mergeDocuments(Configuration config, Collection<Document> sameDocuments)
+    public Document mergeDocuments(Configuration config, Collection<Document> sameDocuments,
+        HighlightingMap allHighlighting, Map<String, Document> mergedHighlighting)
         throws InvocationTargetException, IllegalAccessException
     {
-        Document result = null;
+        String fusionIdField = config.getFusionIdFieldName();
+        Document mergedDoc = null;
+        Document mergedHl = null;
         if (sameDocuments.size() == 1)
         {
-            // we want a result, perhaps the document contains no id!
-            result = sameDocuments.iterator().next();
+            // we want a mergedDoc, perhaps the document contains no id!
+            mergedDoc = sameDocuments.iterator().next();
+            String fusionDocId = mergedDoc.getFusionDocId(fusionIdField);
+            if (fusionDocId != null)
+            {
+                mergedHl = allHighlighting.get(fusionDocId);
+            }
         }
         else
         {
@@ -92,8 +103,8 @@ public class DefaultMergeStrategy implements MergeStrategyIfc
             int at = 0;
             while (at < serverPrio.size())
             {
-                result = findDocumentOfServer(serverPrio.get(at), sameDocuments, idHandler);
-                if (result == null)
+                mergedDoc = findDocumentOfServer(serverPrio.get(at), sameDocuments, idHandler);
+                if (mergedDoc == null)
                 {
                     at++;
                 }
@@ -102,21 +113,47 @@ public class DefaultMergeStrategy implements MergeStrategyIfc
                     break;
                 }
             }
-            at++;
-            while (at < serverPrio.size())
+            if (mergedDoc != null)
             {
-                Document toMerge = findDocumentOfServer(serverPrio.get(at), sameDocuments, idHandler);
-                if (toMerge != null)
-                {
-                    result.addUnsetFusionFieldsOf(toMerge, idHandler);
-                }
+                mergedHl = allHighlighting.get(mergedDoc.getFusionDocId(fusionIdField));
                 at++;
+                while (at < serverPrio.size())
+                {
+                    Document toMerge = findDocumentOfServer(serverPrio.get(at), sameDocuments, idHandler);
+                    if (toMerge != null)
+                    {
+                        mergedDoc.addUnsetFusionFieldsOf(toMerge, idHandler);
+                        // mergedHl should not be null, because otherwise doc wouldn't be found
+                        // but we check it nevertheless
+                        Document hlToMerge = allHighlighting.get(toMerge.getFusionDocId(fusionIdField));
+                        if (mergedHl == null)
+                        {
+                            mergedHl = hlToMerge;
+                        }
+                        else
+                        {
+                            mergedHl.addUnsetFusionFieldsOf(hlToMerge, idHandler);
+                        }
+                    }
+                    at++;
+                }
             }
         }
-        return result;
+
+        // merging modified fusion doc id!
+        String fusionDocId = mergedDoc.getFusionDocId(fusionIdField);
+        if (fusionDocId != null && mergedHl != null && mergedHighlighting != null)
+        {
+            // set the doc id in order to ensure that the merged highlighting will be found for the merged document
+            mergedHl.setFusionDocId(fusionIdField, fusionDocId);
+            mergedHighlighting.put(fusionDocId, mergedHl);
+        }
+
+        return mergedDoc;
     }
 
-    protected Document findDocumentOfServer(String searchServerName, Collection<Document> documents, IdGeneratorIfc idHandler)
+    protected Document findDocumentOfServer(String searchServerName, Collection<Document> documents,
+        IdGeneratorIfc idHandler)
     {
         Document result = null;
         String fusionIdField = idHandler.getFusionIdField();

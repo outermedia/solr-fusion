@@ -184,11 +184,17 @@ public class DefaultSolrAdapterTest
         params.put(PAGE_SIZE.getRequestParamName(), "12");
         params.put(SORT.getRequestParamName(), "title asc");
         params.put(FIELDS_TO_RETURN.getRequestParamName(), "*,score, title");
+        params.put(HIGHLIGHT.getRequestParamName(),"true");
+        params.put(HIGHLIGHT_FIELDS_TO_RETURN.getRequestParamName(), "title,score,*");
+        params.put(HIGHLIGHT_PRE.getRequestParamName(), "pre");
+        params.put(HIGHLIGHT_POST.getRequestParamName(), "post");
+        params.put(HIGHLIGHT_QUERY.getRequestParamName(), "title:goethe");
 
         String ub = adapter.buildHttpClientParams(params).build().toString();
         System.out.println(ub);
         Assert.assertEquals("Expected other solr query url",
-            "http://unit.test.com/?q=*%3A*&fq=title%3Aa&wt=json&start=5&rows=12&sort=title+asc&fl=*%2Cscore%2C+title", ub);
+            "http://unit.test.com/?q=*%3A*&fq=title%3Aa&wt=json&start=5&rows=12&sort=title+asc&fl=*%2Cscore%2C+title" +
+                "&hl=true&hl.simple.pre=pre&hl.simple.post=post&hl.fl=title%2Cscore%2C*&hl.q=title%3Agoethe", ub);
     }
 
 }

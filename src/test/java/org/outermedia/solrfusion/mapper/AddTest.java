@@ -2,12 +2,16 @@ package org.outermedia.solrfusion.mapper;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.outermedia.solrfusion.FusionRequest;
+import org.outermedia.solrfusion.FusionResponse;
+import org.outermedia.solrfusion.adapter.ClosableListIterator;
+import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.query.parser.Query;
-import org.outermedia.solrfusion.response.SimpleXmlResponseRenderer;
+import org.outermedia.solrfusion.response.ClosableIterator;
+import org.outermedia.solrfusion.response.DefaultXmlResponseRenderer;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.FieldVisitor;
 import org.outermedia.solrfusion.types.AbstractTypeTest;
 import org.outermedia.solrfusion.types.ScriptEnv;
 import org.xml.sax.SAXException;
@@ -16,6 +20,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
@@ -80,20 +85,22 @@ public class AddTest extends AbstractTypeTest
         Document doc = createDocument("id", "123", "score", "1.2");
         ScriptEnv env = new ScriptEnv();
         int mappedFieldNr = cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, doc, env, null);
-        SimpleXmlResponseRenderer renderer = (SimpleXmlResponseRenderer) cfg.getResponseRendererByType(
-            ResponseRendererType.XML);
-        StringBuilder sb = new StringBuilder();
-        FieldVisitor visitor = renderer.getDocumentFieldVisitor(sb);
-        doc.accept(visitor, new ScriptEnv());
-        String xmlDocStr = sb.toString();
-        // System.out.println("DOC "+xmlDocStr);
+        DefaultXmlResponseRenderer renderer = DefaultXmlResponseRenderer.Factory.getInstance();
+        renderer.init(null);
+        FusionRequest req = new FusionRequest();
+        req.setQuery("a:dummy");
+        req.setLocale(Locale.GERMAN);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null);
+        ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(Arrays.asList(doc), info);
+        String xmlDocStr = renderer.getResponseString(cfg, docStream, req, new FusionResponse());
+        System.out.println("DOC "+xmlDocStr);
         Assert.assertTrue("Expected field text12 set" + xmlDocStr,
-            xmlDocStr.contains("<str name=\"text12\"><![CDATA[1]]></str>"));
-        Assert.assertTrue("Expected field text13 set" + xmlDocStr, xmlDocStr.contains("    <arr name=\"text13\">\n" +
-            "      <str><![CDATA[1]]></str>\n" +
-            "      <str><![CDATA[2]]></str>\n" +
-            "      <str><![CDATA[3]]></str>\n" +
-            "    </arr>"));
+            xmlDocStr.contains("<str name=\"text12\">1</str>"));
+        Assert.assertTrue("Expected field text13 set" + xmlDocStr, xmlDocStr.contains("<arr name=\"text13\">\n" +
+            "        <str>1</str>\n" +
+            "        <str>2</str>\n" +
+            "        <str>3</str>\n" +
+            "                </arr>"));
     }
 
     protected Document createDocument(String... fieldAndValue)

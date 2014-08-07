@@ -49,6 +49,16 @@ public class FusionRequest
 
     private String highlightingFieldsToReturn;
 
+    private String highlightQuery;
+
+    private Query parsedHighlightQuery;
+
+    private String highlightPre;
+
+    private String highlightPost;
+
+    private String highlight;
+
     // otherwise desc
     private boolean sortAsc;
 
@@ -88,6 +98,8 @@ public class FusionRequest
         Map<String, String> searchServerParams = new HashMap<>();
         buildSearchServerQuery(parsedQuery, QUERY, configuration, searchServerConfig, searchServerParams);
         buildSearchServerQuery(parsedFilterQuery, FILTER_QUERY, configuration, searchServerConfig, searchServerParams);
+        buildSearchServerQuery(parsedHighlightQuery, HIGHLIGHT_QUERY, configuration, searchServerConfig,
+            searchServerParams);
         // get all documents from 0..min(MAXDOCS,start+page size)
         searchServerParams.put(START.getRequestParamName(), String.valueOf(0));
         int rows = Math.min(searchServerConfig.getMaxDocs(), getStart() + getPageSize());
@@ -122,6 +134,24 @@ public class FusionRequest
         String fieldsToReturn = mapFusionFieldListToSearchServerField(fusionFieldsToReturn, configuration,
             searchServerConfig);
         searchServerParams.put(FIELDS_TO_RETURN.getRequestParamName(), fieldsToReturn);
+        String hlFieldsToReturn = mapFusionFieldListToSearchServerField(highlightingFieldsToReturn, configuration,
+            searchServerConfig);
+        if (hlFieldsToReturn.length() > 0)
+        {
+            searchServerParams.put(HIGHLIGHT_FIELDS_TO_RETURN.getRequestParamName(), hlFieldsToReturn);
+        }
+        if (highlightPre != null)
+        {
+            searchServerParams.put(HIGHLIGHT_PRE.getRequestParamName(), highlightPre);
+        }
+        if (highlightPost != null)
+        {
+            searchServerParams.put(HIGHLIGHT_POST.getRequestParamName(), highlightPost);
+        }
+        if (highlight != null)
+        {
+            searchServerParams.put(HIGHLIGHT.getRequestParamName(), highlight);
+        }
         return searchServerParams;
     }
 

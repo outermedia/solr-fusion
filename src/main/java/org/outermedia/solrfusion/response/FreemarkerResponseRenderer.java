@@ -43,8 +43,12 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
     @Getter
     private String encoding;
 
-    public void setEncoding(String encoding) {
-        if (freemarkerConfig == null) return;
+    public void setEncoding(String encoding)
+    {
+        if (freemarkerConfig == null)
+        {
+            return;
+        }
         freemarkerConfig.setDefaultEncoding(encoding);
         this.encoding = encoding;
     }
@@ -52,13 +56,18 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
     @Getter
     private String locale;
 
-    public void setLocale(String locale) {
-        if (freemarkerConfig == null) return;
+    public void setLocale(String locale)
+    {
+        if (freemarkerConfig == null)
+        {
+            return;
+        }
         freemarkerConfig.setLocale(Locale.forLanguageTag(locale));
         this.locale = locale;
     }
 
-    public FreemarkerResponseRenderer() {
+    public FreemarkerResponseRenderer()
+    {
         templateFile = XMLTEMPLATEFILE;
         encoding = defaultEncoding;
         locale = defaultLocale;
@@ -75,16 +84,26 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
         FreemarkerResponse freemarkerResponse = new FreemarkerResponse(configuration, docStream);
         FreemarkerResponseHeader freemarkerResponseHeader = new FreemarkerResponseHeader(docStream, request);
         FreemarkerErrorHeader freemarkerErrorHeader = new FreemarkerErrorHeader(fusionResponse);
+        Map<String, Document> highlighting = null;
+        if (docStream != null)
+        {
+            highlighting = docStream.getExtraInfo().getHighlighting();
+        }
+        FreemarkerResponseHighlighting freemarkerHighlighting = new FreemarkerResponseHighlighting(configuration, highlighting);
 
         input.put("responseHeader", freemarkerResponseHeader);
         input.put("responseError", freemarkerErrorHeader);
         input.put("response", freemarkerResponse);
+        input.put("highlighting", freemarkerHighlighting);
 
         // Get the template
         Template template = null;
-        try {
+        try
+        {
             template = freemarkerConfig.getTemplate(templateFile);
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
 

@@ -18,14 +18,16 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.*;
+import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 /**
  * Created by ballmann on 6/6/14.
  */
 @SuppressWarnings("unchecked")
-public class ControllerFilterQueryTest extends AbstractControllerTest
+public class ControllerHighlightTest extends AbstractControllerTest
 {
     @Test
     public void testProcess()
@@ -38,6 +40,11 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
         fusionRequest.setFilterQuery("author:Goethe -title:tomorrow");
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField("score");
+        fusionRequest.setHighlight("true");
+        fusionRequest.setHighlightQuery("title:goethe");
+        fusionRequest.setHighlightPre("pre");
+        fusionRequest.setHighlightPost("post");
+        fusionRequest.setHighlightingFieldsToReturn("title");
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
         // System.out.println("ERROR " + fusionResponse.getErrorMessage());
@@ -53,7 +60,7 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery("author:Schiller -title:morgen");
-        fusionRequest.setFilterQuery("author:*:Schiller");
+        fusionRequest.setHighlightQuery("author:*:Schiller");
 
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
@@ -71,18 +78,31 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
         IllegalAccessException, URISyntaxException
     {
         testMultipleServers("title:abc", "title:def", "target/test-classes/test-xml-response-9000.xml",
-            "target/test-classes/test-xml-response-9002.xml");
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def"), 4000);
-        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", "titleVT_eng:def"), 4000);
+            "target/test-classes/test-xml-response-9002.xml", ResponseRendererType.XML);
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title"), 4000);
+        verify(testAdapter9002, times(1)).sendQuery(
+            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng"), 4000);
+    }
+
+    protected Map<String, String> buildParams(String q, String hlq, String mappedTitle)
+    {
+        Map<String, String> result = super.buildParams(q, null);
+        result.put(HIGHLIGHT_QUERY.getRequestParamName(), hlq);
+        result.put(HIGHLIGHT_FIELDS_TO_RETURN.getRequestParamName(), mappedTitle);
+        result.put(FIELDS_TO_RETURN.getRequestParamName(), "* score " + mappedTitle);
+        result.put(HIGHLIGHT.getRequestParamName(), "true");
+        result.put(HIGHLIGHT_PRE.getRequestParamName(), "pre");
+        result.put(HIGHLIGHT_POST.getRequestParamName(), "post");
+        return result;
     }
 
     @Test
-    public void testQueryWithMultipleServersButNoResponseDocuments()
+    public void testQueryWithMultipleServersButNoResponseDocumentsXml()
         throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
         IllegalAccessException, URISyntaxException
     {
         String xml = testMultipleServers("title:abc", "title:def", "target/test-classes/test-empty-xml-response.xml",
-            "target/test-classes/test-empty-xml-response.xml");
+            "target/test-classes/test-empty-xml-response.xml", ResponseRendererType.XML);
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<response>\n" +
             "<lst name=\"responseHeader\">\n" +
@@ -92,8 +112,11 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
             "    <str name=\"indent\">on</str>\n" +
             "    <str name=\"start\">0</str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
-            "    <str name=\"fq\"><![CDATA[title:def]]></str>\n" +
             "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
+            "    <str name=\"hl\"><![CDATA[true]]></str>\n" +
+            "    <str name=\"hl.simple.pre\"><![CDATA[pre]]></str>\n" +
+            "    <str name=\"hl.simple.post\"><![CDATA[post]]></str>\n" +
+            "    <str name=\"hl.q\"><![CDATA[title:def]]></str>\n" +
             "    <str name=\"wt\">wt</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "    <str name=\"rows\">0</str>\n" +
@@ -103,12 +126,46 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def"), 4000);
-        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", "titleVT_eng:def"), 4000);
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title"), 4000);
+        verify(testAdapter9002, times(1)).sendQuery(
+            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng"), 4000);
     }
 
-    protected String testMultipleServers(String queryStr, String filterQueryStr, String responseServer1,
-        String responseServer2)
+    @Test
+    public void testQueryWithMultipleServersButNoResponseDocumentsJson()
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
+    {
+        String xml = testMultipleServers("title:abc", "title:def", "target/test-classes/test-empty-xml-response.xml",
+            "target/test-classes/test-empty-xml-response.xml", ResponseRendererType.JSON);
+        String expected = "{\n" +
+            "  \"responseHeader\":{\n" +
+            "    \"status\":0,\n" +
+            "    \"QTime\":0,\n" +
+            "    \"params\":{\n" +
+            "      \"indent\":\"on\",\n" +
+            "      \"start\":\"0\",\n" +
+            "      \"q\":\"title:abc\",\n" +
+            "      \"sort\":\"score\",\n" +
+            "      \"hl\":\"true\",\n" +
+            "      \"hl.simple.pre\":\"pre\",\n" +
+            "      \"hl.simple.post\":\"post\",\n" +
+            "      \"hl.fl\":\"title\",\n" +
+            "      \"hl.q\":\"title:def\",\n" +
+            "      \"wt\":\"json\",\n" +
+            "      \"version\":\"2.2\",\n" +
+            "      \"rows\":\"0\"}},\n" +
+            "  \"response\":{\"numFound\":0,\"start\":0,\"docs\":[\n" +
+            "  ]}\n" +
+            "}";
+        Assert.assertEquals("Found different xml response", expected, xml.trim());
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title"), 4000);
+        verify(testAdapter9002, times(1)).sendQuery(
+            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng"), 4000);
+    }
+
+    protected String testMultipleServers(String queryStr, String highlightQueryStr, String responseServer1,
+        String responseServer2, ResponseRendererType format)
         throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
         IllegalAccessException, URISyntaxException
     {
@@ -143,13 +200,17 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
 
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
+        fusionRequest.setResponseType(format);
         fusionRequest.setQuery(queryStr);
-        fusionRequest.setFilterQuery(filterQueryStr);
+        fusionRequest.setHighlight("true");
+        fusionRequest.setHighlightingFieldsToReturn("title");
+        fusionRequest.setHighlightQuery(highlightQueryStr);
+        fusionRequest.setHighlightPre("pre");
+        fusionRequest.setHighlightPost("post");
         fusionRequest.setPageSize(10);
         fusionRequest.setStart(0);
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
-        fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(spyCfg, fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());

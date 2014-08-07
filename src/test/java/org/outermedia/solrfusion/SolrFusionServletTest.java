@@ -134,6 +134,11 @@ public class SolrFusionServletTest
         }
         String fieldsToReturn = "* score";
         requestParams.put(FIELDS_TO_RETURN.getRequestParamName(), new String[]{fieldsToReturn});
+        requestParams.put(HIGHLIGHT.getRequestParamName(), new String[]{"true"});
+        requestParams.put(HIGHLIGHT_PRE.getRequestParamName(), new String[]{"pre"});
+        requestParams.put(HIGHLIGHT_POST.getRequestParamName(), new String[]{"post"});
+        requestParams.put(HIGHLIGHT_FIELDS_TO_RETURN.getRequestParamName(), new String[]{fieldsToReturn});
+        requestParams.put(HIGHLIGHT_QUERY.getRequestParamName(), new String[]{q});
         FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
         Assert.assertNotNull("Expected request object", req);
         Assert.assertEquals("Got different query", q, req.getQuery());
@@ -142,6 +147,12 @@ public class SolrFusionServletTest
             req.getResponseType());
         Assert.assertEquals("Got different fields", fieldsToReturn, req.getFieldsToReturn());
         Assert.assertFalse("Expected no exception, but got " + req.buildErrorMessage(), req.hasErrors());
+        // check highlighting params
+        Assert.assertEquals("Got different highlight query", q, req.getHighlightQuery());
+        Assert.assertEquals("Got different highlight", "true", req.getHighlight());
+        Assert.assertEquals("Got different highlight pre", "pre", req.getHighlightPre());
+        Assert.assertEquals("Got different highlight post", "post", req.getHighlightPost());
+        Assert.assertEquals("Got different highlight fields", fieldsToReturn, req.getHighlightingFieldsToReturn());
     }
 
     @Test

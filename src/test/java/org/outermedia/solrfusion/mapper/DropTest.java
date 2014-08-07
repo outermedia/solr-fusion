@@ -12,7 +12,7 @@ import org.outermedia.solrfusion.query.parser.BooleanQuery;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.query.parser.TermQuery;
 import org.outermedia.solrfusion.response.ClosableIterator;
-import org.outermedia.solrfusion.response.SimpleXmlResponseRenderer;
+import org.outermedia.solrfusion.response.DefaultXmlResponseRenderer;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.types.AbstractTypeTest;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -42,33 +42,31 @@ public class DropTest extends AbstractTypeTest
         buildResponseField(doc, "Titel", "Ein kurzer Weg");
         buildResponseField(doc, "Autor", "Willi Schiller");
         buildResponseField(doc, "id", "132");
-        Term sourceField = buildResponseField(doc, "f8", "something", "other");
+        Term sourceField = buildResponseField(doc, "f8", "something & more", "other");
         Term sourceRegExpField = buildResponseField(doc, "f9-abc", "something2", "other2");
 
-        SimpleXmlResponseRenderer renderer = SimpleXmlResponseRenderer.getInstance();
-        renderer.setMultiValueKey("arr");
-        Map<String, String> map = new HashMap<>();
-        map.put("text", "str");
-        renderer.setFusionTypeToResponseKey(map);
+        DefaultXmlResponseRenderer renderer = DefaultXmlResponseRenderer.Factory.getInstance();
+        renderer.init(null);
         List<Document> docs = new ArrayList<>();
         docs.add(doc);
-        SearchServerResponseInfo info = new SearchServerResponseInfo(1);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null);
 
         ScriptEnv env = new ScriptEnv();
         SearchServerConfig serverConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
         rm.mapResponse(cfg, serverConfig, doc, env, null);
-        // System.out.println(sourceField.toString());
+        // System.out.println("f8: "+sourceField.toString());
         Assert.assertTrue("Expected that field f8 was removed", sourceField.isRemoved());
         Assert.assertTrue("Expected that field f9-abc was removed", sourceRegExpField.isRemoved());
 
         ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(docs, info);
         FusionRequest req = new FusionRequest();
         req.setQuery("a:dummy");
+        req.setLocale(Locale.GERMAN);
         String ds = renderer.getResponseString(cfg, docStream, req, new FusionResponse());
-        String expectedField = "    <arr name=\"text4\">\n" +
-            "      <str><![CDATA[something]]></str>\n" +
-            "      <str><![CDATA[other]]></str>\n" +
-            "    </arr>";
+        String expectedField = "<arr name=\"text4\">\n" +
+            "        <str>something &amp; more</str>\n" +
+            "        <str>other</str>\n" +
+            "                </arr>";
         Assert.assertFalse("Field f8 was mapped unexpectedly", ds.contains(expectedField));
 
         // remove <drop> for f8
@@ -83,7 +81,7 @@ public class DropTest extends AbstractTypeTest
         // System.out.println("W/O DROP "+sourceField.toString());
         docStream = new ClosableListIterator<>(docs, info);
         String s = renderer.getResponseString(cfg, docStream, req, new FusionResponse());
-        Assert.assertTrue("Field f8 was not mapped.", s.contains(expectedField));
+        Assert.assertTrue("Field f4 was not mapped:\n" + s, s.contains(expectedField));
     }
 
     protected FieldMapping findByName(String s, List<FieldMapping> mappings)
@@ -151,7 +149,8 @@ public class DropTest extends AbstractTypeTest
         // System.out.println(term.toString());
         Assert.assertFalse("Expected that field text4 was not removed", term.isRemoved());
         String s = qb.buildQueryString(query, cfg, searchServerConfig, Locale.GERMAN);
-        Assert.assertEquals("Found different query than expected", "(f8:bla1) AND +t11:\"searched text\"~2^75 AND t13:hello", s);
+        Assert.assertEquals("Found different query than expected",
+            "(f8:bla1) AND +t11:\"searched text\"~2^75 AND t13:hello", s);
     }
 
     @Test

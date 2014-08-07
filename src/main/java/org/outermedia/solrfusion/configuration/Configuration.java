@@ -185,9 +185,11 @@ public class Configuration
      *
      * @return an instance of ResponseConsolidatorIfc
      */
-    public ResponseConsolidatorIfc getResponseConsolidator() throws InvocationTargetException, IllegalAccessException
+    public ResponseConsolidatorIfc getResponseConsolidator(Configuration config) throws InvocationTargetException, IllegalAccessException
     {
-        return getResponseConsolidatorFactory().getInstance();
+        ResponseConsolidatorIfc c = getResponseConsolidatorFactory().getInstance();
+        c.init(config);
+        return c;
     }
 
     /**
@@ -298,5 +300,10 @@ public class Configuration
     public SearchServerConfig getSearchServerConfigByName(String serverName)
     {
         return searchServerConfigs.getSearchServerConfigById(serverName);
+    }
+
+    public String getFusionIdFieldName() throws InvocationTargetException, IllegalAccessException
+    {
+        return getIdGeneratorFactory().getInstance().getFusionIdField();
     }
 }

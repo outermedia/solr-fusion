@@ -1,0 +1,1676 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+
+<lst name="responseHeader">
+  <int name="status">0</int>
+  <int name="QTime">40</int>
+  <lst name="params">
+    <str name="facet">true</str>
+    <str name="facet.mincount">1</str>
+    <str name="indent">yes</str>
+    <str name="facet.limit">100</str>
+    <str name="hl.simple.pre">{{{{START_HILITE}}}}</str>
+    <str name="hl.fl">*</str>
+    <str name="json.nl">arrarr</str>
+    <str name="wt">xml</str>
+    <str name="f.finc_class_facet.facet.sort">index</str>
+    <str name="hl">true</str>
+    <str name="rows">20</str>
+    <str name="fl">score</str>
+    <str name="facet.sort"/>
+    <str name="start">0</str>
+    <str name="q">goethe</str>
+    <str name="facet.prefix"/>
+    <str name="hl.q">goethe</str>
+    <str name="f.format.facet.sort">index</str>
+    <str name="hl.simple.post">{{{{END_HILITE}}}}</str>
+    <arr name="facet.field">
+      <str>{!ex=branch_de15_filter}branch_de15</str>
+      <str>{!ex=format_de15_filter}format_de15</str>
+      <str>collcode_de15</str>
+    </arr>
+  </lst>
+</lst>
+<result name="response" numFound="30013" start="0" maxScore="3.500582">
+  <doc>
+    <float name="score">3.500582</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>not assigned</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Serial</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Journal, E-Journal</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Journal, E-Journal</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Journal, E-Journal</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Serial</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00439cas a22001812  4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156245002600164260001200190935001000202980004500212#30;0000869567#30;DE-576#30;20110815200644.0#30;tu#30;100522c18uuuuuuxx    m            0ger c#30;  #31;a(OCoLC)699941752#30;  #31;a(DE-599)BSZ323446345#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;10#31;aAllerlei über Goethe#30;  #31;aBunzlau#30;  #31;bdruck#30;  #31;a323446345#31;b0#31;c201302091446#31;d201402071842#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0000869567</str>
+    <str name="illustrated">Illustrated</str>
+    <str name="imprint">Bunzlau</str>
+    <arr name="institution"><str>finc</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">s</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>699941752</long></arr>
+    <str name="publishDateSort">1865</str>
+    <arr name="publishPlace"><str>Bunzlau</str></arr>
+    <str name="record_id">323446345</str>
+    <str name="recordtype">marc</str>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Allerlei über Goethe Bunzlau</str>
+    <arr name="spellingShingle"><str>Allerlei über Goethe</str></arr>
+    <str name="title">Allerlei über Goethe</str>
+    <str name="title_full">Allerlei über Goethe</str>
+    <str name="title_fullStr">Allerlei über Goethe</str>
+    <str name="title_full_unstemmed">Allerlei über Goethe</str>
+    <str name="title_short">Allerlei über Goethe</str>
+    <str name="title_sort">allerlei über goethe</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">3.500582</float>
+    <str name="access_facet">Local Holdings</str>
+    <date name="attached_de15">1996-07-22T00:00:00Z</date>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>Bibliotheca Albertina</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>Campusbibliothek I</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>Freihand</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Serial</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Journal, E-Journal</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Journal, E-Journal</str></arr>
+    <arr name="format_dech1"><str>Zeitschrift / Reihe</str></arr>
+    <arr name="format_ded117"><str>Journal, E-Journal</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Serial</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00683cas a2200253   4500001001100000003000700011005001700018007000300035008004100038016002000079022001400099035002500113040003100138245001300169260002800182935001000210983001900220971000700239983001800246969000700264852005600271852005700327980004500384#30;0001525170#30;DE-576#30;20100127022232.0#30;tu#30;900316c19uuuuuuxx    m            0    c#30;  #31;a(OCoLC)16893185#30;  #31;a0766-4281#30;  #31;a(DE-599)BSZ019967055#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;10#31;aTriangle#30;  #31;a[Paris] :#31;bGoethe-Inst.#30;  #31;bdruck#30;  #31;a(DE-Ch1)121024#30;  #31;cRE#30;  #31;a(DE-15)397695#30;  #31;cSE#30;  #31;aDE-15#31;x142241202:201403051836#31;z1996-07-22T00:00:00Z#30;  #31;aDE-Ch1#31;x14224113X:201403051836#31;z1994-10-28T00:00:00Z#30;  #31;a019967055#31;b0#31;c201403051836#31;d201405240141#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0001525170</str>
+    <str name="illustrated">Illustrated</str>
+    <str name="imprint">[Paris] : Goethe-Inst.</str>
+    <arr name="institution"><str>DE-15</str><str>DE-Ch1</str></arr>
+    <arr name="issn"><str>0766-4281</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>not assigned</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">s</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>16893185</long></arr>
+    <str name="publishDateSort">1985</str>
+    <arr name="publishPlace"><str>[Paris] :</str></arr>
+    <arr name="publisher"><str>Goethe-Inst.</str></arr>
+    <str name="record_id">019967055</str>
+    <str name="recordtype">marc</str>
+    <arr name="rsn"><str>(DE-Ch1)121024</str><str>(DE-15)397695</str></arr>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Triangle [Paris] : Goethe-Inst.</str>
+    <arr name="spellingShingle"><str>Triangle</str></arr>
+    <str name="title">Triangle</str>
+    <str name="title_full">Triangle</str>
+    <str name="title_fullStr">Triangle</str>
+    <str name="title_full_unstemmed">Triangle</str>
+    <str name="title_short">Triangle</str>
+    <str name="title_sort">triangle</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">3.0941067</float>
+    <str name="access_facet">Local Holdings</str>
+    <date name="attached_de15">2010-10-11T14:57:07Z</date>
+    <str name="author">Maschek, Friedrich</str>
+    <str name="author_letter">Maschek, Friedrich</str>
+    <str name="authorized_mode">true</str>
+    <arr name="barcode"><str>(DE-15)7004463953</str></arr>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>Bibliotheca Albertina</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de15"><str>Magazin / Sonstige</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Book</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Book, E-Book</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Book, E-Book</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Book, E-Book</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Book</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00800cam a22003012  4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156041000800164046001700172100004200189245002000231246001200251260002300263935001000286982002500296981003800321969001300359983001900372969000600391852005600397980004500453#30;0001302059#30;DE-576#30;20110302012716.0#30;tu#30;040323s1887    xx             00 0 ger c#30;  #31;a(OCoLC)162935703#30;  #31;a(DE-599)BSZ110560701#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;07#31;adt.#30;  #31;ja19b#31;2DE-576#30;1 #31;aMaschek, Friedrich#31;0(DE-576)187631166#30;10#31;aGoethe's Reisen#30;30#31;agoethes#30;  #31;aReichenberg,#31;c1887#30;  #31;bdruck#30;  #31;a(DE-15)7004463953#31;x1#30;  #31;a(DE-15)Goe.-Schi.4530#31;x1#31;ccurrent#30;  #31;bKeine#31;x1#30;  #31;a(DE-15)2140617#30;  #31;cB#30;  #31;aDE-15#31;x650633873:201403061354#31;z2010-10-11T14:57:07Z#30;  #31;a110560701#31;b0#31;c201403061354#31;d201405240116#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0001302059</str>
+    <str name="illustrated">Not Illustrated</str>
+    <str name="imprint">Reichenberg, 1887</str>
+    <arr name="institution"><str>DE-15</str></arr>
+    <str name="itemdata">{"DE-15":[{"cn":"Goe.-Schi.4530","bc":"7004463953"}]}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">m</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>162935703</long></arr>
+    <arr name="publishDate"><str>1887</str></arr>
+    <str name="publishDateSort">1887</str>
+    <arr name="publishPlace"><str>Reichenberg,</str></arr>
+    <str name="record_id">110560701</str>
+    <str name="recordtype">marc</str>
+    <arr name="rsn"><str>(DE-15)2140617</str></arr>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <arr name="signatur"><str>(DE-15)Goe.-Schi.4530</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Maschek, Friedrich (DE-576)187631166 Goethe's Reisen goethes Reichenberg, 1887</str>
+    <arr name="spellingShingle"><str>Maschek, Friedrich</str><str>Goethe's Reisen</str></arr>
+    <arr name="timecode"><str>1851 – 1900</str></arr>
+    <str name="title">Goethe's Reisen</str>
+    <arr name="title_alt"><str>goethes</str></arr>
+    <str name="title_full">Goethe's Reisen</str>
+    <str name="title_fullStr">Goethe's Reisen</str>
+    <str name="title_full_unstemmed">Goethe's Reisen</str>
+    <str name="title_short">Goethe's Reisen</str>
+    <str name="title_sort">goethe's reisen</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">3.0630093</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>not assigned</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Book</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Book, E-Book</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Book, E-Book</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Book, E-Book</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Book</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00543cam a22002052  4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156046001700164245002400181260002100205935001000226852005600236980004500292#30;0012356625#30;DE-576#30;20110315205910.0#30;tu#30;101012s1886    xx             00 0 ger c#30;  #31;a(OCoLC)699874646#30;  #31;a(DE-599)BSZ331419750#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;  #31;ja19b#31;2DE-576#30;10#31;aSchiller und Goethe#30;  #31;aDresden,#31;c[1886]#30;  #31;bdruck#30;  #31;aDE-14#31;x650671295:201403061354#31;z2014-03-16T01:11:25Z#30;  #31;a331419750#31;b0#31;c201403061354#31;d201405240738#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0012356625</str>
+    <str name="illustrated">Not Illustrated</str>
+    <str name="imprint">Dresden, [1886]</str>
+    <arr name="institution"><str>DE-14</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">m</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>699874646</long></arr>
+    <arr name="publishDate"><str>[1886]</str></arr>
+    <str name="publishDateSort">1886</str>
+    <arr name="publishPlace"><str>Dresden,</str></arr>
+    <str name="record_id">331419750</str>
+    <str name="recordtype">marc</str>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Schiller und Goethe Dresden, [1886]</str>
+    <arr name="spellingShingle"><str>Schiller und Goethe</str></arr>
+    <arr name="timecode"><str>1851 – 1900</str></arr>
+    <str name="title">Schiller und Goethe</str>
+    <str name="title_full">Schiller und Goethe</str>
+    <str name="title_fullStr">Schiller und Goethe</str>
+    <str name="title_full_unstemmed">Schiller und Goethe</str>
+    <str name="title_short">Schiller und Goethe</str>
+    <str name="title_sort">schiller und goethe</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">3.0315928</float>
+    <str name="access_facet">Local Holdings</str>
+    <date name="attached_de15">1998-04-17T00:00:00Z</date>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>Bibliotheca Albertina</str><str>Theaterwissenschaften</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Serial</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Journal, E-Journal</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Journal, E-Journal</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Journal, E-Journal</str></arr>
+    <arr name="format_del152"><str>Hierarchie</str><str>Buch</str></arr>
+    <arr name="format_del189"><str>Serial</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00851cas a2200265   4500001001100000003000700011005001700018007000300035008004100038016002000079016002100099035002500120040003100145245009900176260003100275935001000306983001800316969000700334983002000341970000800361852005600369852005700425852005800482980004500540#30;0002076978#30;DE-576#30;20140517071808.0#30;tu#30;870209c19uuuuuuxx    m            0    c#30;  #31;a(OCoLC)17249042#30;7 #31;a272002-4#31;2DE-600#30;  #31;a(DE-599)BSZ012516120#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;10#31;aStudien zur Goethe-Zeit und Goethe-Wirkung /#31;cSchriftenreihe der Goethe-Gesellschaft Stuttgart#30;  #31;aStuttgart [u.a.] :#31;bBelser#30;  #31;bdruck#30;  #31;a(DE-15)635124#30;  #31;cSE#30;  #31;a(DE-L152)111199#30;  #31;cTIT#30;  #31;aDE-15#31;x094972419:201405180231#31;z1998-04-17T00:00:00Z#30;  #31;aDE-540#31;x540743836:201405180231#31;z2007-08-22T12:29:29Z#30;  #31;aDE-L152#31;x601960327:201405180231#31;z2009-06-02T17:18:41Z#30;  #31;a012516120#31;b0#31;c201405180231#31;d201405240909#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0002076978</str>
+    <str name="illustrated">Illustrated</str>
+    <str name="imprint">Stuttgart [u.a.] : Belser</str>
+    <arr name="institution"><str>DE-15</str><str>DE-540</str><str>DE-L152</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>not assigned</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">s</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>17249042</long></arr>
+    <str name="publishDateSort">1986</str>
+    <arr name="publishPlace"><str>Stuttgart [u.a.] :</str></arr>
+    <arr name="publisher"><str>Belser</str></arr>
+    <str name="record_id">012516120</str>
+    <str name="recordtype">marc</str>
+    <arr name="rsn"><str>(DE-15)635124</str><str>(DE-L152)111199</str></arr>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Studien zur Goethe-Zeit und Goethe-Wirkung / Schriftenreihe der Goethe-Gesellschaft Stuttgart Stuttgart [u.a.] : Belser</str>
+    <arr name="spellingShingle"><str>Studien zur Goethe-Zeit und Goethe-Wirkung /</str></arr>
+    <str name="title">Studien zur Goethe-Zeit und Goethe-Wirkung /</str>
+    <str name="title_full">Studien zur Goethe-Zeit und Goethe-Wirkung /</str>
+    <str name="title_fullStr">Studien zur Goethe-Zeit und Goethe-Wirkung /</str>
+    <str name="title_full_unstemmed">Studien zur Goethe-Zeit und Goethe-Wirkung /</str>
+    <str name="title_short">Studien zur Goethe-Zeit und Goethe-Wirkung /</str>
+    <str name="title_sort">studien zur goethe-zeit und goethe-wirkung</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.9353273</float>
+    <str name="access_facet">Local Holdings</str>
+    <date name="attached_de15">1998-08-26T00:00:00Z</date>
+    <str name="author">Goethe, Johann Wolfgang von 1749 - 1832</str>
+    <arr name="author_id"><str>118540238</str></arr>
+    <str name="author_letter">Goethe, Johann Wolfgang von</str>
+    <str name="authorized_mode">true</str>
+    <arr name="barcode"><str>(DE-15)M10114641</str></arr>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>Bibliotheca Albertina</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de15"><str>Magazin / Sonstige</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Book</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Book, E-Book</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Book, E-Book</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Book, E-Book</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Book</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">03870cam a22012732  4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156041000800164046001700172100008300189245003000272246002900302246002100331260002700352300001900379751001600398935001000414982002400424981003600448969001300484983001800497969000600515900003100521900002800552900002600580900002200606900003100628900002700659900002400686900002200710900002100732900001800753900002300771900002800794900002500822900003000847900003100877900002000908900003000928900002100958900002200979900002501001900002101026900002101047900002201068900001601090900001801106900003201124900002201156900002701178900002101205900001501226900001401241900001501255900001801270900001401288900002001302900002801322900001601350900002801366900002501394900001601419900002501435900002801460900002801488900003101516900002101547900002801568900003301596900002701629900002601656900001801682900003201700900001601732900003701748900002801785900001401813900001501827900002701842900001601869900002801885900003301913900003401946900001501980900003801995900002702033900002702060900002702087900001602114900003502130900003102165900002702196900003202223900003302255900001102288900004102299900004102340900006102381900004302442951001002485852005602495980004502551#30;0002414791#30;DE-576#30;20130503234857.0#30;tu#30;980826s1800    xx             00 0 ger c#30;  #31;a(OCoLC)313213439#30;  #31;a(DE-599)BSZ068194811#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;07#31;adt.#30;  #31;jad18#31;2DE-576#30;1 #31;aGoethe, Johann Wolfgang von#31;d1749 - 1832#31;0(DE-588)118540238#31;0(DE-576)161142842#30;10#31;aGöthe's neueste Gedichte#30;30#31;agöthes goethe's goethes#30;9 #31;aNeueste Gedichte#30;  #31;aBerlin :#31;bUnger,#31;c1800#30;  #31;a380 S. :#31;bIll.#30;  #31;aBerlin#31;4pup#30;  #31;bdruck#30;  #31;a(DE-15)M10114641#31;x1#30;  #31;a(DE-15)Hirzel.A.237#31;x1#31;ccurrent#30;  #31;bKeine#31;x1#30;  #31;a(DE-15)706891#30;  #31;cB#30;  #31;aGoethe, Johann Wolfgang v.#30;  #31;aGoethe, Johann Wolfgang#30;  #31;aGoethe, Johann W. von#30;  #31;aGoethe, Johann W.#30;  #31;aGoethe, Johan Wolfgang von#30;  #31;aGoethe, Joh. Wolfg. v.#30;  #31;aGoethe, J. Wolfgang#30;  #31;aGoethe, J. W. von#30;  #31;aGoethe, J. W. v.#30;  #31;aGoethe, J. W.#30;  #31;aGoethe, Ioannes W.#30;  #31;aGoethe, Iohan Wolphgang#30;  #31;aGoethe, Jan Wolfgang#30;  #31;aGoethe, Jean Wolfgang von#30;  #31;aGoethe, João Wolfgang von#30;  #31;aGoethe, Juan W.#30;  #31;aGoethe, Juan Wolfgang von#30;  #31;aGoethe, Volfango#30;  #31;aGoethe, Volfgango#30;  #31;aGoethe, Wolfgang von#30;  #31;aGoethe, Wolfgang#30;  #31;aGoethe, Wolfango#30;  #31;aGoethe, Wolfgango#30;  #31;aGoethe, ...#30;  #31;aGoethius, ...#30;  #31;aGöthe, Johann Wolfgang von#30;  #31;aGöthe, J. W. von#30;  #31;aGöthe, Giov. Volfango#30;  #31;aGöte, Iogann V.#30;  #31;aGöte, ...#30;  #31;aGede, ...#30;  #31;aGēte, ...#30;  #31;aGě'ṭe, ...#30;  #31;aGete, ...#30;  #31;aGete, Iogann W.#30;  #31;aGete, Iogann Volʹfgang#30;  #31;aGete, J. V.#30;  #31;aGëte, Iogann Vol'fgang#30;  #31;aGete, Iohan Volfgang#30;  #31;aGete, I. V.#30;  #31;aGete, Johan Volfgang#30;  #31;aGéte, Johans Volfgangs#30;  #31;aGete, Johann Volʹfgang#30;  #31;aGete, Jogann Vol'fgang fon#30;  #31;aGete, Volʹfgang#30;  #31;aGete, Yogann Volʹfgang#30;  #31;aGete, Yôhân Wôlfgang fôn#30;  #31;aGête, Yôhan Wolfgang#30;  #31;aGete, Yohann Volfqanq#30;  #31;aGêtê, Y. W.#30;  #31;aGeteh, Yohan Ṿolfgang fon#30;  #31;aGkaite, ...#30;  #31;aGkaite, Giochan Bolphnkannk phon#30;  #31;aGkaite, Giochan B. phon#30;  #31;aGót, ...#30;  #31;aG'ote, ...#30;  #31;aG'ote, Jochan Volfgang#30;  #31;aGoet'e, ...#30;  #31;aGoet'e, Iohan Volp'gang#30;  #31;aGūta, Yūhān Wulfgāng fun#30;  #31;aGūta, Yūhān Wulfgāng fūn#30;  #31;aGūta, ...#30;  #31;aĠūtih, Yūhān Vūlfġanġ fūn#30;  #31;aGyot'e, Yohan Wolfgang#30;  #31;aHëte, Ëhan Vol'fhanh#30;  #31;aHete, Johann-Vol'fhanh#30;  #31;aKoet'e, ...#30;  #31;aKoet'e, Yohan Polp'ŭgang p'on#30;  #31;aGėtė, Johanas Volfgangas#30;  #31;aHöte, Iohann Volfqanq#30;  #31;avon Goethe, Johann Wolfgang#30;  #31;a괴테, 요한 볼프강 폰#30;  #31;a歌德#30;  #31;a約翰・沃爾夫岡・馮・歌德#30;  #31;a约翰・沃尔夫冈・冯・歌德#30;  #31;aゲーテ, ヨハン・ヴォルフガング・フォン#30;  #31;aגתה, יוהן וולפגנג פון#30;  #31;bXA-DE#30;  #31;aDE-15#31;x333370996:201403051810#31;z1998-08-26T00:00:00Z#30;  #31;a068194811#31;b0#31;c201403051810#31;d201405240242#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>Germany</str></arr>
+    <str name="id">0002414791</str>
+    <str name="illustrated">Illustrated</str>
+    <str name="imprint">Berlin : Unger, 1800</str>
+    <arr name="institution"><str>DE-15</str></arr>
+    <str name="itemdata">{"DE-15":[{"cn":"Hirzel.A.237","bc":"M10114641"}]}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">m</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>313213439</long></arr>
+    <arr name="physical"><str>380 S. : Ill.</str></arr>
+    <arr name="publishDate"><str>1800</str></arr>
+    <str name="publishDateSort">1800</str>
+    <arr name="publishPlace"><str>Berlin :</str></arr>
+    <arr name="publisher"><str>Unger,</str></arr>
+    <str name="record_id">068194811</str>
+    <str name="recordtype">marc</str>
+    <arr name="rsn"><str>(DE-15)706891</str></arr>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <arr name="signatur"><str>(DE-15)Hirzel.A.237</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Goethe, Johann Wolfgang von 1749 - 1832 (DE-588)118540238 (DE-576)161142842 Göthe's neueste Gedichte göthes goethe's goethes Neueste Gedichte Berlin : Unger, 1800 380 S. : Ill. Berlin pup</str>
+    <arr name="spellingShingle"><str>Goethe, Johann Wolfgang von 1749 - 1832</str><str>Göthe's neueste Gedichte</str></arr>
+    <arr name="timecode"><str>1701 – 1800</str></arr>
+    <str name="title">Göthe's neueste Gedichte</str>
+    <arr name="title_alt"><str>göthes goethe's goethes</str><str>Neueste Gedichte</str></arr>
+    <str name="title_full">Göthe's neueste Gedichte</str>
+    <str name="title_fullStr">Göthe's neueste Gedichte</str>
+    <str name="title_full_unstemmed">Göthe's neueste Gedichte</str>
+    <str name="title_short">Göthe's neueste Gedichte</str>
+    <str name="title_sort">göthe's neueste gedichte</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.679575</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>not assigned</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dateSpan"><str>1.1880 - 34.1913; 89.1972 -</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Journal</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Journal, E-Journal</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Journal, E-Journal</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Journal, E-Journal</str></arr>
+    <arr name="format_del152"><str>Weitere Literaturnachweise</str></arr>
+    <arr name="format_del189"><str>Journal</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00803nas a2200253 c 4500001001100000003000700011005001700018008004100035022001400076040002200090041000800112245004100120260002600161362003200187780004900219787007700268787003000345900003100375950005600406951001900462954002900481970000700510980003200517#30;0004744165#30;DE-601#30;20070316221758.0#30;070314nuuuuuuuu    u p       0   u0ger d#30;  #31;a0323-4207#30;  #31;aGBVCP#31;bger#31;erakwb#30;0 #31;ager#30;10#31;aGoethe-Jahrbuch#31;cGoethe-Gesellschaft#30;3 #31;aGöttingen#31;bWallstein#30;0 #31;a1.1880 - 34.1913; 89.1972 -#30;05#31;iBeil. u. darin aufgeg.#31;tGoethe-Bibliographie#30;0 #31;t35.1914 - 55.1935: Goethe-Gesellschaft: Jahrbuch der Goethe-Gesellschaft#30;0 #31;t56.1936 - 88.1971: Goethe#30;  #31;aGBV#31;bSIM-PK Berlin &lt;B 763&gt;#30;  #31;aLiteraturwissenschaft#31;aGoethe, Johann Wolfgang#31;2241#30;  #31;aE 10#31;aB 6#31;2241#30;  #31;a241#31;b000573310#31;c01#31;x3241#30;  #31;cWL#30;  #31;a001401963#31;b11#31;d201407101523#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0004744165</str>
+    <str name="illustrated">Illustrated</str>
+    <str name="imprint">Göttingen Wallstein</str>
+    <arr name="institution"><str>finc</str></arr>
+    <arr name="issn"><str>0323-4207</str></arr>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Bibliographie des Musikschrifttums online</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">s</str>
+    <str name="multipart_set"> </str>
+    <arr name="publishPlace"><str>Göttingen</str></arr>
+    <arr name="publisher"><str>Wallstein</str></arr>
+    <str name="record_id">001401963</str>
+    <str name="recordtype">marc</str>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <str name="source_id">11</str>
+    <str name="spelling">Goethe-Jahrbuch Goethe-Gesellschaft Göttingen Wallstein 1.1880 - 34.1913; 89.1972 - Beil. u. darin aufgeg. Goethe-Bibliographie 35.1914 - 55.1935: Goethe-Gesellschaft: Jahrbuch der Goethe-Gesellschaft 56.1936 - 88.1971: Goethe</str>
+    <arr name="spellingShingle"><str>Goethe-Jahrbuch</str></arr>
+    <str name="title">Goethe-Jahrbuch</str>
+    <str name="title_full">Goethe-Jahrbuch</str>
+    <str name="title_fullStr">Goethe-Jahrbuch</str>
+    <str name="title_full_unstemmed">Goethe-Jahrbuch</str>
+    <arr name="title_old"><str>Goethe-Bibliographie</str></arr>
+    <str name="title_short">Goethe-Jahrbuch</str>
+    <str name="title_sort">goethe-jahrbuch</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.6526437</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="author_corp">Goethe-Museum</str>
+    <arr name="author_id"><str>2012581-1</str></arr>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>not assigned</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Serial</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Journal, E-Journal</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Journal, E-Journal</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Journal, E-Journal</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Serial</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00868cas a2200289   4500001001100000003000700011005001700018007000300035008004100038015002100079016002000100016002200120035002500142040003100167110007100198245004200269260003300311935001000344910004400354910001800398910002400416910001800440910000800458910001100466852005600477980004500533#30;0012096618#30;DE-576#30;20100223031627.0#30;tu#30;910624c19uuuuuuxx    m            0    c#30;  #31;a87,B17,0681#31;2dnb#30;  #31;a(OCoLC)84285472#30;7 #31;a551263997#31;2DE-101#30;  #31;a(DE-599)DNB551263997#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;2 #31;aGoethe-Museum#31;9g:Düsseldorf#31;0(DE-588)2012581-1#31;0(DE-576)19167060X#30;10#31;aAnmerkung / Goethe-Museum Düsseldorf#30;  #31;aDüsseldorf :#31;bGoethe-Museum#30;  #31;bdruck#30;  #31;aAnton-und-Katharina-Kippenberg-Stiftung#30;  #31;ag:Düsseldorf#30;  #31;aKippenberg-Stiftung#30;  #31;aMusée Goethe#30;  #31;aGMD#30;  #31;a4:abku#30;  #31;aDE-14#31;x166606103:201403051810#31;z2014-03-16T00:32:33Z#30;  #31;a024594490#31;b0#31;c201403051810#31;d201405240213#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0012096618</str>
+    <str name="illustrated">Illustrated</str>
+    <str name="imprint">Düsseldorf : Goethe-Museum</str>
+    <arr name="institution"><str>DE-14</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>not assigned</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">s</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>84285472</long></arr>
+    <str name="publishDateSort">1988</str>
+    <arr name="publishPlace"><str>Düsseldorf :</str></arr>
+    <arr name="publisher"><str>Goethe-Museum</str></arr>
+    <str name="record_id">024594490</str>
+    <str name="recordtype">marc</str>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Goethe-Museum g:Düsseldorf (DE-588)2012581-1 (DE-576)19167060X Anmerkung / Goethe-Museum Düsseldorf Düsseldorf : Goethe-Museum</str>
+    <arr name="spellingShingle"><str>Anmerkung / Goethe-Museum Düsseldorf</str><str>Goethe-Museum</str></arr>
+    <str name="title">Anmerkung / Goethe-Museum Düsseldorf</str>
+    <str name="title_full">Anmerkung / Goethe-Museum Düsseldorf</str>
+    <str name="title_fullStr">Anmerkung / Goethe-Museum Düsseldorf</str>
+    <str name="title_full_unstemmed">Anmerkung / Goethe-Museum Düsseldorf</str>
+    <str name="title_short">Anmerkung / Goethe-Museum Düsseldorf</str>
+    <str name="title_sort">anmerkung / goethe-museum düsseldorf</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.6254365</float>
+    <str name="access_facet">Local Holdings</str>
+    <date name="attached_de15">2011-11-25T07:21:43Z</date>
+    <str name="author">Schlager, Paul</str>
+    <str name="author_letter">Schlager, Paul</str>
+    <str name="authorized_mode">true</str>
+    <arr name="barcode"><str>(DE-15)7010480281</str></arr>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>Bibliotheca Albertina</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de15"><str>Magazin / Sonstige</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="footnote"><str>Aus: Goethe. Viermonatsschrift d. Goethe-Ges ; Bd. 6, H. 2. - Umschlagt.</str></arr>
+    <arr name="format"><str>Book</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Book, E-Book</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Book, E-Book</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Book, E-Book</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Book</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00953cam a22003252  4500001001100000003000700011005001700018007000300035008004100038015001600079016002000095016002300115035002500138040003100163041000800194100003800202245004300240260003300283300001600316500007700332935001000409935000900419982002500428981003500453969001300488983001900501969000600520852005600526980004500582#30;0000644755#30;DE-576#30;20111217060039.0#30;tu#30;111125s1941    xx            000 0 ger c#30;  #31;a00,L01#31;2dnb#30;  #31;a(OCoLC)72101681#30;7 #31;aL356025217#31;2DE-101#30;  #31;a(DE-599)BSZ353666327#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;1 #31;aSchlager, Paul#31;0(DE-576)16962000X#30;10#31;aGoethe-Dissertationen /#31;cPaul Schlager#30;  #31;aWeimar :#31;bGoethe-Ges.,#31;c1941#30;  #31;aS. 217-221.#30;  #31;aAus: Goethe. Viermonatsschrift d. Goethe-Ges ; Bd. 6, H. 2. - Umschlagt.#30;  #31;bdruck#30;  #31;csodr#30;  #31;a(DE-15)7010480281#31;x1#30;  #31;a(DE-15)G.B.S.350:4#31;x1#31;ccurrent#30;  #31;bKeine#31;x1#30;  #31;a(DE-15)2806392#30;  #31;cB#30;  #31;aDE-15#31;x696121190:201403061620#31;z2011-11-25T07:21:43Z#30;  #31;a353666327#31;b0#31;c201403061620#31;d201405240155#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0000644755</str>
+    <str name="illustrated">Not Illustrated</str>
+    <str name="imprint">Weimar : Goethe-Ges., 1941</str>
+    <arr name="institution"><str>DE-15</str></arr>
+    <str name="itemdata">{"DE-15":[{"cn":"G.B.S.350:4","bc":"7010480281"}]}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">m</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>72101681</long></arr>
+    <arr name="physical"><str>S. 217-221.</str></arr>
+    <arr name="publishDate"><str>1941</str></arr>
+    <str name="publishDateSort">1941</str>
+    <arr name="publishPlace"><str>Weimar :</str></arr>
+    <arr name="publisher"><str>Goethe-Ges.,</str></arr>
+    <str name="record_id">353666327</str>
+    <str name="recordtype">marc</str>
+    <arr name="rsn"><str>(DE-15)2806392</str></arr>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <arr name="signatur"><str>(DE-15)G.B.S.350:4</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Schlager, Paul (DE-576)16962000X Goethe-Dissertationen / Paul Schlager Weimar : Goethe-Ges., 1941 S. 217-221. Aus: Goethe. Viermonatsschrift d. Goethe-Ges ; Bd. 6, H. 2. - Umschlagt.</str>
+    <arr name="spellingShingle"><str>Schlager, Paul</str><str>Goethe-Dissertationen /</str></arr>
+    <str name="title">Goethe-Dissertationen /</str>
+    <str name="title_full">Goethe-Dissertationen /</str>
+    <str name="title_fullStr">Goethe-Dissertationen /</str>
+    <str name="title_full_unstemmed">Goethe-Dissertationen /</str>
+    <str name="title_short">Goethe-Dissertationen /</str>
+    <str name="title_sort">goethe-dissertationen</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.6254365</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>not assigned</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dateSpan"><str>104/105.2000/01(2004) -</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Journal</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Journal, E-Journal</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Journal, E-Journal</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Journal, E-Journal</str></arr>
+    <arr name="format_del152"><str>Weitere Literaturnachweise</str></arr>
+    <arr name="format_del189"><str>Journal</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00696nas a2200217 c 4500001001100000003000700011005001700018008004100035040002200076041000800098245009300106260002500199362002800224780006800252900003100320950004600351951001300397954002900410970000700439980003200446#30;0004745795#30;DE-601#30;20070316222112.0#30;070315nuuuuuuuu    u p       0   u0ger d#30;  #31;aGBVCP#31;bger#31;erakwb#30;0 #31;ager#30;10#31;aJahrbuch der Österreichischen Goethe-Gesellschaft#31;cÖsterreichische Goethe-Gesellschaft#30;3 #31;aMünster#31;bLit.-Verl.#30;0 #31;a104/105.2000/01(2004) -#30;02#31;iVorg.#31;tWiener Goethe-Verein: Jahrbuch des Wiener Goethe-Vereins#30;  #31;aGBV#31;bSIM-PK Berlin &lt;B 763&gt;#30;  #31;aGoethe, Johann Wolfgang#31;aÖsterreich#31;2241#30;  #31;aB 6#31;2241#30;  #31;a241#31;b000884979#31;c01#31;x3241#30;  #31;cWL#30;  #31;a001713620#31;b11#31;d201407101523#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0004745795</str>
+    <str name="illustrated">Illustrated</str>
+    <str name="imprint">Münster Lit.-Verl.</str>
+    <arr name="institution"><str>finc</str></arr>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Bibliographie des Musikschrifttums online</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">s</str>
+    <str name="multipart_set"> </str>
+    <arr name="publishPlace"><str>Münster</str></arr>
+    <arr name="publisher"><str>Lit.-Verl.</str></arr>
+    <str name="record_id">001713620</str>
+    <str name="recordtype">marc</str>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <str name="source_id">11</str>
+    <str name="spelling">Jahrbuch der Österreichischen Goethe-Gesellschaft Österreichische Goethe-Gesellschaft Münster Lit.-Verl. 104/105.2000/01(2004) - Vorg. Wiener Goethe-Verein: Jahrbuch des Wiener Goethe-Vereins</str>
+    <arr name="spellingShingle"><str>Jahrbuch der Österreichischen Goethe-Gesellschaft</str></arr>
+    <str name="title">Jahrbuch der Österreichischen Goethe-Gesellschaft</str>
+    <str name="title_full">Jahrbuch der Österreichischen Goethe-Gesellschaft</str>
+    <str name="title_fullStr">Jahrbuch der Österreichischen Goethe-Gesellschaft</str>
+    <str name="title_full_unstemmed">Jahrbuch der Österreichischen Goethe-Gesellschaft</str>
+    <arr name="title_old"><str>Wiener Goethe-Verein: Jahrbuch des Wiener Goethe-Vereins</str></arr>
+    <str name="title_short">Jahrbuch der Österreichischen Goethe-Gesellschaft</str>
+    <str name="title_sort">jahrbuch der österreichischen goethe-gesellschaft</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.6254365</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>not assigned</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Book</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Book, E-Book</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Book, E-Book</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Book, E-Book</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Book</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00677nam a2200217  c4500001001100000003000700011005001700018007000300035008004100038035002500079040003100104041000800135245003700143260000900180490004600189773002600235810008600261935001000347852005700357980004500414#30;0007869169#30;DE-576#30;20070309100337.0#30;tu#30;070309s1904    xx             00 0 ger c#30;  #31;a(DE-599)BSZ262552604#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30; 0#31;aGoethe-Jahrbuch &lt;Göttingen&gt;#31;n25#30;  #31;c1904#30;1 #31;aJahresbericht der Goethe-Gesellschaft#31;v19#30;18#31;w(DE-576)014429322#31;g25#30;2 #31;aGoethe-Gesellschaft#31;tJahresbericht der Goethe-Gesellschaft#31;v19#31;w(DE-576)014973995#30;  #31;bdruck#30;  #31;aDE-D13#31;x614096480:201403061033#31;z2013-05-29T18:02:40Z#30;  #31;a262552604#31;b0#31;c201403061033#31;d201405231959#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0007869169</str>
+    <str name="illustrated">Not Illustrated</str>
+    <str name="imprint">1904</str>
+    <arr name="institution"><str>DE-D13</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">m</str>
+    <arr name="multipart_link"><str>014429322</str><str>014973995</str></arr>
+    <arr name="multipart_part"><str>(014973995)19</str><str>(014429322)25</str></arr>
+    <str name="multipart_set">c</str>
+    <arr name="publishDate"><str>1904</str></arr>
+    <str name="publishDateSort">1904</str>
+    <str name="record_id">262552604</str>
+    <str name="recordtype">marc</str>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <arr name="series"><str>Goethe-Gesellschaft Jahresbericht der Goethe-Gesellschaft</str></arr>
+    <arr name="series2"><str>Jahresbericht der Goethe-Gesellschaft</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Goethe-Jahrbuch &lt;Göttingen&gt; 25 1904 Jahresbericht der Goethe-Gesellschaft 19 (DE-576)014429322 25 Goethe-Gesellschaft Jahresbericht der Goethe-Gesellschaft 19 (DE-576)014973995</str>
+    <arr name="spellingShingle"><str>Goethe-Gesellschaft Jahresbericht der Goethe-Gesellschaft</str><str>Jahresbericht der Goethe-Gesellschaft</str><str>Goethe-Jahrbuch &lt;Göttingen&gt;</str></arr>
+    <str name="title">Goethe-Jahrbuch &lt;Göttingen&gt;</str>
+    <str name="title_full">Goethe-Jahrbuch &lt;Göttingen&gt; 25</str>
+    <str name="title_fullStr">Goethe-Jahrbuch &lt;Göttingen&gt; 25</str>
+    <str name="title_full_unstemmed">Goethe-Jahrbuch &lt;Göttingen&gt; 25</str>
+    <str name="title_part">25</str>
+    <str name="title_short">Goethe-Jahrbuch &lt;Göttingen&gt;</str>
+    <str name="title_sort">goethe-jahrbuch &lt;göttingen&gt;</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.6254365</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>not assigned</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Book</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Book, E-Book</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Book, E-Book</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Book, E-Book</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Book</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00677nam a2200217  c4500001001100000003000700011005001700018007000300035008004100038035002500079040003100104041000800135245003700143260000900180490004600189773002600235810008600261935001000347852005700357980004500414#30;0007837135#30;DE-576#30;20070309100529.0#30;tu#30;070309s1905    xx             00 0 ger c#30;  #31;a(DE-599)BSZ262553155#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30; 0#31;aGoethe-Jahrbuch &lt;Göttingen&gt;#31;n26#30;  #31;c1905#30;1 #31;aJahresbericht der Goethe-Gesellschaft#31;v20#30;18#31;w(DE-576)014429322#31;g26#30;2 #31;aGoethe-Gesellschaft#31;tJahresbericht der Goethe-Gesellschaft#31;v20#31;w(DE-576)014973995#30;  #31;bdruck#30;  #31;aDE-D13#31;x614097185:201403061033#31;z2013-05-29T17:58:22Z#30;  #31;a262553155#31;b0#31;c201403061033#31;d201405232129#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0007837135</str>
+    <str name="illustrated">Not Illustrated</str>
+    <str name="imprint">1905</str>
+    <arr name="institution"><str>DE-D13</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">m</str>
+    <arr name="multipart_link"><str>014429322</str><str>014973995</str></arr>
+    <arr name="multipart_part"><str>(014973995)20</str><str>(014429322)26</str></arr>
+    <str name="multipart_set">c</str>
+    <arr name="publishDate"><str>1905</str></arr>
+    <str name="publishDateSort">1905</str>
+    <str name="record_id">262553155</str>
+    <str name="recordtype">marc</str>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <arr name="series"><str>Goethe-Gesellschaft Jahresbericht der Goethe-Gesellschaft</str></arr>
+    <arr name="series2"><str>Jahresbericht der Goethe-Gesellschaft</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Goethe-Jahrbuch &lt;Göttingen&gt; 26 1905 Jahresbericht der Goethe-Gesellschaft 20 (DE-576)014429322 26 Goethe-Gesellschaft Jahresbericht der Goethe-Gesellschaft 20 (DE-576)014973995</str>
+    <arr name="spellingShingle"><str>Goethe-Gesellschaft Jahresbericht der Goethe-Gesellschaft</str><str>Jahresbericht der Goethe-Gesellschaft</str><str>Goethe-Jahrbuch &lt;Göttingen&gt;</str></arr>
+    <str name="title">Goethe-Jahrbuch &lt;Göttingen&gt;</str>
+    <str name="title_full">Goethe-Jahrbuch &lt;Göttingen&gt; 26</str>
+    <str name="title_fullStr">Goethe-Jahrbuch &lt;Göttingen&gt; 26</str>
+    <str name="title_full_unstemmed">Goethe-Jahrbuch &lt;Göttingen&gt; 26</str>
+    <str name="title_part">26</str>
+    <str name="title_short">Goethe-Jahrbuch &lt;Göttingen&gt;</str>
+    <str name="title_sort">goethe-jahrbuch &lt;göttingen&gt;</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.6254365</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>not assigned</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Book</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Book, E-Book</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Book, E-Book</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Book, E-Book</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Book</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00677nam a2200217  c4500001001100000003000700011005001700018007000300035008004100038035002500079040003100104041000800135245003700143260000900180490004600189773002600235810008600261935001000347852005700357980004500414#30;0007822387#30;DE-576#30;20070309100732.0#30;tu#30;070309s1906    xx             00 0 ger c#30;  #31;a(DE-599)BSZ262553678#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30; 0#31;aGoethe-Jahrbuch &lt;Göttingen&gt;#31;n27#30;  #31;c1906#30;1 #31;aJahresbericht der Goethe-Gesellschaft#31;v21#30;18#31;w(DE-576)014429322#31;g27#30;2 #31;aGoethe-Gesellschaft#31;tJahresbericht der Goethe-Gesellschaft#31;v21#31;w(DE-576)014973995#30;  #31;bdruck#30;  #31;aDE-D13#31;x614097533:201403061033#31;z2013-05-29T17:55:20Z#30;  #31;a262553678#31;b0#31;c201403061033#31;d201405232127#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0007822387</str>
+    <str name="illustrated">Not Illustrated</str>
+    <str name="imprint">1906</str>
+    <arr name="institution"><str>DE-D13</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">m</str>
+    <arr name="multipart_link"><str>014429322</str><str>014973995</str></arr>
+    <arr name="multipart_part"><str>(014973995)21</str><str>(014429322)27</str></arr>
+    <str name="multipart_set">c</str>
+    <arr name="publishDate"><str>1906</str></arr>
+    <str name="publishDateSort">1906</str>
+    <str name="record_id">262553678</str>
+    <str name="recordtype">marc</str>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <arr name="series"><str>Goethe-Gesellschaft Jahresbericht der Goethe-Gesellschaft</str></arr>
+    <arr name="series2"><str>Jahresbericht der Goethe-Gesellschaft</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Goethe-Jahrbuch &lt;Göttingen&gt; 27 1906 Jahresbericht der Goethe-Gesellschaft 21 (DE-576)014429322 27 Goethe-Gesellschaft Jahresbericht der Goethe-Gesellschaft 21 (DE-576)014973995</str>
+    <arr name="spellingShingle"><str>Goethe-Gesellschaft Jahresbericht der Goethe-Gesellschaft</str><str>Jahresbericht der Goethe-Gesellschaft</str><str>Goethe-Jahrbuch &lt;Göttingen&gt;</str></arr>
+    <str name="title">Goethe-Jahrbuch &lt;Göttingen&gt;</str>
+    <str name="title_full">Goethe-Jahrbuch &lt;Göttingen&gt; 27</str>
+    <str name="title_fullStr">Goethe-Jahrbuch &lt;Göttingen&gt; 27</str>
+    <str name="title_full_unstemmed">Goethe-Jahrbuch &lt;Göttingen&gt; 27</str>
+    <str name="title_part">27</str>
+    <str name="title_short">Goethe-Jahrbuch &lt;Göttingen&gt;</str>
+    <str name="title_sort">goethe-jahrbuch &lt;göttingen&gt;</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.6254365</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>not assigned</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Book</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Book, E-Book</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Book, E-Book</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Book, E-Book</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Book</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00552cam a22002052  4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156046001700164245003600181260001800217935001000235852005600245980004500301#30;0012424115#30;DE-576#30;20110327053823.0#30;tu#30;110104s1882    xx             00 0 ger c#30;  #31;a(OCoLC)706859722#30;  #31;a(DE-599)BSZ335477208#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;  #31;ja19b#31;2DE-576#30;10#31;aZum 50jähr. Todestage Goethe's#30;  #31;aBerlin,#31;c1882#30;  #31;bdruck#30;  #31;aDE-14#31;x659599198:201403061351#31;z2014-03-16T01:26:25Z#30;  #31;a335477208#31;b0#31;c201403061351#31;d201405240507#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0012424115</str>
+    <str name="illustrated">Not Illustrated</str>
+    <str name="imprint">Berlin, 1882</str>
+    <arr name="institution"><str>DE-14</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">m</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>706859722</long></arr>
+    <arr name="publishDate"><str>1882</str></arr>
+    <str name="publishDateSort">1882</str>
+    <arr name="publishPlace"><str>Berlin,</str></arr>
+    <str name="record_id">335477208</str>
+    <str name="recordtype">marc</str>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Zum 50jähr. Todestage Goethe's Berlin, 1882</str>
+    <arr name="spellingShingle"><str>Zum 50jähr. Todestage Goethe's</str></arr>
+    <arr name="timecode"><str>1851 – 1900</str></arr>
+    <str name="title">Zum 50jähr. Todestage Goethe's</str>
+    <str name="title_full">Zum 50jähr. Todestage Goethe's</str>
+    <str name="title_fullStr">Zum 50jähr. Todestage Goethe's</str>
+    <str name="title_full_unstemmed">Zum 50jähr. Todestage Goethe's</str>
+    <str name="title_short">Zum 50jähr. Todestage Goethe's</str>
+    <str name="title_sort">zum 50jähr. todestage goethe's</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.542068</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>not assigned</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Book</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Book, E-Book</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Book, E-Book</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Book, E-Book</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Book</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">01146cam a22002892 c4500001001100000003000700011005001700018007000300035008004100038035002500079040003100104245028200135246003600417246002900453246002600482246004100508246002300549246003800572246004300610246002100653260002900674300001600703773002500719935001000744852005700754980004500811#30;0006467047#30;DE-576#30;20051207194738.0#30;tu#30;991028s1895    xx             00 0     c#30;  #31;a(DE-599)BSZ081168276#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;10#31;aW. Goethe.#31;n1,#31;p1749 - 1795. La jeunesse de Goethe. Goethe à Francfort et à Strasbourg. Wetzlar et Werther. Les amis de la jeunesse de Goethe. Premières années de Goethe à Weimar. Goethe en Italie. Travaux scientifiques de Goethe. Goethe et la Révolution /#31;cA. Mézières#30;3 #31;aTravaux scientifiques de Goethe#30;3 #31;aGoethe et la Révolution#30;3 #31;aLa jeunesse de Goethe#30;3 #31;aGoethe à Francfort et à Strasbourg#30;3 #31;aWetzlar et Werther#30;3 #31;aLes amis de la jeunesse de Goethe#30;3 #31;aPremières années de Goethe à Weimar#30;3 #31;aGoethe en Italie#30;  #31;aParis :#31;bHachette,#31;c1895#30;  #31;aXII, 464 S.#30;18#31;w(DE-576)069248915#31;g1#30;  #31;bdruck#30;  #31;aDE-291#31;x367439875:201302071200#31;z2010-12-02T03:40:03Z#30;  #31;a081168276#31;b0#31;c201302071200#31;d201402071537#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0006467047</str>
+    <str name="illustrated">Not Illustrated</str>
+    <str name="imprint">Paris : Hachette, 1895</str>
+    <arr name="institution"><str>DE-291</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>not assigned</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">m</str>
+    <arr name="multipart_link"><str>069248915</str></arr>
+    <arr name="multipart_part"><str>(069248915)1</str></arr>
+    <str name="multipart_set">c</str>
+    <arr name="physical"><str>XII, 464 S.</str></arr>
+    <arr name="publishDate"><str>1895</str></arr>
+    <str name="publishDateSort">1895</str>
+    <arr name="publishPlace"><str>Paris :</str></arr>
+    <arr name="publisher"><str>Hachette,</str></arr>
+    <str name="record_id">081168276</str>
+    <str name="recordtype">marc</str>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">W. Goethe. 1, 1749 - 1795. La jeunesse de Goethe. Goethe à Francfort et à Strasbourg. Wetzlar et Werther. Les amis de la jeunesse de Goethe. Premières années de Goethe à Weimar. Goethe en Italie. Travaux scientifiques de Goethe. Goethe et la Révolution / A. Mézières Travaux scientifiques de Goethe Goethe et la Révolution La jeunesse de Goethe Goethe à Francfort et à Strasbourg Wetzlar et Werther Les amis de la jeunesse de Goethe Premières années de Goethe à Weimar Goethe en Italie Paris : Hachette, 1895 XII, 464 S. (DE-576)069248915 1</str>
+    <arr name="spellingShingle"><str>W. Goethe.</str></arr>
+    <str name="title">W. Goethe.</str>
+    <arr name="title_alt"><str>Travaux scientifiques de Goethe</str><str>Goethe et la Révolution</str><str>La jeunesse de Goethe</str>
+      <str>Goethe à Francfort et à Strasbourg</str><str>Wetzlar et Werther</str><str>Les amis de la jeunesse de Goethe</str><str>Premières années de Goethe à Weimar</str>
+      <str>Goethe en Italie</str></arr>
+    <str name="title_full">W. Goethe. 1, 1749 - 1795. La jeunesse de Goethe. Goethe à Francfort et à Strasbourg. Wetzlar et Werther. Les amis de la jeunesse de Goethe. Premières années de Goethe à Weimar. Goethe en Italie. Travaux scientifiques de Goethe. Goethe et la Révolution /</str>
+    <str name="title_fullStr">W. Goethe. 1, 1749 - 1795. La jeunesse de Goethe. Goethe à Francfort et à Strasbourg. Wetzlar et Werther. Les amis de la jeunesse de Goethe. Premières années de Goethe à Weimar. Goethe en Italie. Travaux scientifiques de Goethe. Goethe et la Révolution /</str>
+    <str name="title_full_unstemmed">W. Goethe. 1, 1749 - 1795. La jeunesse de Goethe. Goethe à Francfort et à Strasbourg. Wetzlar et Werther. Les amis de la jeunesse de Goethe. Premières années de Goethe à Weimar. Goethe en Italie. Travaux scientifiques de Goethe. Goethe et la Révolution /</str>
+    <str name="title_part">1, 1749 - 1795. La jeunesse de Goethe. Goethe à Francfort et à Strasbourg. Wetzlar et Werther. Les amis de la jeunesse de Goethe. Premières années de Goethe à Weimar. Goethe en Italie. Travaux scientifiques de Goethe. Goethe et la Révolution /</str>
+    <str name="title_short">W. Goethe.</str>
+    <str name="title_sort">w. goethe</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.4752853</float>
+    <str name="access_facet">Local Holdings</str>
+    <date name="attached_de15">2010-07-19T07:01:18Z</date>
+    <str name="author">Goethe, Hermann</str>
+    <str name="author_letter">Goethe, Hermann</str>
+    <str name="authorized_mode">true</str>
+    <arr name="barcode"><str>(DE-15)7003360521</str><str>(DE-15)7003360972</str></arr>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>Bibliotheca Albertina</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de15"><str>Magazin / Sonstige</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Book</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Book, E-Book</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Book, E-Book</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Book, E-Book</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Book</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00930cam a22003372  4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156041000800164100003900172245004900211260001600260935001000276982002500286981003600311969001300347982002500360981003200385969001300417983001900430969000600449900001500455900002100470852005600491980004500547#30;0000745438#30;DE-576#30;20110301000645.0#30;tu#30;010521s1878    xx             00 0 ger c#30;  #31;a(OCoLC)313927170#30;  #31;a(DE-599)BSZ091431506#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;07#31;adt.#30;1 #31;aGoethe, Hermann#31;0(DE-576)165582537#30;10#31;aHandbuch der Ampelographie /#31;cHermann Goethe#30;  #31;aGraz,#31;c1878#30;  #31;bdruck#30;  #31;a(DE-15)7003360521#31;x1#30;  #31;a(DE-15)Ökon.1182-l#31;x1#31;ccurrent#30;  #31;bKeine#31;x1#30;  #31;a(DE-15)7003360972#31;x2#30;  #31;a(DE-15)41-4-850#31;x2#31;ccurrent#30;  #31;bKeine#31;x2#30;  #31;a(DE-15)2017636#30;  #31;cB#30;  #31;aGoethe, H.#30;  #31;aGoethe, Herrmann#30;  #31;aDE-15#31;x64195252X:201403060933#31;z2010-07-19T07:01:18Z#30;  #31;a091431506#31;b0#31;c201403060933#31;d201405232227#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0000745438</str>
+    <str name="illustrated">Not Illustrated</str>
+    <str name="imprint">Graz, 1878</str>
+    <arr name="institution"><str>DE-15</str></arr>
+    <str name="itemdata">{"DE-15":[{"cn":"Ökon.1182-l","bc":"7003360521"},{"cn":"41-4-850","bc":"7003360972"}]}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">m</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>313927170</long></arr>
+    <arr name="publishDate"><str>1878</str></arr>
+    <str name="publishDateSort">1878</str>
+    <arr name="publishPlace"><str>Graz,</str></arr>
+    <str name="record_id">091431506</str>
+    <str name="recordtype">marc</str>
+    <arr name="rsn"><str>(DE-15)2017636</str></arr>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <arr name="signatur"><str>(DE-15)Ökon.1182-l</str><str>(DE-15)41-4-850</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Goethe, Hermann (DE-576)165582537 Handbuch der Ampelographie / Hermann Goethe Graz, 1878</str>
+    <arr name="spellingShingle"><str>Goethe, Hermann</str><str>Handbuch der Ampelographie /</str></arr>
+    <str name="title">Handbuch der Ampelographie /</str>
+    <str name="title_full">Handbuch der Ampelographie /</str>
+    <str name="title_fullStr">Handbuch der Ampelographie /</str>
+    <str name="title_full_unstemmed">Handbuch der Ampelographie /</str>
+    <str name="title_short">Handbuch der Ampelographie /</str>
+    <str name="title_sort">handbuch der ampelographie</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.4752853</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>Bibliotheca Albertina</str><str>Kunst</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>832.62</str></arr>
+    <arr name="dewey-hundreds"><str>800 - Literature</str></arr>
+    <arr name="dewey-ones"><str>832 - German drama</str></arr>
+    <str name="dewey-raw">832.62</str>
+    <str name="dewey-sort">832.62000000</str>
+    <arr name="dewey-tens"><str>830 - German &amp; related literatures</str></arr>
+    <arr name="finc_class_facet"><str>Germanistik, Niederlandistik, Skandinavistik</str></arr>
+    <arr name="format"><str>Serial</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Journal, E-Journal</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Journal, E-Journal</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Journal, E-Journal</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Serial</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00787cas a2200265   4500001001100000003000700011005001700018007000300035008004100038016002000079016002200099035002500121040003100146041000800177082001100185245004700196246003400243260002900277935001000306983001800316969000700334852007900341852005600420980004500476#30;0000331951#30;DE-576#30;20140527100448.0#30;tu#30;850101c19uuuuuuxx    m            0ger c#30;  #31;a(OCoLC)22256445#30;7 #31;a1040663-3#31;2DE-600#30;  #31;a(DE-599)BSZ009839410#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;0 #31;a832.62#30;10#31;aGoethe-Schriften im Artemis-Verlag Zürich#30;1 #31;iNebentitel:#31;aGoethe-Schriften#30;  #31;aZürich :#31;bArtemis-Verl.#30;  #31;bdruck#30;  #31;a(DE-15)634318#30;  #31;cSE#30;  #31;aDE-14#31;x479970459:201405280459 479970467:201405280459#31;z2014-03-16T00:14:23Z#30;  #31;aDE-15#31;x479970483:201405280459#31;z1998-05-22T00:00:00Z#30;  #31;a009839410#31;b0#31;c201405280459#31;d201405281046#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0000331951</str>
+    <str name="illustrated">Illustrated</str>
+    <str name="imprint">Zürich : Artemis-Verl.</str>
+    <arr name="institution"><str>DE-14</str><str>DE-15</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">s</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>22256445</long></arr>
+    <str name="publishDateSort">1947</str>
+    <arr name="publishPlace"><str>Zürich :</str></arr>
+    <arr name="publisher"><str>Artemis-Verl.</str></arr>
+    <str name="record_id">009839410</str>
+    <str name="recordtype">marc</str>
+    <arr name="rsn"><str>(DE-15)634318</str></arr>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Goethe-Schriften im Artemis-Verlag Zürich Nebentitel: Goethe-Schriften Zürich : Artemis-Verl.</str>
+    <arr name="spellingShingle"><str>Goethe-Schriften im Artemis-Verlag Zürich</str></arr>
+    <str name="title">Goethe-Schriften im Artemis-Verlag Zürich</str>
+    <arr name="title_alt"><str>Goethe-Schriften</str></arr>
+    <str name="title_full">Goethe-Schriften im Artemis-Verlag Zürich</str>
+    <str name="title_fullStr">Goethe-Schriften im Artemis-Verlag Zürich</str>
+    <str name="title_full_unstemmed">Goethe-Schriften im Artemis-Verlag Zürich</str>
+    <str name="title_short">Goethe-Schriften im Artemis-Verlag Zürich</str>
+    <str name="title_sort">goethe-schriften im artemis-verlag zürich</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.4752853</float>
+    <str name="access_facet">Local Holdings</str>
+    <date name="attached_de15">2011-07-15T10:50:06Z</date>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>Bibliotheca Albertina</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Serial</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Journal, E-Journal</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Journal, E-Journal</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Journal, E-Journal</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Serial</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00706cas a22002412  4500001001100000003000700011005001700018007000300035008004100038016002100079016002100100035002500121040003100146041000800177041000800185245009500193260003900288935001000327983001900337969000700356852005600363980004500419#30;0000471677#30;DE-576#30;20110912200458.0#30;tu#30;031105c19uuuuuuxx    m            0ger c#30;  #31;a(OCoLC)314172236#30;  #31;a(OCoLC)614971790#30;  #31;a(DE-599)BSZ107870169#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;07#31;adt.#30;10#31;aBekenntnisse zu Goethe :#31;bdeutsch-franz. Schriftenreihe zum 200. Geburtstage J. W. Goethes#30;  #31;aMainz :#31;bInternat. Universum-Verl.#30;  #31;bdruck#30;  #31;a(DE-15)2559556#30;  #31;cSE#30;  #31;aDE-15#31;x68384668X:201403061620#31;z2011-07-15T10:50:06Z#30;  #31;a107870169#31;b0#31;c201403061620#31;d201405240707#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0000471677</str>
+    <str name="illustrated">Illustrated</str>
+    <str name="imprint">Mainz : Internat. Universum-Verl.</str>
+    <arr name="institution"><str>DE-15</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">s</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>314172236</long><long>614971790</long></arr>
+    <str name="publishDateSort">1949</str>
+    <arr name="publishPlace"><str>Mainz :</str></arr>
+    <arr name="publisher"><str>Internat. Universum-Verl.</str></arr>
+    <str name="record_id">107870169</str>
+    <str name="recordtype">marc</str>
+    <arr name="rsn"><str>(DE-15)2559556</str></arr>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Bekenntnisse zu Goethe : deutsch-franz. Schriftenreihe zum 200. Geburtstage J. W. Goethes Mainz : Internat. Universum-Verl.</str>
+    <arr name="spellingShingle"><str>Bekenntnisse zu Goethe : deutsch-franz. Schriftenreihe zum 200. Geburtstage J. W. Goethes</str></arr>
+    <str name="title">Bekenntnisse zu Goethe : deutsch-franz. Schriftenreihe zum 200. Geburtstage J. W. Goethes</str>
+    <str name="title_full">Bekenntnisse zu Goethe : deutsch-franz. Schriftenreihe zum 200. Geburtstage J. W. Goethes</str>
+    <str name="title_fullStr">Bekenntnisse zu Goethe : deutsch-franz. Schriftenreihe zum 200. Geburtstage J. W. Goethes</str>
+    <str name="title_full_unstemmed">Bekenntnisse zu Goethe : deutsch-franz. Schriftenreihe zum 200. Geburtstage J. W. Goethes</str>
+    <str name="title_short">Bekenntnisse zu Goethe :</str>
+    <str name="title_sort">bekenntnisse zu goethe :deutsch-franz. schriftenreihe zum 200. geburtstage j. w. goethes</str>
+    <str name="title_sub">deutsch-franz. Schriftenreihe zum 200. Geburtstage J. W. Goethes</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.4752853</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="authorized_mode">true</str>
+    <arr name="barcode"><str>(DE-15)7003275130</str></arr>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>Bibliotheca Albertina</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de15"><str>Magazin / Sonstige</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Book</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Book, E-Book</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Book, E-Book</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Book, E-Book</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Book</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00873cam a22002892  4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156044001000164245007100174260006000245300001100305935001000316982002500326981003700351969001300388983001900401969000600420852005600426852005600482980004500538#30;0000818693#30;DE-576#30;20110709070936.0#30;tu#30;100114s1907    xx             00 0 ger c#30;  #31;a(OCoLC)698905108#30;  #31;a(DE-599)BSZ315271183#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;  #31;aXA-DE#30;10#31;aGedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...#30;  #31;aCleveland, Ohio :#31;bSchiller-Goethe-Denkmalverein,#31;c1907#30;  #31;a207 S.#30;  #31;bdruck#30;  #31;a(DE-15)7003275130#31;x1#30;  #31;a(DE-15)Goe.-Schi.418#31;x1#31;ccurrent#30;  #31;bKeine#31;x1#30;  #31;a(DE-15)2006039#30;  #31;cB#30;  #31;aDE-14#31;x677419589:201403061351#31;z2014-03-15T22:24:04Z#30;  #31;aDE-15#31;x64067058X:201403061351#31;z2010-07-07T07:36:02Z#30;  #31;a315271183#31;b0#31;c201403061351#31;d201405232218#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0000818693</str>
+    <str name="illustrated">Not Illustrated</str>
+    <str name="imprint">Cleveland, Ohio : Schiller-Goethe-Denkmalverein, 1907</str>
+    <arr name="institution"><str>DE-14</str><str>DE-15</str></arr>
+    <str name="itemdata">{"DE-15":[{"cn":"Goe.-Schi.418","bc":"7003275130"}]}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">m</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>698905108</long></arr>
+    <arr name="physical"><str>207 S.</str></arr>
+    <arr name="publishDate"><str>1907</str></arr>
+    <str name="publishDateSort">1907</str>
+    <arr name="publishPlace"><str>Cleveland, Ohio :</str></arr>
+    <arr name="publisher"><str>Schiller-Goethe-Denkmalverein,</str></arr>
+    <str name="record_id">315271183</str>
+    <str name="recordtype">marc</str>
+    <arr name="rsn"><str>(DE-15)2006039</str></arr>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <arr name="signatur"><str>(DE-15)Goe.-Schi.418</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ... Cleveland, Ohio : Schiller-Goethe-Denkmalverein, 1907 207 S.</str>
+    <arr name="spellingShingle"><str>Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...</str></arr>
+    <str name="title">Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+    <str name="title_full">Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+    <str name="title_fullStr">Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+    <str name="title_full_unstemmed">Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+    <str name="title_short">Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+    <str name="title_sort">gedenkbuch der goethe-schiller-denkmalweihe in cleveland, ohio .</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+  <doc>
+    <float name="score">2.4752853</float>
+    <str name="access_facet">Local Holdings</str>
+    <str name="author_corp">Essener Goethe-Gesellschaft</str>
+    <arr name="author_id"><str>2012517-3</str></arr>
+    <str name="authorized_mode">true</str>
+    <arr name="branch_de105"><str>not assigned</str></arr>
+    <arr name="branch_de15"><str>Bibliotheca Albertina</str></arr>
+    <arr name="branch_de520"><str>not assigned</str></arr>
+    <arr name="branch_dech1"><str>not assigned</str></arr>
+    <arr name="branch_dezi4"><str>not assigned</str></arr>
+    <arr name="branch_dezwi2"><str>not assigned</str></arr>
+    <arr name="collcode_de520"><str>not assigned</str></arr>
+    <arr name="collcode_dech1"><str>not assigned</str></arr>
+    <arr name="dewey-full"><str>not assigned</str></arr>
+    <arr name="dewey-hundreds"><str>not assigned</str></arr>
+    <arr name="dewey-ones"><str>not assigned</str></arr>
+    <str name="dewey-sort">not assigned</str>
+    <arr name="dewey-tens"><str>not assigned</str></arr>
+    <arr name="finc_class_facet"><str>no subject assigned</str></arr>
+    <arr name="format"><str>Serial</str></arr>
+    <arr name="format_de105"><str>not assigned</str></arr>
+    <arr name="format_de15"><str>Journal, E-Journal</str></arr>
+    <arr name="format_de520"><str>not assigned</str></arr>
+    <arr name="format_de540"><str>Journal, E-Journal</str></arr>
+    <arr name="format_dech1"><str>not assigned</str></arr>
+    <arr name="format_ded117"><str>Journal, E-Journal</str></arr>
+    <arr name="format_del152"><str>not assigned</str></arr>
+    <arr name="format_del189"><str>Serial</str></arr>
+    <arr name="format_dezi4"><str>not assigned</str></arr>
+    <arr name="format_dezwi2"><str>not assigned</str></arr>
+    <str name="fullrecord">00865cas a2200301   4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156041000800164110007000172245005100242260001000293935001000303983001900313969000700332910002400339910001200363910002000375910001100395852005600406852005600462980004500518#30;0000971353#30;DE-576#30;20110726220751.0#30;tu#30;950601c19uuuuuuxx    m            0ger c#30;  #31;a(OCoLC)312392383#30;  #31;a(DE-599)BSZ045779945#30;  #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;07#31;adt.#30;2 #31;aEssener Goethe-Gesellschaft#31;0(DE-588)2012517-3#31;0(DE-576)191670006#30;10#31;aSchriftenreihe der Essener Goethe-Gesellschaft#30;  #31;aEssen#30;  #31;bdruck#30;  #31;a(DE-15)2498812#30;  #31;cSE#30;  #31;aGoethe-Gesellschaft#30;  #31;ag:Essen#30;  #31;aOrtsvereinigung#30;  #31;a4:adue#30;  #31;aDE-14#31;x257502351:201403061351#31;z2014-03-15T22:55:06Z#30;  #31;aDE-15#31;x679710000:201403061351#31;z2013-09-23T10:49:04Z#30;  #31;a045779945#31;b0#31;c201403061351#31;d201405232249#30;#29;</str>
+    <arr name="geogr_code"><str>not assigned</str></arr>
+    <arr name="geogr_code_person"><str>not assigned</str></arr>
+    <str name="id">0000971353</str>
+    <str name="illustrated">Illustrated</str>
+    <str name="imprint">Essen</str>
+    <arr name="institution"><str>DE-14</str><str>DE-15</str></arr>
+    <str name="itemdata">{}</str>
+    <arr name="language"><str>German</str></arr>
+    <arr name="mega_collection"><str>Verbunddaten SWB</str></arr>
+    <arr name="misc_del152"><str/></arr>
+    <str name="mrc0007">s</str>
+    <str name="multipart_set"> </str>
+    <arr name="oclc_num"><long>312392383</long></arr>
+    <str name="publishDateSort">1949</str>
+    <arr name="publishPlace"><str>Essen</str></arr>
+    <str name="record_id">045779945</str>
+    <str name="recordtype">marc</str>
+    <arr name="rsn"><str>(DE-15)2498812</str></arr>
+    <arr name="rvk_facet"><str>No subject assigned</str></arr>
+    <str name="source_id">0</str>
+    <str name="spelling">Essener Goethe-Gesellschaft (DE-588)2012517-3 (DE-576)191670006 Schriftenreihe der Essener Goethe-Gesellschaft Essen</str>
+    <arr name="spellingShingle"><str>Schriftenreihe der Essener Goethe-Gesellschaft</str><str>Essener Goethe-Gesellschaft</str></arr>
+    <str name="title">Schriftenreihe der Essener Goethe-Gesellschaft</str>
+    <str name="title_full">Schriftenreihe der Essener Goethe-Gesellschaft</str>
+    <str name="title_fullStr">Schriftenreihe der Essener Goethe-Gesellschaft</str>
+    <str name="title_full_unstemmed">Schriftenreihe der Essener Goethe-Gesellschaft</str>
+    <str name="title_short">Schriftenreihe der Essener Goethe-Gesellschaft</str>
+    <str name="title_sort">schriftenreihe der essener goethe-gesellschaft</str>
+    <arr name="topic_facet"><str>not assigned</str></arr>
+    <arr name="udk_facet_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_de105"><str>not assigned</str></arr>
+    <arr name="udk_raw_del189"><str>not assigned</str></arr>
+  </doc>
+</result>
+<lst name="facet_counts">
+  <lst name="facet_queries"/>
+  <lst name="facet_fields">
+    <lst name="branch_de15">
+      <int name="not assigned">18484</int>
+      <int name="Bibliotheca Albertina">10896</int>
+      <int name="Deutsches Literaturinstitut Leipzig">159</int>
+      <int name="Kunst">136</int>
+      <int name="Musik">118</int>
+      <int name="Orientwissenschaften">101</int>
+      <int name="Geographie">94</int>
+      <int name="Campus-Bibliothek">78</int>
+      <int name="Sudhoffinstitut">78</int>
+      <int name="Theaterwissenschaften">71</int>
+      <int name="Archäologie">53</int>
+      <int name="Erziehungswissenschaft">48</int>
+      <int name="Rechtswissenschaft">47</int>
+      <int name="Chemie/Physik">9</int>
+      <int name="Orientwissenschaften, Ägyptologie">9</int>
+      <int name="Geowissenschaften">7</int>
+      <int name="Veterinärmedizin">6</int>
+      <int name="Zentralbibliothek Medizin">6</int>
+      <int name="Mineralogie">4</int>
+      <int name="Museum für Musikinstrumente">4</int>
+      <int name="Orientwissenschaften, Altorientalistik">4</int>
+      <int name="Sportwissenschaft">2</int>
+      <int name="Biowissenschaften">1</int>
+      <int name="Theoretische Physik">1</int>
+      <int name="Zentralbibliothek Medizin 2">1</int>
+    </lst>
+    <lst name="format_de15">
+      <int name="Book, E-Book">20702</int>
+      <int name="Musical Score">2832</int>
+      <int name="Unknown Format">1861</int>
+      <int name="Thesis">1705</int>
+      <int name="Audio">1125</int>
+      <int name="Article, E-Article">500</int>
+      <int name="Journal, E-Journal">438</int>
+      <int name="Microform">392</int>
+      <int name="Website">220</int>
+      <int name="Video">147</int>
+      <int name="Software">66</int>
+      <int name="Map">15</int>
+      <int name="Visual Media">5</int>
+      <int name="Electronic Resource (Data Carrier)">2</int>
+      <int name="Kit">1</int>
+      <int name="Manuscript">1</int>
+      <int name="Newspaper, E-Paper">1</int>
+    </lst>
+    <lst name="collcode_de15">
+      <int name="Magazin / Sonstige">8023</int>
+      <int name="Freihand">1952</int>
+      <int name="Lehrbuchsammlung">19</int>
+    </lst>
+  </lst>
+  <lst name="facet_dates"/>
+  <lst name="facet_ranges"/>
+</lst>
+<lst name="highlighting">
+  <lst name="0000869567">
+    <arr name="title">
+      <str>Allerlei über {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}</str>
+    </arr>
+    <arr name="title_short">
+      <str>Allerlei über {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}</str>
+    </arr>
+    <arr name="title_full">
+      <str>Allerlei über {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}</str>
+    </arr>
+  </lst>
+  <lst name="0001525170"/>
+  <lst name="0001302059">
+    <arr name="title_alt">
+      <str>{{{{START_HILITE}}}}goethes{{{{END_HILITE}}}}</str>
+    </arr>
+    <arr name="title">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}'s Reisen</str>
+    </arr>
+    <arr name="title_short">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}'s Reisen</str>
+    </arr>
+    <arr name="title_full">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}'s Reisen</str>
+    </arr>
+  </lst>
+  <lst name="0012356625">
+    <arr name="title">
+      <str>Schiller und {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}</str>
+    </arr>
+    <arr name="title_short">
+      <str>Schiller und {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}</str>
+    </arr>
+    <arr name="title_full">
+      <str>Schiller und {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}</str>
+    </arr>
+  </lst>
+  <lst name="0002076978">
+    <arr name="title">
+      <str>Studien zur {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Zeit und {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Wirkung /</str>
+    </arr>
+    <arr name="title_short">
+      <str>Studien zur {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Zeit und {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Wirkung /</str>
+    </arr>
+    <arr name="title_full">
+      <str>Studien zur {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Zeit und {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Wirkung /</str>
+    </arr>
+  </lst>
+  <lst name="0002414791">
+    <arr name="title_alt">
+      <str>{{{{START_HILITE}}}}göthes{{{{END_HILITE}}}} {{{{START_HILITE}}}}goethe{{{{END_HILITE}}}}'s {{{{START_HILITE}}}}goethes{{{{END_HILITE}}}}</str>
+    </arr>
+    <arr name="title">
+      <str>{{{{START_HILITE}}}}Göthe{{{{END_HILITE}}}}'s neueste Gedichte</str>
+    </arr>
+    <arr name="title_short">
+      <str>{{{{START_HILITE}}}}Göthe{{{{END_HILITE}}}}'s neueste Gedichte</str>
+    </arr>
+    <arr name="title_full">
+      <str>{{{{START_HILITE}}}}Göthe{{{{END_HILITE}}}}'s neueste Gedichte</str>
+    </arr>
+  </lst>
+  <lst name="0004744165">
+    <arr name="title">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Jahrbuch</str>
+    </arr>
+    <arr name="title_old">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Bibliographie</str>
+    </arr>
+    <arr name="title_short">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Jahrbuch</str>
+    </arr>
+    <arr name="title_full">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Jahrbuch</str>
+    </arr>
+  </lst>
+  <lst name="0012096618">
+    <arr name="title">
+      <str>Anmerkung / {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Museum Düsseldorf</str>
+    </arr>
+    <arr name="title_short">
+      <str>Anmerkung / {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Museum Düsseldorf</str>
+    </arr>
+    <arr name="title_full">
+      <str>Anmerkung / {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Museum Düsseldorf</str>
+    </arr>
+  </lst>
+  <lst name="0000644755">
+    <arr name="footnote">
+      <str>Aus: {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}. Viermonatsschrift d. {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Ges ; Bd. 6, H. 2. - Umschlagt.</str>
+    </arr>
+    <arr name="title">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Dissertationen /</str>
+    </arr>
+    <arr name="title_short">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Dissertationen /</str>
+    </arr>
+    <arr name="title_full">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Dissertationen /</str>
+    </arr>
+  </lst>
+  <lst name="0004745795">
+    <arr name="title">
+      <str>Jahrbuch der Österreichischen {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft</str>
+    </arr>
+    <arr name="title_old">
+      <str>Wiener {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Verein: Jahrbuch des Wiener {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Vereins</str>
+    </arr>
+    <arr name="title_short">
+      <str>Jahrbuch der Österreichischen {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft</str>
+    </arr>
+    <arr name="title_full">
+      <str>Jahrbuch der Österreichischen {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft</str>
+    </arr>
+  </lst>
+  <lst name="0007869169">
+    <arr name="series2">
+      <str>Jahresbericht der {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft</str>
+    </arr>
+    <arr name="series">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft Jahresbericht der {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft</str>
+    </arr>
+    <arr name="title">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Jahrbuch &lt;Göttingen&gt;</str>
+    </arr>
+    <arr name="title_short">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Jahrbuch &lt;Göttingen&gt;</str>
+    </arr>
+    <arr name="title_full">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Jahrbuch &lt;Göttingen&gt; 25</str>
+    </arr>
+  </lst>
+  <lst name="0007837135">
+    <arr name="series2">
+      <str>Jahresbericht der {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft</str>
+    </arr>
+    <arr name="series">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft Jahresbericht der {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft</str>
+    </arr>
+    <arr name="title">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Jahrbuch &lt;Göttingen&gt;</str>
+    </arr>
+    <arr name="title_short">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Jahrbuch &lt;Göttingen&gt;</str>
+    </arr>
+    <arr name="title_full">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Jahrbuch &lt;Göttingen&gt; 26</str>
+    </arr>
+  </lst>
+  <lst name="0007822387">
+    <arr name="series2">
+      <str>Jahresbericht der {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft</str>
+    </arr>
+    <arr name="series">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft Jahresbericht der {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft</str>
+    </arr>
+    <arr name="title">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Jahrbuch &lt;Göttingen&gt;</str>
+    </arr>
+    <arr name="title_short">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Jahrbuch &lt;Göttingen&gt;</str>
+    </arr>
+    <arr name="title_full">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Jahrbuch &lt;Göttingen&gt; 27</str>
+    </arr>
+  </lst>
+  <lst name="0012424115">
+    <arr name="title">
+      <str>Zum 50jähr. Todestage {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}'s</str>
+    </arr>
+    <arr name="title_short">
+      <str>Zum 50jähr. Todestage {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}'s</str>
+    </arr>
+    <arr name="title_full">
+      <str>Zum 50jähr. Todestage {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}'s</str>
+    </arr>
+  </lst>
+  <lst name="0006467047">
+    <arr name="title_alt">
+      <str>Travaux scientifiques de {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}</str>
+    </arr>
+    <arr name="title">
+      <str>W. {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}.</str>
+    </arr>
+    <arr name="title_short">
+      <str>W. {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}.</str>
+    </arr>
+    <arr name="title_part">
+      <str>1, 1749 - 1795. La jeunesse de {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}. {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}} à Francfort et à Strasbourg. Wetzlar et Werther. Les</str>
+    </arr>
+    <arr name="title_full">
+      <str>W. {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}. 1, 1749 - 1795. La jeunesse de {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}. {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}} à Francfort et à Strasbourg. Wetzlar et</str>
+    </arr>
+  </lst>
+  <lst name="0000745438"/>
+  <lst name="0000331951">
+    <arr name="title_alt">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Schriften</str>
+    </arr>
+    <arr name="title">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Schriften im Artemis-Verlag Zürich</str>
+    </arr>
+    <arr name="title_short">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Schriften im Artemis-Verlag Zürich</str>
+    </arr>
+    <arr name="title_full">
+      <str>{{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Schriften im Artemis-Verlag Zürich</str>
+    </arr>
+  </lst>
+  <lst name="0000471677">
+    <arr name="title_sub">
+      <str>deutsch-franz. Schriftenreihe zum 200. Geburtstage J. W. {{{{START_HILITE}}}}Goethes{{{{END_HILITE}}}}</str>
+    </arr>
+    <arr name="title">
+      <str>Bekenntnisse zu {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}} : deutsch-franz. Schriftenreihe zum 200. Geburtstage J. W. {{{{START_HILITE}}}}Goethes{{{{END_HILITE}}}}</str>
+    </arr>
+    <arr name="title_short">
+      <str>Bekenntnisse zu {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}} :</str>
+    </arr>
+    <arr name="title_full">
+      <str>Bekenntnisse zu {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}} : deutsch-franz. Schriftenreihe zum 200. Geburtstage J. W. {{{{START_HILITE}}}}Goethes{{{{END_HILITE}}}}</str>
+    </arr>
+  </lst>
+  <lst name="0000818693">
+    <arr name="title">
+      <str>Gedenkbuch der {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+    </arr>
+    <arr name="title_short">
+      <str>Gedenkbuch der {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+    </arr>
+    <arr name="title_full">
+      <str>Gedenkbuch der {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+    </arr>
+  </lst>
+  <lst name="0000971353">
+    <arr name="title">
+      <str>Schriftenreihe der Essener {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft</str>
+    </arr>
+    <arr name="title_short">
+      <str>Schriftenreihe der Essener {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft</str>
+    </arr>
+    <arr name="title_full">
+      <str>Schriftenreihe der Essener {{{{START_HILITE}}}}Goethe{{{{END_HILITE}}}}-Gesellschaft</str>
+    </arr>
+  </lst>
+</lst>
+</response>

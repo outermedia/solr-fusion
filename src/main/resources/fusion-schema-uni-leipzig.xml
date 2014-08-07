@@ -182,7 +182,7 @@
                 class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory"/>
 
         <om:response-renderer type="xml"
-                              class="org.outermedia.solrfusion.response.SimpleXmlResponseRenderer">
+                              class="org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory">
             <map-type fusion-type="float" key="float"/>
             <map-type fusion-type="double" key="float"/>
             <map-type fusion-type="int" key="int"/>
@@ -205,8 +205,10 @@
             class="org.outermedia.solrfusion.DefaultMergeStrategy$Factory">
             <om:target prio="1" target-name="UBL"/>
             <om:target prio="2" target-name="GBV"/>
-            <om:target prio="3" target-name="DBoD"/>
-            <om:target prio="4" target-name="DBoD1"/>
+            <om:target prio="3" target-name="DBoD1"/>
+            <!-- TODO uncomment if added below
+            <om:target prio="4" target-name="DBoD2"/>
+            -->
         </om:merge>
 
         <om:solr-server name="UBL" version="3.5"
@@ -627,11 +629,6 @@
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field fusion-name="institution">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
             <om:field name="isbn" fusion-name="isbn">
             </om:field>
             <om:field name="isbn" fusion-name="isbn_canc">
@@ -682,7 +679,7 @@
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field name="collection_details" fusion-name="mega_collection">
+            <om:field name="collection_details" fusion-name="institution">
             </om:field>
             <om:field fusion-name="mega_toplevel">
                 <om:drop>

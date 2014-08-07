@@ -4,14 +4,15 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.IdGeneratorIfc;
-import org.outermedia.solrfusion.MultiKeyAndValueMap;
 import org.outermedia.solrfusion.MergeStrategyIfc;
+import org.outermedia.solrfusion.MultiKeyAndValueMap;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.response.parser.Highlighting;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.lang.reflect.InvocationTargetException;
@@ -31,6 +32,10 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
     protected List<Document> allDocs;
     protected int streamCounter;
     private int maxDocNr;
+    protected HighlightingMap allHighlighting;
+    protected Configuration config;
+    protected String fusionIdField;
+    protected String fusionMergeField;
 
     /**
      * Factory creates instances only.
@@ -41,16 +46,75 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         allDocs = new ArrayList<>();
         streamCounter = 0;
         maxDocNr = 0;
+        allHighlighting = new HighlightingMap();
     }
 
-    @Override public void addResultStream(Configuration config, SearchServerConfig searchServerConfig,
-        ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request)
+    @Override
+    public void init(Configuration config) throws InvocationTargetException, IllegalAccessException
+    {
+        this.config = config;
+        fusionIdField = config.getFusionIdFieldName();
+        fusionMergeField = null;
+        MergeStrategyIfc merger = config.getMerger();
+        if (merger != null)
+        {
+            fusionMergeField = merger.getFusionField();
+        }
+        allHighlighting.init(config.getIdGenerator());
+    }
+
+    @Override public void addResultStream(SearchServerConfig searchServerConfig,
+        ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request,
+        List<Highlighting> highlighting)
     {
         streamCounter++;
-        maxDocNr += Math.min(searchServerConfig.getMaxDocs(), docIterator.getExtraInfo().getTotalNumberOfHits());
         Set<String> searchServerFieldsToMap = new HashSet<>();
         searchServerFieldsToMap.add(request.getSearchServerSortField());
         mapMergeField(config, searchServerConfig, request, searchServerFieldsToMap);
+
+        processDocuments(config, searchServerConfig, docIterator, searchServerFieldsToMap);
+
+        processHighlighting(config, searchServerConfig, highlighting);
+    }
+
+    protected void processHighlighting(Configuration config, SearchServerConfig searchServerConfig,
+        List<Highlighting> highlighting)
+    {
+        if (highlighting != null && highlighting.size() > 0)
+        {
+            String idField = searchServerConfig.getIdFieldName();
+            List<Document> highlightingDocs = new ArrayList<>();
+            for (Highlighting hl : highlighting)
+            {
+                highlightingDocs.add(hl.getDocument(idField));
+            }
+            ClosableListIterator<Document, SearchServerResponseInfo> highlightingIt = new ClosableListIterator<>(
+                highlightingDocs, null);
+            try
+            {
+                // map only id field
+                Set<String> searchServerFieldsToMap = new HashSet<>();
+                searchServerFieldsToMap.add(idField);
+                MappingClosableIterator mapper = getNewMappingClosableIterator(config, searchServerConfig,
+                    highlightingIt, searchServerFieldsToMap);
+                while (mapper.hasNext())
+                {
+                    allHighlighting.put(mapper.next());
+                }
+            }
+            catch (Exception e)
+            {
+                log.error("Caught exception while mapping highlighting of server {}",
+                    searchServerConfig.getSearchServerName(), e);
+            }
+        }
+    }
+
+    protected void processDocuments(Configuration config, SearchServerConfig searchServerConfig,
+        ClosableIterator<Document, SearchServerResponseInfo> docIterator, Set<String> searchServerFieldsToMap)
+    {
+        maxDocNr += Math.min(searchServerConfig.getMaxDocs(), docIterator.getExtraInfo().getTotalNumberOfHits());
+
         try
         {
             // map sort field and id/score only
@@ -83,48 +147,23 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
     protected void mapMergeField(Configuration config, SearchServerConfig searchServerConfig, FusionRequest request,
         Set<String> searchServerFieldsToMap)
     {
-        String mergeField = documentMergingWanted(config);
-        if (mergeField != null)
+        if (fusionMergeField != null)
         {
             try
             {
-                Set<String> candidates = request.mapFusionFieldToSearchServerField(mergeField, config,
+                Set<String> candidates = request.mapFusionFieldToSearchServerField(fusionMergeField, config,
                     searchServerConfig);
                 if (candidates.isEmpty())
                 {
-                    log.error("Found not mapping for merge field '{}'", mergeField);
+                    log.error("Found not mapping for merge field '{}'", fusionMergeField);
                 }
                 searchServerFieldsToMap.addAll(candidates);
             }
             catch (Exception e)
             {
-                log.error("Can't map merge field {}", mergeField, e);
+                log.error("Can't map merge field {}", fusionMergeField, e);
             }
         }
-    }
-
-    /**
-     * Get the fusion field name which is used to detect same documents.
-     *
-     * @param configuration
-     * @return null if merging is not configured or the fusion field.
-     */
-    protected String documentMergingWanted(Configuration configuration)
-    {
-        String result = null;
-        try
-        {
-            MergeStrategyIfc merger = configuration.getMerger();
-            if (merger != null)
-            {
-                result = merger.getFusionField();
-            }
-        }
-        catch (Exception e)
-        {
-            log.error("Couldn't get document merger instance.", e);
-        }
-        return result;
     }
 
     @Override public int numberOfResponseStreams()
@@ -137,17 +176,16 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         allDocs.clear();
     }
 
-    @Override public ClosableIterator<Document, SearchServerResponseInfo> getResponseIterator(Configuration config,
+    @Override public ClosableIterator<Document, SearchServerResponseInfo> getResponseIterator(
         FusionRequest fusionRequest) throws InvocationTargetException, IllegalAccessException
     {
         String fusionSortField = fusionRequest.getSolrFusionSortField();
-        MultiKeyAndValueMap<String, Document> lookup = null;
+        MultiKeyAndValueMap<String, Document> docLookup = null;
 
         // merge all docs (at least id is merged)
-        String fusionMergeField = documentMergingWanted(config);
         if (fusionMergeField != null)
         {
-            lookup = mergeDocuments(config);
+            docLookup = mergeDocuments(config, allDocs);
         }
 
         // sort all docs
@@ -159,6 +197,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         int start = fusionRequest.getStart();
         IdGeneratorIfc idGenerator = config.getIdGenerator();
         String fusionIdField = idGenerator.getFusionIdField();
+        Map<String, Document> highlighting = new HashMap<>();
         for (int i = 0; i < fusionRequest.getPageSize() && (i + start) < allDocs.size(); i++)
         {
             Document d = allDocs.get(start + i);
@@ -168,16 +207,22 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             {
                 String mergeFieldValue = d.getFusionValuesOf(fusionMergeField).get(0);
                 // all values of fusionMergeField point to the same container which holds the same documents
-                Set<Document> sameDocuments = lookup.get(mergeFieldValue);
-                completelyMapMergedDoc(config, fusionIdField, sameDocuments);
+                Set<Document> sameDocuments = docLookup.get(mergeFieldValue);
+                completelyMapMergedDoc(sameDocuments, highlighting);
             }
             else
             {
                 completelyMapDoc(config, d, fusionDocId);
+                Document hl = allHighlighting.get(fusionDocId);
+                if (hl != null)
+                {
+                    completelyMapDoc(config, hl, fusionDocId);
+                    highlighting.put(fusionDocId, hl);
+                }
             }
             docsOfPage.add(d);
         }
-        SearchServerResponseInfo info = new SearchServerResponseInfo(maxDocNr);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(maxDocNr, highlighting);
         return new ClosableListIterator<>(docsOfPage, info);
     }
 
@@ -192,27 +237,32 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
      * Apply all mappings to the given list of documents. This method expects, that the "id" field of the documents has
      * already been mapped.
      *
-     * @param config
-     * @param fusionIdField
      * @param sameDocuments
+     * @param highlighting
      * @return
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
     @Override
-    public Document completelyMapMergedDoc(Configuration config, String fusionIdField,
-        Collection<Document> sameDocuments) throws InvocationTargetException, IllegalAccessException
+    public Document completelyMapMergedDoc(Collection<Document> sameDocuments, Map<String, Document> highlighting)
+        throws InvocationTargetException, IllegalAccessException
     {
         Document result;
         MergeStrategyIfc merger = config.getMerger();
         // map documents to merge (d is one entry of sameDocuments)
         for (Document toMerge : sameDocuments)
         {
-            completelyMapDoc(config, toMerge, toMerge.getFusionDocId(fusionIdField));
+            String fusionDocId = toMerge.getFusionDocId(fusionIdField);
+            completelyMapDoc(config, toMerge, fusionDocId);
+            Document hl = allHighlighting.get(fusionDocId);
+            if (hl != null)
+            {
+                completelyMapDoc(config, hl, fusionDocId);
+            }
         }
         if (merger != null)
         {
-            result = merger.mergeDocuments(config, sameDocuments);
+            result = merger.mergeDocuments(config, sameDocuments, allHighlighting, highlighting);
         }
         else
         {
@@ -227,14 +277,14 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         return new ScriptEnv();
     }
 
-    protected MultiKeyAndValueMap<String, Document> mergeDocuments(Configuration config)
+    protected MultiKeyAndValueMap<String, Document> mergeDocuments(Configuration config, List<Document> docs)
         throws InvocationTargetException, IllegalAccessException
     {
         MergeStrategyIfc merger = config.getMerger();
         String mergeFusionField = merger.getFusionField();
         List<Document> newAllDocs = new ArrayList<>();
         MultiKeyAndValueMap<String, Document> lookup = new MultiKeyAndValueMap();
-        for (Document doc : allDocs)
+        for (Document doc : docs)
         {
             List<String> mergeFieldValues = doc.getFusionValuesOf(mergeFusionField);
             if (mergeFieldValues != null && mergeFieldValues.size() > 0)
@@ -247,9 +297,12 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
                 newAllDocs.add(doc);
             }
         }
+        HighlightingMap emptyHighlights = new HighlightingMap();
+        emptyHighlights.init(config.getIdGenerator());
         for (Set<Document> sameDocuments : lookup.values())
         {
-            newAllDocs.add(merger.mergeDocuments(config, sameDocuments));
+            // highlights will be merged when docs of page are known, so we pass on empty highlights here
+            newAllDocs.add(merger.mergeDocuments(config, sameDocuments, emptyHighlights, null));
         }
         allDocs = newAllDocs;
         return lookup;

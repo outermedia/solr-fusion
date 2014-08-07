@@ -8,23 +8,31 @@ import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.response.parser.Highlighting;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ballmann on 04.06.14.
  * <p/>
  * A simple consolidator which neither supports paging or sorting. All hits of all search servers are returned in a
- * round-robin manner.
+ * round-robin manner. highlights are not supported.
  */
 @ToString
 @Slf4j
 public class ResponseConsolidator extends AbstractResponseConsolidator
 {
     private List<ClosableIterator<Document, SearchServerResponseInfo>> responseStreams;
+    private Configuration configuration;
+
+    public void init(Configuration config)
+    {
+        this.configuration = config;
+    }
 
     /**
      * Factory creates instances only.
@@ -36,12 +44,13 @@ public class ResponseConsolidator extends AbstractResponseConsolidator
     }
 
     @Override
-    public void addResultStream(Configuration config, SearchServerConfig searchServerConfig,
-        ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request)
+    public void addResultStream(SearchServerConfig searchServerConfig,
+        ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request,
+        List<Highlighting> highlighting)
     {
         try
         {
-            responseStreams.add(getNewMappingClosableIterator(config, searchServerConfig, docIterator));
+            responseStreams.add(getNewMappingClosableIterator(searchServerConfig, docIterator));
         }
         catch (Exception e)
         {
@@ -50,11 +59,11 @@ public class ResponseConsolidator extends AbstractResponseConsolidator
         }
     }
 
-    protected MappingClosableIterator getNewMappingClosableIterator(Configuration config,
-        SearchServerConfig searchServerConfig, ClosableIterator<Document, SearchServerResponseInfo> docIterator)
+    protected MappingClosableIterator getNewMappingClosableIterator(SearchServerConfig searchServerConfig,
+        ClosableIterator<Document, SearchServerResponseInfo> docIterator)
         throws InvocationTargetException, IllegalAccessException
     {
-        return new MappingClosableIterator(docIterator, config, searchServerConfig, null);
+        return new MappingClosableIterator(docIterator, configuration, searchServerConfig, null);
     }
 
     public int numberOfResponseStreams()
@@ -73,14 +82,13 @@ public class ResponseConsolidator extends AbstractResponseConsolidator
     }
 
     @Override
-    public ClosableIterator<Document, SearchServerResponseInfo> getResponseIterator(Configuration config,
-        FusionRequest fusionRequest)
+    public ClosableIterator<Document, SearchServerResponseInfo> getResponseIterator(FusionRequest fusionRequest)
     {
         return new DefaultClosableIterator(responseStreams);
     }
 
-    @Override public Document completelyMapMergedDoc(Configuration config, String fusionIdField,
-        Collection<Document> sameDocuments) throws InvocationTargetException, IllegalAccessException
+    @Override public Document completelyMapMergedDoc(Collection<Document> sameDocuments,
+        Map<String, Document> highlighting) throws InvocationTargetException, IllegalAccessException
     {
         // not supported
         return null;

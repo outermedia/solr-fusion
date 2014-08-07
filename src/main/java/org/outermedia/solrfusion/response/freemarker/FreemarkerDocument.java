@@ -1,6 +1,7 @@
 package org.outermedia.solrfusion.response.freemarker;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.FusionField;
 import org.outermedia.solrfusion.mapper.Term;
@@ -27,8 +28,18 @@ public class FreemarkerDocument  implements FieldVisitor
     @Getter private boolean hasMultiValuedFields;
     @Getter private boolean hasSingleValuedFields;
 
+    @Getter @Setter private String id;
+
+    protected boolean forceMultiValue;
+
     public FreemarkerDocument()
     {
+        this(false);
+    }
+
+    public FreemarkerDocument(boolean forceMultiValue)
+    {
+        this.forceMultiValue = forceMultiValue;
         this.multiValuedFields = new ArrayList<>();
         this.singleValuedFields = new ArrayList<>();
     }
@@ -41,7 +52,7 @@ public class FreemarkerDocument  implements FieldVisitor
             return true;
 //        field.getFieldType();
 
-        if (field.isMultiValue())
+        if (forceMultiValue || field.isMultiValue())
         {
             // fusion-field is configured as multivalue, but solr server gave a single valued field
             FreemarkerMultiValuedField freemarkerField = FreemarkerMultiValuedField.fromSolrField(sf);
@@ -69,14 +80,14 @@ public class FreemarkerDocument  implements FieldVisitor
         List<String> values = null;
         if(sf != null) t = sf.getTerm();
         if(t != null && t.isWasMapped() && !t.isRemoved()) values = t.getFusionFieldValue();
-        if (field.isSingleValue() && values != null && values.size() > 1)
+        if (!forceMultiValue && field.isSingleValue() && values != null && values.size() > 1)
         {
             // error in mapping. will be logged and nothing is rendered
             log.error("Unable to render multiple values in single valued field {}", field.getFieldName());
             return true;
         }
 
-        if (field.isSingleValue())
+        if (!forceMultiValue && field.isSingleValue())
         {
             FreemarkerSingleValuedField freemarkerField = FreemarkerSingleValuedField.fromSolrField(sf);
             addSingleValuedField(freemarkerField);

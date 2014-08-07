@@ -39,6 +39,12 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     public String ROWS_PARAMETER = "rows";
     public String SORT_PARAMETER = "sort";
     public String FIELDS_TO_RETURN_PARAMETER = "fl";
+    public String HL_SIMPLE_PRE_PARAMETER = "hl.simple.pre";
+    public String HL_FIELDS_PARAMETER = "hl.fl";
+    public String HL_ON_PARAMETER = "hl";
+    public String HL_QUERY_PARAMETER = "hl.q";
+    public String HL_SIMPLE_POST_PARAMETER = "hl.simple.post";
+
 
     private String url;
 
@@ -98,6 +104,31 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         String sortField = st.nextToken();
         String fieldsToReturn = params.get(FIELDS_TO_RETURN.getRequestParamName());
         ub.setParameter(FIELDS_TO_RETURN_PARAMETER, fieldsToReturn);
+        String doHighlighting = params.get(HIGHLIGHT.getRequestParamName());
+        if ("true".equals(doHighlighting))
+        {
+            ub.setParameter(HL_ON_PARAMETER, "true");
+            String pre = params.get(HIGHLIGHT_PRE.getRequestParamName());
+            if (pre != null)
+            {
+                ub.setParameter(HL_SIMPLE_PRE_PARAMETER, pre);
+            }
+            String post = params.get(HIGHLIGHT_POST.getRequestParamName());
+            if (post != null)
+            {
+                ub.setParameter(HL_SIMPLE_POST_PARAMETER, post);
+            }
+            String fields = params.get(HIGHLIGHT_FIELDS_TO_RETURN.getRequestParamName());
+            if (fields != null)
+            {
+                ub.setParameter(HL_FIELDS_PARAMETER, fields);
+            }
+            String hlq = params.get(HIGHLIGHT_QUERY.getRequestParamName());
+            if (hlq != null)
+            {
+                ub.setParameter(HL_QUERY_PARAMETER, hlq);
+            }
+        }
 
         log.debug("Sending query {}", ub.build());
 

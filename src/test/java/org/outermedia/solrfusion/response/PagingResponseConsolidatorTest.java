@@ -39,6 +39,7 @@ public class PagingResponseConsolidatorTest
     public void testSortingEmpty() throws InvocationTargetException, IllegalAccessException
     {
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
+        consolidator.init(cfg);
         List<String> result = sort(consolidator, 0, 4, false);
         Assert.assertEquals("Expected different first page", Arrays.asList(), result);
     }
@@ -47,6 +48,7 @@ public class PagingResponseConsolidatorTest
     public void testSortingNoHits() throws InvocationTargetException, IllegalAccessException
     {
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
+        consolidator.init(cfg);
         createResponses(consolidator, new String[]{}, new String[]{});
         List<String> result = sort(consolidator, 0, 4, false);
         Assert.assertEquals("Expected different first page", Arrays.asList(), result);
@@ -58,6 +60,7 @@ public class PagingResponseConsolidatorTest
     public void testSortingExactPage() throws InvocationTargetException, IllegalAccessException
     {
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
+        consolidator.init(cfg);
         createResponses(consolidator, new String[]{"c", "a"}, new String[]{"b", "d"});
         List<String> result = sort(consolidator, 0, 4, false);
         Assert.assertEquals("Expected different first page", Arrays.asList("d", "c", "b", "a"), result);
@@ -67,6 +70,7 @@ public class PagingResponseConsolidatorTest
     public void testSortingMany() throws InvocationTargetException, IllegalAccessException
     {
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
+        consolidator.init(cfg);
         createResponses(consolidator, new String[]{"c", "a", "w", "b"}, new String[]{"b", "d", "z", "f", "aa"});
         List<String> result = sort(consolidator, 0, 4, false);
         Assert.assertEquals("Expected different first page", Arrays.asList("z", "w", "f", "d"), result);
@@ -82,6 +86,7 @@ public class PagingResponseConsolidatorTest
     public void testSortingManyAsc() throws InvocationTargetException, IllegalAccessException
     {
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
+        consolidator.init(cfg);
         createResponses(consolidator, new String[]{"c", "a", "w", "b"}, new String[]{"b", "d", "z", "f", "aa"});
         List<String> result = sort(consolidator, 0, 4, true);
         Assert.assertEquals("Expected different first page", Arrays.asList("a", "aa", "b", "b"), result);
@@ -106,8 +111,7 @@ public class PagingResponseConsolidatorTest
         fusionRequest.setStart(start);
         fusionRequest.setPageSize(pageSize);
         fusionRequest.setSortAsc(sortAsc);
-        ClosableIterator<Document, SearchServerResponseInfo> docIt = consolidator.getResponseIterator(cfg,
-            fusionRequest);
+        ClosableIterator<Document, SearchServerResponseInfo> docIt = consolidator.getResponseIterator(fusionRequest);
         return collectTitles(docIt);
     }
 
@@ -128,7 +132,7 @@ public class PagingResponseConsolidatorTest
         FusionRequest fusionRequest = new FusionRequest();
         ClosableIterator<Document, SearchServerResponseInfo> documents = createDocuments(serverName, fusionRequest,
             titles);
-        consolidator.addResultStream(cfg, serverConfig, documents, fusionRequest);
+        consolidator.addResultStream(serverConfig, documents, fusionRequest, null);
     }
 
     protected ClosableIterator<Document, SearchServerResponseInfo> createDocuments(String serverName,
@@ -150,7 +154,7 @@ public class PagingResponseConsolidatorTest
             doc.addField(titleField, t);
             docs.add(doc);
         }
-        SearchServerResponseInfo info = new SearchServerResponseInfo(titles.length);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(titles.length, null);
         return new ClosableListIterator<>(docs, info);
     }
 }

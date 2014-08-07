@@ -10,6 +10,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.NamespaceContext;
@@ -118,6 +119,19 @@ public class Util
         return result;
     }
 
+    public <T> T unmarshal(Class<T> docClass, Node node) throws JAXBException
+    {
+        JAXBContext jc = JAXBContext.newInstance(new Class[]{docClass});
+        Unmarshaller u = jc.createUnmarshaller();
+        JAXBElement<T> jaxb = u.unmarshal(node, docClass);
+        T result = null;
+        if (jaxb != null)
+        {
+            result = jaxb.getValue();
+        }
+        return result;
+    }
+
     /**
      * Get the path to a configuration file which is located by its resource path.
      *
@@ -159,7 +173,7 @@ public class Util
      *
      * @param xpathStr   is the xpath.
      * @param typeConfig is a list of dom w3c elements
-     * @param trim whether to trim the found value or not
+     * @param trim       whether to trim the found value or not
      * @return null if nothing is found or the value of the first(!) matched element
      * @throws XPathExpressionException
      */

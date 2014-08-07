@@ -15,6 +15,21 @@
     <#if responseHeader.fields??>
       "fl":"${responseHeader.fields?json_string}",
     </#if>
+    <#if responseHeader.highlight??>
+      "hl":"${responseHeader.highlight?json_string}",
+    </#if>
+    <#if responseHeader.highlightPre??>
+      "hl.simple.pre":"${responseHeader.highlightPre?json_string}",
+    </#if>
+    <#if responseHeader.highlightPost??>
+      "hl.simple.post":"${responseHeader.highlightPost?json_string}",
+    </#if>
+    <#if responseHeader.highlightFields??>
+      "hl.fl":"${responseHeader.highlightFields?json_string}",
+    </#if>
+    <#if responseHeader.highlightQuery??>
+      "hl.q":"${responseHeader.highlightQuery?json_string}",
+    </#if>
       "wt":"json",
       "version":"2.2",
       "rows":"${responseHeader.rows}"}},
@@ -26,7 +41,24 @@
   "response":{"numFound":${response.totalHitNumber?string("0")},"start":0,"docs":[
   <#list response.documents as document>
   {
-    <#list document.multiValuedFields as field>
+    <@outputMultiValueFields fields=document.multiValuedFields />
+    <#if document.hasMultiValuedFields && document.hasSingleValuedFields >,
+    </#if>
+    <@outputSingleValueFields fields=document.singleValuedFields />
+  }<#if document_has_next>,</#if>
+  </#list>
+  ]}
+  <#if highlighting.hasHighlights>
+  , "highlighting":{<#list highlighting.highlighting as doc>
+    "${doc.id}": {
+    <@outputMultiValueFields fields=doc.multiValuedFields />
+    }<#if doc_has_next>,</#if></#list>
+  }
+  </#if>
+}
+<#macro outputMultiValueFields fields>
+    <#if fields??>
+    <#list fields as field>
     "${field.name}":<#rt>
             [<#lt>
                 <#list field.values as value>
@@ -35,17 +67,17 @@
             ]<#rt>
         <#if field_has_next>,</#if><#lt>
     </#list>
-    <#if document.hasMultiValuedFields && document.hasSingleValuedFields >,
     </#if>
-    <#list document.singleValuedFields as field>
+</#macro>
+<#macro outputSingleValueFields fields>
+    <#if fields??>
+    <#list fields as field>
     "${field.name}":<#rt>
             <@outputField type=field.type value=field.value /><#t>
         <#if field_has_next>,</#if><#lt>
     </#list>
-  }<#if document_has_next>,</#if>
-  </#list>
-  ]}
-}
+    </#if>
+</#macro>
 <#macro outputField type value>
     <#switch type>
         <#case "float">

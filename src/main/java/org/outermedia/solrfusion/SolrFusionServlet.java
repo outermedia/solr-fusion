@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
@@ -79,7 +81,8 @@ public class SolrFusionServlet extends HttpServlet
         Map<String, String[]> parameterMap = request.getParameterMap();
         if (log.isDebugEnabled())
         {
-            log.debug("Received request:\nHeader:\n{}\nParams:\n{}", buildPrintableParamMap(headerValues),
+            String url = rebuildRequestUrl(request, parameterMap);
+            log.debug("Received request: {}\nHeader:\n{}\nParams:\n{}", url, buildPrintableParamMap(headerValues),
                 buildPrintableParamMap(parameterMap));
         }
         FusionRequest fusionRequest = buildFusionRequest(parameterMap, headerValues);
@@ -115,6 +118,46 @@ public class SolrFusionServlet extends HttpServlet
                 response.setStatus(400);
                 pw.println(responseStr);
             }
+        }
+    }
+
+    protected String rebuildRequestUrl(HttpServletRequest request, Map<String, String[]> parameterMap)
+        throws UnsupportedEncodingException
+    {
+        StringBuffer url = request.getRequestURL();
+        if (url != null)
+        {
+            if (!parameterMap.isEmpty())
+            {
+                char sep = '?';
+                for (String paramName : parameterMap.keySet())
+                {
+                    String[] paramValues = parameterMap.get(paramName);
+                    if (paramValues != null)
+                    {
+                        for (String paramValue : paramValues)
+                        {
+                            url.append(sep);
+                            url.append(paramName);
+                            url.append('=');
+                            url.append(URLEncoder.encode(paramValue, "UTF-8"));
+                            sep = '&';
+                        }
+                    }
+                    else
+                    {
+                        url.append(sep);
+                        url.append(paramName);
+                        url.append('=');
+                        sep = '&';
+                    }
+                }
+            }
+            return url.toString();
+        }
+        else
+        {
+            return null;
         }
     }
 
@@ -292,10 +335,17 @@ public class SolrFusionServlet extends HttpServlet
         fusionRequest.setSortAsc(sortAsc);
         String fieldsToReturn = getOptionalSingleSearchParamValue(requestParams, FIELDS_TO_RETURN, null, fusionRequest);
         fusionRequest.setFieldsToReturn(fieldsToReturn);
-        String highLightFieldsToReturn = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_FIELDS_TO_RETURN,
+        String highlightFieldsToReturn = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_FIELDS_TO_RETURN,
             null, fusionRequest);
-        fusionRequest.setHighlightingFieldsToReturn(highLightFieldsToReturn);
-
+        fusionRequest.setHighlightingFieldsToReturn(highlightFieldsToReturn);
+        String highlightPost = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_POST, null, fusionRequest);
+        fusionRequest.setHighlightPost(highlightPost);
+        String highlightPre = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_PRE, null, fusionRequest);
+        fusionRequest.setHighlightPre(highlightPre);
+        String highlight = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT, null, fusionRequest);
+        fusionRequest.setHighlight(highlight);
+        String highlightQuery = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_QUERY, null, fusionRequest);
+        fusionRequest.setHighlightQuery(highlightQuery);
         return fusionRequest;
     }
 

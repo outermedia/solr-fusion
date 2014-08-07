@@ -52,7 +52,7 @@ public class MappingClosableIteratorTest
             doc.addField("auto", t);
             docs.add(doc);
         }
-        SearchServerResponseInfo info = new SearchServerResponseInfo(titles.length);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(titles.length, null);
         return new ClosableListIterator<>(docs, info);
     }
 }

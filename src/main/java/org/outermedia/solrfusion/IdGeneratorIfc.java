@@ -29,7 +29,7 @@ public interface IdGeneratorIfc extends Initiable<IdGeneratorFactory>
     public String getSearchServerDocIdFromFusionId(String fusionDocId);
 
     /**
-     * Merge 'otherId' into 'thisId'. {@link #splitMergedIds(String)} is able to split the result again.
+     * Merge 'otherId' into 'thisId'. {@link #splitMergedId(String)} is able to split the result again.
      *
      * @param thisId  not null
      * @param otherId not null

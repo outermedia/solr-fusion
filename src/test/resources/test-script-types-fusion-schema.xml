@@ -17,7 +17,7 @@
         <om:field name="text1"/>
         <om:field name="text2"/>
         <om:field name="text3"/>
-        <om:field name="text4"/>
+        <om:field name="text4" multi-value="true"/>
         <om:field name="text6"/>
         <om:field name="text7"/>
         <om:field name="text8"/>
@@ -25,7 +25,7 @@
         <om:field name="text10"/>
         <om:field name="text11"/>
         <om:field name="text12"/>
-        <om:field name="text13"/>
+        <om:field name="text13" multi-value="true"/>
         <om:field name="text14"/>
         <om:field name="text15"/>
         <om:field name="text16"/>
@@ -75,7 +75,7 @@
             class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory"/>
 
         <om:response-renderer type="xml"
-            class="org.outermedia.solrfusion.response.SimpleXmlResponseRenderer">
+            class="org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory">
             <map-type fusion-type="float" key="float"/>
             <map-type fusion-type="double" key="float"/>
             <map-type fusion-type="int" key="int"/>
@@ -88,7 +88,7 @@
 
         <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
 
-        <om:solr-server name="Bibliothek A" version="3.6"
+        <om:solr-server name="BibliothekA" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
             <om:url>http://host:port/solr/xyz</om:url>

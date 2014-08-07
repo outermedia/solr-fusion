@@ -44,7 +44,7 @@
             class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory"/>
 
         <om:response-renderer type="xml"
-            class="org.outermedia.solrfusion.response.SimpleXmlResponseRenderer">
+            class="org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory">
             <map-type fusion-type="float" key="float"/>
             <map-type fusion-type="double" key="float"/>
             <map-type fusion-type="int" key="int"/>

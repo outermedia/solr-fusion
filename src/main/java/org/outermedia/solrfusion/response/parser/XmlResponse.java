@@ -19,15 +19,14 @@ import java.util.List;
 @ToString
 public class XmlResponse
 {
+    // this field contains the facet and highlighting info too, because jaxb handles same elements ("lst") this ways
     @XmlElement(name = "lst", required = true)
     private List<ResponseSection> header;
 
     @XmlElement(name = "result", required = true)
     private Result result;
 
-    @XmlTransient
-    @Getter
-    @Setter
+    @XmlTransient @Getter @Setter
     private Exception errorReason;
 
     public ResponseSection getResponseHeader()
@@ -38,6 +37,17 @@ public class XmlResponse
     public ResponseSection getResponseErrors()
     {
         return findSectionByName("error");
+    }
+
+    public List<Highlighting> getHighlighting()
+    {
+        List<Highlighting> result = null;
+        ResponseSection section = findSectionByName("highlighting");
+        if (section != null)
+        {
+            result = section.getHighlighting();
+        }
+        return result;
     }
 
     protected ResponseSection findSectionByName(String n)
@@ -70,7 +80,7 @@ public class XmlResponse
     public int getNumFound()
     {
         int nr = 0;
-        if(result != null)
+        if (result != null)
         {
             nr = result.getNumFound();
         }
@@ -80,7 +90,7 @@ public class XmlResponse
     public String getResultName()
     {
         String n = null;
-        if(result != null)
+        if (result != null)
         {
             n = result.getResultName();
         }
