@@ -150,7 +150,7 @@
     <om:script-type name="merge-multi-value" class="org.outermedia.solrfusion.types.MultiValueMerger"/>
     <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
 
-    <om:default-search-field>title</om:default-search-field>
+    <om:default-search-field>allfields</om:default-search-field>
 
     <om:default-sort-field>score desc</om:default-sort-field>
 
