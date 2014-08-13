@@ -4,35 +4,13 @@
     "QTime":0,
     "params":{
       "indent":"on",
-      "start":"0",
-      "q":"${responseHeader.query?json_string}",
-    <#if responseHeader.filterQuery??>
-      "fq":"${responseHeader.filterQuery?json_string}",
-    </#if>
-    <#if responseHeader.sort??>
-      "sort":"${responseHeader.sort?json_string}",
-    </#if>
-    <#if responseHeader.fields??>
-      "fl":"${responseHeader.fields?json_string}",
-    </#if>
-    <#if responseHeader.highlight??>
-      "hl":"${responseHeader.highlight?json_string}",
-    </#if>
-    <#if responseHeader.highlightPre??>
-      "hl.simple.pre":"${responseHeader.highlightPre?json_string}",
-    </#if>
-    <#if responseHeader.highlightPost??>
-      "hl.simple.post":"${responseHeader.highlightPost?json_string}",
-    </#if>
-    <#if responseHeader.highlightFields??>
-      "hl.fl":"${responseHeader.highlightFields?json_string}",
-    </#if>
-    <#if responseHeader.highlightQuery??>
-      "hl.q":"${responseHeader.highlightQuery?json_string}",
-    </#if>
+      "start":"0",<#list responseHeader.queryParams?keys as key>
+      "${key}":"${responseHeader.queryParams[key]?json_string}",</#list><#list responseHeader.multiValueQueryParams?keys as key>
+      "${key}":[
+        <#list responseHeader.multiValueQueryParams[key] as v>"${v?json_string}"<#if v_has_next>,</#if></#list>
+      ],</#list>
       "wt":"json",
-      "version":"2.2",
-      "rows":"${responseHeader.rows}"}},
+      "version":"2.2"}},
   <#if responseError.error>
   "error":{
       "msg":"${responseError.msg?json_string}",
@@ -48,6 +26,21 @@
   }<#if document_has_next>,</#if>
   </#list>
   ]}
+  <#if facets.hasFacets>
+  ,"facet_counts":{
+    "facet_queries":{},
+    "facet_fields":{
+  <#list facets.facets?keys as field>
+      "${field}": [
+    <#list facets.facets[field]?keys as word>
+        ["${word?json_string}", ${facets.facets[field][word]?c}]<#if word_has_next>,</#if>
+    </#list>
+      ]<#if field_has_next>,</#if>
+  </#list>
+  },
+  "facet_dates":{},
+  "facet_ranges":{}}
+  </#if>
   <#if highlighting.hasHighlights>
   , "highlighting":{<#list highlighting.highlighting as doc>
     "${doc.id}": {

@@ -58,9 +58,9 @@ public class FusionController implements FusionControllerIfc
     {
         this.configuration = configuration;
 
-        String queryStr = fusionRequest.getQuery();
-        String filterQueryStr = fusionRequest.getFilterQuery();
-        String highlightQueryStr = fusionRequest.getHighlightQuery();
+        String queryStr = fusionRequest.getQuery().getValue();
+        String filterQueryStr = fusionRequest.getFilterQuery().getValue();
+        String highlightQueryStr = fusionRequest.getHighlightQuery().getValue();
 
         Map<String, Float> boosts = fusionRequest.getBoosts();
         Locale locale = fusionRequest.getLocale();
@@ -218,7 +218,7 @@ public class FusionController implements FusionControllerIfc
             {
                 Document mergedDoc = configuration.getResponseConsolidator(configuration).completelyMapMergedDoc(
                     collectedDocuments, null);
-                SearchServerResponseInfo info = new SearchServerResponseInfo(1, null);
+                SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, null);
                 ClosableIterator<Document, SearchServerResponseInfo> response = new ClosableListIterator<>(
                     Arrays.asList(mergedDoc), info);
                 ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(
@@ -301,11 +301,11 @@ public class FusionController implements FusionControllerIfc
                 Exception se = result.getErrorReason();
                 if (se == null)
                 {
-                    SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound(), null);
+                    SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound(), null, null);
                     ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
                         result.getDocuments(), info);
                     consolidator.addResultStream(searchServerConfig, docIterator, fusionRequest,
-                        result.getHighlighting());
+                        result.getHighlighting(), result.getFacetFields());
                 }
                 else
                 {
@@ -341,9 +341,9 @@ public class FusionController implements FusionControllerIfc
         try
         {
             XmlResponse result;
-            Map<String, String> searchServerParams = fusionRequest.buildSearchServerQueryParams(configuration,
+            Multimap<String> searchServerParams = fusionRequest.buildSearchServerQueryParams(configuration,
                 searchServerConfig);
-            String searchServerQuery = searchServerParams.get(SolrFusionRequestParams.QUERY.getRequestParamName());
+            String searchServerQuery = searchServerParams.getFirst(SolrFusionRequestParams.QUERY);
             if (fusionRequest.getParsedQuery() != null && searchServerQuery.trim().length() == 0)
             {
                 // the mapped query is empty which would return any documents, so don't ask this server

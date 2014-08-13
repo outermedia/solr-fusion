@@ -89,18 +89,19 @@ public class ResponseMapper implements ResponseMapperIfc
     {
         int addedFieldCounter = 0;
         AddOperation addOp = new AddOperation();
-        Map<String, List<Target>> allAddResponseTargets = serverConfig.findAllAddResponseMappings();
-        for (Map.Entry<String, List<Target>> entry : allAddResponseTargets.entrySet())
+        Map<String, TargetsOfMapping> allAddResponseTargets = serverConfig.findAllAddResponseMappings();
+        for (Map.Entry<String, TargetsOfMapping> entry : allAddResponseTargets.entrySet())
         {
             String fusionFieldName = entry.getKey();
             FusionField fusionField = config.findFieldByName(fusionFieldName);
             if (fusionField != null)
             {
-                List<Target> targets = entry.getValue();
+                TargetsOfMapping targets = entry.getValue();
+                String searchServerFieldName = targets.getMappingsSearchServerFieldName();
                 boolean added = false;
                 for (Target t : targets)
                 {
-                    if (addOp.addToResponse(doc, fusionFieldName, fusionField, t))
+                    if (addOp.addToResponse(doc, fusionFieldName, fusionField, searchServerFieldName, t))
                     {
                         added = true;
                     }

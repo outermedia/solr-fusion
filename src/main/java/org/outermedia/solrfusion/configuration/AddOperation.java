@@ -6,9 +6,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.types.ConversionDirection;
-import org.outermedia.solrfusion.types.CopyFusionTermQueryToSearchServerQuery;
-import org.outermedia.solrfusion.types.ScriptEnv;
+import org.outermedia.solrfusion.types.*;
 
 import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -45,9 +43,12 @@ public class AddOperation extends Operation
             // the super call would overwrite the search server field value which is initialized with the fusion field
             // value either the field is dropped or changed
             // super.applyOneQueryOperation(term, env, t);
-            List<String> newSearchServerValue = t.apply(term.getFusionFieldValue(), env,
+            TypeResult opResult = t.apply(term.getFusionFieldValue(), term.getFusionFacetCount(), env,
                 ConversionDirection.FUSION_TO_SEARCH);
-            term.addNewSearchServerQuery(true, newSearchServerValue, env.getConfiguration(), env.getLocale());
+            if (opResult != null)
+            {
+                term.addNewSearchServerQuery(true, opResult.getValues(), env.getConfiguration(), env.getLocale());
+            }
         }
     }
 
@@ -57,21 +58,37 @@ public class AddOperation extends Operation
         // NOP will be done later see addToResponse() below
     }
 
-    public boolean addToResponse(Document doc, String fusionFieldName, FusionField fusionField, Target t)
+    public boolean addToResponse(Document doc, String fusionFieldName, FusionField fusionField,
+        String searchServerFieldName, Target t)
     {
         boolean added = false;
         Term term = doc.getFieldTermByFusionName(fusionFieldName);
         boolean isNew = false;
         if (term == null)
         {
-            term = Term.newFusionTerm(fusionFieldName);
+            // use search server's values as default
+            List<String> searchServerValues = null;
+            List<Integer> searchServerWordCounts = null;
+            if (searchServerFieldName != null)
+            {
+                Term searchServerTerm = doc.getFieldTermByName(searchServerFieldName);
+                if (searchServerTerm != null)
+                {
+                    searchServerValues = searchServerTerm.getSearchServerFieldValue();
+                    searchServerWordCounts = searchServerTerm.getSearchServerFacetCount();
+                }
+            }
+            term = Term.newFusionTerm(fusionFieldName, searchServerValues);
+            term.setFusionField(fusionField);
+            term.setFusionFacetCount(searchServerWordCounts);
             isNew = true;
         }
-        ScriptEnv env = getResponseScriptEnv(term, new ScriptEnv());
+        ScriptEnv env = getResponseScriptEnv(fusionFieldName, term, new ScriptEnv());
         super.applyOneResponseOperation(term, env, t);
-        if (isNew)
+        List<String> fusionFieldValue = term.getFusionFieldValue();
+        if (isNew && fusionFieldValue.size() > 0)
         {
-            doc.addFusionField(fusionFieldName, fusionField, term.getFusionFieldValue());
+            doc.wrapFusionTermWithSolrField(term, fusionField);
             added = true;
         }
         return added;
@@ -92,29 +109,44 @@ public class AddOperation extends Operation
     {
         String msg = null;
 
+        // check <om:add><om:response> and <om:add><om:query-response>
         List<Target> responses = getResponseTargets();
-        if (fieldMapping.getFusionName() == null)
+        if (responses.size() > 0)
         {
-            if (responses.size() > 0)
+            if (fieldMapping.getFusionName() == null)
             {
                 msg = "Please specify a field for attribute 'fusion-name' in order to add something to a response.";
             }
-        }
-        for (Target t : responses)
-        {
-            if (t.getType() == null)
+            else
             {
-                msg = "Please specify a value for the 'type' attribute in the '<om:add>' '<om:response>' operation.";
+                ScriptType scriptType = new ScriptType();
+                scriptType.setClassFactory(CopySearchServerFieldToFusionField.class.getName());
+                scriptType.afterUnmarshal(null, null);
+                for (Target t : responses)
+                {
+                    boolean hasSearchServerName = fieldMapping.getSearchServersName() != null;
+                    if (!hasSearchServerName && t.getType() == null)
+                    {
+                        msg = "Please specify a value for the 'type' attribute in the '<om:add>' '<om:response>' operation.";
+                    }
+                    // set default script type
+                    if (hasSearchServerName && t.getType() == null)
+                    {
+                        t.setType(scriptType);
+                    }
+                }
             }
         }
 
+        // check <om:add><om:query> and <om:add><om:query-response>
         List<Target> queries = getQueryTargets();
         if (queries.size() > 0)
         {
             if (level == AddLevel.INSIDE && fieldMapping.getFusionName() == null)
             {
-                msg = "Please specify a search server field when you want to add a new query part inside of the current " +
-                    "query, because the search server field specifies the place.";
+                msg =
+                    "Please specify a search server field when you want to add a new query part inside of the current " +
+                        "query, because the search server field specifies the place.";
             }
             if (fieldMapping.getSearchServersName() == null)
             {

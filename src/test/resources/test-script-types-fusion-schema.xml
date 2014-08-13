@@ -30,6 +30,8 @@
         <om:field name="text15"/>
         <om:field name="text16"/>
         <om:field name="text17"/>
+        <om:field name="text18a"/>
+        <om:field name="text18b"/>
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile"/>
@@ -120,6 +122,7 @@
                     <om:response type="beanshell">
                         <script><![CDATA[
                             import java.text.SimpleDateFormat;
+                            import java.util.*;
                             GregorianCalendar now = new GregorianCalendar(2014, 6, 19);
                             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
                             // predefined variables: see ScriptEnv.ENV_*
@@ -131,7 +134,13 @@
                             print("Fusion Value       : "+fusionValue);
                             print("Fusion Field       : "+fusionFieldDeclaration);
                             print("Fusion Schema      : "+fusionSchema);
-                            return searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
+                            print("Word Count         : "+facetWordCount);
+                            returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
+                            returnWordCounts = new ArrayList();
+                            returnWordCounts.add("4");
+                            returnWordCounts.add("1");
+                            returnWordCounts.add("3");
+                            returnWordCounts.add("2");
                         ]]></script>
                     </om:response>
                     <om:query type="beanshell">
@@ -148,7 +157,8 @@
                             print("Fusion Value       : "+fusionValue);
                             print("Fusion Field       : "+fusionFieldDeclaration);
                             print("Fusion Schema      : "+fusionSchema);
-                            return searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
+                            print("Word Count         : "+facetWordCount);
+                            returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
                         ]]></script>
                     </om:query>
                 </om:change>
@@ -182,8 +192,9 @@
                             print("Fusion Value       : "+fusionValue+"\n");
                             print("Fusion Field       : "+fusionFieldDeclaration+"\n");
                             print("Fusion Schema      : "+fusionSchema+"\n");
-                            // last value is the return value
-                            searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
+                            print("Word Count         : "+facetWordCount+"\n");
+                            returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
+                            returnWordCounts = ["4", "1", "3", "2"];
                         ]]></script>
                     </om:response>
                     <om:query type="javascript">
@@ -201,8 +212,8 @@
                             print("Fusion Value       : "+fusionValue+"\n");
                             print("Fusion Field       : "+fusionFieldDeclaration+"\n");
                             print("Fusion Schema      : "+fusionSchema+"\n");
-                            // last value is the return value
-                            searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
+                            print("Word Count         : "+facetWordCount+"\n");
+                            returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
                         ]]></script>
                     </om:query>
                 </om:change>
@@ -311,9 +322,9 @@
                 <om:add>
                     <om:response type="javascript">
                         <script>
-                            println("fusionValue="+fusionValue);
+                            println("Mapping for text12: fusionValue="+fusionValue);
                             // in JS all numbers are float!
-                            (fusionValue.get(0)-41).toFixed()
+                            returnValues = (fusionValue.get(0)-41).toFixed()
                         </script>
                     </om:response>
                 </om:add>
@@ -434,6 +445,23 @@
                 </om:add>
                 <om:drop>
                     <om:query/>
+                </om:drop>
+            </om:field>
+
+            <!-- add in facet -->
+            <om:field name="s19" fusion-name="text18a">
+                <om:add>
+                    <om:response />
+                </om:add>
+            </om:field>
+            <om:field name="s19" fusion-name="text18b">
+                <om:add>
+                    <om:response />
+                </om:add>
+            </om:field>
+            <om:field name="s19">
+                <om:drop>
+                    <om:response/>
                 </om:drop>
             </om:field>
 

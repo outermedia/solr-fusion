@@ -16,11 +16,14 @@ import java.util.Map;
 public class SearchServerResponseInfo
 {
     private final Map<String, Document> highlighting;
+    private final Map<String, Map<String, Integer>> facetFields;
     private int totalNumberOfHits;
 
-    public SearchServerResponseInfo(int totalNumber, Map<String, Document> allHighlighting)
+    public SearchServerResponseInfo(int totalNumber, Map<String, Document> allHighlighting,
+        Map<String, Map<String, Integer>> facetFields)
     {
         totalNumberOfHits = totalNumber;
         highlighting = allHighlighting;
+        this.facetFields = facetFields;
     }
 }

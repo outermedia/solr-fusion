@@ -17,7 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.mockito.Mockito.*;
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
@@ -26,7 +28,7 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
  * Created by ballmann on 6/6/14.
  */
 @SuppressWarnings("unchecked")
-public class ControllerHighlightTest extends AbstractControllerTest
+public class ControllerFacetTest extends AbstractControllerTest
 {
     @Test
     public void testProcess()
@@ -39,59 +41,43 @@ public class ControllerHighlightTest extends AbstractControllerTest
         fusionRequest.setFilterQuery(new SolrFusionRequestParam("author:Goethe -title:tomorrow"));
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField("score");
-        fusionRequest.setHighlight(new SolrFusionRequestParam("true"));
-        fusionRequest.setHighlightQuery(new SolrFusionRequestParam("title:goethe"));
-        fusionRequest.setHighlightPre(new SolrFusionRequestParam("pre"));
-        fusionRequest.setHighlightPost(new SolrFusionRequestParam("post"));
-        fusionRequest.setHighlightingFieldsToReturn(new SolrFusionRequestParam("title"));
+        fusionRequest.setFacet(new SolrFusionRequestParam("true"));
+        fusionRequest.setFacetPrefix(new SolrFusionRequestParam("p1"));
+        fusionRequest.setFacetMincount(new SolrFusionRequestParam("2"));
+        fusionRequest.setFacetLimit(new SolrFusionRequestParam("20"));
+        fusionRequest.setFacetSort(new SolrFusionRequestParam("index"));
+        List<SolrFusionRequestParam> facetFields = new ArrayList<>();
+        facetFields.add(new SolrFusionRequestParam("{!ex=format_filter}format"));
+        facetFields.add(new SolrFusionRequestParam("access_facet"));
+        fusionRequest.setFacetFields(facetFields);
+        List<SolrFusionRequestParam> facetSortFields = new ArrayList<>();
+        facetSortFields.add(new SolrFusionRequestParam("index1", "finc_class_facet"));
+        facetSortFields.add(new SolrFusionRequestParam("index2", "format"));
+        fusionRequest.setFacetSortFields(facetSortFields);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
         // System.out.println("ERROR " + fusionResponse.getErrorMessage());
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
     }
 
-    @Test
-    public void testQueryParsingFailed()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
-        IllegalAccessException, URISyntaxException
-    {
-        FusionControllerIfc fc = createTestFusionController("test-empty-fusion-schema.xml");
-        cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
-        FusionRequest fusionRequest = new FusionRequest();
-        fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
-        fusionRequest.setHighlightQuery(new SolrFusionRequestParam("author:*:Schiller"));
-
-        fusionRequest.setResponseType(ResponseRendererType.XML);
-        FusionResponse fusionResponse = new FusionResponse();
-        fc.process(cfg, fusionRequest, fusionResponse);
-        Assert.assertFalse("Expected processing error for bad query", fusionResponse.isOk());
-        Assert.assertEquals("Found different error message than expected",
-            "Query parsing failed: author:*:Schiller\nCause: ERROR: Parsing of query author:*:Schiller failed.\n" +
-                "Cannot interpret query 'author:*:Schiller': '*' or '?' not allowed as first character in WildcardQuery\n" +
-                "'*' or '?' not allowed as first character in WildcardQuery", fusionResponse.getErrorMessage().trim());
-    }
-
-    @Test
-    public void testQueryWithMultipleServersAndResponseDocuments()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
-        IllegalAccessException, URISyntaxException
-    {
-        testMultipleServers("title:abc", "title:def", "target/test-classes/test-xml-response-9000.xml",
-            "target/test-classes/test-xml-response-9002.xml", ResponseRendererType.XML);
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title"), 4000);
-        verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng"), 4000);
-    }
-
-    protected Multimap<String> buildParams(String q, String hlq, String mappedTitle)
+    protected Multimap<String> buildParams(String q, String title1, String title2, String author)
     {
         Multimap<String> result = super.buildParams(q, null);
-        result.put(HIGHLIGHT_QUERY, hlq);
-        result.put(HIGHLIGHT_FIELDS_TO_RETURN, mappedTitle);
-        result.set(FIELDS_TO_RETURN, "* score " + mappedTitle);
-        result.put(HIGHLIGHT, "true");
-        result.put(HIGHLIGHT_PRE, "pre");
-        result.put(HIGHLIGHT_POST, "post");
+        result.set(FIELDS_TO_RETURN, "* score");
+        result.put(FACET, "true");
+        result.put(FACET_PREFIX, "p1");
+        result.put(FACET_MINCOUNT, "2");
+        result.put(FACET_LIMIT, "20");
+        result.put(FACET_SORT, "index");
+        result.put(FACET_FIELD, "{!ex=format_filter}"+title1);
+        result.put(FACET_FIELD, "{!ex=format_filter}"+title2);
+        result.put(FACET_FIELD, author);
+        String facetSortField1 = FACET_SORT_FIELD.buildFusionFacetSortFieldParam(title1, Locale.GERMAN);
+        result.put(facetSortField1, "index1");
+        String facetSortField2 = FACET_SORT_FIELD.buildFusionFacetSortFieldParam(title2, Locale.GERMAN);
+        result.put(facetSortField2, "index1");
+        String facetSortField3 = FACET_SORT_FIELD.buildFusionFacetSortFieldParam(author, Locale.GERMAN);
+        result.put(facetSortField3, "index2");
         return result;
     }
 
@@ -100,7 +86,7 @@ public class ControllerHighlightTest extends AbstractControllerTest
         throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
         IllegalAccessException, URISyntaxException
     {
-        String xml = testMultipleServers("title:abc", "title:def", "target/test-classes/test-empty-xml-response.xml",
+        String xml = testMultipleServers("title:abc", "target/test-classes/test-empty-xml-response.xml",
             "target/test-classes/test-empty-xml-response.xml", ResponseRendererType.XML);
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<response>\n" +
@@ -113,11 +99,17 @@ public class ControllerHighlightTest extends AbstractControllerTest
             "    <str name=\"rows\"><![CDATA[0]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
             "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
-            "    <str name=\"hl\"><![CDATA[true]]></str>\n" +
-            "    <str name=\"hl.simple.pre\"><![CDATA[pre]]></str>\n" +
-            "    <str name=\"hl.simple.post\"><![CDATA[post]]></str>\n" +
-            "    <str name=\"hl.fl\"><![CDATA[title]]></str>\n" +
-            "    <str name=\"hl.q\"><![CDATA[title:def]]></str>\n" +
+            "    <str name=\"facet\"><![CDATA[true]]></str>\n" +
+            "    <str name=\"facet.limit\"><![CDATA[20]]></str>\n" +
+            "    <str name=\"facet.mincount\"><![CDATA[2]]></str>\n" +
+            "    <str name=\"facet.prefix\"><![CDATA[p1]]></str>\n" +
+            "    <str name=\"facet.sort\"><![CDATA[index]]></str>\n" +
+            "    <str name=\"f.title.facet.sort\"><![CDATA[index1]]></str>\n" +
+            "    <str name=\"f.author.facet.sort\"><![CDATA[index2]]></str>\n" +
+            "    <arr name=\"facet.field\">\n" +
+            "        <str>\"{!ex=format_filter}title\"</str>\n" +
+            "        <str>\"author\"</str>\n" +
+            "    </arr>\n" +
             "    <str name=\"wt\">wt</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "  </lst>\n" +
@@ -126,9 +118,9 @@ public class ControllerHighlightTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title"), 4000);
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", "title", "author9000"), 4000);
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng"), 4000);
+            buildParams("titleVT_eng:abc","titleVT_eng", "titleVT_de", "author9002"), 4000);
     }
 
     @Test
@@ -136,7 +128,7 @@ public class ControllerHighlightTest extends AbstractControllerTest
         throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
         IllegalAccessException, URISyntaxException
     {
-        String xml = testMultipleServers("title:abc", "title:def", "target/test-classes/test-empty-xml-response.xml",
+        String xml = testMultipleServers("title:abc", "target/test-classes/test-empty-xml-response.xml",
             "target/test-classes/test-empty-xml-response.xml", ResponseRendererType.JSON);
         String expected = "{\n" +
             "  \"responseHeader\":{\n" +
@@ -148,23 +140,28 @@ public class ControllerHighlightTest extends AbstractControllerTest
             "      \"rows\":\"0\",\n" +
             "      \"q\":\"title:abc\",\n" +
             "      \"sort\":\"score\",\n" +
-            "      \"hl\":\"true\",\n" +
-            "      \"hl.simple.pre\":\"pre\",\n" +
-            "      \"hl.simple.post\":\"post\",\n" +
-            "      \"hl.fl\":\"title\",\n" +
-            "      \"hl.q\":\"title:def\",\n" +
+            "      \"facet\":\"true\",\n" +
+            "      \"facet.limit\":\"20\",\n" +
+            "      \"facet.mincount\":\"2\",\n" +
+            "      \"facet.prefix\":\"p1\",\n" +
+            "      \"facet.sort\":\"index\",\n" +
+            "      \"f.title.facet.sort\":\"index1\",\n" +
+            "      \"f.author.facet.sort\":\"index2\",\n" +
+            "      \"facet.field\":[\n" +
+            "        \"{!ex=format_filter}title\",\"author\"\n" +
+            "      ],\n" +
             "      \"wt\":\"json\",\n" +
             "      \"version\":\"2.2\"}},\n" +
             "  \"response\":{\"numFound\":0,\"start\":0,\"docs\":[\n" +
             "  ]}\n" +
             "}";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title"), 4000);
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", "title", "author9000"), 4000);
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng"), 4000);
+            buildParams("titleVT_eng:abc","titleVT_eng", "titleVT_de", "author9002"), 4000);
     }
 
-    protected String testMultipleServers(String queryStr, String highlightQueryStr, String responseServer1,
+    protected String testMultipleServers(String queryStr, String responseServer1,
         String responseServer2, ResponseRendererType format)
         throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
         IllegalAccessException, URISyntaxException
@@ -202,11 +199,19 @@ public class ControllerHighlightTest extends AbstractControllerTest
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setResponseType(format);
         fusionRequest.setQuery(new SolrFusionRequestParam(queryStr));
-        fusionRequest.setHighlight(new SolrFusionRequestParam("true"));
-        fusionRequest.setHighlightingFieldsToReturn(new SolrFusionRequestParam("title"));
-        fusionRequest.setHighlightQuery(new SolrFusionRequestParam(highlightQueryStr));
-        fusionRequest.setHighlightPre(new SolrFusionRequestParam("pre"));
-        fusionRequest.setHighlightPost(new SolrFusionRequestParam("post"));
+        fusionRequest.setFacet(new SolrFusionRequestParam("true"));
+        fusionRequest.setFacetPrefix(new SolrFusionRequestParam("p1"));
+        fusionRequest.setFacetMincount(new SolrFusionRequestParam("2"));
+        fusionRequest.setFacetLimit(new SolrFusionRequestParam("20"));
+        fusionRequest.setFacetSort(new SolrFusionRequestParam("index"));
+        List<SolrFusionRequestParam> facetFields = new ArrayList<>();
+        facetFields.add(new SolrFusionRequestParam("{!ex=format_filter}title"));
+        facetFields.add(new SolrFusionRequestParam("author"));
+        fusionRequest.setFacetFields(facetFields);
+        List<SolrFusionRequestParam> facetSortFields = new ArrayList<>();
+        facetSortFields.add(new SolrFusionRequestParam("index1", "title"));
+        facetSortFields.add(new SolrFusionRequestParam("index2", "author"));
+        fusionRequest.setFacetSortFields(facetSortFields);
         fusionRequest.setPageSize(10);
         fusionRequest.setStart(0);
         fusionRequest.setSortAsc(false);

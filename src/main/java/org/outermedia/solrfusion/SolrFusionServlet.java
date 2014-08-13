@@ -307,6 +307,18 @@ public class SolrFusionServlet extends HttpServlet
     {
         FusionRequest fusionRequest = getNewFusionRequest();
 
+        buildCoreFusionRequest(requestParams, headerValues, fusionRequest);
+
+        buildHighlightFusionRequest(requestParams, fusionRequest);
+
+        buildFacetFusionRequest(requestParams, fusionRequest);
+
+        return fusionRequest;
+    }
+
+    private void buildCoreFusionRequest(Map<String, String[]> requestParams, Map<String, Object> headerValues,
+        FusionRequest fusionRequest)
+    {
         fusionRequest.setQuery(getRequiredSingleSearchParamValue(requestParams, QUERY, fusionRequest));
         fusionRequest.setFilterQuery(
             getOptionalSingleSearchParamValue(requestParams, FILTER_QUERY, null, fusionRequest));
@@ -319,95 +331,148 @@ public class SolrFusionServlet extends HttpServlet
             sentLocale = Locale.GERMAN;
         }
         fusionRequest.setLocale(sentLocale);
-        String startStr = getOptionalSingleSearchParamValue(requestParams, START, "0", fusionRequest);
-        fusionRequest.setStart(parseInt(startStr, 0));
+        SolrFusionRequestParam startParam = getOptionalSingleSearchParamValue(requestParams, START, "0", fusionRequest);
+        fusionRequest.setStartFromString(startParam);
         int defaultPageSize = cfg.getDefaultPageSize();
-        String pageSizeStr = getOptionalSingleSearchParamValue(requestParams, PAGE_SIZE,
+        SolrFusionRequestParam pageSizeParam = getOptionalSingleSearchParamValue(requestParams, PAGE_SIZE,
             String.valueOf(defaultPageSize), fusionRequest);
-        fusionRequest.setPageSize(parseInt(pageSizeStr, defaultPageSize));
-        String sortStr = getOptionalSingleSearchParamValue(requestParams, SORT, cfg.getDefaultSortField(),
+        fusionRequest.setPageSizeFromString(pageSizeParam, defaultPageSize);
+        SolrFusionRequestParam sortParam = getOptionalSingleSearchParamValue(requestParams, SORT,
+            cfg.getDefaultSortField(), fusionRequest);
+        fusionRequest.setSolrFusionSortingFromString(sortParam);
+        SolrFusionRequestParam fieldsToReturn = getOptionalSingleSearchParamValue(requestParams, FIELDS_TO_RETURN, null,
             fusionRequest);
-        // "<SPACE> desc" in the case a field's name contains "desc" too
-        // because sortStr is trimmed a single "desc" would be treated right
-        boolean sortAsc = !sortStr.contains(" desc");
-        StringTokenizer st = new StringTokenizer(sortStr, " ");
-        fusionRequest.setSolrFusionSortField(st.nextToken());
-        fusionRequest.setSortAsc(sortAsc);
-        String fieldsToReturn = getOptionalSingleSearchParamValue(requestParams, FIELDS_TO_RETURN, null, fusionRequest);
         fusionRequest.setFieldsToReturn(fieldsToReturn);
-        String highlightFieldsToReturn = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_FIELDS_TO_RETURN,
-            null, fusionRequest);
-        fusionRequest.setHighlightingFieldsToReturn(highlightFieldsToReturn);
-        String highlightPost = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_POST, null, fusionRequest);
-        fusionRequest.setHighlightPost(highlightPost);
-        String highlightPre = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_PRE, null, fusionRequest);
-        fusionRequest.setHighlightPre(highlightPre);
-        String highlight = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT, null, fusionRequest);
-        fusionRequest.setHighlight(highlight);
-        String highlightQuery = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_QUERY, null, fusionRequest);
-        fusionRequest.setHighlightQuery(highlightQuery);
-        return fusionRequest;
     }
 
-    protected int parseInt(String s, int defaultValue)
+    protected void buildFacetFusionRequest(Map<String, String[]> requestParams, FusionRequest fusionRequest)
     {
-        int result = defaultValue;
-        try
+        SolrFusionRequestParam facet = getOptionalSingleSearchParamValue(requestParams, FACET, null, fusionRequest);
+        fusionRequest.setFacet(facet);
+        if (facet != null && "true".equals(facet.getValue()))
         {
-            result = Integer.parseInt(s);
-            if (result < 0)
-            {
-                log.error("Ignoring negative start '{}'. Using {} instead.", s, defaultValue);
-                result = defaultValue;
-            }
+            SolrFusionRequestParam facetMinCount = getOptionalSingleSearchParamValue(requestParams, FACET_MINCOUNT,
+                null, fusionRequest);
+            fusionRequest.setFacetMincount(facetMinCount);
+            SolrFusionRequestParam facetLimit = getOptionalSingleSearchParamValue(requestParams, FACET_LIMIT, null,
+                fusionRequest);
+            fusionRequest.setFacetLimit(facetLimit);
+            SolrFusionRequestParam facetSort = getOptionalSingleSearchParamValue(requestParams, FACET_SORT, null,
+                fusionRequest);
+            fusionRequest.setFacetSort(facetSort);
+            SolrFusionRequestParam facetPrefix = getOptionalSingleSearchParamValue(requestParams, FACET_PREFIX, null,
+                fusionRequest);
+            fusionRequest.setFacetPrefix(facetPrefix);
+            List<SolrFusionRequestParam> facetFields = getOptionalMultiSearchParamValue(requestParams, FACET_FIELD);
+            fusionRequest.setFacetFields(facetFields);
+            List<SolrFusionRequestParam> facetSortFields = getOptionalMultiSearchParamValue(requestParams,
+                FACET_SORT_FIELD);
+            fusionRequest.setFacetSortFields(facetSortFields);
         }
-        catch (Exception e)
+    }
+
+    protected void buildHighlightFusionRequest(Map<String, String[]> requestParams, FusionRequest fusionRequest)
+    {
+        SolrFusionRequestParam highlight = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT, null,
+            fusionRequest);
+        fusionRequest.setHighlight(highlight);
+        if (highlight != null && "true".equals(highlight.getValue()))
         {
-            result = defaultValue;
-            log.error("Couldn't parse '{}' to int. Using {} instead.", s, defaultValue);
+            SolrFusionRequestParam highlightFieldsToReturn = getOptionalSingleSearchParamValue(requestParams,
+                HIGHLIGHT_FIELDS_TO_RETURN, null, fusionRequest);
+            fusionRequest.setHighlightingFieldsToReturn(highlightFieldsToReturn);
+            SolrFusionRequestParam highlightPost = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_POST,
+                null, fusionRequest);
+            fusionRequest.setHighlightPost(highlightPost);
+            SolrFusionRequestParam highlightPre = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_PRE, null,
+                fusionRequest);
+            fusionRequest.setHighlightPre(highlightPre);
+            SolrFusionRequestParam highlightQuery = getOptionalSingleSearchParamValue(requestParams, HIGHLIGHT_QUERY,
+                null, fusionRequest);
+            fusionRequest.setHighlightQuery(highlightQuery);
+        }
+    }
+
+    protected SolrFusionRequestParam getRequiredSingleSearchParamValue(Map<String, String[]> requestParams,
+        SolrFusionRequestParams searchParamName, FusionRequest fusionRequest)
+    {
+        SolrFusionRequestParam result = getOptionalSingleSearchParamValue(requestParams, searchParamName, null,
+            fusionRequest);
+        if (result == null || result.getValue() == null)
+        {
+            fusionRequest.addError(
+                buildErrorMessage(ERROR_MSG_FOUND_NO_QUERY_PARAMETER, searchParamName.getRequestParamName()));
+            return new SolrFusionRequestParam(null);
         }
         return result;
     }
 
-    protected String getRequiredSingleSearchParamValue(Map<String, String[]> requestParams,
-        SolrFusionRequestParams searchParamName, FusionRequest fusionRequest)
-    {
-        String requestParamName = searchParamName.getRequestParamName();
-        String[] qs = requestParams.get(requestParamName);
-        if (qs == null || qs.length == 0)
-        {
-            fusionRequest.addError(buildErrorMessage(ERROR_MSG_FOUND_NO_QUERY_PARAMETER, requestParamName));
-            return null;
-        }
-        if (qs.length > 1)
-        {
-            fusionRequest.addError(
-                buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, requestParamName, qs.length));
-            return null;
-        }
-        return qs[0].trim();
-    }
-
-    protected String getOptionalSingleSearchParamValue(Map<String, String[]> requestParams,
+    protected SolrFusionRequestParam getOptionalSingleSearchParamValue(Map<String, String[]> requestParams,
         SolrFusionRequestParams searchParamName, String defaultValue, FusionRequest fusionRequest)
     {
-        String s = defaultValue;
-        String requestParamName = searchParamName.getRequestParamName();
-        String[] qs = requestParams.get(requestParamName);
-        if (qs != null)
+        List<SolrFusionRequestParam> result = getRequestParamByName(searchParamName, requestParams);
+        SolrFusionRequestParam oneResult = null;
+        if (result == null)
         {
-            if (qs.length == 1)
+            oneResult = new SolrFusionRequestParam(defaultValue, null);
+        }
+        else if (!result.isEmpty())
+        {
+            if (result.size() > 1)
             {
-                s = qs[0].trim();
-            }
-            else if (qs.length > 1)
-            {
+                String requestParamName = searchParamName.getRequestParamName();
                 fusionRequest.addError(
-                    buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, requestParamName, qs.length));
-                return null;
+                    buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, requestParamName, result.size()));
+                return new SolrFusionRequestParam(null);
+            }
+            oneResult = result.get(0);
+        }
+        return oneResult;
+    }
+
+    protected List<SolrFusionRequestParam> getRequestParamByName(SolrFusionRequestParams reqParam,
+        Map<String, String[]> requestParams)
+    {
+        List<SolrFusionRequestParam> result = null;
+        if (reqParam.isPattern())
+        {
+            result = new ArrayList<>();
+            for (Map.Entry<String, String[]> rp : requestParams.entrySet())
+            {
+                String patternValue = reqParam.matches(rp.getKey());
+                if (patternValue != null)
+                {
+                    String[] params = rp.getValue();
+                    for (int i = 0; i < params.length; i++)
+                    {
+                        result.add(new SolrFusionRequestParam(params[i], patternValue));
+                    }
+                }
+            }
+            if (result.isEmpty())
+            {
+                result = null;
             }
         }
-        return s;
+        else
+        {
+            String[] params = requestParams.get(reqParam.getRequestParamName());
+            if (params != null)
+            {
+                result = new ArrayList<>();
+                for (int i = 0; i < params.length; i++)
+                {
+                    result.add(new SolrFusionRequestParam(params[i], null));
+                }
+            }
+        }
+        return result;
+    }
+
+    protected List<SolrFusionRequestParam> getOptionalMultiSearchParamValue(Map<String, String[]> requestParams,
+        SolrFusionRequestParams searchParamName)
+    {
+        return getRequestParamByName(searchParamName, requestParams);
     }
 
     protected String buildErrorMessage(String format, Object... args)

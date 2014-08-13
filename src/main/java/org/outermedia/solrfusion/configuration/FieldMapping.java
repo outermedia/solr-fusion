@@ -113,13 +113,18 @@ public class FieldMapping
         // initialize term with mapped name and original fusion value
         term.setSearchServerFieldName(specificSearchServerName);
         List<String> fusionFieldValues = term.getFusionFieldValue();
-        term.setSearchServerFieldValue(fusionFieldValues);
+        if (fusionFieldValues != null)
+        {
+            List<String> initialSearchServerValues = new ArrayList<>();
+            initialSearchServerValues.addAll(fusionFieldValues);
+            term.setSearchServerFieldValue(initialSearchServerValues);
+        }
         term.setWasMapped(true);
 
         ScriptEnv newEnv = new ScriptEnv(env);
-        newEnv.setBinding(ScriptEnv.ENV_FUSION_FIELD, term.getFusionFieldName());
-        newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_FIELD, term.getSearchServerFieldName());
-        newEnv.setBinding(ScriptEnv.ENV_FUSION_FIELD_DECLARATION, term.getFusionField());
+        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD, term.getFusionFieldName());
+        newEnv.setBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD, term.getSearchServerFieldName());
+        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD_DECLARATION, term.getFusionField());
         // don't apply operations on null value (empty list is OK)
         if (operations != null && fusionFieldValues != null)
         {
@@ -151,7 +156,12 @@ public class FieldMapping
         ApplicableResult matchResult = mappingType.applicableToSearchServerField(searchServerFieldName, this);
         if (matchResult != null)
         {
-            specificFusionName = matchResult.getDestinationFieldName();
+            String destinationFieldName = matchResult.getDestinationFieldName();
+            // don't wipe out already set mapped field name (e.g. <om:drop><om:response> without fusion field name)
+            if (destinationFieldName != null)
+            {
+                specificFusionName = destinationFieldName;
+            }
         }
         return matchResult != null;
     }
@@ -179,13 +189,26 @@ public class FieldMapping
         // initialize term with mapped name and original search server value
         term.setFusionFieldName(specificFusionName);
         List<String> searchServerFieldValues = term.getSearchServerFieldValue();
-        term.setFusionFieldValue(searchServerFieldValues);
+        if (searchServerFieldValues != null)
+        {
+            List<String> initialFusionValues = new ArrayList<>();
+            initialFusionValues.addAll(searchServerFieldValues);
+            term.setFusionFieldValue(initialFusionValues);
+        }
+        List<Integer> searchServerFacets = term.getSearchServerFacetCount();
+        if (searchServerFacets != null)
+        {
+            List<Integer> initialFacetCount = new ArrayList<>();
+            initialFacetCount.addAll(searchServerFacets);
+            term.setFusionFacetCount(initialFacetCount);
+        }
         term.setWasMapped(true);
 
         ScriptEnv newEnv = new ScriptEnv(env);
-        newEnv.setBinding(ScriptEnv.ENV_FUSION_FIELD, term.getFusionFieldName());
-        newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_FIELD, term.getSearchServerFieldName());
-        newEnv.setBinding(ScriptEnv.ENV_FUSION_FIELD_DECLARATION, term.getFusionField());
+        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD, term.getFusionFieldName());
+        newEnv.setBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD, term.getSearchServerFieldName());
+        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD_DECLARATION, term.getFusionField());
+        newEnv.setBinding(ScriptEnv.ENV_IN_DOC_TERM, term);
         // don't apply operations on null value (empty list is OK)
         if (operations != null && searchServerFieldValues != null)
         {
@@ -306,9 +329,11 @@ public class FieldMapping
         return result;
     }
 
-    public List<Target> getAllAddResponseMappings()
+    public TargetsOfMapping getAllAddResponseMappings()
     {
-        List<Target> result = new ArrayList<>();
+        TargetsOfMapping result = new TargetsOfMapping();
+        result.setMappingsSearchServerFieldName(searchServersName);
+        result.setMappingsFusionFieldName(fusionName);
         if (operations != null)
         {
             for (Operation o : operations)

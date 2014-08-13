@@ -800,7 +800,7 @@ PARSER_END(QueryParser)
   <#_NUM_CHAR:   ["0"-"9"] >
 // every character that follows a backslash is considered as an escaped character
 | <#_ESCAPED_CHAR: "\\" ~[] >
-| <#_TERM_START_CHAR: ( ~[ " ", "\t", "\n", "\r", "\u3000", "+", "-", "!", "(", ")", ":", "^", "[", "]", "\"", "{", "}", "~", "*", "?", "\\" ]
+| <#_TERM_START_CHAR: ( ~[ " ", "\t", "\n", "\r", "\u3000", "+", "-", "!", "(", ")", ":", "^", "[", "]", "\"", "{", "}", "~", "*", "?", "\\", "=" ]
                         | <_ESCAPED_CHAR> ) >
 | <#_TERM_CHAR: ( <_TERM_START_CHAR> | <_ESCAPED_CHAR> | "-" | "+" ) >
 | <#_WHITESPACE: ( " " | "\t" | "\n" | "\r" | "\u3000") >
@@ -814,6 +814,8 @@ PARSER_END(QueryParser)
 <DEFAULT> TOKEN : {
   <AND:       ("AND" | "&&") >
 | <OR:        ("OR" | "||") >
+| <META_START: "{!" >
+| <META_END:   "}" >
 | <NOT:       ("NOT" | "!") >
 | <PLUS:      "+" >
 | <MINUS:     "-" >
@@ -821,9 +823,12 @@ PARSER_END(QueryParser)
 | <LPAREN:    "(" >
 | <RPAREN:    ")" >
 | <COLON:     ":" >
+| <EQUAL:     "=" >
 | <STAR:      "*" >
 | <CARAT:     "^" > : Boost
 | <QUOTED:     "\"" (<_QUOTED_CHAR>)* "\"">
+| <META_EX:   "ex" >
+| <META_TAG:  "tag" >
 | <TERM:      <_TERM_START_CHAR> (<_TERM_CHAR>)*  >
 | <FUZZY_SLOP:     "~" ( (<_NUM_CHAR>)+ ( "." (<_NUM_CHAR>)+ )? )? >
 | <ALL_DOCS:  <STAR> <COLON> <STAR> >
@@ -947,6 +952,7 @@ Query Query(String field) :
   List<BooleanClause> clauses = new ArrayList<BooleanClause>();
   Query q, firstQuery=null;
   int conj, mods;
+  MetaInfo mi = null;
 }
 {
   mods=Modifiers() q=Clause(field)
@@ -960,13 +966,47 @@ Query Query(String field) :
     { addClause(clauses, conj, mods, q); }
   )*
     {
+      Query result;
       if (clauses.size() == 1 && firstQuery != null)
-        return firstQuery;
+        result = firstQuery;
       else {
-        return getBooleanQuery(clauses);
+        result = getBooleanQuery(clauses);
       }
+      result.setMetaInfo(mi);
+      return result;
     }
 }
+
+/*
+MetaInfo metaInfo() : {
+  Token n;
+  Token v;
+  MetaInfo mi = new MetaInfo();
+}
+{
+    < META_START >
+    (
+        n = < META_EX >
+        < EQUAL >
+        v = < TERM >
+        {
+            mi.setName(n.image);
+            mi.setValue(v.image);
+        }
+    |   n = < META_TAG >
+        < EQUAL >
+        v = < TERM >
+        {
+            mi.setName(n.image);
+            mi.setValue(v.image);
+        }
+    )
+    < META_END >
+    {
+      return mi;
+    }
+}
+*/
 
 Query Clause(String field) : {
   Query q;
@@ -978,7 +1018,7 @@ Query Clause(String field) : {
     {
       return new MatchAllDocsQuery();
     }
-  | 
+  |
     [
       LOOKAHEAD(2)
       (

@@ -188,7 +188,7 @@ public class Configuration
     public ResponseConsolidatorIfc getResponseConsolidator(Configuration config) throws InvocationTargetException, IllegalAccessException
     {
         ResponseConsolidatorIfc c = getResponseConsolidatorFactory().getInstance();
-        c.init(config);
+        c.initConsolidator(config);
         return c;
     }
 

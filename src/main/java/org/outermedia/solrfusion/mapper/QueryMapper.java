@@ -90,7 +90,7 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
             }
         }
         ScriptEnv newEnv = new ScriptEnv(env);
-        newEnv.setBinding(ScriptEnv.ENV_TERM_QUERY_PART, tq);
+        newEnv.setBinding(ScriptEnv.ENV_IN_TERM_QUERY_PART, tq);
         for (FieldMapping m : mappings)
         {
             m.applyQueryMappings(t, newEnv);

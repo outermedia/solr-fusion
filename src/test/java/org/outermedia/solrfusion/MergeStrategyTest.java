@@ -123,12 +123,12 @@ public class MergeStrategyTest
             Object value = fields[i + 1];
             if (value instanceof List)
             {
-                doc.addFusionField(name, fusionField, (List<String>) value);
+                doc.addFusionField(name, fusionField, (List<String>) value, null);
             }
             else
             {
-                List<String> valueLIst = Arrays.asList((String) value);
-                doc.addFusionField(name, fusionField, valueLIst);
+                List<String> valueList = Arrays.asList((String) value);
+                doc.addFusionField(name, fusionField, valueList, null);
             }
             doc.getFieldTermByFusionName(name).setWasMapped(true);
         }

@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.query;
 
 import junit.framework.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
@@ -47,7 +48,7 @@ public class QueryTest
 
         String query = "Schiller";
         Query o = parseQuery(cfg, query);
-        String expected = "TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueries=null))";
+        String expected = "TermQuery(super=Query(boostValue=null, addInside=null, metaInfo=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueries=null))";
         Assert.assertEquals("Got different query object than expected", expected, o.toString());
 
         checkBoost(cfg, "Schiller^0.75", 0.75f);
@@ -68,7 +69,7 @@ public class QueryTest
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
 
         Query o = parseQuery(cfg, "title:Schiller");
-        String expected = "TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueries=null))";
+        String expected = "TermQuery(super=Query(boostValue=null, addInside=null, metaInfo=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueries=null))";
         Assert.assertEquals("Got different query object than expected", expected, o.toString());
 
         String query = "+title:Schiller";
@@ -146,7 +147,7 @@ public class QueryTest
 
         String query = "title:Schiller title:Müller";
         Query o = parseQuery(cfg, query);
-        String expected = "BooleanQuery(super=Query(boostValue=null, addInside=null), clauses=[BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueries=null))), BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null, addInside=null), term=Term(fusionFieldName=title, fusionFieldValue=[Müller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueries=null)))])";
+        String expected = "BooleanQuery(super=Query(boostValue=null, addInside=null, metaInfo=null), clauses=[BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null, addInside=null, metaInfo=null), term=Term(fusionFieldName=title, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueries=null))), BooleanClause(occur=OCCUR_MUST, query=TermQuery(super=Query(boostValue=null, addInside=null, metaInfo=null), term=Term(fusionFieldName=title, fusionFieldValue=[Müller], fusionField=FusionField(fieldName=title, type=text, format=null, multiValue=null), searchServerFieldName=null, searchServerFieldValue=null, removed=false, wasMapped=false, processed=false, newQueries=null)))])";
         Assert.assertEquals("Got different query object than expected", expected, o.toString());
     }
 
@@ -419,4 +420,22 @@ public class QueryTest
         return pq;
     }
 
+    // MetaInfo is currently not parsed
+    @Ignore
+    @Test
+    public void parseQueryWithMetaInfo()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+        String query = "{!ex=format_filter}title";
+        EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
+        p.init(new QueryParserFactory());
+        Map<String, Float> boosts = new HashMap<String, Float>();
+        Query q = p.parse(cfg, boosts, query, Locale.GERMAN, null);
+        System.out.println("Q " + q);
+        MetaInfo mi = q.getMetaInfo();
+        Assert.assertNotNull("Expected to find meta info", mi);
+        Assert.assertEquals("Found different meta info name", "ex", mi.getName());
+        Assert.assertEquals("Found different meta info value", "format_filter", mi.getValue());
+    }
 }

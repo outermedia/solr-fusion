@@ -85,16 +85,20 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
         FreemarkerResponseHeader freemarkerResponseHeader = new FreemarkerResponseHeader(docStream, request);
         FreemarkerErrorHeader freemarkerErrorHeader = new FreemarkerErrorHeader(fusionResponse);
         Map<String, Document> highlighting = null;
+        Map<String, Map<String, Integer>> facets = null;
         if (docStream != null)
         {
             highlighting = docStream.getExtraInfo().getHighlighting();
+            facets = docStream.getExtraInfo().getFacetFields();
         }
         FreemarkerResponseHighlighting freemarkerHighlighting = new FreemarkerResponseHighlighting(configuration, highlighting);
+        FreemarkerFacets freemarkerFacets = new FreemarkerFacets(configuration, facets);
 
         input.put("responseHeader", freemarkerResponseHeader);
         input.put("responseError", freemarkerErrorHeader);
         input.put("response", freemarkerResponse);
         input.put("highlighting", freemarkerHighlighting);
+        input.put("facets", freemarkerFacets);
 
         // Get the template
         Template template = null;

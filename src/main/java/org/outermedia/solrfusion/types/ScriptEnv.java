@@ -15,11 +15,16 @@ import java.util.Map;
  * <p/>
  * Created by ballmann on 03.06.14.
  * <p/>
- * The following env entries are available: <ul> <li>{@value #ENV_FUSION_FIELD} - a String</li> <li>{@value
- * #ENV_FUSION_VALUE} - a List of String</li> <li>{@value #ENV_SEARCH_SERVER_FIELD} - a String</li> <li>{@value
- * #ENV_SEARCH_SERVER_VALUE} - a List of String</li> <li>{@value #ENV_FUSION_FIELD_DECLARATION} - a FusionField
- * instance</li> <li>{@value #ENV_FUSION_SCHEMA} - a Configuration instance</li> <li>{@value #ENV_VALUES} - a List of
- * String</li> <li>{@value #ENV_CONVERSION} - a ConversionDirection</li> </ul>
+ * The following env entries are available in a ScriptType: <ul> <li>{@value #ENV_IN_FUSION_FIELD} - a String</li>
+ * <li>{@value #ENV_IN_FUSION_VALUE} - a List of String</li> <li>{@value #ENV_IN_SEARCH_SERVER_FIELD} - a String</li>
+ * <li>{@value #ENV_IN_SEARCH_SERVER_VALUE} - a List of String</li> <li>{@value #ENV_IN_FUSION_FIELD_DECLARATION} - a
+ * FusionField instance</li> <li>{@value #ENV_IN_FUSION_SCHEMA} - a Configuration instance</li> <li>{@value
+ * #ENV_IN_VALUES} - a List of String</li> <li>{@value #ENV_IN_CONVERSION} - a ConversionDirection</li><li>{@value
+ * #ENV_IN_LOCALE} - a Locale</li> <li>{@value #ENV_IN_DOCUMENT} - a Document</li><li>{@value #ENV_IN_TERM_QUERY_PART} -
+ * a TermQuery</li> <li>{@value #ENV_IN_SEARCH_SERVER_CONFIG} - a SearchServerConfig</li><li>{@value #ENV_IN_WORD_COUNT}
+ * - a list of int</li><li>{@value #ENV_IN_DOC_TERM} - a Term</li></ul> A ScriptType has to set the following entries:
+ * <ul><li>{@value #ENV_OUT_NEW_VALUES} - null or a list of processed values</li> <li>{@value #ENV_OUT_NEW_WORD_COUNTS}
+ * - a list of new word counts (default value is copied from {@value #ENV_IN_WORD_COUNT})</li></ul>
  */
 @ToString
 public class ScriptEnv
@@ -27,18 +32,25 @@ public class ScriptEnv
     private Map<String, Object> bindings;
     private ScriptEnv parentBindings;
 
-    public final static String ENV_FUSION_FIELD = "fusionField"; // a String
-    public final static String ENV_FUSION_VALUE = "fusionValue"; // a String
-    public final static String ENV_SEARCH_SERVER_FIELD = "searchServerField"; // a String
-    public final static String ENV_SEARCH_SERVER_VALUE = "searchServerValue"; // a String
-    public final static String ENV_FUSION_FIELD_DECLARATION = "fusionFieldDeclaration"; // a FusionField
-    public final static String ENV_FUSION_SCHEMA = "fusionSchema"; // a Configuration
-    public final static String ENV_VALUES = "values"; // a List of String
-    public final static String ENV_CONVERSION = "conversion"; // a ConversionDirection
-    public final static String ENV_LOCALE = "locale"; // a Locale
-    public final static String ENV_DOCUMENT = "responseDocument"; // a Document
-    public final static String ENV_TERM_QUERY_PART = "termQueryPart"; // a TermQuery
-    public final static String ENV_SEARCH_SERVER_CONFIG = "searchServerConfig"; // a SearchServerConfig
+    // variables passed into a script
+    public final static String ENV_IN_FUSION_FIELD = "fusionField"; // a String
+    public final static String ENV_IN_FUSION_VALUE = "fusionValue"; // a String
+    public final static String ENV_IN_SEARCH_SERVER_FIELD = "searchServerField"; // a String
+    public final static String ENV_IN_SEARCH_SERVER_VALUE = "searchServerValue"; // a String
+    public final static String ENV_IN_FUSION_FIELD_DECLARATION = "fusionFieldDeclaration"; // a FusionField
+    public final static String ENV_IN_FUSION_SCHEMA = "fusionSchema"; // a Configuration
+    public final static String ENV_IN_VALUES = "values"; // a List of String
+    public final static String ENV_IN_CONVERSION = "conversion"; // a ConversionDirection
+    public final static String ENV_IN_LOCALE = "locale"; // a Locale
+    public final static String ENV_IN_DOCUMENT = "responseDocument"; // a Document
+    public final static String ENV_IN_TERM_QUERY_PART = "termQueryPart"; // a TermQuery
+    public final static String ENV_IN_SEARCH_SERVER_CONFIG = "searchServerConfig"; // a SearchServerConfig
+    public final static String ENV_IN_WORD_COUNT = "facetWordCount"; // a List<Integer> for facets only
+    public final static String ENV_IN_DOC_TERM = "docFieldTerm";
+
+    // variables set by a script
+    public final static String ENV_OUT_NEW_VALUES = "returnValues";
+    public final static String ENV_OUT_NEW_WORD_COUNTS = "returnWordCounts";
 
     public ScriptEnv()
     {
@@ -83,42 +95,42 @@ public class ScriptEnv
 
     public void setConfiguration(Configuration cfg)
     {
-        setBinding(ENV_FUSION_SCHEMA, cfg);
+        setBinding(ENV_IN_FUSION_SCHEMA, cfg);
     }
 
     public Configuration getConfiguration()
     {
-        return (Configuration) getBinding(ENV_FUSION_SCHEMA);
+        return (Configuration) getBinding(ENV_IN_FUSION_SCHEMA);
     }
 
     public void setLocale(Locale l)
     {
-        setBinding(ENV_LOCALE, l);
+        setBinding(ENV_IN_LOCALE, l);
     }
 
     public Locale getLocale()
     {
-        return (Locale) getBinding(ENV_LOCALE);
+        return (Locale) getBinding(ENV_IN_LOCALE);
     }
 
     public void setDocument(Document doc)
     {
-        setBinding(ENV_DOCUMENT, doc);
+        setBinding(ENV_IN_DOCUMENT, doc);
     }
 
     public Document getDocument()
     {
-        return (Document) getBinding(ENV_DOCUMENT);
+        return (Document) getBinding(ENV_IN_DOCUMENT);
     }
 
     public SearchServerConfig getSearchServerConfig()
     {
-        return (SearchServerConfig) getBinding(ENV_SEARCH_SERVER_CONFIG);
+        return (SearchServerConfig) getBinding(ENV_IN_SEARCH_SERVER_CONFIG);
     }
 
     public void setSearchServerConfig(SearchServerConfig config)
     {
-        setBinding(ENV_SEARCH_SERVER_CONFIG, config);
+        setBinding(ENV_IN_SEARCH_SERVER_CONFIG, config);
     }
 
 }

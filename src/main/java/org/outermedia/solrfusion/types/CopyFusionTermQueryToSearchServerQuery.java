@@ -22,23 +22,26 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
         // NOP
     }
 
-    @Override public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
+    @Override public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+        ConversionDirection dir)
     {
         // values come from tq, but here we need the whole term query
-        TermQuery tq = (TermQuery) env.getBinding(ScriptEnv.ENV_TERM_QUERY_PART);
-        String searchServerFieldName = env.getStringBinding(ScriptEnv.ENV_SEARCH_SERVER_FIELD);
+        TermQuery tq = (TermQuery) env.getBinding(ScriptEnv.ENV_IN_TERM_QUERY_PART);
+        String searchServerFieldName = env.getStringBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD);
         TermQuery searchServerTermQuery = tq.shallowClone();
         searchServerTermQuery.setSearchServerFieldName(searchServerFieldName);
         Configuration configuration = env.getConfiguration();
         SearchServerConfig searchServerConfig = env.getSearchServerConfig();
-        List<String> result = null;
+        List<String> newValues = null;
+        TypeResult result = null;
         try
         {
             QueryBuilderIfc qb = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
             String qs = qb.buildQueryStringWithoutNew(searchServerTermQuery, configuration, searchServerConfig,
                 env.getLocale());
-            result = new ArrayList<>();
-            result.add(qs);
+            newValues = new ArrayList<>();
+            newValues.add(qs);
+            result = new TypeResult(newValues, facetWordCounts);
         }
         catch (Exception e)
         {

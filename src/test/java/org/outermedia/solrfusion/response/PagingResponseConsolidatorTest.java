@@ -4,21 +4,23 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.outermedia.solrfusion.FusionRequest;
+import org.outermedia.solrfusion.IdGeneratorIfc;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.response.parser.FacetHit;
+import org.outermedia.solrfusion.response.parser.WordCount;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.UnmarshalException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by ballmann on 7/11/14.
@@ -39,7 +41,7 @@ public class PagingResponseConsolidatorTest
     public void testSortingEmpty() throws InvocationTargetException, IllegalAccessException
     {
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
-        consolidator.init(cfg);
+        consolidator.initConsolidator(cfg);
         List<String> result = sort(consolidator, 0, 4, false);
         Assert.assertEquals("Expected different first page", Arrays.asList(), result);
     }
@@ -48,8 +50,8 @@ public class PagingResponseConsolidatorTest
     public void testSortingNoHits() throws InvocationTargetException, IllegalAccessException
     {
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
-        consolidator.init(cfg);
-        createResponses(consolidator, new String[]{}, new String[]{});
+        consolidator.initConsolidator(cfg);
+        createResponses(consolidator, new String[]{}, new String[]{}, null, null);
         List<String> result = sort(consolidator, 0, 4, false);
         Assert.assertEquals("Expected different first page", Arrays.asList(), result);
         result = sort(consolidator, 4, 4, false);
@@ -60,8 +62,8 @@ public class PagingResponseConsolidatorTest
     public void testSortingExactPage() throws InvocationTargetException, IllegalAccessException
     {
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
-        consolidator.init(cfg);
-        createResponses(consolidator, new String[]{"c", "a"}, new String[]{"b", "d"});
+        consolidator.initConsolidator(cfg);
+        createResponses(consolidator, new String[]{"c", "a"}, new String[]{"b", "d"}, null, null);
         List<String> result = sort(consolidator, 0, 4, false);
         Assert.assertEquals("Expected different first page", Arrays.asList("d", "c", "b", "a"), result);
     }
@@ -70,8 +72,9 @@ public class PagingResponseConsolidatorTest
     public void testSortingMany() throws InvocationTargetException, IllegalAccessException
     {
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
-        consolidator.init(cfg);
-        createResponses(consolidator, new String[]{"c", "a", "w", "b"}, new String[]{"b", "d", "z", "f", "aa"});
+        consolidator.initConsolidator(cfg);
+        createResponses(consolidator, new String[]{"c", "a", "w", "b"}, new String[]{"b", "d", "z", "f", "aa"}, null,
+            null);
         List<String> result = sort(consolidator, 0, 4, false);
         Assert.assertEquals("Expected different first page", Arrays.asList("z", "w", "f", "d"), result);
         result = sort(consolidator, 4, 4, false);
@@ -86,8 +89,9 @@ public class PagingResponseConsolidatorTest
     public void testSortingManyAsc() throws InvocationTargetException, IllegalAccessException
     {
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
-        consolidator.init(cfg);
-        createResponses(consolidator, new String[]{"c", "a", "w", "b"}, new String[]{"b", "d", "z", "f", "aa"});
+        consolidator.initConsolidator(cfg);
+        createResponses(consolidator, new String[]{"c", "a", "w", "b"}, new String[]{"b", "d", "z", "f", "aa"}, null,
+            null);
         List<String> result = sort(consolidator, 0, 4, true);
         Assert.assertEquals("Expected different first page", Arrays.asList("a", "aa", "b", "b"), result);
         result = sort(consolidator, 4, 4, true);
@@ -96,10 +100,11 @@ public class PagingResponseConsolidatorTest
         Assert.assertEquals("Expected different third page", Arrays.asList("z"), result);
     }
 
-    protected void createResponses(ResponseConsolidatorIfc consolidator, String[] titles1, String[] titles2)
+    protected void createResponses(ResponseConsolidatorIfc consolidator, String[] titles1, String[] titles2,
+        List<FacetHit> facetFields1, List<FacetHit> facetFields2)
     {
-        addAnswerFromServer("Bibliothek9000", consolidator, titles1);
-        addAnswerFromServer("Bibliothek9002", consolidator, titles2);
+        addAnswerFromServer("Bibliothek9000", consolidator, titles1, facetFields1);
+        addAnswerFromServer("Bibliothek9002", consolidator, titles2, facetFields2);
         Assert.assertEquals("Number of added responses is different", 2, consolidator.numberOfResponseStreams());
     }
 
@@ -126,13 +131,14 @@ public class PagingResponseConsolidatorTest
         return result;
     }
 
-    protected void addAnswerFromServer(String serverName, ResponseConsolidatorIfc consolidator, String[] titles)
+    protected void addAnswerFromServer(String serverName, ResponseConsolidatorIfc consolidator, String[] titles,
+        List<FacetHit> facetFields)
     {
         SearchServerConfig serverConfig = cfg.getSearchServerConfigByName(serverName);
         FusionRequest fusionRequest = new FusionRequest();
         ClosableIterator<Document, SearchServerResponseInfo> documents = createDocuments(serverName, fusionRequest,
             titles);
-        consolidator.addResultStream(serverConfig, documents, fusionRequest, null);
+        consolidator.addResultStream(serverConfig, documents, fusionRequest, null, facetFields);
     }
 
     protected ClosableIterator<Document, SearchServerResponseInfo> createDocuments(String serverName,
@@ -154,7 +160,71 @@ public class PagingResponseConsolidatorTest
             doc.addField(titleField, t);
             docs.add(doc);
         }
-        SearchServerResponseInfo info = new SearchServerResponseInfo(titles.length, null);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(titles.length, null, null);
         return new ClosableListIterator<>(docs, info);
+    }
+
+    @Test
+    public void testFacetHandling() throws InvocationTargetException, IllegalAccessException, UnmarshalException
+    {
+        PagingResponseConsolidator consolidator = (PagingResponseConsolidator) PagingResponseConsolidator.Factory.getInstance();
+        consolidator.initConsolidator(cfg);
+
+        createResponses(consolidator, new String[]{"a"}, new String[]{"b"},
+            Arrays.asList(buildFaceHit("title", "a", "b"), buildFaceHit("language", "a", "b")),
+            Arrays.asList(buildFaceHit("titleVT_de", "A", "B"), buildFaceHit("titleVT_eng", "A", "C"),
+                buildFaceHit("language", "A", "B")));
+
+        IdGeneratorIfc idGen = cfg.getIdGenerator();
+        String fusionIdField = idGen.getFusionIdField();
+        Map<String, Map<String, Integer>> fusionFacetFields = new HashMap<>();
+        consolidator.mapFacetWordCounts(idGen, fusionIdField, fusionFacetFields);
+        System.out.println("FACETS " + fusionFacetFields);
+        Assert.assertEquals("Different facet number than expected", 3, fusionFacetFields.size());
+        String theKey = "title";
+        Assert.assertEquals("Expected other facet field", "title", theKey);
+        Map<String, Integer> facet = fusionFacetFields.get(theKey);
+        // word counts of "A" are added
+        Map<String, Integer> expectedMap = buildWordCountMap("a", 1, "b", 2, "A", 2, "B", 2, "C", 2);
+        Assert.assertEquals("Expected other facets", expectedMap, facet);
+        Assert.assertTrue("Didn't find language in " + fusionFacetFields.keySet(),
+            fusionFacetFields.containsKey("language"));
+        // the last mapping sets the fusion field's name
+        Assert.assertTrue("Didn't find language_en in " + fusionFacetFields.keySet(),
+            fusionFacetFields.containsKey("language_en"));
+        expectedMap = buildWordCountMap("A", 1, "B", 2);
+        Assert.assertEquals("Expected other facets", expectedMap, fusionFacetFields.get("language_en"));
+        expectedMap = buildWordCountMap("a", 1, "b", 2);
+        Assert.assertEquals("Expected other facets", expectedMap, fusionFacetFields.get("language"));
+    }
+
+    protected FacetHit buildFaceHit(String searchServerField, String w1, String w2) throws UnmarshalException
+    {
+        FacetHit fh = new FacetHit();
+        fh.setSearchServerFieldName(searchServerField);
+        List<WordCount> fieldCounts = new ArrayList<>();
+        fieldCounts.add(buildWordCount(w1, 1));
+        fieldCounts.add(buildWordCount(w2, 2));
+        fh.setFieldCounts(fieldCounts);
+        fh.afterUnmarshal(null, null);
+        return fh;
+    }
+
+    protected WordCount buildWordCount(String w, int count)
+    {
+        WordCount wc = new WordCount();
+        wc.setWord(w);
+        wc.setCount(count);
+        return wc;
+    }
+
+    protected Map<String, Integer> buildWordCountMap(Object... entries)
+    {
+        HashMap<String, Integer> expectedMap = new HashMap<>();
+        for (int i = 0; i < entries.length; i += 2)
+        {
+            expectedMap.put((String) entries[i], (Integer) entries[i + 1]);
+        }
+        return expectedMap;
     }
 }

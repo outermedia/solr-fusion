@@ -35,13 +35,13 @@ public class ValueTest extends AbstractTypeTest
         Element elem = util.parseXml(xml);
         Value valueType = Mockito.spy(new Value());
         valueType.passArguments(util.filterElements(elem.getChildNodes()), util);
-        Mockito.verify(valueType,Mockito.times(1)).logBadConfiguration(Mockito.eq(true), Mockito.anyList());
+        Mockito.verify(valueType, Mockito.times(1)).logBadConfiguration(Mockito.eq(true), Mockito.anyList());
 
         List<String> values = valueType.getValues();
         Assert.assertEquals("Found different parsed value than expected", Arrays.asList("abc123"), values);
 
-        values = valueType.apply(null, null, ConversionDirection.SEARCH_TO_FUSION);
-        Assert.assertEquals("Found different values than expected", Arrays.asList("abc123"), values);
+        TypeResult opResult = valueType.apply(null, null, null, ConversionDirection.SEARCH_TO_FUSION);
+        Assert.assertEquals("Found different values than expected", Arrays.asList("abc123"), opResult.getValues());
     }
 
     @Test
@@ -53,13 +53,13 @@ public class ValueTest extends AbstractTypeTest
         Element elem = util.parseXml(xml);
         Value valueType = Mockito.spy(new Value());
         valueType.passArguments(util.filterElements(elem.getChildNodes()), util);
-        Mockito.verify(valueType,Mockito.times(1)).logBadConfiguration(Mockito.eq(true), Mockito.anyList());
+        Mockito.verify(valueType, Mockito.times(1)).logBadConfiguration(Mockito.eq(true), Mockito.anyList());
 
         List<String> values = valueType.getValues();
         Assert.assertEquals("Found different parsed value than expected", Arrays.asList("a", "b", "c"), values);
 
-        values = valueType.apply(null, null, ConversionDirection.SEARCH_TO_FUSION);
-        Assert.assertEquals("Found different values than expected", Arrays.asList("a", "b", "c"), values);
+        TypeResult opResult = valueType.apply(null, null, null, ConversionDirection.SEARCH_TO_FUSION);
+        Assert.assertEquals("Found different values than expected", Arrays.asList("a", "b", "c"), opResult.getValues());
     }
 
     @Test
@@ -71,17 +71,18 @@ public class ValueTest extends AbstractTypeTest
         Element elem = util.parseXml(xml);
         Value valueType = Mockito.spy(new Value());
         valueType.passArguments(util.filterElements(elem.getChildNodes()), util);
-        Mockito.verify(valueType,Mockito.times(1)).logBadConfiguration(Mockito.eq(false), Mockito.anyList());
+        Mockito.verify(valueType, Mockito.times(1)).logBadConfiguration(Mockito.eq(false), Mockito.anyList());
 
         List<String> values = valueType.getValues();
         Assert.assertEquals("Found different parsed value than expected", null, values);
 
-        values = valueType.apply(null, null, ConversionDirection.SEARCH_TO_FUSION);
-        Assert.assertEquals("Found different values than expected", null, values);
+        TypeResult opResult = valueType.apply(null, null, null, ConversionDirection.SEARCH_TO_FUSION);
+        Assert.assertEquals("Found different values than expected", null, opResult.getValues());
     }
 
     @Test
-    public void testResponseMapping() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+    public void testResponseMapping()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
         ResponseMapperIfc rm = ResponseMapper.Factory.getInstance();
@@ -98,12 +99,12 @@ public class ValueTest extends AbstractTypeTest
         // System.out.println(sourceField.toString());
         Assert.assertEquals("Found wrong field name mapping", "source", sourceField.getFusionFieldName());
         Assert.assertEquals("Found wrong field value mapping", Arrays.asList("BIB-A"),
-                sourceField.getFusionFieldValue());
+            sourceField.getFusionFieldValue());
     }
 
     @Test
     public void testQueryMapping()
-            throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
         QueryMapperIfc qm = QueryMapper.Factory.getInstance();
@@ -117,7 +118,6 @@ public class ValueTest extends AbstractTypeTest
         Assert.assertTrue("Expected that term was mapped", term.isWasMapped());
         // System.out.println(term.toString());
         Assert.assertEquals("Found wrong field name mapping", "bibName", term.getSearchServerFieldName());
-        Assert.assertEquals("Found wrong field value mapping", Arrays.asList("bib1"),
-                term.getSearchServerFieldValue());
+        Assert.assertEquals("Found wrong field value mapping", Arrays.asList("bib1"), term.getSearchServerFieldValue());
     }
 }

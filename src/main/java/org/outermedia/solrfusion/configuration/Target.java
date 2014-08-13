@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.types.AbstractType;
 import org.outermedia.solrfusion.types.ConversionDirection;
 import org.outermedia.solrfusion.types.ScriptEnv;
+import org.outermedia.solrfusion.types.TypeResult;
 import org.w3c.dom.Element;
 
 import javax.xml.bind.annotation.XmlAnyElement;
@@ -51,23 +52,24 @@ public abstract class Target
     @XmlTransient @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     private Util util;
 
+
     public Target()
     {
         util = new Util();
     }
 
-    public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
+    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env, ConversionDirection dir)
     {
-        List<String> result = null;
+        TypeResult result = null;
         if (type != null)
         {
             try
             {
-                AbstractType typeImpl = (AbstractType) type.getInstance();
+                AbstractType typeImpl = type.getInstance();
                 if (typeImpl != null)
                 {
                     typeImpl.passArguments(typeConfig, util);
-                    result = typeImpl.apply(values, env, dir);
+                    result = typeImpl.apply(values, facetWordCounts, env, dir);
                 }
                 else
                 {

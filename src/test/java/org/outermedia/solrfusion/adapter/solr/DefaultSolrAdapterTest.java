@@ -14,13 +14,14 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.outermedia.solrfusion.query.SolrFusionRequestParams;
+import org.outermedia.solrfusion.Multimap;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseException;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.configuration.Util;
+import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.xml.sax.SAXException;
 
@@ -29,9 +30,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import static org.mockito.Mockito.*;
@@ -97,9 +96,8 @@ public class DefaultSolrAdapterTest
             try
             {
                 SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
-                Map<String, String> params = new HashMap<>();
-                String qParam = SolrFusionRequestParams.QUERY.getRequestParamName();
-                params.put(qParam, "shakespeare");
+                Multimap<String> params = new Multimap<>();
+                params.put(SolrFusionRequestParams.QUERY, "shakespeare");
                 InputStream is = adapter.sendQuery(params, 4000);
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -138,9 +136,9 @@ public class DefaultSolrAdapterTest
 
         // without response
         when(entity.getContent()).thenReturn(null);
-        Map<String, String> params = new HashMap<>();
-        params.put(QUERY.getRequestParamName(), "*:*");
-        params.put(SORT.getRequestParamName(), "score desc");
+        Multimap<String> params = new Multimap<>();
+        params.put(QUERY, "*:*");
+        params.put(SORT, "score desc");
         try
         {
             adapter.sendQuery(params, 3000);
@@ -175,26 +173,39 @@ public class DefaultSolrAdapterTest
         SearchServerConfig serverConfig = mock(SearchServerConfig.class);
         doReturn("http://unit.test.com/").when(serverConfig).getUrl();
         adapter.init(serverConfig);
-        Map<String, String> params = new HashMap<>();
+        Multimap<String> params = new Multimap<>();
 
-        params.put(QUERY.getRequestParamName(), "*:*");
-        params.put(FILTER_QUERY.getRequestParamName(), "title:a");
-        params.put(WRITER_TYPE.getRequestParamName(), "json");
-        params.put(START.getRequestParamName(), "5");
-        params.put(PAGE_SIZE.getRequestParamName(), "12");
-        params.put(SORT.getRequestParamName(), "title asc");
-        params.put(FIELDS_TO_RETURN.getRequestParamName(), "*,score, title");
-        params.put(HIGHLIGHT.getRequestParamName(),"true");
-        params.put(HIGHLIGHT_FIELDS_TO_RETURN.getRequestParamName(), "title,score,*");
-        params.put(HIGHLIGHT_PRE.getRequestParamName(), "pre");
-        params.put(HIGHLIGHT_POST.getRequestParamName(), "post");
-        params.put(HIGHLIGHT_QUERY.getRequestParamName(), "title:goethe");
+        params.put(QUERY, "*:*");
+        params.put(FILTER_QUERY, "title:a");
+        params.put(WRITER_TYPE, "json");
+        params.put(START, "5");
+        params.put(PAGE_SIZE, "12");
+        params.put(SORT, "title asc");
+        params.put(FIELDS_TO_RETURN, "*,score, title");
+        params.put(HIGHLIGHT,"true");
+        params.put(HIGHLIGHT_FIELDS_TO_RETURN, "title,score,*");
+        params.put(HIGHLIGHT_PRE, "pre");
+        params.put(HIGHLIGHT_POST, "post");
+        params.put(HIGHLIGHT_QUERY, "title:goethe");
+        params.put(FACET, "true");
+        params.put(FACET_PREFIX, "p1");
+        params.put(FACET_LIMIT, "20");
+        params.put(FACET_MINCOUNT, "2");
+        params.put(FACET_SORT, "index");
+        params.put(FACET_FIELD, "{!ex=format_filter}format");
+        params.put(FACET_FIELD, "{!ex=format_de15_filter}format_de15");
+        params.put("f.finc_class_facet.facet.sort", "index1");
+        params.put("f.format.facet.sort", "index2");
 
         String ub = adapter.buildHttpClientParams(params).build().toString();
-        System.out.println(ub);
+        // System.out.println(ub);
         Assert.assertEquals("Expected other solr query url",
             "http://unit.test.com/?q=*%3A*&fq=title%3Aa&wt=json&start=5&rows=12&sort=title+asc&fl=*%2Cscore%2C+title" +
-                "&hl=true&hl.simple.pre=pre&hl.simple.post=post&hl.fl=title%2Cscore%2C*&hl.q=title%3Agoethe", ub);
+                "&hl=true&hl.simple.pre=pre&hl.simple.post=post&hl.fl=title%2Cscore%2C*&hl.q=title%3Agoethe" +
+                "&facet=true&facet.sort=index&facet.prefix=p1&facet.mincount=2&facet.limit=20" +
+                "&facet.field=%7B%21ex%3Dformat_de15_filter%7Dformat_de15" +
+                "&facet.field=%7B%21ex%3Dformat_filter%7Dformat&f.finc_class_facet.facet.sort=index1" +
+                "&f.format.facet.sort=index2", ub);
     }
 
 }

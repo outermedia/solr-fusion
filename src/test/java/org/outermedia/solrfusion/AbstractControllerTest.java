@@ -23,9 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.Mockito.*;
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
@@ -47,18 +45,18 @@ public class AbstractControllerTest
     @Mock
     private SearchServerConfig testSearchConfig;
 
-    protected Map<String, String> buildParams(String q, String fq)
+    protected Multimap<String> buildParams(String q, String fq)
     {
-        Map<String, String> result = new HashMap<>();
-        result.put(QUERY.getRequestParamName(), q);
+        Multimap<String> result = new Multimap<>();
+        result.put(QUERY, q);
         if (fq != null)
         {
-            result.put(FILTER_QUERY.getRequestParamName(), fq);
+            result.put(FILTER_QUERY, fq);
         }
-        result.put(PAGE_SIZE.getRequestParamName(), "10");
-        result.put(START.getRequestParamName(), "0");
-        result.put(SORT.getRequestParamName(), "score desc");
-        result.put(FIELDS_TO_RETURN.getRequestParamName(), "* score");
+        result.put(PAGE_SIZE, "10");
+        result.put(START, "0");
+        result.put(SORT, "score desc");
+        result.put(FIELDS_TO_RETURN, "* score");
         return result;
     }
 
@@ -100,8 +98,7 @@ public class AbstractControllerTest
             searchServerConfigs.clear();
             searchServerConfigs.add(searchServerConfig);
             when(searchServerConfig.getInstance()).thenReturn(testAdapter);
-            when(testAdapter.sendQuery(Mockito.anyMapOf(String.class, String.class), Mockito.anyInt())).thenReturn(
-                testResponse);
+            when(testAdapter.sendQuery(Mockito.any(Multimap.class), Mockito.anyInt())).thenReturn(testResponse);
         }
         return cfg.getController();
     }

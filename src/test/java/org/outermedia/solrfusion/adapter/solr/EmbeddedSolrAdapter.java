@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.outermedia.solrfusion.Multimap;
 import org.outermedia.solrfusion.SolrTestServer;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
@@ -16,7 +17,6 @@ import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
@@ -45,27 +45,27 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
     }
 
     @Override
-    public InputStream sendQuery(Map<String, String> params, int timeout) throws URISyntaxException, IOException
+    public InputStream sendQuery(Multimap<String> params, int timeout) throws URISyntaxException, IOException
     {
-        String q = params.get(SolrFusionRequestParams.QUERY.getRequestParamName());
-        String fq = params.get(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName());
+        String q = params.getFirst(SolrFusionRequestParams.QUERY);
+        String fq = params.getFirst(SolrFusionRequestParams.FILTER_QUERY);
         SolrQuery query = new SolrQuery(q);
         if (fq != null)
         {
             query.setFilterQueries(fq);
         }
-        String responseFormat = params.get(WRITER_TYPE.getRequestParamName());
+        String responseFormat = params.getFirst(WRITER_TYPE);
         query.set(WRITER_TYPE_PARAMETER, responseFormat);
-        String start = params.get(START.getRequestParamName());
+        String start = params.getFirst(START);
         query.setStart(Integer.valueOf(start));
-        String rows = params.get(PAGE_SIZE.getRequestParamName());
+        String rows = params.getFirst(PAGE_SIZE);
         query.setRows(Integer.valueOf(rows));
-        String sortStr = params.get(SORT.getRequestParamName());
+        String sortStr = params.getFirst(SORT);
         StringTokenizer st = new StringTokenizer(sortStr, " ");
         String sortField = st.nextToken();
         String sortDir = st.nextToken();
         query.setSort(sortField, sortDir.equals("asc") ? SolrQuery.ORDER.asc : SolrQuery.ORDER.desc);
-        String fieldsToReturn = params.get(FIELDS_TO_RETURN.getRequestParamName());
+        String fieldsToReturn = params.getFirst(FIELDS_TO_RETURN);
         fieldsToReturn = mergeField(sortField, fieldsToReturn);
         String fieldsToReturnArr[] = fieldsToReturn.split(" ");
         query.setFields(fieldsToReturnArr);

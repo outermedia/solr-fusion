@@ -11,5 +11,4 @@ print("Fusion Field       : "+fusionField+"\n");
 print("Fusion Value       : "+fusionValue+"\n");
 print("Fusion Field       : "+fusionFieldDeclaration+"\n");
 print("Fusion Schema      : "+fusionSchema+"\n");
-// last value is the return value
-searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
+returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());

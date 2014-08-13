@@ -24,9 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.Mockito.*;
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
@@ -100,13 +98,13 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "  <lst name=\"params\">\n" +
             "    <str name=\"indent\">on</str>\n" +
             "    <str name=\"start\">0</str>\n" +
+            "    <str name=\"rows\"><![CDATA[0]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:xyz]]></str>\n" +
             "    <str name=\"fq\"><![CDATA[title:XYZ]]></str>\n" +
             "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"fl\"><![CDATA[id title score]]></str>\n" +
             "    <str name=\"wt\">wt</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
-            "    <str name=\"rows\">0</str>\n" +
             "  </lst>\n" +
             "</lst>\n" +
             "<result name=\"response\" numFound=\"0\" start=\"0\">\n" +
@@ -121,12 +119,12 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
                 "score desc", FIELDS_TO_RETURN, "id titleVT_de titleVT_eng score"), 4000);
     }
 
-    protected Map<String, String> buildMap(Object... v)
+    protected Multimap<String> buildMap(Object... v)
     {
-        Map<String, String> result = new HashMap<>();
+        Multimap<String> result = new Multimap<>();
         for (int i = 0; i < v.length; i += 2)
         {
-            result.put(((SolrFusionRequestParams) v[i]).getRequestParamName(), (String) v[i + 1]);
+            result.put(((SolrFusionRequestParams) v[i]), (String) v[i + 1]);
         }
         return result;
     }
@@ -146,13 +144,13 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "  <lst name=\"params\">\n" +
             "    <str name=\"indent\">on</str>\n" +
             "    <str name=\"start\">0</str>\n" +
+            "    <str name=\"rows\"><![CDATA[2]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
             "    <str name=\"fq\"><![CDATA[title:abc]]></str>\n" +
             "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"fl\"><![CDATA[id title score]]></str>\n" +
             "    <str name=\"wt\">wt</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
-            "    <str name=\"rows\">2</str>\n" +
             "  </lst>\n" +
             "</lst>\n" +
             "<result name=\"response\" numFound=\"2\" start=\"0\">\n" +
@@ -206,14 +204,15 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
 
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
-        fusionRequest.setQuery(queryStr);
-        fusionRequest.setFilterQuery(filterQueryStr);
+        fusionRequest.setQuery(new SolrFusionRequestParam(queryStr));
+        fusionRequest.setFilterQuery(new SolrFusionRequestParam(filterQueryStr));
         fusionRequest.setResponseType(ResponseRendererType.XML);
         fusionRequest.setStart(0);
         fusionRequest.setPageSize(10);
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
-        fusionRequest.setFieldsToReturn("id title " + fusionRequest.getSolrFusionSortField());
+        fusionRequest.setFieldsToReturn(
+            new SolrFusionRequestParam("id title " + fusionRequest.getSolrFusionSortField()));
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(spyCfg, fusionRequest, fusionResponse);
         System.out.println("RESPONSE " + fusionResponse.getErrorMessage());

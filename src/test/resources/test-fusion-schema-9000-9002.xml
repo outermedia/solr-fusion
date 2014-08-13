@@ -9,6 +9,7 @@
         <om:field name="language"/>
         <om:field name="title"/>
         <om:field name="score" type="float"/>
+        <om:field name="author" />
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js"/>
@@ -78,6 +79,7 @@
             <om:field name="id" fusion-name="id"/>
             <om:field name="title" fusion-name="title"/>
             <om:field name="language" fusion-name="language"/>
+            <om:field name="author9000" fusion-name="author"/>
 
         </om:solr-server>
 
@@ -98,6 +100,7 @@
             <om:field name="titleVT_eng" fusion-name="title"/>
             <om:field name="language" fusion-name="language_de"/>
             <om:field name="language" fusion-name="language_en"/>
+            <om:field name="author9002" fusion-name="author"/>
 
         </om:solr-server>
 

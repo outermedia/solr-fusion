@@ -48,7 +48,8 @@ public abstract class AbstractType implements Initiable<ScriptType>
      * @param dir    is the conversion direction. Either from fusion schema to search server schema or vice versa.
      * @return perhaps null
      */
-    public abstract List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir);
+    public abstract TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+        ConversionDirection dir);
 
     /**
      * Utility method to get a script engine by name.
@@ -86,34 +87,42 @@ public abstract class AbstractType implements Initiable<ScriptType>
      * @return null in error case
      */
     @SuppressWarnings("unchecked")
-    public List<String> applyScriptEngineCode(ScriptEngine engine, String code, List<String> values, ScriptEnv env)
+    public TypeResult applyScriptEngineCode(ScriptEngine engine, String code, List<String> values,
+        List<Integer> facetWordCounts, ScriptEnv env)
     {
         Bindings bindings = engine.createBindings();
         bindings.putAll(engine.getBindings(ScriptContext.GLOBAL_SCOPE));
         ScriptEnv newEnv = new ScriptEnv(env);
-        newEnv.setBinding(ScriptEnv.ENV_VALUES, values);
+        newEnv.setBinding(ScriptEnv.ENV_IN_VALUES, values);
+        newEnv.setBinding(ScriptEnv.ENV_IN_WORD_COUNT, facetWordCounts);
+        newEnv.setBinding(ScriptEnv.ENV_OUT_NEW_WORD_COUNTS, facetWordCounts);
         newEnv.flatten(bindings);
         Object evaluated = null;
+        List<Integer> returnWordCounts = null;
         try
         {
-            evaluated = engine.eval(code, bindings);
+            engine.eval(code, bindings);
+            evaluated = bindings.get(ScriptEnv.ENV_OUT_NEW_VALUES);
+            returnWordCounts = (List<Integer>) bindings.get(ScriptEnv.ENV_OUT_NEW_WORD_COUNTS);
         }
         catch (ScriptException e)
         {
             log.error("Caught exception while evaluating code: {}", code, e);
         }
-        List<String> result = null;
+        TypeResult result = null;
+        List<String> returnValues = null;
         if (evaluated != null)
         {
-            result = new ArrayList<>();
+            returnValues = new ArrayList<>();
             if (evaluated instanceof List)
             {
-                result.addAll((java.util.Collection<? extends String>) evaluated);
+                returnValues.addAll((java.util.Collection<? extends String>) evaluated);
             }
             else
             {
-                result.add(evaluated.toString());
+                returnValues.add(evaluated.toString());
             }
+            result = new TypeResult(returnValues, returnWordCounts);
         }
         return result;
     }

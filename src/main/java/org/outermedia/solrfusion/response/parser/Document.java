@@ -30,7 +30,7 @@ public class Document implements VisitableDocument
 {
     @XmlElements(
         value = {@XmlElement(name = "str"), @XmlElement(name = "date"), @XmlElement(name = "float"), @XmlElement(
-            name = "long"),})
+            name = "long"), @XmlElement(name = "int")})
     private List<SolrSingleValuedField> solrSingleValuedFields;
 
     @XmlElement(name = "arr", required = true)
@@ -198,32 +198,39 @@ public class Document implements VisitableDocument
         solrMultiValuedFields.add(f);
     }
 
-    public SolrField addFusionField(String fusionName, FusionField fusionField, List<String> value)
+    public SolrField addFusionField(String fusionName, FusionField fusionField, List<String> value,
+        List<Integer> wordCount)
+    {
+        Term term = Term.newFusionTerm(fusionName, value);
+        term.setFusionField(fusionField);
+        term.setFusionFacetCount(wordCount);
+        return wrapFusionTermWithSolrField(term, fusionField);
+    }
+
+    public SolrField wrapFusionTermWithSolrField(Term term, FusionField fusionField)
     {
         SolrField result = null;
-        if (value.size() == 1)
+        if (fusionField.isSingleValue())
         {
+            if (term.getFusionFieldValue().size() != 1)
+            {
+                log.warn("Got invalid number of values ({} != 1) for solr single field {}",
+                    term.getFusionFieldValue().size(), term.getFusionFieldName());
+            }
             SolrSingleValuedField f = new SolrSingleValuedField();
-            Term term = Term.newFusionTerm(fusionName, value);
-            term.setFusionField(fusionField);
             f.setTerm(term);
             addSingleField(f);
             result = f;
         }
-        else if (value.size() > 1)
+        else
         {
             SolrMultiValuedField f = new SolrMultiValuedField();
-            Term term = Term.newFusionTerm(fusionName, value);
-            term.setFusionField(fusionField);
             f.setTerm(term);
             addMultiField(f);
             result = f;
         }
-        else
-        {
-            throw new RuntimeException("No value given for field: '" + fusionName + "'");
-        }
         return result;
+
     }
 
     protected void addSingleField(SolrSingleValuedField f)
@@ -309,22 +316,34 @@ public class Document implements VisitableDocument
                     sb.append(t.getSearchServerFieldName());
                     if (isMultiple)
                     {
-                        sb.append("[" + t.getSearchServerFieldValue().size() + "]");
+                        List<String> searchServerFieldValue = t.getSearchServerFieldValue();
+                        if (searchServerFieldValue != null)
+                        {
+                            sb.append("[" + searchServerFieldValue.size() + "]");
+                        }
                     }
                     sb.append("=");
                     sb.append(t.mergeSearchServerValues());
+                    sb.append("\n");
                 }
                 else
                 {
-                    sb.append(t.getFusionFieldName());
-                    if (isMultiple)
+                    if (!t.isRemoved())
                     {
-                        sb.append("[" + t.getFusionFieldValue().size() + "]");
+                        sb.append(t.getFusionFieldName());
+                        if (isMultiple)
+                        {
+                            List<String> fusionFieldValue = t.getFusionFieldValue();
+                            if (fusionFieldValue != null)
+                            {
+                                sb.append("[" + fusionFieldValue.size() + "]");
+                            }
+                        }
+                        sb.append("=");
+                        sb.append(t.mergeFusionValues());
+                        sb.append("\n");
                     }
-                    sb.append("=");
-                    sb.append(t.mergeFusionValues());
                 }
-                sb.append("\n");
             }
 
             @Override public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
@@ -429,4 +448,5 @@ public class Document implements VisitableDocument
             idTerm.getSearchServerFieldValue().set(0, searchServerDocId);
         }
     }
+
 }

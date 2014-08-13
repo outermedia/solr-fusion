@@ -99,9 +99,11 @@ public class Table extends AbstractType
     }
 
     @Override
-    public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
+    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+        ConversionDirection dir)
     {
-        List<String> result = new ArrayList<>();
+        TypeResult result = null;
+        List<String> newValues = new ArrayList<>();
         Map<String, String> mapping = null;
         if (dir == ConversionDirection.SEARCH_TO_FUSION)
         {
@@ -115,18 +117,19 @@ public class Table extends AbstractType
         {
             throw new RuntimeException("Unsupported conversion direction: " + dir);
         }
+        result = new TypeResult(newValues, facetWordCounts);
         for (String v : values)
         {
             if (v == null)
             {
-                result.add(null);
+                newValues.add(null);
             }
             else
             {
                 String nv = mapping.get(v);
                 if (nv != null)
                 {
-                    result.add(nv);
+                    newValues.add(nv);
                 }
                 else
                 {
@@ -134,7 +137,7 @@ public class Table extends AbstractType
                 }
             }
         }
-        if (result.isEmpty())
+        if (newValues.isEmpty())
         {
             result = null;
         }

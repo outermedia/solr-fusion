@@ -23,8 +23,7 @@ import java.util.Arrays;
  */
 public class JsTest extends AbstractTypeTest
 {
-    @SuppressWarnings("unchecked")
-    @Test
+    @SuppressWarnings("unchecked") @Test
     public void testConfigParsing() throws IOException, SAXException, ParserConfigurationException
     {
         String xml = docOpen + "<script>return 42;</script>" + docClose;
@@ -39,8 +38,7 @@ public class JsTest extends AbstractTypeTest
         Assert.assertEquals("Parsing of configuration failed.", "return 42;", code);
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
+    @SuppressWarnings("unchecked") @Test
     public void testMissingConfig() throws IOException, SAXException, ParserConfigurationException
     {
         String xml = docOpen + docClose;
@@ -57,7 +55,7 @@ public class JsTest extends AbstractTypeTest
 
     @Test
     public void testResponseMapping()
-            throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
         ResponseMapperIfc rm = ResponseMapper.Factory.getInstance();
@@ -74,12 +72,14 @@ public class JsTest extends AbstractTypeTest
         // System.out.println(sourceField.toString());
         Assert.assertEquals("Found wrong field name mapping", "today3", sourceField.getFusionFieldName());
         Assert.assertEquals("Found wrong field value mapping", Arrays.asList("something at 2014-07-19"),
-                sourceField.getFusionFieldValue());
+            sourceField.getFusionFieldValue());
+        Assert.assertEquals("Found wrong facet word counts", Arrays.asList("4", "1", "3", "2"),
+            sourceField.getFusionFacetCount());
     }
 
     @Test
     public void testQueryMapping()
-            throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
         QueryMapperIfc qm = QueryMapper.Factory.getInstance();
@@ -94,6 +94,6 @@ public class JsTest extends AbstractTypeTest
         // System.out.println(term.toString());
         Assert.assertEquals("Found wrong field name mapping", "f3", term.getSearchServerFieldName());
         Assert.assertEquals("Found wrong field value mapping", Arrays.asList("something at 2014-07-19"),
-                term.getSearchServerFieldValue());
+            term.getSearchServerFieldValue());
     }
 }

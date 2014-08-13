@@ -7,6 +7,7 @@ import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.response.parser.FacetHit;
 import org.outermedia.solrfusion.response.parser.Highlighting;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,11 +20,11 @@ import java.util.Map;
  */
 public interface ResponseConsolidatorIfc extends Initiable<ResponseConsolidatorFactory>
 {
-    public void init(Configuration config) throws InvocationTargetException, IllegalAccessException;
+    public void initConsolidator(Configuration config) throws InvocationTargetException, IllegalAccessException;
 
     public void addResultStream(SearchServerConfig searchServerConfig,
         ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request,
-        List<Highlighting> highlighting);
+        List<Highlighting> highlighting, List<FacetHit> facetFields);
 
     public int numberOfResponseStreams();
 

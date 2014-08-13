@@ -58,7 +58,7 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
     private Map<String, List<Target>> allAddQueryMappingsCache;
 
     @XmlTransient
-    private Map<String, List<Target>> allAddResponseMappingsCache;
+    private Map<String, TargetsOfMapping> allAddResponseMappingsCache;
 
 
     /**
@@ -165,16 +165,16 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
      *
      * @return a perhaps empty table of all response parts to add.
      */
-    public Map<String, List<Target>> findAllAddResponseMappings()
+    public Map<String, TargetsOfMapping> findAllAddResponseMappings()
     {
-        Map<String, List<Target>> result = allAddResponseMappingsCache;
+        Map<String, TargetsOfMapping> result = allAddResponseMappingsCache;
         if (result == null)
         {
             // preserve order
             result = new LinkedHashMap<>();
             for (FieldMapping m : fieldMappings)
             {
-                List<Target> responseTargets = m.getAllAddResponseMappings();
+                TargetsOfMapping responseTargets = m.getAllAddResponseMappings();
                 if (responseTargets.size() > 0)
                 {
                     List<Target> existingTargets = result.get(m.getFusionName());

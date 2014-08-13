@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.FusionResponse;
+import org.outermedia.solrfusion.SolrFusionRequestParam;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.*;
@@ -11,7 +12,10 @@ import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.DefaultXmlResponseRenderer;
+import org.outermedia.solrfusion.response.FacetWordCountBuilder;
 import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.response.parser.FacetHit;
+import org.outermedia.solrfusion.response.parser.WordCount;
 import org.outermedia.solrfusion.types.AbstractTypeTest;
 import org.outermedia.solrfusion.types.ScriptEnv;
 import org.xml.sax.SAXException;
@@ -20,9 +24,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Created by ballmann on 7/18/14.
@@ -40,7 +42,7 @@ public class AddTest extends AbstractTypeTest
         FieldMapping text11Mapping = searchServerConfig.findAllMappingsForFusionField("text11").get(0);
         text11Mapping.setSearchServersName(null);
         text11Mapping.setMappingType(MappingType.EXACT_FUSION_NAME_ONLY);
-        // System.out.println("BAD ADD " + text9Mapping);
+        // System.out.println("BAD ADD " + text11Mapping);
         AddOperation add = (AddOperation) text11Mapping.getOperations().get(0);
         try
         {
@@ -50,7 +52,7 @@ public class AddTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 295: Please specify a field for attribute 'name' in order to add something to a query.",
+                "In fusion schema at line 306: Please specify a field for attribute 'name' in order to add something to a query.",
                 e.getMessage());
         }
 
@@ -68,7 +70,7 @@ public class AddTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 302: Please specify a field for attribute 'fusion-name' in order to add something to a response.",
+                "In fusion schema at line 313: Please specify a field for attribute 'fusion-name' in order to add something to a response.",
                 e.getMessage());
         }
 
@@ -88,13 +90,14 @@ public class AddTest extends AbstractTypeTest
         DefaultXmlResponseRenderer renderer = DefaultXmlResponseRenderer.Factory.getInstance();
         renderer.init(null);
         FusionRequest req = new FusionRequest();
-        req.setQuery("a:dummy");
+        req.setQuery(new SolrFusionRequestParam("a:dummy"));
         req.setLocale(Locale.GERMAN);
-        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null);
-        ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(Arrays.asList(doc), info);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, null);
+        ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(Arrays.asList(doc),
+            info);
         String xmlDocStr = renderer.getResponseString(cfg, docStream, req, new FusionResponse());
-        System.out.println("DOC "+xmlDocStr);
-        Assert.assertTrue("Expected field text12 set" + xmlDocStr,
+        // System.out.println("DOC "+xmlDocStr);
+        Assert.assertTrue("Expected field text12 set in " + xmlDocStr,
             xmlDocStr.contains("<str name=\"text12\">1</str>"));
         Assert.assertTrue("Expected field text13 set" + xmlDocStr, xmlDocStr.contains("<arr name=\"text13\">\n" +
             "        <str>1</str>\n" +
@@ -292,5 +295,65 @@ public class AddTest extends AbstractTypeTest
     {
         MatchAllDocsQuery result = new MatchAllDocsQuery();
         return result;
+    }
+
+    @Test
+    public void testAddInFacet()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+        InvocationTargetException, IllegalAccessException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
+        SearchServerConfig searchServerConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
+
+        // map search document
+        Document doc = createDocument("id", "123", "score", "1.2", "s19", "abc");
+        ScriptEnv env = new ScriptEnv();
+        cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, doc, env, null);
+
+        // map facet
+        FacetHit facetHit = new FacetHit();
+        facetHit.setSearchServerFieldName("s19");
+        facetHit.setFieldCounts(Arrays.asList(newWordCount("a", 1), newWordCount("b", 2), newWordCount("c", 3)));
+        facetHit.afterUnmarshal(null, null);
+        Document facetDoc = facetHit.getDocument(searchServerConfig.getIdFieldName(), 1);
+        cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, facetDoc, new ScriptEnv(), null);
+        Map<String, Map<String, Integer>> facets = new HashMap<>();
+        facetDoc.accept(new FacetWordCountBuilder(cfg.getFusionIdFieldName(), cfg.getIdGenerator(), doc, facets), null);
+
+        // render result
+        DefaultXmlResponseRenderer renderer = DefaultXmlResponseRenderer.Factory.getInstance();
+        renderer.init(null);
+        FusionRequest req = new FusionRequest();
+        req.setQuery(new SolrFusionRequestParam("a:dummy"));
+        req.setLocale(Locale.GERMAN);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, facets);
+        ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(Arrays.asList(doc),
+            info);
+        FusionResponse fusionResponse = new FusionResponse();
+        fusionResponse.setOk();
+        String xmlDocStr = renderer.getResponseString(cfg, docStream, req, fusionResponse);
+        // System.out.println("DOC " + xmlDocStr);
+
+        // check result
+        String expected = "<lst name=\"text18a\">\n" +
+            "            <int name=\"b\">2</int>\n" +
+            "            <int name=\"c\">3</int>\n" +
+            "            <int name=\"a\">1</int>\n" +
+            "        </lst>";
+        Assert.assertTrue("Didn't find text18a in: " + xmlDocStr, xmlDocStr.contains(expected));
+        expected = "<lst name=\"text18b\">\n" +
+            "            <int name=\"b\">2</int>\n" +
+            "            <int name=\"c\">3</int>\n" +
+            "            <int name=\"a\">1</int>\n" +
+            "        </lst>";
+        Assert.assertTrue("Didn't find text18b in: " + xmlDocStr, xmlDocStr.contains(expected));
+    }
+
+    protected WordCount newWordCount(String word, int count)
+    {
+        WordCount wc = new WordCount();
+        wc.setWord(word);
+        wc.setCount(count);
+        return wc;
     }
 }

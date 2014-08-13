@@ -50,6 +50,17 @@ public class XmlResponse
         return result;
     }
 
+    public List<FacetHit> getFacetFields()
+    {
+        List<FacetHit> result = null;
+        ResponseSection section = findSectionByName("facet_counts");
+        if (section != null)
+        {
+            result = section.getFacetHits();
+        }
+        return result;
+    }
+
     protected ResponseSection findSectionByName(String n)
     {
         ResponseSection result = null;

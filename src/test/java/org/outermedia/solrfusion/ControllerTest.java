@@ -27,7 +27,6 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.anyMapOf;
 import static org.mockito.Mockito.*;
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
@@ -46,7 +45,7 @@ public class ControllerTest extends AbstractControllerTest
     {
         FusionControllerIfc fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
         FusionRequest fusionRequest = new FusionRequest();
-        fusionRequest.setQuery("author:Schiller -title:morgen");
+        fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         FusionResponse fusionResponse = new FusionResponse();
@@ -68,10 +67,10 @@ public class ControllerTest extends AbstractControllerTest
         searchServerConfigs.clear();
         searchServerConfigs.add(configuredSearchServer);
         when(configuredSearchServer.getInstance()).thenReturn(testAdapter);
-        when(testAdapter.sendQuery(anyMapOf(String.class, String.class), Mockito.anyInt())).thenReturn(testResponse);
+        when(testAdapter.sendQuery(any(Multimap.class), Mockito.anyInt())).thenReturn(testResponse);
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
-        fusionRequest.setQuery("author:Schiller -title:morgen");
+        fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         // response format not set
@@ -82,9 +81,9 @@ public class ControllerTest extends AbstractControllerTest
         Assert.assertEquals("Found different error message than expected",
             "Found no configuration for response renderer: <unknown>", fusionResponse.getErrorMessage());
 
-        // first fc.process() consumed test response, so re-init it and bind the new object to the testAdapter again
+        // first fc.process() consumed test response, so re-initConsolidator it and bind the new object to the testAdapter again
         initTestResponse();
-        when(testAdapter.sendQuery(anyMapOf(String.class, String.class), Mockito.anyInt())).thenReturn(testResponse);
+        when(testAdapter.sendQuery(any(Multimap.class), Mockito.anyInt())).thenReturn(testResponse);
         // renderer specified, but not configured
         cfg.getSearchServerConfigs().getResponseRendererFactories().clear();
         fusionRequest.setResponseType(ResponseRendererType.JSON);
@@ -102,7 +101,7 @@ public class ControllerTest extends AbstractControllerTest
         FusionControllerIfc fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
         FusionRequest fusionRequest = new FusionRequest();
-        fusionRequest.setQuery("author:Schiller -title:morgen");
+        fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         fusionRequest.setResponseType(ResponseRendererType.XML);
@@ -121,7 +120,7 @@ public class ControllerTest extends AbstractControllerTest
         FusionControllerIfc fc = createTestFusionController("test-empty-fusion-schema.xml");
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
         FusionRequest fusionRequest = new FusionRequest();
-        fusionRequest.setQuery("author:Schiller -title:morgen");
+        fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         fusionRequest.setResponseType(ResponseRendererType.XML);
@@ -140,7 +139,7 @@ public class ControllerTest extends AbstractControllerTest
         FusionControllerIfc fc = createTestFusionController("test-empty-fusion-schema.xml");
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
         FusionRequest fusionRequest = new FusionRequest();
-        fusionRequest.setQuery("author:*:Schiller");
+        fusionRequest.setQuery(new SolrFusionRequestParam("author:*:Schiller"));
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         fusionRequest.setResponseType(ResponseRendererType.XML);
@@ -179,11 +178,11 @@ public class ControllerTest extends AbstractControllerTest
             "  <lst name=\"params\">\n" +
             "    <str name=\"indent\">on</str>\n" +
             "    <str name=\"start\">0</str>\n" +
+            "    <str name=\"rows\"><![CDATA[0]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
             "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"wt\">wt</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
-            "    <str name=\"rows\">0</str>\n" +
             "  </lst>\n" +
             "</lst>\n" +
             "<result name=\"response\" numFound=\"0\" start=\"0\">\n" +
@@ -218,18 +217,16 @@ public class ControllerTest extends AbstractControllerTest
         searchServerConfigs.add(searchServerConfig9000);
         testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
-        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(anyMapOf(String.class, String.class),
-            Mockito.anyInt());
+        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class), Mockito.anyInt());
 
         searchServerConfigs.add(searchServerConfig9002);
         testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
-        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(anyMapOf(String.class, String.class),
-            Mockito.anyInt());
+        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class), Mockito.anyInt());
 
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
-        fusionRequest.setQuery("title:abc");
+        fusionRequest.setQuery(new SolrFusionRequestParam("title:abc"));
         fusionRequest.setPageSize(10);
         fusionRequest.setStart(0);
         fusionRequest.setSortAsc(false);
@@ -267,7 +264,7 @@ public class ControllerTest extends AbstractControllerTest
         fusionRequest.setPageSize(200);
         fusionRequest.setSolrFusionSortField("title");
         fusionRequest.setSortAsc(true);
-        fusionRequest.setFieldsToReturn("id,title");
+        fusionRequest.setFieldsToReturn(new SolrFusionRequestParam("id,title"));
         Term hlt = Term.newFusionTerm("title", "abc");
         hlt.setSearchServerFieldName("titleVT_de");
         hlt.setSearchServerFieldValue(Arrays.asList("abc"));
@@ -275,30 +272,53 @@ public class ControllerTest extends AbstractControllerTest
         hlt.setRemoved(false);
         TermQuery hlq = new TermQuery(hlt);
         fusionRequest.setParsedHighlightQuery(hlq);
-        fusionRequest.setHighlight("true");
-        fusionRequest.setHighlightPre("pre");
-        fusionRequest.setHighlightPost("post");
-        fusionRequest.setHighlightingFieldsToReturn("title,id");
-        Map<String, String> map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
-        Assert.assertEquals("Expected other sort field", "titleVT_de asc", map.get(SORT.getRequestParamName()));
-        Assert.assertEquals("Expected other start value", "0", map.get(START.getRequestParamName()));
+        fusionRequest.setHighlight(new SolrFusionRequestParam("true"));
+        fusionRequest.setHighlightPre(new SolrFusionRequestParam("pre"));
+        fusionRequest.setHighlightPost(new SolrFusionRequestParam("post"));
+        fusionRequest.setHighlightingFieldsToReturn(new SolrFusionRequestParam("title,id"));
+        fusionRequest.setFacet(new SolrFusionRequestParam("true"));
+        fusionRequest.setFacetSort(new SolrFusionRequestParam("index"));
+        fusionRequest.setFacetLimit(new SolrFusionRequestParam("20"));
+        fusionRequest.setFacetMincount(new SolrFusionRequestParam("2"));
+        fusionRequest.setFacetPrefix(new SolrFusionRequestParam("p1"));
+        List<SolrFusionRequestParam> facetFields = new ArrayList<>();
+        facetFields.add(new SolrFusionRequestParam("{!ex=format_filter}title"));
+        facetFields.add(new SolrFusionRequestParam("{!ex=format_de15_filter}author"));
+        fusionRequest.setFacetFields(facetFields);
+        List<SolrFusionRequestParam> facetSortFields = new ArrayList<>();
+        facetSortFields.add(new SolrFusionRequestParam("index1", "title"));
+        facetSortFields.add(new SolrFusionRequestParam("index2", "author"));
+        fusionRequest.setFacetSortFields(facetSortFields);
+
+        Multimap<String> map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
+        Assert.assertEquals("Expected other sort field", "titleVT_de asc", map.getFirst(SORT));
+        Assert.assertEquals("Expected other start value", "0", map.getFirst(START));
         int maxDocs = serverConfig.getMaxDocs();
-        Assert.assertEquals("Expected other page size", String.valueOf(maxDocs),
-            map.get(PAGE_SIZE.getRequestParamName()));
-        Assert.assertEquals("Expected other search server query", "titleVT_de:abc",
-            map.get(QUERY.getRequestParamName()));
+        Assert.assertEquals("Expected other page size", String.valueOf(maxDocs), map.getFirst(PAGE_SIZE));
+        Assert.assertEquals("Expected other search server query", "titleVT_de:abc", map.getFirst(QUERY));
+
+        // check highlights
         Assert.assertEquals("Expected other search server highlight query", "titleVT_de:abc",
-            map.get(HIGHLIGHT_QUERY.getRequestParamName()));
-        Assert.assertEquals("Expected other search server highlight pre", "pre",
-            map.get(HIGHLIGHT_PRE.getRequestParamName()));
-        Assert.assertEquals("Expected other search server highlight post", "post",
-            map.get(HIGHLIGHT_POST.getRequestParamName()));
-        Assert.assertEquals("Expected other search server highlight value", "true",
-            map.get(HIGHLIGHT.getRequestParamName()));
+            map.getFirst(HIGHLIGHT_QUERY));
+        Assert.assertEquals("Expected other search server highlight pre", "pre", map.getFirst(HIGHLIGHT_PRE));
+        Assert.assertEquals("Expected other search server highlight post", "post", map.getFirst(HIGHLIGHT_POST));
+        Assert.assertEquals("Expected other search server highlight value", "true", map.getFirst(HIGHLIGHT));
         Assert.assertEquals("Expected other search server highlight fields", "titleVT_de titleVT_eng id",
-            map.get(HIGHLIGHT_FIELDS_TO_RETURN.getRequestParamName()));
-        System.out.println("MAP " + map);
-        // TODO check HL params
+            map.getFirst(HIGHLIGHT_FIELDS_TO_RETURN));
+
+        // check facet params
+        Assert.assertEquals("Expected other search server facet", "true", map.getFirst(FACET));
+        Assert.assertEquals("Expected other search server facet prefix", "p1", map.getFirst(FACET_PREFIX));
+        Assert.assertEquals("Expected other search server facet min", "2", map.getFirst(FACET_MINCOUNT));
+        Assert.assertEquals("Expected other search server facet limit", "20", map.getFirst(FACET_LIMIT));
+        Assert.assertEquals("Expected other search server facet sort", "index", map.getFirst(FACET_SORT));
+        List<String> expected = Arrays.asList("{!ex=format_filter}titleVT_de", "{!ex=format_de15_filter}author9002",
+            "{!ex=format_filter}titleVT_eng");
+        Assert.assertEquals("Got different facet fields", expected, new ArrayList<>(map.get(FACET_FIELD)));
+        List<Map.Entry<String, String>> collectedFacetSortFields = map.filterBy(FACET_SORT_FIELD);
+        String actualStr = collectedFacetSortFields.toString();
+        String expectedStr = "[f.titleVT_eng.facet.sort=index1, f.author9002.facet.sort=index2, f.titleVT_de.facet.sort=index1]";
+        Assert.assertEquals("Got different facet sort fields", expectedStr, actualStr);
 
         // below server's max limit, return wanted size
         int start = 4;
@@ -306,21 +326,19 @@ public class ControllerTest extends AbstractControllerTest
         fusionRequest.setStart(start);
         fusionRequest.setPageSize(maxDocs - 1 - start);
         map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
-        Assert.assertEquals("Expected other page size", "99", map.get(PAGE_SIZE.getRequestParamName()));
+        Assert.assertEquals("Expected other page size", "99", map.getFirst(PAGE_SIZE));
 
         // up to server's max limit, return wanted size
         fusionRequest.setStart(start);
         fusionRequest.setPageSize(maxDocs - start);
         map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
-        Assert.assertEquals("Expected other page size", String.valueOf(maxDocs),
-            map.get(PAGE_SIZE.getRequestParamName()));
+        Assert.assertEquals("Expected other page size", String.valueOf(maxDocs), map.getFirst(PAGE_SIZE));
 
         // above  server's max limit, return server's limit
         fusionRequest.setStart(start + 1);
         fusionRequest.setPageSize(maxDocs - start);
         map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
-        Assert.assertEquals("Expected other page size", String.valueOf(maxDocs),
-            map.get(PAGE_SIZE.getRequestParamName()));
+        Assert.assertEquals("Expected other page size", String.valueOf(maxDocs), map.getFirst(PAGE_SIZE));
     }
 
     @Test
@@ -430,9 +448,9 @@ public class ControllerTest extends AbstractControllerTest
         doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
         FusionRequest request = new FusionRequest();
         String sep = DefaultIdGenerator.SEPARATOR;
-        request.setQuery("id:\"Bibliothek9000" + sep + "1\"");
+        request.setQuery(new SolrFusionRequestParam("id:\"Bibliothek9000" + sep + "1\""));
         request.setResponseType(ResponseRendererType.XML);
-        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
+        request.setParsedQuery(controller.parseQuery(request.getQuery().getValue(), null, Locale.GERMAN, request));
         FusionResponse response = new FusionResponse();
 
         log.info("--- without merger test ---");
@@ -467,7 +485,7 @@ public class ControllerTest extends AbstractControllerTest
         doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
         response = new FusionResponse();
         // reset modified query object
-        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
+        request.setParsedQuery(controller.parseQuery(request.getQuery().getValue(), null, Locale.GERMAN, request));
         controller.processIdQuery(request, response);
         Assert.assertTrue("Expected no error", response.isOk());
         Assert.assertTrue("Response doesn't contain doc: " + response.getResponseAsString(),
@@ -478,7 +496,7 @@ public class ControllerTest extends AbstractControllerTest
         xmlResponse.setErrorReason(new RuntimeException("Error1"));
         response = new FusionResponse();
         // reset modified query object
-        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
+        request.setParsedQuery(controller.parseQuery(request.getQuery().getValue(), null, Locale.GERMAN, request));
         controller.processIdQuery(request, response);
         Assert.assertEquals("Expected error", "Internal processing error. Reason: Error1", response.getErrorMessage());
 
@@ -509,10 +527,11 @@ public class ControllerTest extends AbstractControllerTest
         xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponsWithoutIdStr));
         doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
         response = new FusionResponse();
-        request.setQuery("id:Bibliothek9000" + sep + "1");
-        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
-        request.setFilterQuery("");
-        request.setParsedFilterQuery(controller.parseQuery(request.getFilterQuery(), null, Locale.GERMAN, request));
+        request.setQuery(new SolrFusionRequestParam("id:Bibliothek9000" + sep + "1"));
+        request.setParsedQuery(controller.parseQuery(request.getQuery().getValue(), null, Locale.GERMAN, request));
+        request.setFilterQuery(new SolrFusionRequestParam(""));
+        request.setParsedFilterQuery(
+            controller.parseQuery(request.getFilterQuery().getValue(), null, Locale.GERMAN, request));
         request.setResponseType(ResponseRendererType.XML);
         controller.process(cfg, request, response);
         Assert.assertTrue("Expected no error: " + response.getErrorMessage(), response.isOk());
@@ -523,7 +542,7 @@ public class ControllerTest extends AbstractControllerTest
         xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponsWithoutIdStr));
         doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
         response = new FusionResponse();
-        request.setParsedQuery(controller.parseQuery(request.getQuery(), null, Locale.GERMAN, request));
+        request.setParsedQuery(controller.parseQuery(request.getQuery().getValue(), null, Locale.GERMAN, request));
         controller.process(cfg, request, response);
         Assert.assertTrue("Expected no error: " + response.getErrorMessage(), response.isOk());
         log.debug("Returning:\n{}", response.getResponseAsString());

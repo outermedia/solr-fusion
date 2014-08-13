@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.types.ConversionDirection;
 import org.outermedia.solrfusion.types.ScriptEnv;
+import org.outermedia.solrfusion.types.TypeResult;
 
 import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.annotation.XmlElement;
@@ -26,15 +27,12 @@ import java.util.List;
 @ToString
 public abstract class Operation
 {
-    @XmlElements(value =
-            {
-                    @XmlElement(name = "query", type = Query.class,
-                            namespace = "http://solrfusion.outermedia.org/configuration/"),
-                    @XmlElement(name = "response", type = Response.class,
-                            namespace = "http://solrfusion.outermedia.org/configuration/"),
-                    @XmlElement(name = "query-response", type = QueryResponse.class,
-                            namespace = "http://solrfusion.outermedia.org/configuration/")
-            })
+    @XmlElements(value = {@XmlElement(name = "query", type = Query.class,
+        namespace = "http://solrfusion.outermedia.org/configuration/"), @XmlElement(name = "response",
+        type = Response.class,
+        namespace = "http://solrfusion.outermedia.org/configuration/"), @XmlElement(name = "query-response",
+        type = QueryResponse.class,
+        namespace = "http://solrfusion.outermedia.org/configuration/")})
     private List<Target> targets;
 
     /**
@@ -155,9 +153,9 @@ public abstract class Operation
     public ScriptEnv getQueryScriptEnv(Term term, ScriptEnv env)
     {
         ScriptEnv newEnv = new ScriptEnv(env);
-        newEnv.setBinding(ScriptEnv.ENV_FUSION_VALUE, term.getFusionFieldValue());
-        newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_VALUE, term.getSearchServerFieldValue());
-        newEnv.setBinding(ScriptEnv.ENV_CONVERSION, ConversionDirection.FUSION_TO_SEARCH);
+        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_VALUE, term.getFusionFieldValue());
+        newEnv.setBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_VALUE, term.getSearchServerFieldValue());
+        newEnv.setBinding(ScriptEnv.ENV_IN_CONVERSION, ConversionDirection.FUSION_TO_SEARCH);
         return newEnv;
     }
 
@@ -166,14 +164,18 @@ public abstract class Operation
         // the searchServerFieldValue is initialized with the fusionFieldValue
         // because it is possible to apply several mappings in sequence the searchServerFieldValue
         // has to be used
-        List<String> newSearchServerValue = t.apply(term.getSearchServerFieldValue(), newEnv,
-                ConversionDirection.FUSION_TO_SEARCH);
-        term.setSearchServerFieldValue(newSearchServerValue);
+        TypeResult opResult = t.apply(term.getSearchServerFieldValue(), term.getSearchServerFacetCount(),
+            newEnv, ConversionDirection.FUSION_TO_SEARCH);
+        if(opResult != null)
+        {
+            term.setSearchServerFieldValue(opResult.getValues());
+            term.setSearchServerFacetCount(opResult.getWordCounts());
+        }
     }
 
     public void applyAllResponseOperations(Term term, ScriptEnv env)
     {
-        ScriptEnv newEnv = getResponseScriptEnv(term, env);
+        ScriptEnv newEnv = getResponseScriptEnv(null, term, env);
         List<Target> queryTargets = getResponseTargets();
         for (Target t : queryTargets)
         {
@@ -181,12 +183,14 @@ public abstract class Operation
         }
     }
 
-    public ScriptEnv getResponseScriptEnv(Term term, ScriptEnv env)
+    public ScriptEnv getResponseScriptEnv(String fusionFieldName, Term term, ScriptEnv env)
     {
         ScriptEnv newEnv = new ScriptEnv(env);
-        newEnv.setBinding(ScriptEnv.ENV_FUSION_VALUE, term.getFusionFieldValue());
-        newEnv.setBinding(ScriptEnv.ENV_SEARCH_SERVER_VALUE, term.getSearchServerFieldValue());
-        newEnv.setBinding(ScriptEnv.ENV_CONVERSION, ConversionDirection.SEARCH_TO_FUSION);
+        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD, fusionFieldName);
+        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_VALUE, term.getFusionFieldValue());
+        newEnv.setBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_VALUE, term.getSearchServerFieldValue());
+        newEnv.setBinding(ScriptEnv.ENV_IN_CONVERSION, ConversionDirection.SEARCH_TO_FUSION);
+        newEnv.setBinding(ScriptEnv.ENV_IN_DOC_TERM, term);
         return newEnv;
     }
 
@@ -195,14 +199,19 @@ public abstract class Operation
         // the fusionFieldValue is initialized with the searchServerFieldValue
         // because it is possible to apply several mappings in sequence the fusionFieldValue
         // has to be used
-        List<String> newFusionValue = t.apply(term.getFusionFieldValue(), newEnv, ConversionDirection.SEARCH_TO_FUSION);
-        term.setFusionFieldValue(newFusionValue);
+        TypeResult opResult = t.apply(term.getFusionFieldValue(), term.getFusionFacetCount(), newEnv,
+            ConversionDirection.SEARCH_TO_FUSION);
+        if(opResult != null)
+        {
+            term.setFusionFieldValue(opResult.getValues());
+            term.setFusionFacetCount(opResult.getWordCounts());
+        }
     }
 
     /**
      * This method is called in {@link org.outermedia.solrfusion.configuration.FieldMapping#afterUnmarshal(javax.xml.bind.Unmarshaller,
-     * Object)} in order to run checks which can't be done by the XML schema validation.
-     * Implementations should throw an UnmarshalException in the case of errors.
+     * Object)} in order to run checks which can't be done by the XML schema validation. Implementations should throw an
+     * UnmarshalException in the case of errors.
      */
     protected abstract void check(FieldMapping fieldMapping) throws UnmarshalException;
 }

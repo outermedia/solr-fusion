@@ -10,20 +10,21 @@ import java.util.List;
 public class DummyType extends AbstractType
 {
 
-	@Override
-	public void passArguments(List<Element> typeConfig, Util util)
-	{
-		//  NOP
-	}
+    @Override
+    public void passArguments(List<Element> typeConfig, Util util)
+    {
+        //  NOP
+    }
 
     @Override
-    public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
+    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+        ConversionDirection dir)
     {
         return null;
     }
 
     public static DummyType getInstance()
-	{
-		return new DummyType();
-	}
+    {
+        return new DummyType();
+    }
 }

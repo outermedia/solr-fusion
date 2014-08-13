@@ -5,7 +5,9 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
@@ -20,7 +22,7 @@ import java.util.List;
 @XmlType(name = "responseSection")
 @ToString(exclude = {"lists"})
 @Slf4j
-@XmlSeeAlso(Highlighting.class)
+@XmlSeeAlso(value = {Highlighting.class, FacetHit.class})
 public class ResponseSection
 {
     @XmlElements(value = {@XmlElement(name = "str"), @XmlElement(name = "int")})
@@ -32,9 +34,11 @@ public class ResponseSection
     @XmlAnyElement
     private List<Element> lists;
 
-    @Getter
-    @XmlTransient
+    @Getter @XmlTransient
     private List<Highlighting> highlighting;
+
+    @Getter @XmlTransient
+    private List<FacetHit> facetHits;
 
     public String getErrorCode()
     {
@@ -67,7 +71,33 @@ public class ResponseSection
     {
         if ("facet_counts".equals(name))
         {
-            // TODO parse xml
+            for (Element node : lists)
+            {
+                // TODO facet_queries
+                if ("facet_fields".equals(node.getAttribute("name")))
+                {
+                    facetHits = new ArrayList<>();
+                    Util xmlUtil = new Util();
+                    NodeList lstList = node.getElementsByTagName("lst");
+                    if (lstList != null)
+                    {
+                        for (int i = 0; i < lstList.getLength(); i++)
+                        {
+                            try
+                            {
+                                FacetHit hit = xmlUtil.unmarshal(FacetHit.class, lstList.item(i));
+                                facetHits.add(hit);
+                            }
+                            catch (JAXBException e)
+                            {
+                                log.error("Ignoring facet field, because of parse error", e);
+                            }
+                        }
+                    }
+                }
+                // TODO facet_dates
+                // TODO acet_ranges
+            }
         }
 
         if ("highlighting".equals(name) && lists != null)

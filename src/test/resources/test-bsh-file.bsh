@@ -10,4 +10,4 @@ print("Fusion Field       : "+fusionField);
 print("Fusion Value       : "+fusionValue);
 print("Fusion Field       : "+fusionFieldDeclaration);
 print("Fusion Schema      : "+fusionSchema);
-return searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
+returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());

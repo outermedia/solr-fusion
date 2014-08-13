@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.FusionResponse;
+import org.outermedia.solrfusion.SolrFusionRequestParam;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.*;
@@ -23,7 +24,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by ballmann on 6/19/14.
@@ -49,7 +52,7 @@ public class DropTest extends AbstractTypeTest
         renderer.init(null);
         List<Document> docs = new ArrayList<>();
         docs.add(doc);
-        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, null);
 
         ScriptEnv env = new ScriptEnv();
         SearchServerConfig serverConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
@@ -60,7 +63,7 @@ public class DropTest extends AbstractTypeTest
 
         ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(docs, info);
         FusionRequest req = new FusionRequest();
-        req.setQuery("a:dummy");
+        req.setQuery(new SolrFusionRequestParam("a:dummy"));
         req.setLocale(Locale.GERMAN);
         String ds = renderer.getResponseString(cfg, docStream, req, new FusionResponse());
         String expectedField = "<arr name=\"text4\">\n" +
@@ -174,7 +177,7 @@ public class DropTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 283: Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target.",
+                "In fusion schema at line 294: Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target.",
                 e.getMessage());
         }
 
@@ -192,7 +195,7 @@ public class DropTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 288: Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target.",
+                "In fusion schema at line 299: Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target.",
                 e.getMessage());
         }
     }

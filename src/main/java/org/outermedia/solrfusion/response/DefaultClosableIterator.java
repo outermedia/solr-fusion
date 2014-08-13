@@ -17,7 +17,7 @@ public class DefaultClosableIterator extends RoundRobinClosableIterator<Document
         for(ClosableIterator<Document,SearchServerResponseInfo> ci : closableIterators){
             totalHits += ci.getExtraInfo().getTotalNumberOfHits();
         }
-        setExtraInfo(new SearchServerResponseInfo(totalHits, null));
+        setExtraInfo(new SearchServerResponseInfo(totalHits, null, null));
     }
 
 }

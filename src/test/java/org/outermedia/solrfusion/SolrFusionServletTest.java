@@ -24,10 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -139,20 +136,57 @@ public class SolrFusionServletTest
         requestParams.put(HIGHLIGHT_POST.getRequestParamName(), new String[]{"post"});
         requestParams.put(HIGHLIGHT_FIELDS_TO_RETURN.getRequestParamName(), new String[]{fieldsToReturn});
         requestParams.put(HIGHLIGHT_QUERY.getRequestParamName(), new String[]{q});
+        requestParams.put(FACET.getRequestParamName(), new String[]{"true"});
+        requestParams.put(FACET_FIELD.getRequestParamName(),
+            new String[]{"{!ex=format_filter}format", "{!ex=format_de15_filter}format_de15"});
+        requestParams.put(FACET_LIMIT.getRequestParamName(), new String[]{"20"});
+        requestParams.put(FACET_MINCOUNT.getRequestParamName(), new String[]{"2"});
+        requestParams.put(FACET_PREFIX.getRequestParamName(), new String[]{"p1"});
+        requestParams.put(FACET_SORT.getRequestParamName(), new String[]{"author"});
+        requestParams.put("f.finc_class_facet.facet.sort", new String[]{"s1"});
+        requestParams.put("f.format.facet.sort", new String[]{"s2"});
+
         FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
+
+        // check core params
         Assert.assertNotNull("Expected request object", req);
-        Assert.assertEquals("Got different query", q, req.getQuery());
-        Assert.assertEquals("Got different filter query", fq, req.getFilterQuery());
+        Assert.assertEquals("Got different query", q, req.getQuery().getValue());
+        Assert.assertEquals("Got different filter query", fq, req.getFilterQuery().getValue());
         Assert.assertEquals("Got different renderer type than expected", ResponseRendererType.JSON,
             req.getResponseType());
-        Assert.assertEquals("Got different fields", fieldsToReturn, req.getFieldsToReturn());
+        Assert.assertEquals("Got different fields", fieldsToReturn, req.getFieldsToReturn().getValue());
         Assert.assertFalse("Expected no exception, but got " + req.buildErrorMessage(), req.hasErrors());
+
         // check highlighting params
-        Assert.assertEquals("Got different highlight query", q, req.getHighlightQuery());
-        Assert.assertEquals("Got different highlight", "true", req.getHighlight());
-        Assert.assertEquals("Got different highlight pre", "pre", req.getHighlightPre());
-        Assert.assertEquals("Got different highlight post", "post", req.getHighlightPost());
-        Assert.assertEquals("Got different highlight fields", fieldsToReturn, req.getHighlightingFieldsToReturn());
+        Assert.assertEquals("Got different highlight query", q, req.getHighlightQuery().getValue());
+        Assert.assertEquals("Got different highlight", "true", req.getHighlight().getValue());
+        Assert.assertEquals("Got different highlight pre", "pre", req.getHighlightPre().getValue());
+        Assert.assertEquals("Got different highlight post", "post", req.getHighlightPost().getValue());
+        Assert.assertEquals("Got different highlight fields", fieldsToReturn,
+            req.getHighlightingFieldsToReturn().getValue());
+
+        // check facet params
+        Assert.assertEquals("Got different facet", "true", req.getFacet().getValue());
+        Assert.assertEquals("Got different facet", "20", req.getFacetLimit().getValue());
+        Assert.assertEquals("Got different facet", "2", req.getFacetMincount().getValue());
+        Assert.assertEquals("Got different facet", "p1", req.getFacetPrefix().getValue());
+        Assert.assertEquals("Got different facet", "author", req.getFacetSort().getValue());
+        List<SolrFusionRequestParam> facetFields = req.getFacetFields();
+        Assert.assertNotNull("Expected facet fields", facetFields);
+        Assert.assertEquals("Got different number of facet fields", 2, facetFields.size());
+        Assert.assertEquals("Got different first facet field", "{!ex=format_filter}format",
+            facetFields.get(0).getValue());
+        Assert.assertEquals("Got different second facet field", "{!ex=format_de15_filter}format_de15",
+            facetFields.get(1).getValue());
+        List<SolrFusionRequestParam> facetSortFields = req.getFacetSortFields();
+        Assert.assertNotNull("Expected facet sort fields", facetSortFields);
+        Assert.assertEquals("Got different number of facet sort fields", 2, facetSortFields.size());
+        Assert.assertEquals("Got different first facet sort field value", "s1", facetSortFields.get(0).getValue());
+        Assert.assertEquals("Got different second facet sort field value", "s2", facetSortFields.get(1).getValue());
+        Assert.assertEquals("Got different first facet sort field", "finc_class_facet",
+            facetSortFields.get(0).getParamNameVariablePart());
+        Assert.assertEquals("Got different second facet sort field", "format",
+            facetSortFields.get(1).getParamNameVariablePart());
     }
 
     @Test
@@ -214,7 +248,7 @@ public class SolrFusionServletTest
             requestParams.put(SolrFusionRequestParams.WRITER_TYPE.getRequestParamName(), new String[]{f});
             FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
             Assert.assertNotNull("Expected request object", req);
-            Assert.assertEquals("Got different different", q, req.getQuery());
+            Assert.assertEquals("Got different different", q, req.getQuery().getValue());
             Assert.assertEquals("Got different renderer type than expected",
                 ResponseRendererType.valueOf(f.toUpperCase()), req.getResponseType());
             Assert.assertFalse("Expected no exception, but got " + req.buildErrorMessage(), req.hasErrors());
@@ -241,13 +275,13 @@ public class SolrFusionServletTest
         format = format.replace("{}", "(.+)");
         format = format.replace("%s", "(.+)");
         format = format.replace("%d", "(.+)");
-        // System.out.println("PAT " + format);
+        System.out.println("PAT " + format + " " + actual);
         Pattern pat = Pattern.compile(format);
         Matcher mat = pat.matcher(actual);
         Assert.assertTrue("Expected match of pattern=" + format + " and value=" + actual, mat.find());
         for (int i = 0; i < args.length; i++)
         {
-            Assert.assertEquals("", args[i], mat.group(i + 1));
+            Assert.assertEquals("Expected other value", args[i], mat.group(i + 1));
         }
     }
 

@@ -66,11 +66,12 @@ public class Value extends AbstractType
     }
 
     @Override
-    public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
+    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+        ConversionDirection dir)
     {
 //        log.debug("VALUE {} sees fusion-value={} search-server-value={}", this.values,
-//            env.getBinding(ScriptEnv.ENV_FUSION_VALUE), env.getBinding(ScriptEnv.ENV_SEARCH_SERVER_VALUE));
-        return this.values;
+//            env.getBinding(ScriptEnv.ENV_IN_FUSION_VALUE), env.getBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_VALUE));
+        return new TypeResult(this.values, facetWordCounts);
     }
 
     public static Value getInstance()

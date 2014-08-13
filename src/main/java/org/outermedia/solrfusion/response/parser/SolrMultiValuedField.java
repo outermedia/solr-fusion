@@ -31,6 +31,7 @@ public class SolrMultiValuedField extends SolrField
                     @XmlElement(name = "date"),
                     @XmlElement(name = "float"),
                     @XmlElement(name = "long"),
+                    @XmlElement(name = "int")
             })
     private List<String> values;
 

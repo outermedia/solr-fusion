@@ -8,30 +8,30 @@ import java.util.List;
 
 /**
  * A given Java class is used to compute a field conversion.
- * 
+ *
  * @author ballmann
- * 
  */
 
 @ToString(callSuper = true)
 public class Java extends AbstractType
 {
 
-	@Override
-	public void passArguments(List<Element> typeConfig, Util util)
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void passArguments(List<Element> typeConfig, Util util)
+    {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
     @Override
-    public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
+    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+        ConversionDirection dir)
     {
         return null; // TODO
     }
 
     public static Java getInstance()
-	{
-		return new Java();
-	}
+    {
+        return new Java();
+    }
 }

@@ -11,8 +11,7 @@ import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
-import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.Highlighting;
+import org.outermedia.solrfusion.response.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.lang.reflect.InvocationTargetException;
@@ -31,11 +30,12 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
 {
     protected List<Document> allDocs;
     protected int streamCounter;
-    private int maxDocNr;
+    protected int maxDocNr;
     protected HighlightingMap allHighlighting;
     protected Configuration config;
     protected String fusionIdField;
     protected String fusionMergeField;
+    protected List<FacetHit> facetFields;
 
     /**
      * Factory creates instances only.
@@ -50,7 +50,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
     }
 
     @Override
-    public void init(Configuration config) throws InvocationTargetException, IllegalAccessException
+    public void initConsolidator(Configuration config) throws InvocationTargetException, IllegalAccessException
     {
         this.config = config;
         fusionIdField = config.getFusionIdFieldName();
@@ -65,16 +65,47 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
 
     @Override public void addResultStream(SearchServerConfig searchServerConfig,
         ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request,
-        List<Highlighting> highlighting)
+        List<Highlighting> highlighting, List<FacetHit> facetFields)
     {
         streamCounter++;
-        Set<String> searchServerFieldsToMap = new HashSet<>();
-        searchServerFieldsToMap.add(request.getSearchServerSortField());
-        mapMergeField(config, searchServerConfig, request, searchServerFieldsToMap);
+        Set<String> searchServerFieldsToMap = getSingleFieldMapping(request.getSearchServerSortField());
+        mapMergeField(config, searchServerConfig, request, searchServerFieldsToMap, fusionMergeField);
 
         processDocuments(config, searchServerConfig, docIterator, searchServerFieldsToMap);
 
         processHighlighting(config, searchServerConfig, highlighting);
+
+        processFacetFields(config, searchServerConfig, facetFields);
+    }
+
+    protected void processFacetFields(Configuration config, SearchServerConfig searchServerConfig,
+        List<FacetHit> facetFields)
+    {
+        String searchServerIdField = searchServerConfig.getIdFieldName();
+        if (facetFields != null)
+        {
+            // generate dummy search server ids
+            String idField = searchServerConfig.getIdFieldName();
+            Set<String> searchServerFieldsToMap = getSingleFieldMapping(idField);
+            for (int i = 0; i < facetFields.size(); i++)
+            {
+                Document d = facetFields.get(i).getDocument(searchServerIdField, i + 1);
+                try
+                {
+                    config.getResponseMapper().mapResponse(config, searchServerConfig, d, getNewScriptEnv(),
+                        searchServerFieldsToMap);
+                }
+                catch (Exception e)
+                {
+                    log.error("Couldn't create/get response mapper instance", e);
+                }
+            }
+            if (this.facetFields == null)
+            {
+                this.facetFields = new ArrayList<>();
+            }
+            this.facetFields.addAll(facetFields);
+        }
     }
 
     protected void processHighlighting(Configuration config, SearchServerConfig searchServerConfig,
@@ -92,9 +123,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
                 highlightingDocs, null);
             try
             {
-                // map only id field
-                Set<String> searchServerFieldsToMap = new HashSet<>();
-                searchServerFieldsToMap.add(idField);
+                Set<String> searchServerFieldsToMap = getSingleFieldMapping(idField);
                 MappingClosableIterator mapper = getNewMappingClosableIterator(config, searchServerConfig,
                     highlightingIt, searchServerFieldsToMap);
                 while (mapper.hasNext())
@@ -108,6 +137,14 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
                     searchServerConfig.getSearchServerName(), e);
             }
         }
+    }
+
+    private Set<String> getSingleFieldMapping(String searchServerField)
+    {
+        // map only id field
+        Set<String> searchServerFieldsToMap = new HashSet<>();
+        searchServerFieldsToMap.add(searchServerField);
+        return searchServerFieldsToMap;
     }
 
     protected void processDocuments(Configuration config, SearchServerConfig searchServerConfig,
@@ -145,23 +182,23 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
     }
 
     protected void mapMergeField(Configuration config, SearchServerConfig searchServerConfig, FusionRequest request,
-        Set<String> searchServerFieldsToMap)
+        Set<String> searchServerFieldsToMap, String fusionFieldToMap)
     {
-        if (fusionMergeField != null)
+        if (fusionFieldToMap != null)
         {
             try
             {
-                Set<String> candidates = request.mapFusionFieldToSearchServerField(fusionMergeField, config,
+                Set<String> candidates = request.mapFusionFieldToSearchServerField(fusionFieldToMap, config,
                     searchServerConfig);
                 if (candidates.isEmpty())
                 {
-                    log.error("Found not mapping for merge field '{}'", fusionMergeField);
+                    log.error("Found not mapping for merge field '{}'", fusionFieldToMap);
                 }
                 searchServerFieldsToMap.addAll(candidates);
             }
             catch (Exception e)
             {
-                log.error("Can't map merge field {}", fusionMergeField, e);
+                log.error("Can't map merge field {}", fusionFieldToMap, e);
             }
         }
     }
@@ -195,8 +232,8 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         // get docs of page
         List<Document> docsOfPage = new ArrayList<>();
         int start = fusionRequest.getStart();
-        IdGeneratorIfc idGenerator = config.getIdGenerator();
-        String fusionIdField = idGenerator.getFusionIdField();
+        final IdGeneratorIfc idGenerator = config.getIdGenerator();
+        final String fusionIdField = idGenerator.getFusionIdField();
         Map<String, Document> highlighting = new HashMap<>();
         for (int i = 0; i < fusionRequest.getPageSize() && (i + start) < allDocs.size(); i++)
         {
@@ -222,8 +259,27 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             }
             docsOfPage.add(d);
         }
-        SearchServerResponseInfo info = new SearchServerResponseInfo(maxDocNr, highlighting);
+
+        final Map<String, Map<String, Integer>> fusionFacetFields = new HashMap<>();
+        mapFacetWordCounts(idGenerator, fusionIdField, fusionFacetFields);
+
+        SearchServerResponseInfo info = new SearchServerResponseInfo(maxDocNr, highlighting, fusionFacetFields);
         return new ClosableListIterator<>(docsOfPage, info);
+    }
+
+    protected void mapFacetWordCounts(final IdGeneratorIfc idGenerator, final String fusionIdField,
+        final Map<String, Map<String, Integer>> fusionFacetFields)
+        throws InvocationTargetException, IllegalAccessException
+    {
+        if (facetFields != null)
+        {
+            for (FacetHit fh : facetFields)
+            {
+                final Document doc = fh.getDocument();
+                completelyMapDoc(config, doc, doc.getFusionDocId(fusionIdField));
+                doc.accept(new FacetWordCountBuilder(fusionIdField, idGenerator, doc, fusionFacetFields), null);
+            }
+        }
     }
 
     protected void completelyMapDoc(Configuration config, Document d, String fusionDocId)

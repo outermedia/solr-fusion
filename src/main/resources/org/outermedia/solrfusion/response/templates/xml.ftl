@@ -5,35 +5,13 @@
   <int name="QTime">0</int>
   <lst name="params">
     <str name="indent">on</str>
-    <str name="start">0</str>
-    <str name="q"><![CDATA[${responseHeader.query}]]></str>
-    <#if responseHeader.filterQuery??>
-    <str name="fq"><![CDATA[${responseHeader.filterQuery}]]></str>
-    </#if>
-    <#if responseHeader.sort??>
-    <str name="sort"><![CDATA[${responseHeader.sort}]]></str>
-    </#if>
-    <#if responseHeader.fields??>
-    <str name="fl"><![CDATA[${responseHeader.fields}]]></str>
-    </#if>
-    <#if responseHeader.highlight??>
-    <str name="hl"><![CDATA[${responseHeader.highlight}]]></str>
-    </#if>
-    <#if responseHeader.highlightPre??>
-    <str name="hl.simple.pre"><![CDATA[${responseHeader.highlightPre}]]></str>
-    </#if>
-    <#if responseHeader.highlightPost??>
-    <str name="hl.simple.post"><![CDATA[${responseHeader.highlightPost}]]></str>
-    </#if>
-    <#if responseHeader.highlighFields??>
-    <str name="hl.fl"><![CDATA[${responseHeader.highlighFields}]]></str>
-    </#if>
-    <#if responseHeader.highlightQuery??>
-    <str name="hl.q"><![CDATA[${responseHeader.highlightQuery}]]></str>
-    </#if>
+    <str name="start">0</str><#list responseHeader.queryParams?keys as key>
+    <str name="${key}"><![CDATA[${responseHeader.queryParams[key]}]]></str></#list><#list responseHeader.multiValueQueryParams?keys as key>
+    <arr name="${key}"><#list responseHeader.multiValueQueryParams[key] as v>
+        <str>"${v?json_string}"</str></#list>
+    </arr></#list>
     <str name="wt">wt</str>
     <str name="version">2.2</str>
-    <str name="rows">${responseHeader.rows}</str>
   </lst>
 </lst>
 <#if responseError.error>
@@ -50,6 +28,22 @@
     </doc>
     </#list>
 </result>
+<#if facets.hasFacets>
+<lst name="facet_counts">
+    <lst name="facet_queries" />
+    <lst name="facet_fields">
+<#list facets.facets?keys as field>
+        <lst name="${field}">
+<#list facets.facets[field]?keys as word>
+            <int name="${word?xml}">${facets.facets[field][word]?c}</int>
+</#list>
+        </lst>
+</#list>
+    </lst>
+    <lst name="facet_dates" />
+    <lst name="facet_ranges" />
+</lst>
+</#if>
 <#if highlighting.hasHighlights>
 <lst name="highlighting"><#list highlighting.highlighting as doc>
     <lst name="${doc.id}">

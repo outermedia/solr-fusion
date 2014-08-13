@@ -1,12 +1,12 @@
 package org.outermedia.solrfusion.adapter;
 
+import org.outermedia.solrfusion.Multimap;
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.Map;
 
 /**
  * Allows to send and receive data from a search server.
@@ -25,7 +25,7 @@ public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
      * @param timeout              a timeout in milliseconds
      * @return null for error or a document stream
      */
-    public InputStream sendQuery(Map<String, String> searchServerQueryStr, int timeout)
+    public InputStream sendQuery(Multimap<String> searchServerQueryStr, int timeout)
         throws URISyntaxException, IOException;
 
     public void init(SearchServerConfig config);

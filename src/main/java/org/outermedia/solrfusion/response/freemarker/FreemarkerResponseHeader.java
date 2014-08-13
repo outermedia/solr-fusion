@@ -2,9 +2,18 @@ package org.outermedia.solrfusion.response.freemarker;
 
 import lombok.Getter;
 import org.outermedia.solrfusion.FusionRequest;
+import org.outermedia.solrfusion.SolrFusionRequestParam;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
+import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.parser.Document;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 /**
  * Data holder class to represent a response header in the freemarker template.
@@ -14,43 +23,71 @@ import org.outermedia.solrfusion.response.parser.Document;
 @Getter
 public class FreemarkerResponseHeader
 {
+    private Map<String, String> queryParams;
+    private Map<String, List<String>> multiValueQueryParams;
 
-    private String query;
-
-    private String filterQuery;
-
-    private int rows;
-
-    private String sort;
-
-    private String fields;
-
-    private String highlight;
-
-    private String highlightPre;
-
-    private String highlightPost;
-
-    private String highlightFields;
-
-    private String highlightQuery;
-
-    public FreemarkerResponseHeader(ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request)
+    public FreemarkerResponseHeader(ClosableIterator<Document, SearchServerResponseInfo> docStream,
+        FusionRequest request)
     {
-        this.rows = 0;
-        if(docStream != null)
+        queryParams = new LinkedHashMap<>();
+        multiValueQueryParams = new LinkedHashMap<>();
+
+        int rows = 0;
+        if (docStream != null)
         {
             rows = docStream.size();
         }
-        this.query = request.getQuery();
-        if(this.query == null) this.query = "";
-        this.filterQuery = request.getFilterQuery();
-        this.sort = request.getSolrFusionSortField();
-        this.fields = request.getFieldsToReturn();
-        this.highlight = request.getHighlight();
-        this.highlightPre = request.getHighlightPre();
-        this.highlightPost = request.getHighlightPost();
-        this.highlightFields = request.getHighlightingFieldsToReturn();
-        this.highlightQuery = request.getHighlightQuery();
+        queryParams.put(PAGE_SIZE.getRequestParamName(), String.valueOf(rows));
+        String query = request.getQuery().getValue();
+        if (query == null)
+        {
+            query = "";
+        }
+        queryParams.put(QUERY.getRequestParamName(), query);
+        addIfNotNull(FILTER_QUERY, request.getFilterQuery().getValue());
+        addIfNotNull(SORT, request.getSolrFusionSortField());
+        addIfNotNull(FIELDS_TO_RETURN, request.getFieldsToReturn().getValue());
+
+        // highlights
+        addIfNotNull(SolrFusionRequestParams.HIGHLIGHT, request.getHighlight().getValue());
+        addIfNotNull(HIGHLIGHT_PRE, request.getHighlightPre().getValue());
+        addIfNotNull(HIGHLIGHT_POST, request.getHighlightPost().getValue());
+        addIfNotNull(HIGHLIGHT_FIELDS_TO_RETURN, request.getHighlightingFieldsToReturn().getValue());
+        addIfNotNull(HIGHLIGHT_QUERY, request.getHighlightQuery().getValue());
+
+        // facets
+        addIfNotNull(FACET, request.getFacet().getValue());
+        addIfNotNull(FACET_LIMIT, request.getFacetLimit().getValue());
+        addIfNotNull(FACET_MINCOUNT, request.getFacetMincount().getValue());
+        addIfNotNull(FACET_PREFIX, request.getFacetPrefix().getValue());
+        addIfNotNull(FACET_SORT, request.getFacetSort().getValue());
+        List<SolrFusionRequestParam> facetFieldParams = request.getFacetFields();
+        List<String> facetFields = new ArrayList<>();
+        if (facetFieldParams != null)
+        {
+            for (SolrFusionRequestParam sp : facetFieldParams)
+            {
+                facetFields.add(sp.getValue());
+            }
+            multiValueQueryParams.put(FACET_FIELD.getRequestParamName(), facetFields);
+        }
+        List<SolrFusionRequestParam> facetSortFields = request.getFacetSortFields();
+        if (facetSortFields != null)
+        {
+            for (SolrFusionRequestParam sp : facetSortFields)
+            {
+                String fusionParam = SolrFusionRequestParams.FACET_SORT_FIELD.buildFusionFacetSortFieldParam(
+                    sp.getParamNameVariablePart(), request.getLocale());
+                queryParams.put(fusionParam, sp.getValue());
+            }
+        }
+    }
+
+    protected void addIfNotNull(SolrFusionRequestParams paramName, String paramValue)
+    {
+        if (paramValue != null)
+        {
+            queryParams.put(paramName.getRequestParamName(), paramValue);
+        }
     }
 }

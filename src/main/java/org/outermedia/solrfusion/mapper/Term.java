@@ -19,7 +19,7 @@ import java.util.Locale;
  * @author sballmann
  */
 
-@ToString
+@ToString(exclude = {"fusionFacetCount", "searchServerFacetCount"})
 @Getter
 @Setter
 @Slf4j
@@ -28,8 +28,11 @@ public class Term
     private String fusionFieldName;
     private List<String> fusionFieldValue;
     private FusionField fusionField;
+    private List<Integer> fusionFacetCount;
+
     private String searchServerFieldName;
     private List<String> searchServerFieldValue;
+    private List<Integer> searchServerFacetCount;
 
     // set by an remove operation
     private boolean removed;
@@ -60,7 +63,10 @@ public class Term
         Term result = new Term();
         result.fusionFieldName = field;
         result.fusionFieldValue = new ArrayList<>();
-        result.fusionFieldValue.addAll(termStr);
+        if (termStr != null)
+        {
+            result.fusionFieldValue.addAll(termStr);
+        }
         return result;
     }
 
@@ -87,6 +93,7 @@ public class Term
     {
         searchServerFieldName = null;
         searchServerFieldValue = null;
+        searchServerFacetCount = null;
         removed = false;
         wasMapped = false;
         processed = false;
@@ -97,6 +104,7 @@ public class Term
     {
         fusionFieldName = null;
         fusionFieldValue = null;
+        fusionFacetCount = null;
         fusionField = null;
         removed = false;
         wasMapped = false;
@@ -200,8 +208,10 @@ public class Term
         newTerm.fusionFieldName = fusionFieldName;
         newTerm.fusionFieldValue = fusionFieldValue;
         newTerm.fusionField = fusionField;
+        newTerm.fusionFacetCount = fusionFacetCount;
         newTerm.searchServerFieldName = searchServerFieldName;
         newTerm.searchServerFieldValue = searchServerFieldValue;
+        newTerm.searchServerFacetCount = searchServerFacetCount;
         newTerm.removed = removed;
         newTerm.wasMapped = wasMapped;
         newTerm.processed = processed;

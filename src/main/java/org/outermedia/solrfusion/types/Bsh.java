@@ -63,9 +63,9 @@ public class Bsh extends AbstractType
      * @return
      */
     @Override
-    public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
+    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env, ConversionDirection dir)
     {
-        return applyScriptEngineCode(engine, code, values, env);
+        return applyScriptEngineCode(engine, code, values, facetWordCounts, env);
     }
 
     public static Bsh getInstance()

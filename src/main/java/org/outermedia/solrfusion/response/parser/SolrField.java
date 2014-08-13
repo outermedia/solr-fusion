@@ -72,5 +72,22 @@ public abstract class SolrField
         return result;
     }
 
+    public boolean isFusionField(String fusionFieldName)
+    {
+        return fusionFieldName.equals(term.getFusionFieldName());
+    }
 
+    public List<Integer> getFusionFacetCount()
+    {
+        return term.getFusionFacetCount();
+    }
+
+    public String getFusionFieldName()
+    {
+        return term.getFusionFieldName();
+    }
+
+    public boolean isProcessed() { return term.isProcessed(); }
+
+    public boolean isRemoved() { return term.isRemoved(); }
 }

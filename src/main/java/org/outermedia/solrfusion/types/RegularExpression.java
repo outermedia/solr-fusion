@@ -63,20 +63,22 @@ public class RegularExpression extends AbstractType
     }
 
     @Override
-    public List<String> apply(List<String> values, ScriptEnv env, ConversionDirection dir)
+    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+        ConversionDirection dir)
     {
-        List<String> result = new ArrayList<>();
+        List<String> newValues = new ArrayList<>();
+        TypeResult result = new TypeResult(newValues, facetWordCounts);
         for (String v : values)
         {
             if (v != null)
             {
                 Matcher matcher = pattern.matcher(v);
                 String rv = matcher.replaceAll(replacement);
-                result.add(rv);
+                newValues.add(rv);
             }
             else
             {
-                result.add(null);
+                newValues.add(null);
             }
         }
         if (values.isEmpty())

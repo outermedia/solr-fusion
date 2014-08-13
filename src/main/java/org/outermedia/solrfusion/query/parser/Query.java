@@ -16,6 +16,8 @@ public abstract class Query implements VisitableQuery
     // otherwise outside
     private Boolean addInside;
 
+    private MetaInfo metaInfo;
+
     public void setBoost(float f)
     {
         this.boostValue = f;

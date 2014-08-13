@@ -55,7 +55,7 @@ public class PagingResponseConsolidatorMergeTest
         Highlighting hl4 = createHighlighting("4");
 
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
-        consolidator.init(cfg);
+        consolidator.initConsolidator(cfg);
         addAnswerFromServer("BibliothekA", consolidator, Arrays.asList(d1, d4), Arrays.asList(hl1, hl4));
         addAnswerFromServer("BibliothekB", consolidator, Arrays.asList(d2), Arrays.asList(hl2));
         addAnswerFromServer("BibliothekC", consolidator, Arrays.asList(d3), Arrays.asList(hl3));
@@ -139,7 +139,7 @@ public class PagingResponseConsolidatorMergeTest
         Document d4 = (buildDocument("Id", "4", "Title", "t4", "Other1", "o1x", "Other3", "o3x"));
 
         ResponseConsolidatorIfc consolidator = PagingResponseConsolidator.Factory.getInstance();
-        consolidator.init(cfg);
+        consolidator.initConsolidator(cfg);
         addAnswerFromServer("BibliothekB", consolidator, Arrays.asList(d2), null);
         addAnswerFromServer("BibliothekA", consolidator, Arrays.asList(d1, d4), null);
         addAnswerFromServer("BibliothekC", consolidator, Arrays.asList(d3), null);
@@ -215,12 +215,12 @@ public class PagingResponseConsolidatorMergeTest
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setSearchServerSortField("Id");
         ClosableIterator<Document, SearchServerResponseInfo> documents = createDocuments(docs);
-        consolidator.addResultStream(serverConfig, documents, fusionRequest, highlights);
+        consolidator.addResultStream(serverConfig, documents, fusionRequest, highlights, null);
     }
 
     protected ClosableIterator<Document, SearchServerResponseInfo> createDocuments(List<Document> docs)
     {
-        SearchServerResponseInfo info = new SearchServerResponseInfo(docs.size(), null);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(docs.size(), null, null);
         return new ClosableListIterator<>(docs, info);
     }
 }

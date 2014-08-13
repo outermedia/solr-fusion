@@ -74,6 +74,8 @@ public class BshTest extends AbstractTypeTest
         Assert.assertEquals("Found wrong field name mapping", "today", sourceField.getFusionFieldName());
         Assert.assertEquals("Found wrong field value mapping", Arrays.asList("something at 2014-07-19"),
                 sourceField.getFusionFieldValue());
+        Assert.assertEquals("Found wrong facet word counts", Arrays.asList("4", "1", "3", "2"),
+            sourceField.getFusionFacetCount());
     }
 
     @Test
