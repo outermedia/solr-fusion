@@ -8,7 +8,7 @@
     <str name="start">0</str><#list responseHeader.queryParams?keys as key>
     <str name="${key}"><![CDATA[${responseHeader.queryParams[key]}]]></str></#list><#list responseHeader.multiValueQueryParams?keys as key>
     <arr name="${key}"><#list responseHeader.multiValueQueryParams[key] as v>
-        <str>"${v?json_string}"</str></#list>
+        <str>${v?xml}</str></#list>
     </arr></#list>
     <str name="wt">wt</str>
     <str name="version">2.2</str>
