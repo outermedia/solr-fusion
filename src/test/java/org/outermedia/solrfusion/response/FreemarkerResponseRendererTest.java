@@ -12,10 +12,7 @@ import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
-import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.FacetHit;
-import org.outermedia.solrfusion.response.parser.Highlighting;
-import org.outermedia.solrfusion.response.parser.XmlResponse;
+import org.outermedia.solrfusion.response.parser.*;
 import org.xml.sax.SAXException;
 
 import javax.script.ScriptException;
@@ -155,10 +152,9 @@ public class FreemarkerResponseRendererTest
         res.setOk(true);
         jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req, res);
         // System.out.println(jsonResponse);
-        Assert.assertTrue("json response should contain filter query in header",
-            jsonResponse.contains("\"fq\":[\n" +
-                "        \"salat\",\"tomato\"\n" +
-                "      ],"));
+        Assert.assertTrue("json response should contain filter query in header", jsonResponse.contains("\"fq\":[\n" +
+            "        \"salat\",\"tomato\"\n" +
+            "      ],"));
 
         res.setResponseForException(new Exception("An\nerror\noccurred."));
         jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req, res);
@@ -312,11 +308,11 @@ public class FreemarkerResponseRendererTest
         // System.out.println(jsonResponse);
 
         Assert.assertTrue("Expected to find facet fields and field collcode_de15, but got: " + jsonResponse,
-            jsonResponse.contains("\"facet_fields\":{\n" + "      \"collcode_de15\": ["));
+            jsonResponse.contains("\"facet_fields\":{\n" + "      \"branch_de15\": ["));
         Assert.assertTrue("Expected to find facet collcode_de15 with [\"Freihand\", 1952], but got: " + jsonResponse,
             jsonResponse.contains("[\"Freihand\", 1952]"));
         Assert.assertTrue("Expected to find facet format_de15 with [\"Software\", 66], but got: " + jsonResponse,
-            jsonResponse.contains("\"format_de15\": [\n" + "        [\"Software\", 66]"));
+            jsonResponse.contains("[\"Software\", 66]"));
     }
 
     @Test
@@ -338,7 +334,7 @@ public class FreemarkerResponseRendererTest
         // System.out.println(xmlResponse);
 
         Assert.assertTrue("Expected to find facet fields and field collcode_de15, but got: " + xmlResponse,
-            xmlResponse.contains("<lst name=\"facet_fields\">\n" + "        <lst name=\"collcode_de15\">"));
+            xmlResponse.contains("<lst name=\"facet_fields\">\n" + "        <lst name=\"branch_de15\">"));
         Assert.assertTrue(
             "Expected to find facet collcode_de15 with <int name=\"Freihand\">1952</int>, but got: : " + xmlResponse,
             xmlResponse.contains("<int name=\"Freihand\">1952</int>"));
@@ -347,26 +343,28 @@ public class FreemarkerResponseRendererTest
             xmlResponse.contains("<int name=\"Software\">66</int>"));
     }
 
-    private String createResponseFacets(Configuration spyCfg, ResponseRendererIfc responseRenderer)
+    protected String createResponseFacets(Configuration spyCfg, ResponseRendererIfc responseRenderer)
         throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException,
         InvocationTargetException, IllegalAccessException
     {
         XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, "response-with-facets-highlighting.xml", null);
         List<FacetHit> facets = response9000.getFacetFields();
         SearchServerConfig searchServerConfig = spyCfg.getConfigurationOfSearchServers().get(0);
-        Map<String, Map<String, Integer>> facetFields = new HashMap<>();
         PagingResponseConsolidator consolidator = (PagingResponseConsolidator) spyCfg.getResponseConsolidatorFactory().getInstance();
         consolidator.initConsolidator(cfg);
         consolidator.processFacetFields(cfg, searchServerConfig, facets);
-        consolidator.mapFacetWordCounts(cfg.getIdGenerator(), cfg.getFusionIdFieldName(), facetFields);
-        // System.out.println("FACETS "+facetFields);
-        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getNumFound(), null, facetFields);
+        FusionRequest req = new FusionRequest();
+        req.setQuery(new SolrFusionRequestParam("goethe"));
+        req.setFacetLimit(new SolrFusionRequestParam("20"));
+        Map<String, List<WordCount>> sortedFacets = consolidator.mapFacetWordCounts(cfg.getIdGenerator(),
+            cfg.getFusionIdFieldName(), req);
+        // System.out.println("FACETS "+sortedFacets);
+        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getNumFound(), null,
+            sortedFacets);
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             new ArrayList<Document>(), info9000);
         ClosableIterator<Document, SearchServerResponseInfo> closableDocIterator = new MappingClosableIterator(
             docIterator, spyCfg, searchServerConfig, null);
-        FusionRequest req = new FusionRequest();
-        req.setQuery(new SolrFusionRequestParam("goethe"));
         FusionResponse res = new FusionResponse();
         res.setOk(true);
         return responseRenderer.getResponseString(cfg, closableDocIterator, req, res);

@@ -1,0 +1,3962 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+    <lst name="responseHeader">
+        <int name="status">0</int>
+        <int name="QTime">139</int>
+        <lst name="params">
+            <str name="facet">true</str>
+            <str name="sort">score desc</str>
+            <str name="facet.mincount">1</str>
+            <str name="facet.limit">100</str>
+            <str name="hl.simple.pre">{{{{START_HILITE}}}}</str>
+            <str name="hl.fl">*</str>
+            <str name="wt"/>
+            <str name="hl">true</str>
+            <str name="f.finc_class_facet.facet.sort">index</str>
+            <str name="rows">20</str>
+            <str name="fl">score *</str>
+            <str name="facet.sort"/>
+            <str name="start">0</str>
+            <str name="q">allfields:Schiller</str>
+            <str name="facet.prefix"/>
+            <str name="f.format.facet.sort">index</str>
+            <str name="hl.simple.post">{{{{END_HILITE}}}}</str>
+            <arr name="facet.field">
+                <str>{!ex=format_de15_filter}format_de15</str>
+                <str>{!ex=author_facet_filter}author_facet</str>
+                <str>{!ex=mega_collection_filter}mega_collection</str>
+                <str>mega_toplevel</str>
+                <str>{!ex=finc_class_facet_filter}finc_class_facet</str>
+                <str>{!ex=language_filter}language</str>
+                <str>access_facet</str>
+                <str>{!ex=branch_de15_filter}branch_de15</str>
+                <str>publishDateSort</str>
+                <str>{!ex=format_filter}format</str>
+            </arr>
+            <str name="fq"/>
+        </lst>
+    </lst>
+    <result name="response" numFound="15816" start="0" maxScore="3.3590302">
+        <doc>
+            <float name="score">3.3590302</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Schiller, Friedrich</str>
+            <str name="author_letter">Schiller, Friedrich</str>
+            <str name="authorized_mode">true</str>
+            <arr name="barcode">
+                <str>(DE-Wim8)709229488</str>
+            </arr>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00465nam a2200169
+                ca4500001001100000003000700011005001700018008004100035035002500076040002200101100002400123245003800147260002900185982002300214852001200237980004600249#30;0007586933#30;DE-601#30;20101120023123.0#30;021022nuuuuuuuu
+                000 0 d#30; #31;a(DE-599)GBV358198992#30; #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aSchiller,
+                Friedrich#30;10#31;aSchiller :#31;bWerke in drei Bänden#30;3 #31;aLeipzig#31;bBibliogr. Inst.#30;
+                #31;a(DE-Wim8)709229488#30; #31;aDE-Wim8#30;
+                #31;a358198992#31;b21#31;c201304130859#31;d201305060817#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0007586933</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Leipzig Bibliogr. Inst.</str>
+            <arr name="institution">
+                <str>DE-Wim8</str>
+            </arr>
+            <arr name="language">
+                <str>not assigned</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>GBV Musikdigitalisate</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set">a</str>
+            <arr name="publishPlace">
+                <str>Leipzig</str>
+            </arr>
+            <arr name="publisher">
+                <str>Bibliogr. Inst.</str>
+            </arr>
+            <str name="record_id">358198992</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">21</str>
+            <str name="spelling">Schiller, Friedrich Schiller : Werke in drei Bänden Leipzig Bibliogr. Inst.</str>
+            <arr name="spellingShingle">
+                <str>Schiller, Friedrich</str>
+                <str>Schiller : Werke in drei Bänden</str>
+            </arr>
+            <str name="title">Schiller : Werke in drei Bänden</str>
+            <str name="title_full">Schiller : Werke in drei Bänden</str>
+            <str name="title_fullStr">Schiller : Werke in drei Bänden</str>
+            <str name="title_full_unstemmed">Schiller : Werke in drei Bänden</str>
+            <str name="title_short">Schiller :</str>
+            <str name="title_sort">schiller :werke in drei bänden</str>
+            <str name="title_sub">Werke in drei Bänden</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">3.3252704</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00543cam a22002052
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156046001700164245002400181260002100205935001000226852005600236980004500292#30;0012356625#30;DE-576#30;20110315205910.0#30;tu#30;101012s1886
+                xx 00 0 ger c#30; #31;a(OCoLC)699874646#30; #31;a(DE-599)BSZ331419750#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30; #31;ja19b#31;2DE-576#30;10#31;aSchiller und
+                Goethe#30; #31;aDresden,#31;c[1886]#30; #31;bdruck#30;
+                #31;aDE-14#31;x650671295:201403061354#31;z2014-03-16T01:11:25Z#30;
+                #31;a331419750#31;b0#31;c201403061354#31;d201407260955#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0012356625</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Dresden, [1886]</str>
+            <arr name="institution">
+                <str>DE-14</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>699874646</long>
+            </arr>
+            <arr name="publishDate">
+                <str>[1886]</str>
+            </arr>
+            <str name="publishDateSort">1886</str>
+            <arr name="publishPlace">
+                <str>Dresden,</str>
+            </arr>
+            <str name="record_id">331419750</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Schiller und Goethe Dresden, [1886]</str>
+            <arr name="spellingShingle">
+                <str>Schiller und Goethe</str>
+            </arr>
+            <arr name="timecode">
+                <str>1851 – 1900</str>
+            </arr>
+            <str name="title">Schiller und Goethe</str>
+            <str name="title_full">Schiller und Goethe</str>
+            <str name="title_fullStr">Schiller und Goethe</str>
+            <str name="title_full_unstemmed">Schiller und Goethe</str>
+            <str name="title_short">Schiller und Goethe</str>
+            <str name="title_sort">schiller und goethe</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.8502316</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>Bibliotheca Albertina</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>Campusbibliothek I</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>Freihand</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Serial</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Journal, E-Journal</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Journal, E-Journal</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>Zeitschrift / Reihe</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Journal, E-Journal</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Serial</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00893cas a2200301
+                4500001001100000003000700011005001700018007000300035008004100038016002000079016002100099035002500120040003100145041000800176041000800184245002300192260004400215935001000259983001900269971000700288983001800295969000700313852005600320852005600376852005700432852005700489980004500546#30;0000000469#30;DE-576#30;20140523183852.0#30;tu#30;850101c19uuuuuuxx
+                m 0ger c#30; #31;a(OCoLC)05373472#30;7 #31;a401636-1#31;2DE-600#30; #31;a(DE-599)BSZ000705330#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;07#31;adt.#30;10#31;aTurmhahn-Bücherei#30;
+                #31;aMarbach a.N. :#31;bSchiller-Nationalmuseum#30; #31;bdruck#30; #31;a(DE-Ch1)222485#30; #31;cRE#30;
+                #31;a(DE-15)715058#30; #31;cSE#30; #31;aDE-14#31;x004858042:201405280459#31;z2014-03-16T02:27:31Z#30;
+                #31;aDE-15#31;x004858158:201405280459#31;z1998-11-13T00:00:00Z#30;
+                #31;aDE-D13#31;x51701114X:201405280459#31;z2013-05-29T18:05:38Z#30;
+                #31;aDE-Ch1#31;x004858034:201405280459#31;z1996-06-24T00:00:00Z#30;
+                #31;a000705330#31;b0#31;c201405280459#31;d201407261104#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0000000469</str>
+            <str name="illustrated">Illustrated</str>
+            <str name="imprint">Marbach a.N. : Schiller-Nationalmuseum</str>
+            <arr name="institution">
+                <str>DE-14</str>
+                <str>DE-15</str>
+                <str>DE-D13</str>
+                <str>DE-Ch1</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">s</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>5373472</long>
+            </arr>
+            <str name="publishDateSort">1949</str>
+            <arr name="publishPlace">
+                <str>Marbach a.N. :</str>
+            </arr>
+            <arr name="publisher">
+                <str>Schiller-Nationalmuseum</str>
+            </arr>
+            <str name="record_id">000705330</str>
+            <str name="recordtype">marc</str>
+            <arr name="rsn">
+                <str>(DE-Ch1)222485</str>
+                <str>(DE-15)715058</str>
+            </arr>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Turmhahn-Bücherei Marbach a.N. : Schiller-Nationalmuseum</str>
+            <arr name="spellingShingle">
+                <str>Turmhahn-Bücherei</str>
+            </arr>
+            <str name="title">Turmhahn-Bücherei</str>
+            <str name="title_full">Turmhahn-Bücherei</str>
+            <str name="title_fullStr">Turmhahn-Bücherei</str>
+            <str name="title_full_unstemmed">Turmhahn-Bücherei</str>
+            <str name="title_short">Turmhahn-Bücherei</str>
+            <str name="title_sort">turmhahn-bücherei</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.8502316</float>
+            <str name="access_facet">Local Holdings</str>
+            <date name="attached_de15">2010-01-27T20:24:54Z</date>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>Bibliotheca Albertina</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Serial</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Journal, E-Journal</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Journal, E-Journal</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Journal, E-Journal</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Serial</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00575cas a22002172
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156245003400164260002200198935001000220983001900230969000700249852005600256980004500312#30;0000824772#30;DE-576#30;20110309232358.0#30;tu#30;100127c19uuuuuuxx
+                m 0ger c#30; #31;a(OCoLC)699243459#30; #31;a(DE-599)BSZ316538981#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;10#31;aSchriften des Schiller-Bundes#30;
+                #31;aBerlin :#31;bZiemsen#30; #31;bdruck#30; #31;a(DE-15)1887173#30; #31;cSE#30;
+                #31;aDE-15#31;x622293397:201403060933#31;z2010-01-27T20:24:54Z#30;
+                #31;a316538981#31;b0#31;c201403060933#31;d201407260636#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0000824772</str>
+            <str name="illustrated">Illustrated</str>
+            <str name="imprint">Berlin : Ziemsen</str>
+            <arr name="institution">
+                <str>DE-15</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">s</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>699243459</long>
+            </arr>
+            <str name="publishDateSort">1919</str>
+            <arr name="publishPlace">
+                <str>Berlin :</str>
+            </arr>
+            <arr name="publisher">
+                <str>Ziemsen</str>
+            </arr>
+            <str name="record_id">316538981</str>
+            <str name="recordtype">marc</str>
+            <arr name="rsn">
+                <str>(DE-15)1887173</str>
+            </arr>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Schriften des Schiller-Bundes Berlin : Ziemsen</str>
+            <arr name="spellingShingle">
+                <str>Schriften des Schiller-Bundes</str>
+            </arr>
+            <str name="title">Schriften des Schiller-Bundes</str>
+            <str name="title_full">Schriften des Schiller-Bundes</str>
+            <str name="title_fullStr">Schriften des Schiller-Bundes</str>
+            <str name="title_full_unstemmed">Schriften des Schiller-Bundes</str>
+            <str name="title_short">Schriften des Schiller-Bundes</str>
+            <str name="title_sort">schriften des schiller-bundes</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.8502316</float>
+            <str name="access_facet">Local Holdings</str>
+            <date name="attached_de15">2006-03-03T11:11:49Z</date>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>Bibliotheca Albertina</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Serial</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Journal, E-Journal</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Journal, E-Journal</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Journal, E-Journal</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Serial</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00591cas a2200217
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156245003000164260004200194935001000236983001900246969000700265852005600272980004500328#30;0002688343#30;DE-576#30;20110302221945.0#30;tu#30;060203c20uuuuuuxx
+                m 0ger c#30; #31;a(OCoLC)315092687#30; #31;a(DE-599)BSZ250677571#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;10#31;aJunger Kulturjournalismus#30;
+                #31;aHildesheim :#31;bGlück-&amp;-Schiller-Verl.#30; #31;bdruck#30; #31;a(DE-15)1460581#30; #31;cSE#30;
+                #31;aDE-15#31;x503952338:201403052218#31;z2006-03-03T11:11:49Z#30;
+                #31;a250677571#31;b0#31;c201403052218#31;d201407260052#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0002688343</str>
+            <str name="illustrated">Illustrated</str>
+            <str name="imprint">Hildesheim : Glück-&amp;-Schiller-Verl.</str>
+            <arr name="institution">
+                <str>DE-15</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">s</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>315092687</long>
+            </arr>
+            <str name="publishDateSort">2005</str>
+            <arr name="publishPlace">
+                <str>Hildesheim :</str>
+            </arr>
+            <arr name="publisher">
+                <str>Glück-&amp;-Schiller-Verl.</str>
+            </arr>
+            <str name="record_id">250677571</str>
+            <str name="recordtype">marc</str>
+            <arr name="rsn">
+                <str>(DE-15)1460581</str>
+            </arr>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Junger Kulturjournalismus Hildesheim : Glück-&amp;-Schiller-Verl.</str>
+            <arr name="spellingShingle">
+                <str>Junger Kulturjournalismus</str>
+            </arr>
+            <str name="title">Junger Kulturjournalismus</str>
+            <str name="title_full">Junger Kulturjournalismus</str>
+            <str name="title_fullStr">Junger Kulturjournalismus</str>
+            <str name="title_full_unstemmed">Junger Kulturjournalismus</str>
+            <str name="title_short">Junger Kulturjournalismus</str>
+            <str name="title_sort">junger kulturjournalismus</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="authorized_mode">true</str>
+            <arr name="barcode">
+                <str>(DE-15)7003275130</str>
+            </arr>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>Bibliotheca Albertina</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de15">
+                <str>Magazin / Sonstige</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00873cam a22002892
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156044001000164245007100174260006000245300001100305935001000316982002500326981003700351969001300388983001900401969000600420852005600426852005600482980004500538#30;0000818693#30;DE-576#30;20110709070936.0#30;tu#30;100114s1907
+                xx 00 0 ger c#30; #31;a(OCoLC)698905108#30; #31;a(DE-599)BSZ315271183#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30; #31;aXA-DE#30;10#31;aGedenkbuch der
+                Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...#30; #31;aCleveland, Ohio
+                :#31;bSchiller-Goethe-Denkmalverein,#31;c1907#30; #31;a207 S.#30; #31;bdruck#30;
+                #31;a(DE-15)7003275130#31;x1#30; #31;a(DE-15)Goe.-Schi.418#31;x1#31;ccurrent#30; #31;bKeine#31;x1#30;
+                #31;a(DE-15)2006039#30; #31;cB#30; #31;aDE-14#31;x677419589:201403061351#31;z2014-03-15T22:24:04Z#30;
+                #31;aDE-15#31;x64067058X:201403061351#31;z2010-07-07T07:36:02Z#30;
+                #31;a315271183#31;b0#31;c201403061351#31;d201407260041#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0000818693</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Cleveland, Ohio : Schiller-Goethe-Denkmalverein, 1907</str>
+            <arr name="institution">
+                <str>DE-14</str>
+                <str>DE-15</str>
+            </arr>
+            <str name="itemdata">{"DE-15":[{"cn":"Goe.-Schi.418","bc":"7003275130"}]}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>698905108</long>
+            </arr>
+            <arr name="physical">
+                <str>207 S.</str>
+            </arr>
+            <arr name="publishDate">
+                <str>1907</str>
+            </arr>
+            <str name="publishDateSort">1907</str>
+            <arr name="publishPlace">
+                <str>Cleveland, Ohio :</str>
+            </arr>
+            <arr name="publisher">
+                <str>Schiller-Goethe-Denkmalverein,</str>
+            </arr>
+            <str name="record_id">315271183</str>
+            <str name="recordtype">marc</str>
+            <arr name="rsn">
+                <str>(DE-15)2006039</str>
+            </arr>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <arr name="signatur">
+                <str>(DE-15)Goe.-Schi.418</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ... Cleveland, Ohio :
+                Schiller-Goethe-Denkmalverein, 1907 207 S.
+            </str>
+            <arr name="spellingShingle">
+                <str>Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+            </arr>
+            <str name="title">Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+            <str name="title_full">Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+            <str name="title_fullStr">Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+            <str name="title_full_unstemmed">Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+            <str name="title_short">Gedenkbuch der Goethe-Schiller-Denkmalweihe in Cleveland, Ohio ...</str>
+            <str name="title_sort">gedenkbuch der goethe-schiller-denkmalweihe in cleveland, ohio .</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <date name="attached_de15">2010-09-03T13:49:50Z</date>
+            <str name="authorized_mode">true</str>
+            <arr name="barcode">
+                <str>(DE-15)7003971433</str>
+                <str>(DE-15)7003971626</str>
+            </arr>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>Bibliotheca Albertina</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de15">
+                <str>Magazin / Sonstige</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00873cam a22003132
+                c4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156044001000164245006100174260000900235773002500244935001000269982002500279981003900304969001300343982002500356981003900381969001300420983001900433969000600452852005600458980004500514#30;0001348218#30;DE-576#30;20110309213455.0#30;tu#30;100115s1909
+                xx 00 0 ger c#30; #31;a(OCoLC)699122593#30; #31;a(DE-599)BSZ315686197#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30; #31;aXA-DE#30;10#31;aStudien zu Schillers
+                Dramen.#31;n1,#31;pSchillers Wilhelm Tell#30; #31;c1909#30;18#31;w(DE-576)287042103#31;g1#30;
+                #31;bdruck#30; #31;a(DE-15)7003971433#31;x1#30; #31;a(DE-15)Goe.-Schi.993-d#31;x1#31;ccurrent#30;
+                #31;bKeine#31;x1#30; #31;a(DE-15)7003971626#31;x2#30; #31;a(DE-15)Goe.-Schi.26090#31;x2#31;ccurrent#30;
+                #31;bKeine#31;x2#30; #31;a(DE-15)2087102#30; #31;cB#30;
+                #31;aDE-15#31;x647186217:201403061354#31;z2010-09-03T13:49:50Z#30;
+                #31;a315686197#31;b0#31;c201403061354#31;d201407260250#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0001348218</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">1909</str>
+            <arr name="institution">
+                <str>DE-15</str>
+            </arr>
+            <str name="itemdata">
+                {"DE-15":[{"cn":"Goe.-Schi.993-d","bc":"7003971433"},{"cn":"Goe.-Schi.26090","bc":"7003971626"}]}
+            </str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <arr name="multipart_link">
+                <str>287042103</str>
+            </arr>
+            <arr name="multipart_part">
+                <str>(287042103)1</str>
+            </arr>
+            <str name="multipart_set">c</str>
+            <arr name="oclc_num">
+                <long>699122593</long>
+            </arr>
+            <arr name="publishDate">
+                <str>1909</str>
+            </arr>
+            <str name="publishDateSort">1909</str>
+            <str name="record_id">315686197</str>
+            <str name="recordtype">marc</str>
+            <arr name="rsn">
+                <str>(DE-15)2087102</str>
+            </arr>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <arr name="signatur">
+                <str>(DE-15)Goe.-Schi.993-d</str>
+                <str>(DE-15)Goe.-Schi.26090</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Studien zu Schillers Dramen. 1, Schillers Wilhelm Tell 1909 (DE-576)287042103 1</str>
+            <arr name="spellingShingle">
+                <str>Studien zu Schillers Dramen.</str>
+            </arr>
+            <str name="title">Studien zu Schillers Dramen.</str>
+            <str name="title_full">Studien zu Schillers Dramen. 1, Schillers Wilhelm Tell</str>
+            <str name="title_fullStr">Studien zu Schillers Dramen. 1, Schillers Wilhelm Tell</str>
+            <str name="title_full_unstemmed">Studien zu Schillers Dramen. 1, Schillers Wilhelm Tell</str>
+            <str name="title_part">1, Schillers Wilhelm Tell</str>
+            <str name="title_short">Studien zu Schillers Dramen.</str>
+            <str name="title_sort">studien zu schillers dramen</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <date name="attached_de15">2010-12-23T14:22:16Z</date>
+            <str name="author">Schiller, Harald</str>
+            <str name="author_letter">Schiller, Harald</str>
+            <str name="authorized_mode">true</str>
+            <arr name="barcode">
+                <str>(DE-15)0021049892</str>
+            </arr>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>Bibliotheca Albertina</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00771cam a22002772
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156100004000164245004900204260002100253300001100274935001000285982002500295981003300320969001400353983001900367969000600386852005600392980004500448#30;0001464514#30;DE-576#30;20110318012912.0#30;tu#30;101223s1928
+                xx 00 0 swe c#30; #31;a(OCoLC)465014594#30; #31;a(DE-599)BSZ335303102#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;aswe#30;1 #31;aSchiller,
+                Harald#31;0(DE-576)173976506#30;10#31;aDiktare och idealister /#31;cav Harald Schiller#30;
+                #31;aStockholm,#31;c1928#30; #31;a223 S.#30; #31;bdruck#30; #31;a(DE-15)0021049892#31;x1#30;
+                #31;a(DE-15)86-8-2674#31;x1#31;ccurrent#30; #31;bFHOmag#31;x1#30; #31;a(DE-15)2239720#30; #31;cB#30;
+                #31;aDE-15#31;x65924845X:201403061354#31;z2010-12-23T14:22:16Z#30;
+                #31;a335303102#31;b0#31;c201403061354#31;d201407260137#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0001464514</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Stockholm, 1928</str>
+            <arr name="institution">
+                <str>DE-15</str>
+            </arr>
+            <str name="itemdata">{"DE-15":[{"cn":"86-8-2674","bc":"0021049892"}]}</str>
+            <arr name="language">
+                <str>Swedish</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>465014594</long>
+            </arr>
+            <arr name="physical">
+                <str>223 S.</str>
+            </arr>
+            <arr name="publishDate">
+                <str>1928</str>
+            </arr>
+            <str name="publishDateSort">1928</str>
+            <arr name="publishPlace">
+                <str>Stockholm,</str>
+            </arr>
+            <str name="record_id">335303102</str>
+            <str name="recordtype">marc</str>
+            <arr name="rsn">
+                <str>(DE-15)2239720</str>
+            </arr>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <arr name="signatur">
+                <str>(DE-15)86-8-2674</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Schiller, Harald (DE-576)173976506 Diktare och idealister / av Harald Schiller
+                Stockholm, 1928 223 S.
+            </str>
+            <arr name="spellingShingle">
+                <str>Schiller, Harald</str>
+                <str>Diktare och idealister /</str>
+            </arr>
+            <str name="title">Diktare och idealister /</str>
+            <str name="title_full">Diktare och idealister /</str>
+            <str name="title_fullStr">Diktare och idealister /</str>
+            <str name="title_full_unstemmed">Diktare och idealister /</str>
+            <str name="title_short">Diktare och idealister /</str>
+            <str name="title_sort">diktare och idealister</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <date name="attached_de15">2010-12-23T14:52:19Z</date>
+            <str name="author">Schiller, Hermann</str>
+            <str name="author_letter">Schiller, Hermann</str>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>Bibliotheca Albertina</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00664nam a22002292
+                a4500001001100000003000700011005001700018007000300035008004100038035002500079040003100104041000800135100004100143245006000184260003200244935001000276983001900286969000700305900002100312852005600333980004500389#30;0001464540#30;DE-576#30;20101223145219.0#30;tu#30;101223n19uuuuuuxx
+                00 0 ger c#30; #31;a(DE-599)GBV268913617#30; #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;1
+                #31;aSchiller, Hermann#31;0(DE-576)170707318#30;10#31;aAufsätze über die Schulreform 1900 /#31;cHerman
+                Schiller#30; #31;aWiesbaden :#31;bNenmich,#31;c19XX#30; #31;bdruck#30; #31;a(DE-15)2239766#30;
+                #31;cMB#30; #31;aSchiller, Herman#30; #31;aDE-15#31;x659251272:201403061354#31;z2010-12-23T14:52:19Z#30;
+                #31;a335304710#31;b0#31;c201403061354#31;d201407260343#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0001464540</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Wiesbaden : Nenmich, 19XX</str>
+            <arr name="institution">
+                <str>DE-15</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set">a</str>
+            <arr name="publishDate">
+                <str>19XX</str>
+            </arr>
+            <str name="publishDateSort">1901</str>
+            <arr name="publishPlace">
+                <str>Wiesbaden :</str>
+            </arr>
+            <arr name="publisher">
+                <str>Nenmich,</str>
+            </arr>
+            <str name="record_id">335304710</str>
+            <str name="recordtype">marc</str>
+            <arr name="rsn">
+                <str>(DE-15)2239766</str>
+            </arr>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Schiller, Hermann (DE-576)170707318 Aufsätze über die Schulreform 1900 / Herman
+                Schiller Wiesbaden : Nenmich, 19XX
+            </str>
+            <arr name="spellingShingle">
+                <str>Schiller, Hermann</str>
+                <str>Aufsätze über die Schulreform 1900 /</str>
+            </arr>
+            <str name="title">Aufsätze über die Schulreform 1900 /</str>
+            <str name="title_full">Aufsätze über die Schulreform 1900 /</str>
+            <str name="title_fullStr">Aufsätze über die Schulreform 1900 /</str>
+            <str name="title_full_unstemmed">Aufsätze über die Schulreform 1900 /</str>
+            <str name="title_short">Aufsätze über die Schulreform 1900 /</str>
+            <str name="title_sort">aufsätze über die schulreform 1900</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Schiller, Leon</str>
+            <str name="author_letter">Schiller, Leon</str>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>Bibliotheca Albertina</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00701cam a2200241
+                a4500001001100000003000700011005001700018007000300035008004100038035002500079040003100104041000800135041001000143100003800153245002700191260004800218935001000266983001900276969000700295852005600302852005600358980004500414#30;0003276392#30;DE-576#30;20090205151239.0#30;tu#30;970805n19uuuuuuxx
+                00 0 pol c#30; #31;a(DE-599)BSZ060565470#30; #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0
+                #31;apol#30;07#31;apoln.#30;1 #31;aSchiller, Leon#31;0(DE-576)167888536#30;10#31;aPisma /#31;cLeon
+                Schiller#30; #31;aWarszawa :#31;bPaństwowy Inst. Wydawn.,#31;c19XX#30; #31;bdruck#30;
+                #31;a(DE-15)1731159#30; #31;cMB#30; #31;aDE-14#31;x310124409:201403061033#31;z2014-03-16T01:10:33Z#30;
+                #31;aDE-15#31;x591792761:201403061033#31;z2009-02-05T15:13:20Z#30;
+                #31;a060565470#31;b0#31;c201403061033#31;d201407260648#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0003276392</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Warszawa : Państwowy Inst. Wydawn., 19XX</str>
+            <arr name="institution">
+                <str>DE-14</str>
+                <str>DE-15</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>Polish</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set">a</str>
+            <arr name="publishDate">
+                <str>19XX</str>
+            </arr>
+            <str name="publishDateSort">1978</str>
+            <arr name="publishPlace">
+                <str>Warszawa :</str>
+            </arr>
+            <arr name="publisher">
+                <str>Państwowy Inst. Wydawn.,</str>
+            </arr>
+            <str name="record_id">060565470</str>
+            <str name="recordtype">marc</str>
+            <arr name="rsn">
+                <str>(DE-15)1731159</str>
+            </arr>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Schiller, Leon (DE-576)167888536 Pisma / Leon Schiller Warszawa : Państwowy Inst.
+                Wydawn., 19XX
+            </str>
+            <arr name="spellingShingle">
+                <str>Schiller, Leon</str>
+                <str>Pisma /</str>
+            </arr>
+            <str name="title">Pisma /</str>
+            <str name="title_full">Pisma /</str>
+            <str name="title_fullStr">Pisma /</str>
+            <str name="title_full_unstemmed">Pisma /</str>
+            <str name="title_short">Pisma /</str>
+            <str name="title_sort">pisma</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Schiller, Friedrich 1759 - 1805</str>
+            <arr name="author_id">
+                <str>118607626</str>
+            </arr>
+            <str name="author_letter">Schiller, Friedrich</str>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">02772nam a22009252
+                a4500001001100000003000700011005001700018007000300035008004100038035002500079040003100104041000800135046001700143100007500160245002000235260003000255935001000285900004500295900002800340900002700368900002600395900001800421900004500439900004100484900003500525900003400560900002300594900003100617900002300648900003100671900002000702900002300722900002600745900002300771900002500794900002900819900002400848900002400872900002400896900002700920900002300947900002100970900002100991900001701012900001801029900001901047900001601066900002001082900001601102900001901118900002101137900002001158900002001178900001601198900002201214900002501236900002501261900002501286900002401311900002601335900002201361900002201383900002101405900001701426900001601443900003801459900002401497900002401521900001801545900001801563900002601581900001401607900002801621900002801649900002801677900002901705951001001734852005701744980004501801#30;0006697768#30;DE-576#30;20061022155151.0#30;tu#30;061022n18uuuuuuxx
+                00 0 ger c#30; #31;a(DE-599)BSZ258168048#30; #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;
+                #31;ja19b#31;2DE-576#30;1 #31;aSchiller, Friedrich#31;d1759 -
+                1805#31;0(DE-588)118607626#31;0(DE-576)162908903#30;10#31;aSchillers Werke#30; #31;aStuttgart
+                :#31;bCotta,#31;c18XX#30; #31;bdruck#30; #31;aSchiller, Friedrich Johann Christoph von#30;
+                #31;aSchiller, Friedrich von#30; #31;aSchiller, Friedrich v.#30; #31;aSchiller, Friedr. von#30;
+                #31;aSchiller, Fr.#30; #31;aSchiller, Johann Christoph Friedrich von#30; #31;aSchiller, Johann Christoph
+                Friedrich#30; #31;aSchiller, Joh. Christoph Frid.#30; #31;aSchiller, J. C. Friedrich von#30;
+                #31;aSchiller, J. C. F.#30; #31;aSchiller, Johann Frederich#30; #31;aSchiller, Bedřich#30;
+                #31;aSchiller, C. Friedrich von#30; #31;aSchiller, C. F.#30; #31;aSchiller, Federico#30; #31;aSchiller,
+                Federico de#30; #31;aSchiller, Frederic#30; #31;aSchiller, Frédéric#30; #31;aSchiller, Frédéric von#30;
+                #31;aSchiller, Frederick#30; #31;aSchiller, Frederico#30; #31;aSchiller, Friderico#30; #31;aSchiller,
+                Fridrich von#30; #31;aSchiller, Fryderyk#30; #31;aSchiller, Fr. v.#30; #31;aSchiller, F. von#30;
+                #31;aSchiller, F.#30; #31;aSchiller, ...#30; #31;aSchüller, ...#30; #31;aHsilô, ...#30; #31;aShiler,
+                Fridrih#30; #31;aShirâ, ...#30; #31;aShirureru, ...#30; #31;aŠiler, Fridrich#30; #31;aŠiler, Fridrih#30;
+                #31;aŠiler, Fridrik#30; #31;aŠiler, ...#30; #31;aŠileri, Phridrih#30; #31;aŠileris, Fridrichas#30;
+                #31;aŠileris, Frydrichas#30; #31;aŠileris, Frydrychas#30; #31;aŠīlir, Frīdrīš#30; #31;aŞiller, Frederik
+                fon#30; #31;aŠiller, Fridrich#30; #31;aSiller, Fridricku#30; #31;aŠiller, Fridrih#30; #31;aŠiller,
+                Fr.#30; #31;aŠiller, F.#30; #31;aŠiller, Iogann Christof Fridrich#30; #31;aSiller, Phrēntrich#30;
+                #31;aSiller, Phriderikos#30; #31;aŠillers, Fr.#30; #31;aŠīllir, ...#30; #31;aSillŏ, P'ŭridŭrihi#30;
+                #31;aSillr, F.#30; #31;a실러, 프리드리히#30; #31;a弗里德里希·席勒#30; #31;a席勒, 弗里德里希#30; #31;aשילר, פרידריך#30;
+                #31;bXA-DE#30; #31;aDE-291#31;x51866967X:201302071200#31;z2006-10-22T15:51:56Z#30;
+                #31;a258168048#31;b0#31;c201302071200#31;d201402071742#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>Germany</str>
+            </arr>
+            <str name="id">0006697768</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Stuttgart : Cotta, 18XX</str>
+            <arr name="institution">
+                <str>DE-291</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set">a</str>
+            <arr name="publishDate">
+                <str>18XX</str>
+            </arr>
+            <str name="publishDateSort">1867</str>
+            <arr name="publishPlace">
+                <str>Stuttgart :</str>
+            </arr>
+            <arr name="publisher">
+                <str>Cotta,</str>
+            </arr>
+            <str name="record_id">258168048</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Schiller, Friedrich 1759 - 1805 (DE-588)118607626 (DE-576)162908903 Schillers Werke
+                Stuttgart : Cotta, 18XX
+            </str>
+            <arr name="spellingShingle">
+                <str>Schiller, Friedrich 1759 - 1805</str>
+                <str>Schillers Werke</str>
+            </arr>
+            <arr name="timecode">
+                <str>1851 – 1900</str>
+            </arr>
+            <str name="title">Schillers Werke</str>
+            <str name="title_full">Schillers Werke</str>
+            <str name="title_fullStr">Schillers Werke</str>
+            <str name="title_full_unstemmed">Schillers Werke</str>
+            <str name="title_short">Schillers Werke</str>
+            <str name="title_sort">schillers werke</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Schiller, Friedrich</str>
+            <arr name="author_id">
+                <str>118607626</str>
+            </arr>
+            <str name="author_letter">Schiller, Friedrich</str>
+            <str name="authorized_mode">true</str>
+            <arr name="barcode">
+                <str>(DE-Wim8)1169401287</str>
+            </arr>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>MusicalScore</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Musical Score</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Musical Score</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Musical Score</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Musical Score</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00499nca a2200169 c
+                4500001001100000003000700011005001700018007000300035008004100038035002500079040002200104100006300126245005800189982002400247852001200271980004600283#30;0007403754#30;DE-601#30;20100624143905.0#30;qu#30;100624s2010
+                000 0 d#30; #31;a(DE-599)GBV630016208#30; #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aSchiller, Friedrich
+                #31;0(DE-601)133368432#31;0(DE-588)118607626#30;10#31;aFünfzig Lieder#31;n34#31;pDie Ideale / Friedrich
+                @Schiller#30; #31;a(DE-Wim8)1169401287#30; #31;aDE-Wim8#30;
+                #31;a630016208#31;b21#31;c201304130859#31;d201305060813#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0007403754</str>
+            <str name="illustrated">Not Illustrated</str>
+            <arr name="institution">
+                <str>DE-Wim8</str>
+            </arr>
+            <arr name="language">
+                <str>not assigned</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>GBV Musikdigitalisate</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">a</str>
+            <str name="multipart_set"></str>
+            <str name="publishDateSort">2010</str>
+            <str name="record_id">630016208</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">21</str>
+            <str name="spelling">Schiller, Friedrich (DE-601)133368432 (DE-588)118607626 Fünfzig Lieder 34 Die Ideale /
+                Friedrich @Schiller
+            </str>
+            <arr name="spellingShingle">
+                <str>Schiller, Friedrich</str>
+                <str>Fünfzig Lieder</str>
+            </arr>
+            <str name="title">Fünfzig Lieder</str>
+            <str name="title_full">Fünfzig Lieder 34 Die Ideale / Friedrich @Schiller</str>
+            <str name="title_fullStr">Fünfzig Lieder 34 Die Ideale / Friedrich @Schiller</str>
+            <str name="title_full_unstemmed">Fünfzig Lieder 34 Die Ideale / Friedrich @Schiller</str>
+            <str name="title_part">34 Die Ideale / Friedrich @Schiller</str>
+            <str name="title_short">Fünfzig Lieder</str>
+            <str name="title_sort">fünfzig lieder</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Schiller, Friedrich</str>
+            <arr name="author_id">
+                <str>118607626</str>
+            </arr>
+            <str name="author_letter">Schiller, Friedrich</str>
+            <str name="authorized_mode">true</str>
+            <arr name="barcode">
+                <str>(DE-Wim8)116926140X</str>
+            </arr>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>MusicalScore</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Musical Score</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Musical Score</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Musical Score</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Musical Score</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00497nca a2200169 c
+                4500001001100000003000700011005001700018007000300035008004100038035002500079040002200104100006300126245005600189982002400245852001200269980004600281#30;0007424199#30;DE-601#30;20100624143920.0#30;qu#30;100623s2010
+                000 0 d#30; #31;a(DE-599)GBV629830118#30; #31;aGBVCP#31;bger#31;erakwb#30;1 #31;aSchiller, Friedrich
+                #31;0(DE-601)133368432#31;0(DE-588)118607626#30;10#31;aFünfzig Lieder#31;n33#31;pBerglied / Friedrich
+                @Schiller#30; #31;a(DE-Wim8)116926140X#30; #31;aDE-Wim8#30;
+                #31;a629830118#31;b21#31;c201304130859#31;d201305060814#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0007424199</str>
+            <str name="illustrated">Not Illustrated</str>
+            <arr name="institution">
+                <str>DE-Wim8</str>
+            </arr>
+            <arr name="language">
+                <str>not assigned</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>GBV Musikdigitalisate</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">a</str>
+            <str name="multipart_set"></str>
+            <str name="publishDateSort">2010</str>
+            <str name="record_id">629830118</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">21</str>
+            <str name="spelling">Schiller, Friedrich (DE-601)133368432 (DE-588)118607626 Fünfzig Lieder 33 Berglied /
+                Friedrich @Schiller
+            </str>
+            <arr name="spellingShingle">
+                <str>Schiller, Friedrich</str>
+                <str>Fünfzig Lieder</str>
+            </arr>
+            <str name="title">Fünfzig Lieder</str>
+            <str name="title_full">Fünfzig Lieder 33 Berglied / Friedrich @Schiller</str>
+            <str name="title_fullStr">Fünfzig Lieder 33 Berglied / Friedrich @Schiller</str>
+            <str name="title_full_unstemmed">Fünfzig Lieder 33 Berglied / Friedrich @Schiller</str>
+            <str name="title_part">33 Berglied / Friedrich @Schiller</str>
+            <str name="title_short">Fünfzig Lieder</str>
+            <str name="title_sort">fünfzig lieder</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Haeusser, Friedrich Emil</str>
+            <str name="author_letter">Haeusser, Friedrich Emil</str>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00678cam a22002292
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156046001700164100004800181245006000229246001400289260003400303935001000337852005600347980004500403#30;0010853660#30;DE-576#30;20100313030534.0#30;tu#30;060123s1879
+                xx 00 0 ger c#30; #31;a(OCoLC)254098896#30; #31;a(DE-599)BSZ250416220#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30; #31;ja19b#31;2DE-576#30;1 #31;aHaeusser,
+                Friedrich Emil#31;0(DE-576)250415208#30;10#31;aSchiller's Jungfrau von Orleans :#31;bdramaturgische
+                Tafel#30;30#31;aSchillers#30; #31;aMannheim ;#31;aStraßburg,#31;c1879#30; #31;bdruck#30;
+                #31;aDE-14#31;x501362126:201403052218#31;z2014-03-15T16:48:34Z#30;
+                #31;a250416220#31;b0#31;c201403052218#31;d201407251811#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0010853660</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Mannheim ; Straßburg, 1879</str>
+            <arr name="institution">
+                <str>DE-14</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>254098896</long>
+            </arr>
+            <arr name="publishDate">
+                <str>1879</str>
+            </arr>
+            <str name="publishDateSort">1879</str>
+            <arr name="publishPlace">
+                <str>Mannheim ;</str>
+                <str>Straßburg,</str>
+            </arr>
+            <str name="record_id">250416220</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Haeusser, Friedrich Emil (DE-576)250415208 Schiller's Jungfrau von Orleans :
+                dramaturgische Tafel Schillers Mannheim ; Straßburg, 1879
+            </str>
+            <arr name="spellingShingle">
+                <str>Haeusser, Friedrich Emil</str>
+                <str>Schiller's Jungfrau von Orleans : dramaturgische Tafel</str>
+            </arr>
+            <arr name="timecode">
+                <str>1851 – 1900</str>
+            </arr>
+            <str name="title">Schiller's Jungfrau von Orleans : dramaturgische Tafel</str>
+            <arr name="title_alt">
+                <str>Schillers</str>
+            </arr>
+            <str name="title_full">Schiller's Jungfrau von Orleans : dramaturgische Tafel</str>
+            <str name="title_fullStr">Schiller's Jungfrau von Orleans : dramaturgische Tafel</str>
+            <str name="title_full_unstemmed">Schiller's Jungfrau von Orleans : dramaturgische Tafel</str>
+            <str name="title_short">Schiller's Jungfrau von Orleans :</str>
+            <str name="title_sort">schiller's jungfrau von orleans :dramaturgische tafel</str>
+            <str name="title_sub">dramaturgische Tafel</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Huffelmann, Martin</str>
+            <str name="author_letter">Huffelmann, Martin</str>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00647cam a22002172
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156100004200164245007700206246001400283260002100297935001000318852005600328980004500384#30;0011975707#30;DE-576#30;20110303202429.0#30;tu#30;070710s1909
+                xx 00 0 ger c#30; #31;a(OCoLC)315843131#30; #31;a(DE-599)BSZ266475817#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;1 #31;aHuffelmann,
+                Martin#31;0(DE-576)266475728#30;10#31;aSchillers Vaterland :#31;bGedenkrede zum 150. Geburtstage Friedr.
+                Schillers#30;30#31;aFriedrich#30; #31;aWiesbaden,#31;c1909#30; #31;bdruck#30;
+                #31;aDE-14#31;x537724796:201403052218#31;z2014-03-16T00:07:24Z#30;
+                #31;a266475817#31;b0#31;c201403052218#31;d201407260357#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0011975707</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Wiesbaden, 1909</str>
+            <arr name="institution">
+                <str>DE-14</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>315843131</long>
+            </arr>
+            <arr name="publishDate">
+                <str>1909</str>
+            </arr>
+            <str name="publishDateSort">1909</str>
+            <arr name="publishPlace">
+                <str>Wiesbaden,</str>
+            </arr>
+            <str name="record_id">266475817</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Huffelmann, Martin (DE-576)266475728 Schillers Vaterland : Gedenkrede zum 150.
+                Geburtstage Friedr. Schillers Friedrich Wiesbaden, 1909
+            </str>
+            <arr name="spellingShingle">
+                <str>Huffelmann, Martin</str>
+                <str>Schillers Vaterland : Gedenkrede zum 150. Geburtstage Friedr. Schillers</str>
+            </arr>
+            <str name="title">Schillers Vaterland : Gedenkrede zum 150. Geburtstage Friedr. Schillers</str>
+            <arr name="title_alt">
+                <str>Friedrich</str>
+            </arr>
+            <str name="title_full">Schillers Vaterland : Gedenkrede zum 150. Geburtstage Friedr. Schillers</str>
+            <str name="title_fullStr">Schillers Vaterland : Gedenkrede zum 150. Geburtstage Friedr. Schillers</str>
+            <str name="title_full_unstemmed">Schillers Vaterland : Gedenkrede zum 150. Geburtstage Friedr. Schillers
+            </str>
+            <str name="title_short">Schillers Vaterland :</str>
+            <str name="title_sort">schillers vaterland :gedenkrede zum 150. geburtstage friedr. schillers</str>
+            <str name="title_sub">Gedenkrede zum 150. Geburtstage Friedr. Schillers</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Haeusser, Friedrich Emil</str>
+            <str name="author_letter">Haeusser, Friedrich Emil</str>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00688cam a22002292
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156046001700164100004800181245005700229246002700286260003400313935001000347852005600357980004500413#30;0012392953#30;DE-576#30;20100313030534.0#30;tu#30;060123s1879
+                xx 00 0 ger c#30; #31;a(OCoLC)254098824#30; #31;a(DE-599)BSZ250415305#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30; #31;ja19b#31;2DE-576#30;1 #31;aHaeusser,
+                Friedrich Emil#31;0(DE-576)250415208#30;10#31;aSchiller's Wallenstein's Tod :#31;bdramaturgische
+                Tafel#30;30#31;aSchillers Wallensteins#30; #31;aMannheim ;#31;aStraßburg,#31;c1879#30; #31;bdruck#30;
+                #31;aDE-14#31;x501359060:201403052218#31;z2014-03-16T01:18:21Z#30;
+                #31;a250415305#31;b0#31;c201403052218#31;d201407260708#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0012392953</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Mannheim ; Straßburg, 1879</str>
+            <arr name="institution">
+                <str>DE-14</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>254098824</long>
+            </arr>
+            <arr name="publishDate">
+                <str>1879</str>
+            </arr>
+            <str name="publishDateSort">1879</str>
+            <arr name="publishPlace">
+                <str>Mannheim ;</str>
+                <str>Straßburg,</str>
+            </arr>
+            <str name="record_id">250415305</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Haeusser, Friedrich Emil (DE-576)250415208 Schiller's Wallenstein's Tod :
+                dramaturgische Tafel Schillers Wallensteins Mannheim ; Straßburg, 1879
+            </str>
+            <arr name="spellingShingle">
+                <str>Haeusser, Friedrich Emil</str>
+                <str>Schiller's Wallenstein's Tod : dramaturgische Tafel</str>
+            </arr>
+            <arr name="timecode">
+                <str>1851 – 1900</str>
+            </arr>
+            <str name="title">Schiller's Wallenstein's Tod : dramaturgische Tafel</str>
+            <arr name="title_alt">
+                <str>Schillers Wallensteins</str>
+            </arr>
+            <str name="title_full">Schiller's Wallenstein's Tod : dramaturgische Tafel</str>
+            <str name="title_fullStr">Schiller's Wallenstein's Tod : dramaturgische Tafel</str>
+            <str name="title_full_unstemmed">Schiller's Wallenstein's Tod : dramaturgische Tafel</str>
+            <str name="title_short">Schiller's Wallenstein's Tod :</str>
+            <str name="title_sort">schiller's wallenstein's tod :dramaturgische tafel</str>
+            <str name="title_sub">dramaturgische Tafel</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Haeusser, Friedrich Emil</str>
+            <str name="author_letter">Haeusser, Friedrich Emil</str>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00670cam a22002292
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156046001700164100004800181245005200229246001400281260003400295935001000329852005600339980004500395#30;0012392954#30;DE-576#30;20100313030534.0#30;tu#30;060123s1878
+                xx 00 0 ger c#30; #31;a(OCoLC)254098868#30; #31;a(DE-599)BSZ250415569#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30; #31;ja19b#31;2DE-576#30;1 #31;aHaeusser,
+                Friedrich Emil#31;0(DE-576)250415208#30;10#31;aSchiller's Maria Stuart :#31;bdramaturgische
+                Tafel#30;30#31;aSchillers#30; #31;aMannheim ;#31;aStraßburg,#31;c1878#30; #31;bdruck#30;
+                #31;aDE-14#31;x501359648:201403052218#31;z2014-03-16T01:18:21Z#30;
+                #31;a250415569#31;b0#31;c201403052218#31;d201407260708#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0012392954</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Mannheim ; Straßburg, 1878</str>
+            <arr name="institution">
+                <str>DE-14</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>254098868</long>
+            </arr>
+            <arr name="publishDate">
+                <str>1878</str>
+            </arr>
+            <str name="publishDateSort">1878</str>
+            <arr name="publishPlace">
+                <str>Mannheim ;</str>
+                <str>Straßburg,</str>
+            </arr>
+            <str name="record_id">250415569</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Haeusser, Friedrich Emil (DE-576)250415208 Schiller's Maria Stuart : dramaturgische
+                Tafel Schillers Mannheim ; Straßburg, 1878
+            </str>
+            <arr name="spellingShingle">
+                <str>Haeusser, Friedrich Emil</str>
+                <str>Schiller's Maria Stuart : dramaturgische Tafel</str>
+            </arr>
+            <arr name="timecode">
+                <str>1851 – 1900</str>
+            </arr>
+            <str name="title">Schiller's Maria Stuart : dramaturgische Tafel</str>
+            <arr name="title_alt">
+                <str>Schillers</str>
+            </arr>
+            <str name="title_full">Schiller's Maria Stuart : dramaturgische Tafel</str>
+            <str name="title_fullStr">Schiller's Maria Stuart : dramaturgische Tafel</str>
+            <str name="title_full_unstemmed">Schiller's Maria Stuart : dramaturgische Tafel</str>
+            <str name="title_short">Schiller's Maria Stuart :</str>
+            <str name="title_sort">schiller's maria stuart :dramaturgische tafel</str>
+            <str name="title_sub">dramaturgische Tafel</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6872241</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Haeusser, Friedrich Emil</str>
+            <str name="author_letter">Haeusser, Friedrich Emil</str>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00690cam a22002292
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156046001700164100004800181245005900229246002700288260003400315935001000349852005600359980004500415#30;0012392955#30;DE-576#30;20100529051310.0#30;tu#30;060123s1879
+                xx 00 0 ger c#30; #31;a(OCoLC)315000704#30; #31;a(DE-599)BSZ250415747#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30; #31;ja19b#31;2DE-576#30;1 #31;aHaeusser,
+                Friedrich Emil#31;0(DE-576)250415208#30;10#31;aSchiller's Wallenstein's Lager :#31;bdramaturgische
+                Tafel#30;30#31;aSchillers Wallensteins#30; #31;aMannheim ;#31;aStraßburg,#31;c1879#30; #31;bdruck#30;
+                #31;aDE-14#31;x501360239:201403052218#31;z2014-03-16T01:18:21Z#30;
+                #31;a250415747#31;b0#31;c201403052218#31;d201407260708#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0012392955</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Mannheim ; Straßburg, 1879</str>
+            <arr name="institution">
+                <str>DE-14</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>315000704</long>
+            </arr>
+            <arr name="publishDate">
+                <str>1879</str>
+            </arr>
+            <str name="publishDateSort">1879</str>
+            <arr name="publishPlace">
+                <str>Mannheim ;</str>
+                <str>Straßburg,</str>
+            </arr>
+            <str name="record_id">250415747</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Haeusser, Friedrich Emil (DE-576)250415208 Schiller's Wallenstein's Lager :
+                dramaturgische Tafel Schillers Wallensteins Mannheim ; Straßburg, 1879
+            </str>
+            <arr name="spellingShingle">
+                <str>Haeusser, Friedrich Emil</str>
+                <str>Schiller's Wallenstein's Lager : dramaturgische Tafel</str>
+            </arr>
+            <arr name="timecode">
+                <str>1851 – 1900</str>
+            </arr>
+            <str name="title">Schiller's Wallenstein's Lager : dramaturgische Tafel</str>
+            <arr name="title_alt">
+                <str>Schillers Wallensteins</str>
+            </arr>
+            <str name="title_full">Schiller's Wallenstein's Lager : dramaturgische Tafel</str>
+            <str name="title_fullStr">Schiller's Wallenstein's Lager : dramaturgische Tafel</str>
+            <str name="title_full_unstemmed">Schiller's Wallenstein's Lager : dramaturgische Tafel</str>
+            <str name="title_short">Schiller's Wallenstein's Lager :</str>
+            <str name="title_sort">schiller's wallenstein's lager :dramaturgische tafel</str>
+            <str name="title_sub">dramaturgische Tafel</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6555467</float>
+            <str name="access_facet">Local Holdings</str>
+            <date name="attached_de15">2010-07-22T10:14:44Z</date>
+            <str name="author">Schiller, Friedrich 1759 - 1805</str>
+            <arr name="author2">
+                <str>Greif, Martin</str>
+            </arr>
+            <arr name="author_id">
+                <str>118607626</str>
+            </arr>
+            <str name="author_letter">Schiller, Friedrich</str>
+            <str name="authorized_mode">true</str>
+            <arr name="barcode">
+                <str>(DE-15)7003401283</str>
+                <str>(DE-15)0020223690</str>
+            </arr>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>Bibliotheca Albertina</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de15">
+                <str>Magazin / Sonstige</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">03561cam a22011652
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156041000800164100007500172245011100247246003700358246001400395260001900409700003700428935001000465982002500475981003300500969001300533982002500546981003900571969001300610983001900623969000600642900004500648900002800693900002700721900002600748900001800774900004500792900004100837900004100878900003500919900003400954900002300988900003101011900002301042900003101065900002001096900002301116900002601139900002301165900002501188900002901213900002401242900002401266900002401290900002701314900002301341900002101364900002101385900001701406900001801423900001901441900001601460900002001476900001601496900001901512900002101531900002001552900002001572900001601592900002201608900002501630900002501655900002501680900002401705900002601729900002201755900002201777900002101799900001701820900001601837900003801853900002401891900002401915900001801939900001801957900002601975900001402001900002502015900002002040900002102060900002802081900002802109900002802137900002902165900002502194900001402219900002302233900002802256951001002284852005602294980004502350#30;0000764026#30;DE-576#30;20130926160942.0#30;tu#30;040420s1902
+                xx 00 0 ger c#30; #31;a(OCoLC)314664324#30; #31;a(DE-599)BSZ110964217#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;07#31;adt.#30;1 #31;aSchiller,
+                Friedrich#31;d1759 - 1805#31;0(DE-588)118607626#31;0(DE-576)162908903#30;10#31;aSchillers Demetrius
+                :#31;bdas Fragment. Nachspiel zu Schillers Demetrius / Martin Greif /#31;cFriedrich Schiller#30;3
+                #31;aNachspiel zu Schillers Demetrius#30;9 #31;aDemetrius#30; #31;aLeipzig,#31;c1902#30;1 #31;aGreif,
+                Martin#31;0(DE-576)339458542#30; #31;bdruck#30; #31;a(DE-15)7003401283#31;x1#30;
+                #31;a(DE-15)Dürr.349#31;x1#31;ccurrent#30; #31;bKeine#31;x1#30; #31;a(DE-15)0020223690#31;x2#30;
+                #31;a(DE-15)Goe.-Schi.12830#31;x2#31;ccurrent#30; #31;bKeine#31;x2#30; #31;a(DE-15)2024670#30;
+                #31;cB#30; #31;aSchiller, Friedrich Johann Christoph von#30; #31;aSchiller, Friedrich von#30;
+                #31;aSchiller, Friedrich v.#30; #31;aSchiller, Friedr. von#30; #31;aSchiller, Fr.#30; #31;aSchiller,
+                Johann Christoph Friedrich von#30; #31;aSchiller, Johann Christoph Friderich#30; #31;aSchiller, Johann
+                Christoph Friedrich#30; #31;aSchiller, Joh. Christoph Frid.#30; #31;aSchiller, J. C. Friedrich von#30;
+                #31;aSchiller, J. C. F.#30; #31;aSchiller, Johann Frederich#30; #31;aSchiller, Bedřich#30;
+                #31;aSchiller, C. Friedrich von#30; #31;aSchiller, C. F.#30; #31;aSchiller, Federico#30; #31;aSchiller,
+                Federico de#30; #31;aSchiller, Frederic#30; #31;aSchiller, Frédéric#30; #31;aSchiller, Frédéric von#30;
+                #31;aSchiller, Frederick#30; #31;aSchiller, Frederico#30; #31;aSchiller, Friderico#30; #31;aSchiller,
+                Fridrich von#30; #31;aSchiller, Fryderyk#30; #31;aSchiller, Fr. v.#30; #31;aSchiller, F. von#30;
+                #31;aSchiller, F.#30; #31;aSchiller, ...#30; #31;aSchüller, ...#30; #31;aHsilô, ...#30; #31;aShiler,
+                Fridrih#30; #31;aShirâ, ...#30; #31;aShirureru, ...#30; #31;aŠiler, Fridrich#30; #31;aŠiler, Fridrih#30;
+                #31;aŠiler, Fridrik#30; #31;aŠiler, ...#30; #31;aŠileri, Phridrih#30; #31;aŠileris, Fridrichas#30;
+                #31;aŠileris, Frydrichas#30; #31;aŠileris, Frydrychas#30; #31;aŠīlir, Frīdrīš#30; #31;aŞiller, Frederik
+                fon#30; #31;aŠiller, Fridrich#30; #31;aSiller, Fridricku#30; #31;aŠiller, Fridrih#30; #31;aŠiller,
+                Fr.#30; #31;aŠiller, F.#30; #31;aŠiller, Iogann Christof Fridrich#30; #31;aSiller, Phrēntrich#30;
+                #31;aSiller, Phriderikos#30; #31;aŠillers, Fr.#30; #31;aŠīllir, ...#30; #31;aSillŏ, P'ŭridŭrihi#30;
+                #31;aSillr, F.#30; #31;aFu li de li xi Xi le#30; #31;aFulidelixi-Xile#30; #31;aXile, Fulidelixi#30;
+                #31;a실러, 프리드리히#30; #31;a弗里德里希·席勒#30; #31;a席勒, 弗里德里希#30; #31;aשילר, פרידריך#30; #31;aGreif-Schuhmann,
+                ...#30; #31;aGreif, M.#30; #31;aFrey, Friedrich H.#30; #31;aFrey, Friedrich Hermann#30; #31;bXA-DE#30;
+                #31;aDE-15#31;x642342032:201403060933#31;z2010-07-22T10:14:44Z#30;
+                #31;a110964217#31;b0#31;c201403060933#31;d201407252324#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>Germany</str>
+            </arr>
+            <str name="id">0000764026</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Leipzig, 1902</str>
+            <arr name="institution">
+                <str>DE-15</str>
+            </arr>
+            <str name="itemdata">
+                {"DE-15":[{"cn":"Goe.-Schi.12830","bc":"0020223690"},{"cn":"Dürr.349","bc":"7003401283"}]}
+            </str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>314664324</long>
+            </arr>
+            <arr name="publishDate">
+                <str>1902</str>
+            </arr>
+            <str name="publishDateSort">1902</str>
+            <arr name="publishPlace">
+                <str>Leipzig,</str>
+            </arr>
+            <str name="record_id">110964217</str>
+            <str name="recordtype">marc</str>
+            <arr name="rsn">
+                <str>(DE-15)2024670</str>
+            </arr>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <arr name="signatur">
+                <str>(DE-15)Dürr.349</str>
+                <str>(DE-15)Goe.-Schi.12830</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Schiller, Friedrich 1759 - 1805 (DE-588)118607626 (DE-576)162908903 Schillers Demetrius
+                : das Fragment. Nachspiel zu Schillers Demetrius / Martin Greif / Friedrich Schiller Nachspiel zu
+                Schillers Demetrius Demetrius Leipzig, 1902 Greif, Martin (DE-576)339458542
+            </str>
+            <arr name="spellingShingle">
+                <str>Schiller, Friedrich 1759 - 1805</str>
+                <str>Schillers Demetrius : das Fragment. Nachspiel zu Schillers Demetrius / Martin Greif /</str>
+                <str>Greif, Martin</str>
+            </arr>
+            <str name="title">Schillers Demetrius : das Fragment. Nachspiel zu Schillers Demetrius / Martin Greif /
+            </str>
+            <arr name="title_alt">
+                <str>Nachspiel zu Schillers Demetrius</str>
+                <str>Demetrius</str>
+            </arr>
+            <str name="title_full">Schillers Demetrius : das Fragment. Nachspiel zu Schillers Demetrius / Martin Greif
+                /
+            </str>
+            <str name="title_fullStr">Schillers Demetrius : das Fragment. Nachspiel zu Schillers Demetrius / Martin
+                Greif /
+            </str>
+            <str name="title_full_unstemmed">Schillers Demetrius : das Fragment. Nachspiel zu Schillers Demetrius /
+                Martin Greif /
+            </str>
+            <str name="title_short">Schillers Demetrius :</str>
+            <str name="title_sort">schillers demetrius :das fragment. nachspiel zu schillers demetrius / martin greif
+            </str>
+            <str name="title_sub">das Fragment. Nachspiel zu Schillers Demetrius / Martin Greif /</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <float name="score">2.6555467</float>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Schiller, Friedrich 1759 - 1805</str>
+            <arr name="author_id">
+                <str>118607626</str>
+            </arr>
+            <str name="author_letter">Schiller, Friedrich</str>
+            <str name="authorized_mode">true</str>
+            <arr name="barcode">
+                <str>(DE-15)0020635981</str>
+            </arr>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>Bibliotheca Albertina</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de15">
+                <str>Magazin / Sonstige</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">03452cam a2201093
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156100007500164245005800239260005600297300001000353490006900363810009600432935001000528935000900538982002500547981003500572969001300607983001900620969000600639900004500645900002800690900002700718900002600745900001800771900004500789900004100834900004100875900003500916900003400951900002300985900003101008900002301039900003101062900002001093900002301113900002601136900002301162900002501185900002901210900002401239900002401263900002401287900002701311900002301338900002101361900002101382900001701403900001801420900001901438900001601457900002001473900001601493900001901509900002101528900002001549900002001569900001601589900002201605900002501627900002501652900002501677900002401702900002601726900002201752900002201774900002101796900001701817900001601834900003801850900002401888900002401912900001801936900001801954900002601972900001401998900002502012900002002037900002102057900002802078900002802106900002802134900002902162951001002191852005602201852005602257980004502313#30;0004279203#30;DE-576#30;20120619143008.0#30;tu#30;960925s1959
+                xx 000 0 ger c#30; #31;a(OCoLC)231755986#30; #31;a(DE-599)BSZ054523397#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;1 #31;aSchiller, Friedrich#31;d1759 -
+                1805#31;0(DE-588)118607626#31;0(DE-576)162908903#30;10#31;aVerzeichnis seiner Dramenpläne
+                /#31;cFriedrich Schiller#30; #31;aMarbach a. Neckar :#31;bSchiller-Nationalmuseum,#31;c1959#30; #31;a2
+                Bl.#30;1 #31;aFaksimiledruck / Schiller-Nationalmuseum Marbach am Neckar ; #31;v4#30;2
+                #31;aSchiller-Nationalmuseum und Deutsches
+                Literaturarchiv#31;tFaksimiledruck#31;v4#31;w(DE-576)017578752#30; #31;bdruck#30; #31;cfaks#30;
+                #31;a(DE-15)0020635981#31;x1#30; #31;a(DE-15)64-4-2032:4#31;x1#31;ccurrent#30; #31;bKeine#31;x1#30;
+                #31;a(DE-15)3121814#30; #31;cB#30; #31;aSchiller, Friedrich Johann Christoph von#30; #31;aSchiller,
+                Friedrich von#30; #31;aSchiller, Friedrich v.#30; #31;aSchiller, Friedr. von#30; #31;aSchiller, Fr.#30;
+                #31;aSchiller, Johann Christoph Friedrich von#30; #31;aSchiller, Johann Christoph Friderich#30;
+                #31;aSchiller, Johann Christoph Friedrich#30; #31;aSchiller, Joh. Christoph Frid.#30; #31;aSchiller, J.
+                C. Friedrich von#30; #31;aSchiller, J. C. F.#30; #31;aSchiller, Johann Frederich#30; #31;aSchiller,
+                Bedřich#30; #31;aSchiller, C. Friedrich von#30; #31;aSchiller, C. F.#30; #31;aSchiller, Federico#30;
+                #31;aSchiller, Federico de#30; #31;aSchiller, Frederic#30; #31;aSchiller, Frédéric#30; #31;aSchiller,
+                Frédéric von#30; #31;aSchiller, Frederick#30; #31;aSchiller, Frederico#30; #31;aSchiller, Friderico#30;
+                #31;aSchiller, Fridrich von#30; #31;aSchiller, Fryderyk#30; #31;aSchiller, Fr. v.#30; #31;aSchiller, F.
+                von#30; #31;aSchiller, F.#30; #31;aSchiller, ...#30; #31;aSchüller, ...#30; #31;aHsilô, ...#30;
+                #31;aShiler, Fridrih#30; #31;aShirâ, ...#30; #31;aShirureru, ...#30; #31;aŠiler, Fridrich#30;
+                #31;aŠiler, Fridrih#30; #31;aŠiler, Fridrik#30; #31;aŠiler, ...#30; #31;aŠileri, Phridrih#30;
+                #31;aŠileris, Fridrichas#30; #31;aŠileris, Frydrichas#30; #31;aŠileris, Frydrychas#30; #31;aŠīlir,
+                Frīdrīš#30; #31;aŞiller, Frederik fon#30; #31;aŠiller, Fridrich#30; #31;aSiller, Fridricku#30;
+                #31;aŠiller, Fridrih#30; #31;aŠiller, Fr.#30; #31;aŠiller, F.#30; #31;aŠiller, Iogann Christof
+                Fridrich#30; #31;aSiller, Phrēntrich#30; #31;aSiller, Phriderikos#30; #31;aŠillers, Fr.#30; #31;aŠīllir,
+                ...#30; #31;aSillŏ, P'ŭridŭrihi#30; #31;aSillr, F.#30; #31;aFu li de li xi Xi le#30;
+                #31;aFulidelixi-Xile#30; #31;aXile, Fulidelixi#30; #31;a실러, 프리드리히#30; #31;a弗里德里希·席勒#30; #31;a席勒,
+                弗里德里希#30; #31;aשילר, פרידריך#30; #31;bXA-DE#30;
+                #31;aDE-14#31;x650692233:201403061834#31;z2014-03-16T02:48:42Z#30;
+                #31;aDE-15#31;x715912828:201403061834#31;z2012-06-19T14:30:08Z#30;
+                #31;a054523397#31;b0#31;c201403061834#31;d201407261009#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>Germany</str>
+            </arr>
+            <str name="id">0004279203</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Marbach a. Neckar : Schiller-Nationalmuseum, 1959</str>
+            <arr name="institution">
+                <str>DE-14</str>
+                <str>DE-15</str>
+            </arr>
+            <str name="itemdata">{"DE-15":[{"cn":"64-4-2032:4","bc":"0020635981"}]}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <arr name="multipart_link">
+                <str>017578752</str>
+            </arr>
+            <arr name="multipart_part">
+                <str>(017578752)4</str>
+            </arr>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>231755986</long>
+            </arr>
+            <arr name="physical">
+                <str>2 Bl.</str>
+            </arr>
+            <arr name="publishDate">
+                <str>1959</str>
+            </arr>
+            <str name="publishDateSort">1959</str>
+            <arr name="publishPlace">
+                <str>Marbach a. Neckar :</str>
+            </arr>
+            <arr name="publisher">
+                <str>Schiller-Nationalmuseum,</str>
+            </arr>
+            <str name="record_id">054523397</str>
+            <str name="recordtype">marc</str>
+            <arr name="rsn">
+                <str>(DE-15)3121814</str>
+            </arr>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <arr name="series">
+                <str>Schiller-Nationalmuseum und Deutsches Literaturarchiv Faksimiledruck</str>
+            </arr>
+            <arr name="series2">
+                <str>Faksimiledruck / Schiller-Nationalmuseum Marbach am Neckar ;</str>
+            </arr>
+            <arr name="signatur">
+                <str>(DE-15)64-4-2032:4</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Schiller, Friedrich 1759 - 1805 (DE-588)118607626 (DE-576)162908903 Verzeichnis seiner
+                Dramenpläne / Friedrich Schiller Marbach a. Neckar : Schiller-Nationalmuseum, 1959 2 Bl. Faksimiledruck
+                / Schiller-Nationalmuseum Marbach am Neckar ; 4 Schiller-Nationalmuseum und Deutsches Literaturarchiv
+                Faksimiledruck 4 (DE-576)017578752
+            </str>
+            <arr name="spellingShingle">
+                <str>Faksimiledruck / Schiller-Nationalmuseum Marbach am Neckar ;</str>
+                <str>Schiller-Nationalmuseum und Deutsches Literaturarchiv Faksimiledruck</str>
+                <str>Schiller, Friedrich 1759 - 1805</str>
+                <str>Verzeichnis seiner Dramenpläne /</str>
+            </arr>
+            <str name="title">Verzeichnis seiner Dramenpläne /</str>
+            <str name="title_full">Verzeichnis seiner Dramenpläne /</str>
+            <str name="title_fullStr">Verzeichnis seiner Dramenpläne /</str>
+            <str name="title_full_unstemmed">Verzeichnis seiner Dramenpläne /</str>
+            <str name="title_short">Verzeichnis seiner Dramenpläne /</str>
+            <str name="title_sort">verzeichnis seiner dramenpläne</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+    </result>
+    <lst name="facet_counts">
+        <lst name="facet_queries"/>
+        <lst name="facet_fields">
+            <lst name="format_de15">
+                <int name="Book, E-Book">10802</int>
+                <int name="Thesis">2015</int>
+                <int name="Musical Score">1027</int>
+                <int name="Article, E-Article">464</int>
+                <int name="Unknown Format">454</int>
+                <int name="Audio">310</int>
+                <int name="Journal, E-Journal">284</int>
+                <int name="Microform">179</int>
+                <int name="Website">131</int>
+                <int name="Video">91</int>
+                <int name="Software">30</int>
+                <int name="Map">18</int>
+                <int name="Newspaper, E-Paper">4</int>
+                <int name="Visual Media">4</int>
+                <int name="Electronic Resource (Remote Access)">3</int>
+            </lst>
+            <lst name="author_facet">
+                <int name="Schiller, Friedrich 1759 - 1805">2572</int>
+                <int name="Beethoven, Ludwig van Komponist 1770-1827">255</int>
+                <int name="Goethe, Johann Wolfgang von 1749 - 1832">192</int>
+                <int name="Schiller-Nationalmuseum und Deutsches Literaturarchiv">181</int>
+                <int name="Universität Jena">176</int>
+                <int name="Beethoven, Ludwig van 1770-1827">171</int>
+                <int name="Schubert, Franz">140</int>
+                <int name="Schiller, Friedrich">135</int>
+                <int name="Schubert, Franz Komponist 1797-1828">117</int>
+                <int name="Schubert, Franz 1797-1828">80</int>
+                <int name="Mozart, Wolfgang Amadeus Komponist 1756-1791">76</int>
+                <int name="C. Schiller">75</int>
+                <int name="Schubert, Franz 1797 - 1828">74</int>
+                <int name="Beethoven, Ludwig van 1770 - 1827">66</int>
+                <int name="Philharmonia Orchestra">64</int>
+                <int name="Bach, Johann Sebastian Komponist 1685-1750">59</int>
+                <int name="Brahms, Johannes Komponist 1833-1897">59</int>
+                <int name="Berliner Philharmoniker">58</int>
+                <int name="Friedrich Schiller (1759-1805)">57</int>
+                <int name="Händel, Georg Friedrich Komponist 1685-1759">57</int>
+                <int name="Liszt, Franz">56</int>
+                <int name="Bolck, Franz">51</int>
+                <int name="Schiller, Friedrich von">51</int>
+                <int name="Schumann, Robert Komponist 1810-1856">50</int>
+                <int name="Deutsche Schillergesellschaft">49</int>
+                <int name="Alexander Schill">48</int>
+                <int name="Schill, Alexander">47</int>
+                <int name="London Symphony Orchestra">46</int>
+                <int name="Philadelphia Orchestra">46</int>
+                <int name="Tschaikowsky, Peter Iljitsch Komponist 1840-1893">46</int>
+                <int name="Verdi, Giuseppe Komponist 1813-1901">46</int>
+                <int name="Zeller, Bernhard 1919 - 2008">46</int>
+                <int name="Vivaldi, Antonio Komponist 1678-1741">45</int>
+                <int name="New Philharmonia Orchestra">44</int>
+                <int name="Westminster Choir">42</int>
+                <int name="Schiller, Karl 1882-">41</int>
+                <int name="Schiller, Friedrich 1759-1805">40</int>
+                <int name="Wagner, Richard Komponist 1813-1883">39</int>
+                <int name="Academy of St. Martin in the Fields Orchestra">38</int>
+                <int name="Puccini, Giacomo Komponist 1858-1924">38</int>
+                <int name="Romberg, Andreas 1767 - 1821">38</int>
+                <int name="Elgar, Edward Komponist 1857-1934">37</int>
+                <int name="Strauss, Richard Komponist 1864-1949">37</int>
+                <int name="English Chamber Orchestra">36</int>
+                <int name="London Philharmonic Orchestra">36</int>
+                <int name="Schiller, Dieter">36</int>
+                <int name="Mendelssohn Bartholdy, Felix Komponist 1809-1847">35</int>
+                <int name="Rachmaninoff, Sergej Komponist 1873-1943">34</int>
+                <int name="Düntzer, Heinrich 1813 - 1901">33</int>
+                <int name="H. Schlager">31</int>
+                <int name="Vienna Philharmonic Orchestra">31</int>
+                <int name="Dvorák, Antonín Komponist 1841-1904">30</int>
+                <int name="S. Borrmann">29</int>
+                <int name="Schiller, Walter 1889-">29</int>
+                <int name="Barber, Samuel Komponist 1910-1981">28</int>
+                <int name="Bizet, Georges Komponist 1838-1875">28</int>
+                <int name="Debussy, Claude Komponist 1862-1918">28</int>
+                <int name="Oellers, Norbert 1936-">28</int>
+                <int name="Fischer-Dieskau, Dietrich">27</int>
+                <int name="Koopmann, Helmut 1933-">27</int>
+                <int name="Staatskapelle Dresden">27</int>
+                <int name="Verdi, Giuseppe 1813 - 1901">27</int>
+                <int name="Holst, Gustav Komponist 1874-1934">26</int>
+                <int name="Mahler, Gustav Komponist 1860-1911">26</int>
+                <int name="Moore, Gerald">26</int>
+                <int name="Prokofieff, Sergej Komponist 1891-1953">26</int>
+                <int name="Royal Philharmonic Orchestra">26</int>
+                <int name="Schiller, Herman 1839 - 1902">26</int>
+                <int name="Beethoven, Ludwig van">25</int>
+                <int name="Liszt, Franz 1811 - 1886">25</int>
+                <int name="Schiller, Karl Martin">25</int>
+                <int name="Strasbourg Philharmonic Orchestra">25</int>
+                <int name="Fischer, Daniel Andreas - 1750">24</int>
+                <int name="Grieg, Edvard Komponist 1843-1907">24</int>
+                <int name="Haydn, Franz Joseph Komponist 1732-1809">24</int>
+                <int name="Milan La Scala Orchestra">24</int>
+                <int name="Orff, Carl Komponist 1895-1982">24</int>
+                <int name="Schostakowitsch, Dmitri Komponist 1906-1975">24</int>
+                <int name="Strauß, Johann (Sohn) Komponist 1825-1899">24</int>
+                <int name="City of Birmingham Symphony Orchestra">23</int>
+                <int name="F. Ravegnani">23</int>
+                <int name="Milan La Scala Chorus">23</int>
+                <int name="Saint-Saëns, Camille Komponist 1835-1921">23</int>
+                <int name="Seidel, Samuel 1698 - 1755">23</int>
+                <int name="Sibelius, Jean Komponist 1865-1957">23</int>
+                <int name="Chopin, Frédéric Komponist 1810-1849">22</int>
+                <int name="Fauré, Gabriel Komponist 1845-1924">22</int>
+                <int name="Golz, Jochen 1942-">22</int>
+                <int name="Oslo Philharmonic Orchestra">22</int>
+                <int name="Schille, Gottfried 1929 - 2005">22</int>
+                <int name="Schultze-Mosgau, Stefan">22</int>
+                <int name="Sigusch, Bernd W.">22</int>
+                <int name="C. M. Volk">21</int>
+                <int name="Friedrich Schiller (1759–1805)">21</int>
+                <int name="King's College Choir, Cambridge">21</int>
+                <int name="Nationale Forschungs- und Gedenkstätten der Klassischen Deutschen Literatur">21</int>
+                <int name="Royal Choral Society">21</int>
+                <int name="Schleußner, Ekkehard">21</int>
+                <int name="Shakespeare, William 1564 - 1616">21</int>
+                <int name="Wilhelmi, Bernd">21</int>
+            </lst>
+            <lst name="mega_collection">
+                <int name="Verbunddaten SWB">11812</int>
+                <int name="Diss online">954</int>
+                <int name="GBV Musikdigitalisate">744</int>
+                <int name="Lizenzfreie Online-Ressourcen">583</int>
+                <int name="Naxos Music Library">430</int>
+                <int name="Nielsen Book Data - NE print">359</int>
+                <int name="DOAJ Directory of Open Access Journals">267</int>
+                <int name="Schweitzer EBL - PDA">151</int>
+                <int name="Qucosa">131</int>
+                <int name="Petrucci Musikbibliothek">115</int>
+                <int name="Music Online Reference">81</int>
+                <int name="B3Kat">73</int>
+                <int name="Eighteenth Century Collection Online">40</int>
+                <int name="Music Treasures Consortium">34</int>
+                <int name="Munzinger">28</int>
+                <int name="Répertoire International des Sources Musicale">13</int>
+                <int name="SSOAR Social Science Open Access Repository">12</int>
+                <int name="Corvey Digital Collection - Literature of the 18th and 19th Centuries">10</int>
+                <int name="Making of the Modern World">7</int>
+                <int name="Early American Imprints, Series II - Shaw/Shoemaker 1801-1819 / EAI II">4</int>
+                <int name="EBSCOhost eBook Collection">3</int>
+                <int name="Early American Imprints, Series I - Evans 1639-1800 / EAI">3</int>
+                <int name="Gallica (BNF)">3</int>
+                <int name="Oxford Scholarship Online">3</int>
+                <int name="Springer eBook Collection / Medicine 2005-2008">3</int>
+                <int name="ebrary E-Books">3</int>
+                <int name="MyiLibrary">2</int>
+                <int name="DOAB Directory of Open Access Books">1</int>
+                <int name="Elsevier E-Books">1</int>
+                <int name="Karger eBooks Collection 1997-2009">1</int>
+                <int name="Primary Sources / Slavic Studies">1</int>
+            </lst>
+            <lst name="mega_toplevel"/>
+            <lst name="finc_class_facet">
+                <int name="Allgemeine Naturwissenschaft">21</int>
+                <int
+                    name="Allgemeine und vergleichende Sprach- und Literaturwissenschaft, Indogermanistik, Außereuropäische Sprachen und Literaturen">
+                    236
+                </int>
+                <int name="Allgemeines">372</int>
+                <int name="Anglistik, Amerikanistik">54</int>
+                <int name="Biologie">279</int>
+                <int name="Byzantinistik">1</int>
+                <int name="Chemie und Pharmazie">64</int>
+                <int name="Ethnologie (Volks- und Völkerkunde)">19</int>
+                <int name="Geographie">214</int>
+                <int name="Geologie und Paläontologie">47</int>
+                <int name="Germanistik, Niederlandistik, Skandinavistik">3147</int>
+                <int name="Geschichte">323</int>
+                <int name="Informatik">171</int>
+                <int name="Klassische Archäologie">24</int>
+                <int name="Klassische Philologie">20</int>
+                <int name="Kunst und Kunstgeschichte">182</int>
+                <int name="Land- und Forstwirtschaft, Gartenbau, Fischereiwirtschaft, Hauswirtschaft">68</int>
+                <int name="Mathematik">105</int>
+                <int name="Medizin">919</int>
+                <int name="Militärwissenschaft">7</int>
+                <int name="Musikwissenschaft">153</int>
+                <int name="Neugriechische Philologie">2</int>
+                <int name="Philosophie">264</int>
+                <int name="Physik">139</int>
+                <int name="Politologie">158</int>
+                <int name="Psychologie">88</int>
+                <int name="Pädagogik">308</int>
+                <int name="Rechtswissenschaft">173</int>
+                <int name="Romanistik">44</int>
+                <int name="Slawistik">50</int>
+                <int name="Soziologie">569</int>
+                <int name="Sport">48</int>
+                <int name="Technik">873</int>
+                <int name="Theologie und Religionswissenschaft">145</int>
+                <int name="Theologie und Religionswissenschaften">4</int>
+                <int name="Wirtschaftswissenschaften">321</int>
+                <int name="no subject assigned">8786</int>
+            </lst>
+            <lst name="language">
+                <int name="German">12534</int>
+                <int name="English">1702</int>
+                <int name="not assigned">1113</int>
+                <int name="Latin">326</int>
+                <int name="French">218</int>
+                <int name="Italian">77</int>
+                <int name="Russian">54</int>
+                <int name="Polish">31</int>
+                <int name="Spanish">30</int>
+                <int name="Portuguese">23</int>
+                <int name="Undetermined">19</int>
+                <int name="Czech">15</int>
+                <int name="Chinese">14</int>
+                <int name="Hungarian">12</int>
+                <int name="Romanian">11</int>
+                <int name="Ancient Greek">10</int>
+                <int name="Dutch">9</int>
+                <int name="Swedish">7</int>
+                <int name="Bulgarian">4</int>
+                <int name="Japanese">4</int>
+                <int name="Lithuanian">4</int>
+                <int name="Sorbian">4</int>
+                <int name="Turkish">4</int>
+                <int name="Arabic">3</int>
+                <int name="Belarusian">3</int>
+                <int name="Danish">3</int>
+                <int name="Hebrew">3</int>
+                <int name="Catalan">2</int>
+                <int name="Korean">2</int>
+                <int name="Sumerian">2</int>
+                <int name="Ukrainian">2</int>
+                <int name="Akkadian">1</int>
+                <int name="Albanian">1</int>
+                <int name="Ancient Egyptian">1</int>
+                <int name="Bosnian">1</int>
+                <int name="Esperanto">1</int>
+                <int name="Georgian">1</int>
+                <int name="Greek">1</int>
+                <int name="Music">1</int>
+                <int name="Ossetian">1</int>
+                <int name="Slovenian">1</int>
+                <int name="Yiddish">1</int>
+            </lst>
+            <lst name="access_facet">
+                <int name="Local Holdings">12589</int>
+                <int name="Electronic Resources">3227</int>
+            </lst>
+            <lst name="branch_de15">
+                <int name="not assigned">9889</int>
+                <int name="Bibliotheca Albertina">5531</int>
+                <int name="Campus-Bibliothek">185</int>
+                <int name="Deutsches Literaturinstitut Leipzig">109</int>
+                <int name="Erziehungswissenschaft">49</int>
+                <int name="Rechtswissenschaft">47</int>
+                <int name="Kunst">41</int>
+                <int name="Musik">37</int>
+                <int name="Geographie">35</int>
+                <int name="Sudhoffinstitut">29</int>
+                <int name="Archäologie">23</int>
+                <int name="Theaterwissenschaften">21</int>
+                <int name="Veterinärmedizin">20</int>
+                <int name="Orientwissenschaften">18</int>
+                <int name="Orientwissenschaften, Altorientalistik">14</int>
+                <int name="Chemie/Physik">11</int>
+                <int name="Sportwissenschaft">10</int>
+                <int name="Zentralbibliothek Medizin 2">7</int>
+                <int name="Mineralogie">5</int>
+                <int name="Orientwissenschaften, Ägyptologie">3</int>
+                <int name="Zentralbibliothek Medizin">2</int>
+                <int name="Biowissenschaften">1</int>
+                <int name="Theoretische Physik">1</int>
+            </lst>
+            <lst name="publishDateSort">
+                <int name="2013">827</int>
+                <int name="2012">569</int>
+                <int name="2005">417</int>
+                <int name="2011">400</int>
+                <int name="2014">339</int>
+                <int name="1905">323</int>
+                <int name="2009">298</int>
+                <int name="1999">244</int>
+                <int name="2007">241</int>
+                <int name="2010">237</int>
+                <int name="2008">236</int>
+                <int name="2004">201</int>
+                <int name="2006">176</int>
+                <int name="1990">165</int>
+                <int name="1984">159</int>
+                <int name="2000">159</int>
+                <int name="1859">146</int>
+                <int name="2002">146</int>
+                <int name="1989">143</int>
+                <int name="1985">142</int>
+                <int name="1997">141</int>
+                <int name="2001">140</int>
+                <int name="1988">138</int>
+                <int name="1996">135</int>
+                <int name="1992">132</int>
+                <int name="1959">130</int>
+                <int name="2003">129</int>
+                <int name="1955">127</int>
+                <int name="1986">123</int>
+                <int name="1987">119</int>
+                <int name="1980">116</int>
+                <int name="1969">114</int>
+                <int name="1998">114</int>
+                <int name="1982">113</int>
+                <int name="1993">112</int>
+                <int name="1994">109</int>
+                <int name="1983">108</int>
+                <int name="1981">102</int>
+                <int name="1909">97</int>
+                <int name="1995">97</int>
+                <int name="1977">96</int>
+                <int name="1991">95</int>
+                <int name="1910">93</int>
+                <int name="1974">93</int>
+                <int name="1895">88</int>
+                <int name="1976">88</int>
+                <int name="1967">87</int>
+                <int name="1979">87</int>
+                <int name="1978">85</int>
+                <int name="1975">80</int>
+                <int name="1968">79</int>
+                <int name="1970">79</int>
+                <int name="1904">73</int>
+                <int name="1906">73</int>
+                <int name="1860">71</int>
+                <int name="1912">71</int>
+                <int name="1926">70</int>
+                <int name="1958">70</int>
+                <int name="1973">70</int>
+                <int name="1964">69</int>
+                <int name="1960">68</int>
+                <int name="1908">65</int>
+                <int name="1966">65</int>
+                <int name="1907">64</int>
+                <int name="1965">64</int>
+                <int name="1810">63</int>
+                <int name="1923">62</int>
+                <int name="1900">61</int>
+                <int name="1971">61</int>
+                <int name="1897">60</int>
+                <int name="1800">59</int>
+                <int name="1963">59</int>
+                <int name="1911">58</int>
+                <int name="1927">57</int>
+                <int name="1961">57</int>
+                <int name="1824">55</int>
+                <int name="1962">55</int>
+                <int name="1972">55</int>
+                <int name="1913">54</int>
+                <int name="1954">54</int>
+                <int name="1957">53</int>
+                <int name="1890">52</int>
+                <int name="1869">51</int>
+                <int name="1868">50</int>
+                <int name="1893">49</int>
+                <int name="1953">49</int>
+                <int name="1935">48</int>
+                <int name="1901">46</int>
+                <int name="1902">46</int>
+                <int name="1925">46</int>
+                <int name="1928">46</int>
+                <int name="1838">44</int>
+                <int name="1862">44</int>
+                <int name="1892">44</int>
+                <int name="1898">44</int>
+                <int name="1938">44</int>
+                <int name="1840">43</int>
+                <int name="1856">43</int>
+                <int name="1956">43</int>
+                <int name="1751">41</int>
+            </lst>
+            <lst name="format">
+                <int name="ArtPrint">3</int>
+                <int name="Article">124</int>
+                <int name="AudioTape">6</int>
+                <int name="AudioVisualMedia">1</int>
+                <int name="BluRayDisc">1</int>
+                <int name="Book">9764</int>
+                <int name="CD">142</int>
+                <int name="CDROM">11</int>
+                <int name="DVDVideo">43</int>
+                <int name="Electronic">131</int>
+                <int name="ElectronicArticle">340</int>
+                <int name="ElectronicJournal">39</int>
+                <int name="ElectronicMusicalScore">595</int>
+                <int name="ElectronicResourceRemoteAccess">3</int>
+                <int name="ElectronicSerial">5</int>
+                <int name="ElectronicThesis">1076</int>
+                <int name="Journal">161</int>
+                <int name="Map">18</int>
+                <int name="Microfiche">174</int>
+                <int name="Microfilm">5</int>
+                <int name="MusicalScore">129</int>
+                <int name="Newspaper">4</int>
+                <int name="NotatedMusic">303</int>
+                <int name="Placard">1</int>
+                <int name="Record">54</int>
+                <int name="Serial">79</int>
+                <int name="Software">19</int>
+                <int name="SoundRecording">77</int>
+                <int name="SoundRecordingMedium">31</int>
+                <int name="Thesis">939</int>
+                <int name="Unknown">454</int>
+                <int name="Video">1</int>
+                <int name="VideoTape">45</int>
+                <int name="eBook">1038</int>
+            </lst>
+        </lst>
+        <lst name="facet_dates"/>
+        <lst name="facet_ranges"/>
+    </lst>
+    <lst name="highlighting">
+        <lst name="0007586933">
+            <arr name="title">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}} : Werke in drei Bänden</str>
+            </arr>
+            <arr name="title_short">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}} :</str>
+            </arr>
+            <arr name="title_full">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}} : Werke in drei Bänden</str>
+            </arr>
+        </lst>
+        <lst name="0012356625">
+            <arr name="title">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}} und Goethe</str>
+            </arr>
+            <arr name="title_short">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}} und Goethe</str>
+            </arr>
+            <arr name="title_full">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}} und Goethe</str>
+            </arr>
+        </lst>
+        <lst name="0000000469"/>
+        <lst name="0000824772">
+            <arr name="title">
+                <str>Schriften des {{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}-Bundes</str>
+            </arr>
+            <arr name="title_short">
+                <str>Schriften des {{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}-Bundes</str>
+            </arr>
+            <arr name="title_full">
+                <str>Schriften des {{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}-Bundes</str>
+            </arr>
+        </lst>
+        <lst name="0002688343"/>
+        <lst name="0000818693">
+            <arr name="title">
+                <str>Gedenkbuch der Goethe-{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}-Denkmalweihe in Cleveland,
+                    Ohio ...
+                </str>
+            </arr>
+            <arr name="title_short">
+                <str>Gedenkbuch der Goethe-{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}-Denkmalweihe in Cleveland,
+                    Ohio ...
+                </str>
+            </arr>
+            <arr name="title_full">
+                <str>Gedenkbuch der Goethe-{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}-Denkmalweihe in Cleveland,
+                    Ohio ...
+                </str>
+            </arr>
+        </lst>
+        <lst name="0001348218">
+            <arr name="title">
+                <str>Studien zu {{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Dramen.</str>
+            </arr>
+            <arr name="title_short">
+                <str>Studien zu {{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Dramen.</str>
+            </arr>
+            <arr name="title_part">
+                <str>1, {{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Wilhelm Tell</str>
+            </arr>
+            <arr name="title_full">
+                <str>Studien zu {{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Dramen. 1,
+                    {{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Wilhelm Tell
+                </str>
+            </arr>
+        </lst>
+        <lst name="0001464514"/>
+        <lst name="0001464540"/>
+        <lst name="0003276392"/>
+        <lst name="0006697768">
+            <arr name="title">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Werke</str>
+            </arr>
+            <arr name="title_short">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Werke</str>
+            </arr>
+            <arr name="title_full">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Werke</str>
+            </arr>
+        </lst>
+        <lst name="0007403754">
+            <arr name="title_part">
+                <str>34 Die Ideale / Friedrich @{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}</str>
+            </arr>
+            <arr name="title_full">
+                <str>Fünfzig Lieder 34 Die Ideale / Friedrich @{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}</str>
+            </arr>
+        </lst>
+        <lst name="0007424199">
+            <arr name="title_part">
+                <str>33 Berglied / Friedrich @{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}</str>
+            </arr>
+            <arr name="title_full">
+                <str>Fünfzig Lieder 33 Berglied / Friedrich @{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}</str>
+            </arr>
+        </lst>
+        <lst name="0010853660">
+            <arr name="title_alt">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}}</str>
+            </arr>
+            <arr name="title">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}'s Jungfrau von Orleans : dramaturgische Tafel</str>
+            </arr>
+            <arr name="title_short">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}'s Jungfrau von Orleans :</str>
+            </arr>
+            <arr name="title_full">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}'s Jungfrau von Orleans : dramaturgische Tafel</str>
+            </arr>
+        </lst>
+        <lst name="0011975707">
+            <arr name="title_sub">
+                <str>Gedenkrede zum 150. Geburtstage Friedr. {{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}}</str>
+            </arr>
+            <arr name="title">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Vaterland : Gedenkrede zum 150. Geburtstage Friedr.
+                    {{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}}
+                </str>
+            </arr>
+            <arr name="title_short">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Vaterland :</str>
+            </arr>
+            <arr name="title_full">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Vaterland : Gedenkrede zum 150. Geburtstage Friedr.
+                    {{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}}
+                </str>
+            </arr>
+        </lst>
+        <lst name="0012392953">
+            <arr name="title_alt">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Wallensteins</str>
+            </arr>
+            <arr name="title">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}'s Wallenstein's Tod : dramaturgische Tafel</str>
+            </arr>
+            <arr name="title_short">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}'s Wallenstein's Tod :</str>
+            </arr>
+            <arr name="title_full">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}'s Wallenstein's Tod : dramaturgische Tafel</str>
+            </arr>
+        </lst>
+        <lst name="0012392954">
+            <arr name="title_alt">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}}</str>
+            </arr>
+            <arr name="title">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}'s Maria Stuart : dramaturgische Tafel</str>
+            </arr>
+            <arr name="title_short">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}'s Maria Stuart :</str>
+            </arr>
+            <arr name="title_full">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}'s Maria Stuart : dramaturgische Tafel</str>
+            </arr>
+        </lst>
+        <lst name="0012392955">
+            <arr name="title_alt">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Wallensteins</str>
+            </arr>
+            <arr name="title">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}'s Wallenstein's Lager : dramaturgische Tafel</str>
+            </arr>
+            <arr name="title_short">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}'s Wallenstein's Lager :</str>
+            </arr>
+            <arr name="title_full">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}'s Wallenstein's Lager : dramaturgische Tafel</str>
+            </arr>
+        </lst>
+        <lst name="0000764026">
+            <arr name="title_sub">
+                <str>das Fragment. Nachspiel zu {{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Demetrius / Martin Greif
+                    /
+                </str>
+            </arr>
+            <arr name="title_alt">
+                <str>Nachspiel zu {{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Demetrius</str>
+            </arr>
+            <arr name="title">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Demetrius : das Fragment. Nachspiel zu
+                    {{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Demetrius / Martin Greif /
+                </str>
+            </arr>
+            <arr name="title_short">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Demetrius :</str>
+            </arr>
+            <arr name="title_full">
+                <str>{{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Demetrius : das Fragment. Nachspiel zu
+                    {{{{START_HILITE}}}}Schillers{{{{END_HILITE}}}} Demetrius / Martin Greif /
+                </str>
+            </arr>
+        </lst>
+        <lst name="0004279203">
+            <arr name="series2">
+                <str>Faksimiledruck / {{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}-Nationalmuseum Marbach am Neckar
+                    ;
+                </str>
+            </arr>
+            <arr name="series">
+                <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}-Nationalmuseum und Deutsches Literaturarchiv
+                    Faksimiledruck
+                </str>
+            </arr>
+        </lst>
+    </lst>
+</response>

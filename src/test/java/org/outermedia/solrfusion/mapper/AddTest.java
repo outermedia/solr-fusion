@@ -13,6 +13,7 @@ import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.DefaultXmlResponseRenderer;
 import org.outermedia.solrfusion.response.FacetWordCountBuilder;
+import org.outermedia.solrfusion.response.FacetWordCountSorter;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.response.parser.FacetHit;
 import org.outermedia.solrfusion.response.parser.WordCount;
@@ -304,6 +305,9 @@ public class AddTest extends AbstractTypeTest
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
         SearchServerConfig searchServerConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
+        FusionRequest req = new FusionRequest();
+        req.setQuery(new SolrFusionRequestParam("a:dummy"));
+        req.setLocale(Locale.GERMAN);
 
         // map search document
         Document doc = createDocument("id", "123", "score", "1.2", "s19", "abc");
@@ -319,14 +323,13 @@ public class AddTest extends AbstractTypeTest
         cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, facetDoc, new ScriptEnv(), null);
         Map<String, Map<String, Integer>> facets = new HashMap<>();
         facetDoc.accept(new FacetWordCountBuilder(cfg.getFusionIdFieldName(), cfg.getIdGenerator(), doc, facets), null);
+        FacetWordCountSorter facetSorter = new FacetWordCountSorter();
+        Map<String, List<WordCount>> sortedFacets = facetSorter.sort(facets, req);
 
         // render result
         DefaultXmlResponseRenderer renderer = DefaultXmlResponseRenderer.Factory.getInstance();
         renderer.init(null);
-        FusionRequest req = new FusionRequest();
-        req.setQuery(new SolrFusionRequestParam("a:dummy"));
-        req.setLocale(Locale.GERMAN);
-        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, facets);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, sortedFacets);
         ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(Arrays.asList(doc),
             info);
         FusionResponse fusionResponse = new FusionResponse();
@@ -336,15 +339,15 @@ public class AddTest extends AbstractTypeTest
 
         // check result
         String expected = "<lst name=\"text18a\">\n" +
+            "            <int name=\"a\">1</int>\n" +
             "            <int name=\"b\">2</int>\n" +
             "            <int name=\"c\">3</int>\n" +
-            "            <int name=\"a\">1</int>\n" +
             "        </lst>";
         Assert.assertTrue("Didn't find text18a in: " + xmlDocStr, xmlDocStr.contains(expected));
         expected = "<lst name=\"text18b\">\n" +
+            "            <int name=\"a\">1</int>\n" +
             "            <int name=\"b\">2</int>\n" +
             "            <int name=\"c\">3</int>\n" +
-            "            <int name=\"a\">1</int>\n" +
             "        </lst>";
         Assert.assertTrue("Didn't find text18b in: " + xmlDocStr, xmlDocStr.contains(expected));
     }

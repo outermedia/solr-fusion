@@ -955,7 +955,7 @@ Query Query(String field) :
   MetaInfo mi = null;
 }
 {
-  mods=Modifiers() q=Clause(field)
+  (mi = metaInfo())? mods=Modifiers() q=Clause(field)
   {
     addClause(clauses, CONJ_NONE, mods, q);
     if (mods == MOD_NONE)
@@ -977,7 +977,6 @@ Query Query(String field) :
     }
 }
 
-/*
 MetaInfo metaInfo() : {
   Token n;
   Token v;
@@ -1006,7 +1005,6 @@ MetaInfo metaInfo() : {
       return mi;
     }
 }
-*/
 
 Query Clause(String field) : {
   Query q;

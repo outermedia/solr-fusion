@@ -1,5 +1,7 @@
 package org.outermedia.solrfusion.response.parser;
 
+import com.google.common.collect.ComparisonChain;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,11 +18,27 @@ import javax.xml.bind.annotation.*;
 @Slf4j
 @Getter
 @Setter
-public class WordCount
+@EqualsAndHashCode(exclude = {"sortByCount"})
+public class WordCount implements Comparable<WordCount>
 {
     @XmlAttribute(name = "name", required = true)
     private String word;
 
     @XmlValue
     private int count;
+
+    @XmlTransient
+    private boolean sortByCount; // else by word
+
+    @Override public int compareTo(WordCount otherWordCount)
+    {
+        if (sortByCount)
+        {
+            return ComparisonChain.start().compare(count, otherWordCount.count).result();
+        }
+        else
+        {
+            return ComparisonChain.start().compare(word, otherWordCount.word).result();
+        }
+    }
 }

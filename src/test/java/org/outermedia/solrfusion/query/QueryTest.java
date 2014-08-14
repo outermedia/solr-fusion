@@ -2,7 +2,6 @@ package org.outermedia.solrfusion.query;
 
 import junit.framework.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
@@ -420,8 +419,6 @@ public class QueryTest
         return pq;
     }
 
-    // MetaInfo is currently not parsed
-    @Ignore
     @Test
     public void parseQueryWithMetaInfo()
         throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException, ParseException

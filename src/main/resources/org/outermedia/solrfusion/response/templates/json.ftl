@@ -32,8 +32,8 @@
     "facet_fields":{
   <#list facets.facets?keys as field>
       "${field}": [
-    <#list facets.facets[field]?keys as word>
-        ["${word?json_string}", ${facets.facets[field][word]?c}]<#if word_has_next>,</#if>
+    <#list facets.facets[field] as wc>
+        ["${wc.word?json_string}", ${wc.count?c}]<#if wc_has_next>,</#if>
     </#list>
       ]<#if field_has_next>,</#if>
   </#list>

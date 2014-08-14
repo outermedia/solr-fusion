@@ -34,8 +34,8 @@
     <lst name="facet_fields">
 <#list facets.facets?keys as field>
         <lst name="${field}">
-<#list facets.facets[field]?keys as word>
-            <int name="${word?xml}">${facets.facets[field][word]?c}</int>
+<#list facets.facets[field] as wc>
+            <int name="${wc.word?xml}">${wc.count?c}</int>
 </#list>
         </lst>
 </#list>

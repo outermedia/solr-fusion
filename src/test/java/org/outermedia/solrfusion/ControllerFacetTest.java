@@ -70,8 +70,8 @@ public class ControllerFacetTest extends AbstractControllerTest
         result.put(FACET_MINCOUNT, "2");
         result.put(FACET_LIMIT, "20");
         result.put(FACET_SORT, "index");
-        result.put(FACET_FIELD, "{!ex=format_filter}"+title1);
-        result.put(FACET_FIELD, "{!ex=format_filter}"+title2);
+        result.put(FACET_FIELD, "{!ex=format_filter}" + title1);
+        result.put(FACET_FIELD, "{!ex=format_filter}" + title2);
         result.put(FACET_FIELD, author);
         String facetSortField1 = FACET_SORT_FIELD.buildFusionFacetSortFieldParam(title1, Locale.GERMAN);
         result.put(facetSortField1, "index1");
@@ -88,7 +88,8 @@ public class ControllerFacetTest extends AbstractControllerTest
         IllegalAccessException, URISyntaxException
     {
         String xml = testMultipleServers("title:abc", "target/test-classes/test-empty-xml-response.xml",
-            "target/test-classes/test-empty-xml-response.xml", ResponseRendererType.XML);
+            "target/test-classes/test-empty-xml-response.xml", ResponseRendererType.XML,
+            "test-fusion-schema-9000-9002.xml", null);
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<response>\n" +
             "<lst name=\"responseHeader\">\n" +
@@ -121,7 +122,7 @@ public class ControllerFacetTest extends AbstractControllerTest
         Assert.assertEquals("Found different xml response", expected, xml.trim());
         verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", "title", "author9000"), 4000);
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc","titleVT_eng", "titleVT_de", "author9002"), 4000);
+            buildParams("titleVT_eng:abc", "titleVT_eng", "titleVT_de", "author9002"), 4000);
     }
 
     @Test
@@ -130,7 +131,8 @@ public class ControllerFacetTest extends AbstractControllerTest
         IllegalAccessException, URISyntaxException
     {
         String xml = testMultipleServers("title:abc", "target/test-classes/test-empty-xml-response.xml",
-            "target/test-classes/test-empty-xml-response.xml", ResponseRendererType.JSON);
+            "target/test-classes/test-empty-xml-response.xml", ResponseRendererType.JSON,
+            "test-fusion-schema-9000-9002.xml", null);
         String expected = "{\n" +
             "  \"responseHeader\":{\n" +
             "    \"status\":0,\n" +
@@ -159,11 +161,11 @@ public class ControllerFacetTest extends AbstractControllerTest
         Assert.assertEquals("Found different xml response", expected, xml.trim());
         verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", "title", "author9000"), 4000);
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc","titleVT_eng", "titleVT_de", "author9002"), 4000);
+            buildParams("titleVT_eng:abc", "titleVT_eng", "titleVT_de", "author9002"), 4000);
     }
 
-    protected String testMultipleServers(String queryStr, String responseServer1,
-        String responseServer2, ResponseRendererType format)
+    protected String testMultipleServers(String queryStr, String responseServer1, String responseServer2,
+        ResponseRendererType format, String fusionSchemaPath, List<SolrFusionRequestParam> filterQueries)
         throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
         IllegalAccessException, URISyntaxException
     {
@@ -172,7 +174,7 @@ public class ControllerFacetTest extends AbstractControllerTest
         ByteArrayInputStream documents9000Stream = new ByteArrayInputStream(documents9000);
         ByteArrayInputStream documents9002Stream = new ByteArrayInputStream(documents9002);
 
-        cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
+        cfg = helper.readFusionSchemaWithoutValidation(fusionSchemaPath);
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
         // the mapping is very incomplete, so ignore all unmapped fields
         testResponseMapper.ignoreMissingMappings();
@@ -187,14 +189,12 @@ public class ControllerFacetTest extends AbstractControllerTest
         searchServerConfigs.add(searchServerConfig9000);
         testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
-        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class),
-            Mockito.anyInt());
+        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class), Mockito.anyInt());
 
         searchServerConfigs.add(searchServerConfig9002);
         testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
-        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class),
-            Mockito.anyInt());
+        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class), Mockito.anyInt());
 
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
@@ -216,6 +216,7 @@ public class ControllerFacetTest extends AbstractControllerTest
         fusionRequest.setPageSize(10);
         fusionRequest.setStart(0);
         fusionRequest.setSortAsc(false);
+        fusionRequest.setFilterQuery(filterQueries);
         fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(spyCfg, fusionRequest, fusionResponse);
@@ -225,5 +226,20 @@ public class ControllerFacetTest extends AbstractControllerTest
         Assert.assertNotNull("Expected XML result, but got nothing", result);
         // System.out.println("RESPONSE " + result);
         return result;
+    }
+
+    @Test
+    public void testQueryWithMultipleServersMultipleDocumentsJson()
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
+    {
+        String xml = testMultipleServers("title:abc", "target/test-classes/test-schiller-9000.xml",
+            "target/test-classes/test-schiller-9001.xml", ResponseRendererType.JSON, "fusion-schema-uni-leipzig.xml",
+            Arrays.asList(new SolrFusionRequestParam("authorized_mode:\"false\""),
+                new SolrFusionRequestParam("{!tag=format_filter}(format:\"BluRayDisc\")")));
+        Multimap<String> expectedParams = buildParams("title:abc", "title", "title", "author");
+        expectedParams.put(FILTER_QUERY, "format:\"BluRayDisc\"");
+        verify(testAdapter9000, times(1)).sendQuery(expectedParams, 4000);
+        // System.out.println("XML " + xml);
     }
 }

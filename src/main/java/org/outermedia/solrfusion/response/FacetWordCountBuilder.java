@@ -15,10 +15,10 @@ import java.util.Map;
 @Slf4j
 public class FacetWordCountBuilder implements FieldVisitor
 {
-    private final String fusionIdField;
-    private final IdGeneratorIfc idGenerator;
-    private final Document doc;
-    private final Map<String, Map<String, Integer>> fusionFacetFields;
+    private String fusionIdField;
+    private IdGeneratorIfc idGenerator;
+    private Document doc;
+    private Map<String, Map<String, Integer>> fusionFacetFields;
 
     public FacetWordCountBuilder(String fusionIdField, IdGeneratorIfc idGenerator, Document doc,
         Map<String, Map<String, Integer>> fusionFacetFields)

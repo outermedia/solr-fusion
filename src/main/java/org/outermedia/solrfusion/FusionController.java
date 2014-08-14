@@ -326,6 +326,7 @@ public class FusionController implements FusionControllerIfc
         Query highlightQuery = fusionRequest.getParsedHighlightQuery();
         for (SearchServerConfig searchServerConfig : configuredSearchServers)
         {
+            log.info("Processing query for search server {}", searchServerConfig.getSearchServerName());
             if (mapQuery(env, searchServerConfig, Arrays.asList(query, highlightQuery)) &&
                 mapQuery(env, searchServerConfig, filterQuery))
             {

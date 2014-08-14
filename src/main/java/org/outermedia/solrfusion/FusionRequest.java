@@ -57,6 +57,9 @@ public class FusionRequest
 
     private List<String> errors;
 
+    public static final String SORT_INDEX = "index";
+    public static final String SORT_COUNT = "count";
+
     public FusionRequest()
     {
         responseType = ResponseRendererType.JSON;
@@ -146,8 +149,8 @@ public class FusionRequest
                     prefix = p.substring(0, curlyBracketPos + 1);
                     p = p.substring(curlyBracketPos + 1);
                 }
-                Set<String> searchServerFields = mapFusionFieldToSearchServerField(p, configuration,
-                    searchServerConfig);
+                Set<String> searchServerFields = mapFusionFieldToSearchServerField(p, configuration, searchServerConfig,
+                    null);
                 for (String searchServerField : searchServerFields)
                 {
                     searchServerParams.put(FACET_FIELD, prefix + searchServerField);
@@ -161,7 +164,7 @@ public class FusionRequest
                 String value = sp.getValue();
                 String fusionFieldName = sp.getParamNameVariablePart();
                 Set<String> searchServerFields = mapFusionFieldToSearchServerField(fusionFieldName, configuration,
-                    searchServerConfig);
+                    searchServerConfig, null);
                 for (String searchServerField : searchServerFields)
                 {
                     String facetSortField = FACET_SORT_FIELD.buildFusionFacetSortFieldParam(searchServerField, locale);
@@ -185,7 +188,7 @@ public class FusionRequest
         // TODO handle 1:n mapping i.e. 1 solrfusion field is mapped to several search server fields?
         // does it mean to sort by several search server fields?
         Set<String> searchServerFieldSet = mapFusionFieldToSearchServerField(getSolrFusionSortField(), configuration,
-            searchServerConfig);
+            searchServerConfig, ResponseMapperIfc.DOC_FIELD_NAME_SCORE);
         if (searchServerFieldSet.isEmpty())
         {
             log.error("Found not mapping for sort field '{}'", getSolrFusionSortField());
@@ -210,7 +213,7 @@ public class FusionRequest
             fusionFieldsToReturn += " " + highlightingFieldsToReturn.getValue();
         }
         String fieldsToReturn = mapFusionFieldListToSearchServerField(fusionFieldsToReturn, configuration,
-            searchServerConfig);
+            searchServerConfig, null);
         searchServerParams.put(FIELDS_TO_RETURN, fieldsToReturn);
     }
 
@@ -218,7 +221,7 @@ public class FusionRequest
         SearchServerConfig searchServerConfig, Multimap<String> searchServerParams)
     {
         String hlFieldsToReturn = mapFusionFieldListToSearchServerField(highlightingFieldsToReturn.getValue(),
-            configuration, searchServerConfig);
+            configuration, searchServerConfig, null);
         if (hlFieldsToReturn.length() > 0)
         {
             searchServerParams.put(HIGHLIGHT_FIELDS_TO_RETURN, hlFieldsToReturn);
@@ -237,7 +240,7 @@ public class FusionRequest
      * @return a string of field names separated by SPACE
      */
     protected String mapFusionFieldListToSearchServerField(String fieldList, Configuration configuration,
-        SearchServerConfig searchServerConfig)
+        SearchServerConfig searchServerConfig, String defaultSearchServerField)
     {
         // preserve insertion order
         Set<String> fieldSet = new LinkedHashSet<>();
@@ -254,7 +257,8 @@ public class FusionRequest
                     if (!fusionField.isEmpty())
                     {
                         fieldSet.addAll(
-                            mapFusionFieldToSearchServerField(fusionField, configuration, searchServerConfig));
+                            mapFusionFieldToSearchServerField(fusionField, configuration, searchServerConfig,
+                                defaultSearchServerField));
                     }
                 }
                 catch (Exception e)
@@ -275,8 +279,20 @@ public class FusionRequest
         return sb.toString();
     }
 
+    /**
+     * Map a fusion field name to search server fields.
+     *
+     * @param fusionField
+     * @param configuration
+     * @param searchServerConfig
+     * @param defaultSearchServerField
+     * @return a perhaps empty set, but not "null"
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
     public Set<String> mapFusionFieldToSearchServerField(String fusionField, Configuration configuration,
-        SearchServerConfig searchServerConfig) throws InvocationTargetException, IllegalAccessException
+        SearchServerConfig searchServerConfig, String defaultSearchServerField)
+        throws InvocationTargetException, IllegalAccessException
     {
         // preserve insertion order
         Set<String> result = new LinkedHashSet<>();
@@ -287,10 +303,12 @@ public class FusionRequest
         else
         {
             List<FieldMapping> mappings = searchServerConfig.findAllMappingsForFusionField(fusionField);
+            boolean foundMapping = false;
             if (mappings.size() > 0)
             {
                 for (FieldMapping fm : mappings)
                 {
+                    foundMapping = true;
                     String searchServersName = fm.getSearchServersName();
                     if (searchServersName != null)
                     {
@@ -313,10 +331,20 @@ public class FusionRequest
             }
             if (result.isEmpty())
             {
-                result.add(ResponseMapperIfc.DOC_FIELD_NAME_SCORE);
-                log.error(
-                    "Can't handle fusion field '{}', because no mapping exist for search server {}. Using {} instead.",
-                    fusionField, searchServerConfig.getSearchServerName(), result);
+                if (defaultSearchServerField != null)
+                {
+                    result.add(defaultSearchServerField);
+                    log.error(
+                        "Can't handle fusion field '{}', because no mapping exist for search server {}. Using {} instead.",
+                        fusionField, searchServerConfig.getSearchServerName(), result);
+                }
+                else
+                {
+                    if (!foundMapping)
+                    {
+                        log.warn("Didn't find mapping for '{}'.", fusionField);
+                    }
+                }
             }
         }
         return result;
@@ -329,8 +357,11 @@ public class FusionRequest
         if (query != null)
         {
             QueryBuilderIfc queryBuilder = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
-            searchServerParams.put(paramName,
-                queryBuilder.buildQueryString(query, configuration, searchServerConfig, locale));
+            String queryStr = queryBuilder.buildQueryString(query, configuration, searchServerConfig, locale);
+            if (queryStr.length() > 0)
+            {
+                searchServerParams.put(paramName, queryStr);
+            }
         }
     }
 
@@ -433,5 +464,58 @@ public class FusionRequest
             log.error("Couldn't parse '{}' to int. Using {} instead.", s, defaultValue);
         }
         return result;
+    }
+
+    /**
+     * Get the sort kind ("index" or "count" for a given fusion field.
+     *
+     * @param fusionFacetField
+     * @return "index" or "count"
+     */
+    public String getSortingOfFacetField(String fusionFacetField)
+    {
+        int facetLimit = -1;
+        try
+        {
+            String facetLimitStr = getFacetLimit().getValue();
+            if (facetLimitStr != null)
+            {
+                facetLimit = Integer.parseInt(facetLimitStr);
+            }
+        }
+        catch (Exception e)
+        {
+            log.error("", e);
+        }
+        String sort = (facetLimit > 0) ? SORT_COUNT : SORT_INDEX;
+        String generalSort = getFacetSort().getValue();
+        if ("index".equals(generalSort))
+        {
+            sort = SORT_INDEX;
+        }
+        if ("count".equals(generalSort))
+        {
+            sort = SORT_COUNT;
+        }
+        if (facetSortFields != null)
+        {
+            for (SolrFusionRequestParam sp : facetSortFields)
+            {
+                if (fusionFacetField.equals(sp.getParamNameVariablePart()))
+                {
+                    String fieldSort = sp.getValue();
+                    if ("index".equals(fieldSort))
+                    {
+                        sort = SORT_INDEX;
+                    }
+                    if ("count".equals(fieldSort))
+                    {
+                        sort = SORT_COUNT;
+                    }
+                    break;
+                }
+            }
+        }
+        return sort;
     }
 }

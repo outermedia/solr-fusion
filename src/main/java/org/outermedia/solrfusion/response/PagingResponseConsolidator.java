@@ -189,7 +189,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             try
             {
                 Set<String> candidates = request.mapFusionFieldToSearchServerField(fusionFieldToMap, config,
-                    searchServerConfig);
+                    searchServerConfig, null);
                 if (candidates.isEmpty())
                 {
                     log.error("Found not mapping for merge field '{}'", fusionFieldToMap);
@@ -260,26 +260,38 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             docsOfPage.add(d);
         }
 
-        final Map<String, Map<String, Integer>> fusionFacetFields = new HashMap<>();
-        mapFacetWordCounts(idGenerator, fusionIdField, fusionFacetFields);
+        Map<String, List<WordCount>> sortedFusionFacetFields = mapFacetWordCounts(idGenerator, fusionIdField,
+            fusionRequest);
 
-        SearchServerResponseInfo info = new SearchServerResponseInfo(maxDocNr, highlighting, fusionFacetFields);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(maxDocNr, highlighting, sortedFusionFacetFields);
         return new ClosableListIterator<>(docsOfPage, info);
     }
 
-    protected void mapFacetWordCounts(final IdGeneratorIfc idGenerator, final String fusionIdField,
-        final Map<String, Map<String, Integer>> fusionFacetFields)
-        throws InvocationTargetException, IllegalAccessException
+    protected Map<String, List<WordCount>> mapFacetWordCounts(IdGeneratorIfc idGenerator, String fusionIdField,
+        FusionRequest fusionRequest) throws InvocationTargetException, IllegalAccessException
     {
+        Map<String, Map<String, Integer>> fusionFacetFields = new LinkedHashMap<>();
         if (facetFields != null)
         {
             for (FacetHit fh : facetFields)
             {
                 final Document doc = fh.getDocument();
                 completelyMapDoc(config, doc, doc.getFusionDocId(fusionIdField));
-                doc.accept(new FacetWordCountBuilder(fusionIdField, idGenerator, doc, fusionFacetFields), null);
+                doc.accept(getFacetBuilder(idGenerator, fusionIdField, fusionFacetFields, doc), null);
             }
         }
+        return getNewFacetWordCountSorter().sort(fusionFacetFields, fusionRequest);
+    }
+
+    private FacetWordCountSorter getNewFacetWordCountSorter()
+    {
+        return new FacetWordCountSorter();
+    }
+
+    protected FacetWordCountBuilder getFacetBuilder(IdGeneratorIfc idGenerator, String fusionIdField,
+        Map<String, Map<String, Integer>> fusionFacetFields, Document doc)
+    {
+        return new FacetWordCountBuilder(fusionIdField, idGenerator, doc, fusionFacetFields);
     }
 
     protected void completelyMapDoc(Configuration config, Document d, String fusionDocId)

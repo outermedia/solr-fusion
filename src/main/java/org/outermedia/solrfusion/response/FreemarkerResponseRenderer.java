@@ -1,22 +1,23 @@
 package org.outermedia.solrfusion.response;
 
 import freemarker.template.*;
-import freemarker.template.Configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.FusionResponse;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
-import org.outermedia.solrfusion.configuration.*;
+import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 import org.outermedia.solrfusion.response.freemarker.FreemarkerErrorHeader;
 import org.outermedia.solrfusion.response.freemarker.FreemarkerResponse;
 import org.outermedia.solrfusion.response.freemarker.FreemarkerResponseHeader;
 import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.response.parser.WordCount;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -85,7 +86,7 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
         FreemarkerResponseHeader freemarkerResponseHeader = new FreemarkerResponseHeader(docStream, request);
         FreemarkerErrorHeader freemarkerErrorHeader = new FreemarkerErrorHeader(fusionResponse);
         Map<String, Document> highlighting = null;
-        Map<String, Map<String, Integer>> facets = null;
+        Map<String, List<WordCount>> facets = null;
         if (docStream != null)
         {
             highlighting = docStream.getExtraInfo().getHighlighting();

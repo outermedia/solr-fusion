@@ -895,6 +895,12 @@
                     <om:query/>
                 </om:drop>
             </om:field>
+
+            <!-- vufind uses the following fields in a simple search, which don't exist in GBV -->
+            <om:field fusion-name="mega_collection">
+                <om:drop><om:query/></om:drop>
+            </om:field>
+
         </om:solr-server>
 
 
@@ -972,8 +978,6 @@
 
             <om:field name="publisher" fusion-name="publisher" />
 
-            <om:field name="sourceid" fusion-name="record_id" />
-
             <om:field name="titleVT_de" fusion-name="title">
                 <om:add level="inside"><om:query/></om:add>
             </om:field>
@@ -997,10 +1001,51 @@
             </om:field>
             <!-- TODO merge search server response of fields above into one fusion field title_short -->
 
+            <!-- vufind uses title_sort to sort books, but DBoD has no title_sort values -->
+            <om:field name="titleVT_de" fusion-name="title_sort">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field name="titleVT_eng" fusion-name="title_sort">
+                <om:add level="inside"><om:query/></om:add>
+            </om:field>
+            <om:field fusion-name="title_sort">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <!-- TODO merge search server response of fields above into one fusion field title_sort -->
+
+            <!-- vufind uses the following fields in a simple search, which don't exist in DBoD -->
+            <om:field fusion-name="format">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="format_de15">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="access_facet">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="mega_toplevel">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="branch_de15">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="language">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="author_facet">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="publishDateSort">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+
             <om:field name="keywords" fusion-name="topic" />
 
             <om:field name="deeplink" fusion-name="url" />
 
+            <!--
+            <om:field name="sourceid" fusion-name="record_id" />
+            -->
             <om:field name="source_id" fusion-name="source_id">
                 <om:add>
                     <om:response type="static-value">

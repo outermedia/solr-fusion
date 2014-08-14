@@ -93,10 +93,13 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     {
         URIBuilder ub = new URIBuilder(url);
         ub.setParameter(QUERY_PARAMETER, params.getFirst(QUERY));
-        String fq = params.getFirst(FILTER_QUERY);
-        if (fq != null)
+        Collection<String> fqs = params.get(FILTER_QUERY);
+        if (fqs != null)
         {
-            ub.setParameter(FILTER_QUERY_PARAMETER, fq);
+            for (String fq : fqs)
+            {
+                ub.addParameter(FILTER_QUERY_PARAMETER, fq);
+            }
         }
         ub.setParameter(WRITER_TYPE_PARAMETER, params.getFirst(WRITER_TYPE));
         ub.setParameter(START_PARAMETER, params.getFirst(START));

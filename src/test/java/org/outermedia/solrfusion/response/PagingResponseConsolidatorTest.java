@@ -177,15 +177,15 @@ public class PagingResponseConsolidatorTest
 
         IdGeneratorIfc idGen = cfg.getIdGenerator();
         String fusionIdField = idGen.getFusionIdField();
-        Map<String, Map<String, Integer>> fusionFacetFields = new HashMap<>();
-        consolidator.mapFacetWordCounts(idGen, fusionIdField, fusionFacetFields);
-        System.out.println("FACETS " + fusionFacetFields);
+        FusionRequest req = new FusionRequest();
+        Map<String, List<WordCount>> fusionFacetFields = consolidator.mapFacetWordCounts(idGen, fusionIdField, req);
+        // System.out.println("FACETS " + fusionFacetFields);
         Assert.assertEquals("Different facet number than expected", 3, fusionFacetFields.size());
         String theKey = "title";
         Assert.assertEquals("Expected other facet field", "title", theKey);
-        Map<String, Integer> facet = fusionFacetFields.get(theKey);
+        List<WordCount> facet = fusionFacetFields.get(theKey);
         // word counts of "A" are added
-        Map<String, Integer> expectedMap = buildWordCountMap("a", 1, "b", 2, "A", 2, "B", 2, "C", 2);
+        List<WordCount> expectedMap = buildWordCountMap("A", 2, "B", 2, "C", 2, "a", 1, "b", 2);
         Assert.assertEquals("Expected other facets", expectedMap, facet);
         Assert.assertTrue("Didn't find language in " + fusionFacetFields.keySet(),
             fusionFacetFields.containsKey("language"));
@@ -218,12 +218,15 @@ public class PagingResponseConsolidatorTest
         return wc;
     }
 
-    protected Map<String, Integer> buildWordCountMap(Object... entries)
+    protected List<WordCount> buildWordCountMap(Object... entries)
     {
-        HashMap<String, Integer> expectedMap = new HashMap<>();
+        List<WordCount> expectedMap = new ArrayList<>();
         for (int i = 0; i < entries.length; i += 2)
         {
-            expectedMap.put((String) entries[i], (Integer) entries[i + 1]);
+            WordCount wc = new WordCount();
+            wc.setWord((String) entries[i]);
+            wc.setCount((Integer) entries[i + 1]);
+            expectedMap.add(wc);
         }
         return expectedMap;
     }

@@ -361,7 +361,7 @@ public class ControllerTest extends AbstractControllerTest
         Assert.assertEquals("Mapping returned other field than expected", "language", searchServerField);
 
         searchServerField = mapField("unknown", request, cfg, serverConfig);
-        Assert.assertEquals("Mapping returned other field than expected", "score", searchServerField);
+        Assert.assertNull("Mapping shouldn't find a mapping", searchServerField);
 
         // special case id
         searchServerField = mapField("id", request, cfg, serverConfig);
@@ -372,18 +372,23 @@ public class ControllerTest extends AbstractControllerTest
         Assert.assertEquals("Mapping returned other field than expected", "score", searchServerField);
 
         // language_de and language_en are both mapped to language
-        String fl = request.mapFusionFieldListToSearchServerField("language_de, language_en", cfg, serverConfig);
+        String fl = request.mapFusionFieldListToSearchServerField("language_de, language_en", cfg, serverConfig, null);
         Assert.assertEquals("Mapping returned other field than expected", "language", fl);
 
         // title is mapped to two fields, preserve order of textual order of mappings
-        fl = request.mapFusionFieldListToSearchServerField("title id", cfg, serverConfig);
+        fl = request.mapFusionFieldListToSearchServerField("title id", cfg, serverConfig, null);
         Assert.assertEquals("Mapping returned other field than expected", "titleVT_de titleVT_eng id", fl);
     }
 
     protected String mapField(String field, FusionRequest request, Configuration cfg, SearchServerConfig serverConfig)
         throws InvocationTargetException, IllegalAccessException
     {
-        return request.mapFusionFieldToSearchServerField(field, cfg, serverConfig).iterator().next();
+        Set<String> strings = request.mapFusionFieldToSearchServerField(field, cfg, serverConfig, null);
+        if (strings == null || strings.isEmpty())
+        {
+            return null;
+        }
+        return strings.iterator().next();
     }
 
     @Test
