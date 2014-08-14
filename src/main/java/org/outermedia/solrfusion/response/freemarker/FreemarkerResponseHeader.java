@@ -44,7 +44,7 @@ public class FreemarkerResponseHeader
             query = "";
         }
         queryParams.put(QUERY.getRequestParamName(), query);
-        addIfNotNull(FILTER_QUERY, request.getFilterQuery().getValue());
+        buildMultiValueParam(request.getFilterQuery(), FILTER_QUERY);
         addIfNotNull(SORT, request.getSolrFusionSortField());
         addIfNotNull(FIELDS_TO_RETURN, request.getFieldsToReturn().getValue());
 
@@ -61,16 +61,7 @@ public class FreemarkerResponseHeader
         addIfNotNull(FACET_MINCOUNT, request.getFacetMincount().getValue());
         addIfNotNull(FACET_PREFIX, request.getFacetPrefix().getValue());
         addIfNotNull(FACET_SORT, request.getFacetSort().getValue());
-        List<SolrFusionRequestParam> facetFieldParams = request.getFacetFields();
-        List<String> facetFields = new ArrayList<>();
-        if (facetFieldParams != null)
-        {
-            for (SolrFusionRequestParam sp : facetFieldParams)
-            {
-                facetFields.add(sp.getValue());
-            }
-            multiValueQueryParams.put(FACET_FIELD.getRequestParamName(), facetFields);
-        }
+        buildMultiValueParam(request.getFacetFields(), FACET_FIELD);
         List<SolrFusionRequestParam> facetSortFields = request.getFacetSortFields();
         if (facetSortFields != null)
         {
@@ -79,6 +70,23 @@ public class FreemarkerResponseHeader
                 String fusionParam = SolrFusionRequestParams.FACET_SORT_FIELD.buildFusionFacetSortFieldParam(
                     sp.getParamNameVariablePart(), request.getLocale());
                 queryParams.put(fusionParam, sp.getValue());
+            }
+        }
+    }
+
+    protected void buildMultiValueParam(List<SolrFusionRequestParam> facetFieldParams,
+        SolrFusionRequestParams fusionParam)
+    {
+        List<String> paramValues = new ArrayList<>();
+        if (facetFieldParams != null)
+        {
+            for (SolrFusionRequestParam sp : facetFieldParams)
+            {
+                paramValues.add(sp.getValue());
+            }
+            if (!paramValues.isEmpty())
+            {
+                multiValueQueryParams.put(fusionParam.getRequestParamName(), paramValues);
             }
         }
     }

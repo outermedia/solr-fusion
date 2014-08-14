@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -100,9 +101,11 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "    <str name=\"start\">0</str>\n" +
             "    <str name=\"rows\"><![CDATA[0]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:xyz]]></str>\n" +
-            "    <str name=\"fq\"><![CDATA[title:XYZ]]></str>\n" +
             "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"fl\"><![CDATA[id title score]]></str>\n" +
+            "    <arr name=\"fq\">\n" +
+            "        <str>title:XYZ</str>\n" +
+            "    </arr>\n" +
             "    <str name=\"wt\">wt</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "  </lst>\n" +
@@ -146,9 +149,11 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "    <str name=\"start\">0</str>\n" +
             "    <str name=\"rows\"><![CDATA[2]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
-            "    <str name=\"fq\"><![CDATA[title:abc]]></str>\n" +
             "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"fl\"><![CDATA[id title score]]></str>\n" +
+            "    <arr name=\"fq\">\n" +
+            "        <str>title:abc</str>\n" +
+            "    </arr>\n" +
             "    <str name=\"wt\">wt</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "  </lst>\n" +
@@ -205,7 +210,7 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam(queryStr));
-        fusionRequest.setFilterQuery(new SolrFusionRequestParam(filterQueryStr));
+        fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam(filterQueryStr)));
         fusionRequest.setResponseType(ResponseRendererType.XML);
         fusionRequest.setStart(0);
         fusionRequest.setPageSize(10);

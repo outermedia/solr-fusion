@@ -147,7 +147,7 @@ public class ControllerTest extends AbstractControllerTest
         fc.process(cfg, fusionRequest, fusionResponse);
         Assert.assertFalse("Expected processing error for bad query", fusionResponse.isOk());
         Assert.assertEquals("Found different error message than expected",
-            "Query parsing failed: author:*:Schiller\nCause: ERROR: Parsing of query author:*:Schiller failed.\n" +
+            "Query parsing failed: author:*:Schiller;\nCause: ERROR: Parsing of query author:*:Schiller failed.\n" +
                 "Cannot interpret query 'author:*:Schiller': '*' or '?' not allowed as first character in WildcardQuery\n" +
                 "'*' or '?' not allowed as first character in WildcardQuery", fusionResponse.getErrorMessage().trim());
     }
@@ -529,9 +529,8 @@ public class ControllerTest extends AbstractControllerTest
         response = new FusionResponse();
         request.setQuery(new SolrFusionRequestParam("id:Bibliothek9000" + sep + "1"));
         request.setParsedQuery(controller.parseQuery(request.getQuery().getValue(), null, Locale.GERMAN, request));
-        request.setFilterQuery(new SolrFusionRequestParam(""));
-        request.setParsedFilterQuery(
-            controller.parseQuery(request.getFilterQuery().getValue(), null, Locale.GERMAN, request));
+        request.setFilterQuery(Arrays.asList(new SolrFusionRequestParam("")));
+        request.setParsedFilterQuery(null);
         request.setResponseType(ResponseRendererType.XML);
         controller.process(cfg, request, response);
         Assert.assertTrue("Expected no error: " + response.getErrorMessage(), response.isOk());

@@ -151,7 +151,14 @@ public class SolrFusionServletTest
         // check core params
         Assert.assertNotNull("Expected request object", req);
         Assert.assertEquals("Got different query", q, req.getQuery().getValue());
-        Assert.assertEquals("Got different filter query", fq, req.getFilterQuery().getValue());
+        if(fq == null)
+        {
+            Assert.assertNull("Expected no filter query list", req.getFilterQuery());
+        }
+        else
+        {
+            Assert.assertEquals("Got different filter query", fq, req.getFilterQuery().get(0).getValue());
+        }
         Assert.assertEquals("Got different renderer type than expected", ResponseRendererType.JSON,
             req.getResponseType());
         Assert.assertEquals("Got different fields", fieldsToReturn, req.getFieldsToReturn().getValue());
@@ -206,18 +213,6 @@ public class SolrFusionServletTest
         FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
         match(req.buildErrorMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
             SolrFusionRequestParams.QUERY.getRequestParamName(), "2");
-    }
-
-    @Test
-    public void testBuildFusionRequestWithTooManyFilterQueries()
-    {
-        Map<String, String[]> requestParams = new HashMap<>();
-        requestParams.put(SolrFusionRequestParams.QUERY.getRequestParamName(), new String[]{"schiller"});
-        requestParams.put(SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(),
-            new String[]{"schiller", "goethe"});
-        FusionRequest req = servlet.buildFusionRequest(requestParams, new HashMap<String, Object>());
-        match(req.buildErrorMessage(), SolrFusionServlet.ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS,
-            SolrFusionRequestParams.FILTER_QUERY.getRequestParamName(), "2");
     }
 
     @Test
@@ -392,7 +387,7 @@ public class SolrFusionServletTest
         outStr = runRequest(reqParams, servlet, req);
         // System.out.println("OUT " + outStr);
         Assert.assertTrue("Expected error message. but got:\n" + outStr, outStr.contains(
-            "\"msg\":\"Query parsing failed: xyz:3\\nCause: ERROR: Parsing of query xyz:3 failed.\\nCannot interpret query 'xyz:3': Didn't find field 'xyz' in fusion schema. Please define it there.\\nDidn't find field 'xyz' in fusion schema. Please define it there.\\n\\n\","));
+            "\"msg\":\"Query parsing failed: xyz:3;\\nCause: ERROR: Parsing of query xyz:3 failed.\\nCannot interpret query 'xyz:3': Didn't find field 'xyz' in fusion schema. Please define it there.\\nDidn't find field 'xyz' in fusion schema. Please define it there.\\n\\n\","));
 
         // unknown field in qm in xml
         reqParams = new HashMap<>();
@@ -401,7 +396,7 @@ public class SolrFusionServletTest
         outStr = runRequest(reqParams, servlet, req);
         System.out.println("OUT " + outStr);
         Assert.assertTrue("Expected error message. but got:\n" + outStr,
-            outStr.contains("<str name=\"msg\"><![CDATA[Query parsing failed: xyz:3\n" +
+            outStr.contains("<str name=\"msg\"><![CDATA[Query parsing failed: xyz:3;\n" +
                 "Cause: ERROR: Parsing of query xyz:3 failed.\n" +
                 "Cannot interpret query 'xyz:3': Didn't find field 'xyz' in fusion schema. Please define it there.\n" +
                 "Didn't find field 'xyz' in fusion schema. Please define it there.\n" +

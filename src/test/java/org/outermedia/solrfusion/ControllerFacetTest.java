@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,7 +39,7 @@ public class ControllerFacetTest extends AbstractControllerTest
         FusionControllerIfc fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
-        fusionRequest.setFilterQuery(new SolrFusionRequestParam("author:Goethe -title:tomorrow"));
+        fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam("author:Goethe -title:tomorrow")));
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField("score");
         fusionRequest.setFacet(new SolrFusionRequestParam("true"));
@@ -107,8 +108,8 @@ public class ControllerFacetTest extends AbstractControllerTest
             "    <str name=\"f.title.facet.sort\"><![CDATA[index1]]></str>\n" +
             "    <str name=\"f.author.facet.sort\"><![CDATA[index2]]></str>\n" +
             "    <arr name=\"facet.field\">\n" +
-            "        <str>\"{!ex=format_filter}title\"</str>\n" +
-            "        <str>\"author\"</str>\n" +
+            "        <str>{!ex=format_filter}title</str>\n" +
+            "        <str>author</str>\n" +
             "    </arr>\n" +
             "    <str name=\"wt\">wt</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +

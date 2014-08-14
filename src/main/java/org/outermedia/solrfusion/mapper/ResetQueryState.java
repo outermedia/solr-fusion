@@ -4,6 +4,8 @@ import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+import java.util.List;
+
 /**
  * Map a fusion query to a solr request.
  * <p/>
@@ -15,6 +17,17 @@ public class ResetQueryState implements QueryVisitor
     public void reset(Query query)
     {
         query.accept(this, null);
+    }
+
+    public void reset(List<Query> queryList)
+    {
+        for (Query query : queryList)
+        {
+            if (query != null)
+            {
+                query.accept(this, null);
+            }
+        }
     }
 
     // ---- Visitor methods --------------------------------------------------------------------------------------------

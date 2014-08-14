@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -36,7 +37,7 @@ public class ControllerHighlightTest extends AbstractControllerTest
         FusionControllerIfc fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
-        fusionRequest.setFilterQuery(new SolrFusionRequestParam("author:Goethe -title:tomorrow"));
+        fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam("author:Goethe -title:tomorrow")));
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField("score");
         fusionRequest.setHighlight(new SolrFusionRequestParam("true"));
@@ -66,7 +67,7 @@ public class ControllerHighlightTest extends AbstractControllerTest
         fc.process(cfg, fusionRequest, fusionResponse);
         Assert.assertFalse("Expected processing error for bad query", fusionResponse.isOk());
         Assert.assertEquals("Found different error message than expected",
-            "Query parsing failed: author:*:Schiller\nCause: ERROR: Parsing of query author:*:Schiller failed.\n" +
+            "Query parsing failed: author:*:Schiller;\nCause: ERROR: Parsing of query author:*:Schiller failed.\n" +
                 "Cannot interpret query 'author:*:Schiller': '*' or '?' not allowed as first character in WildcardQuery\n" +
                 "'*' or '?' not allowed as first character in WildcardQuery", fusionResponse.getErrorMessage().trim());
     }

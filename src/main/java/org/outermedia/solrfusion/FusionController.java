@@ -59,33 +59,65 @@ public class FusionController implements FusionControllerIfc
         this.configuration = configuration;
 
         String queryStr = fusionRequest.getQuery().getValue();
-        String filterQueryStr = fusionRequest.getFilterQuery().getValue();
+        List<SolrFusionRequestParam> filterQueryList = fusionRequest.getFilterQuery();
         String highlightQueryStr = fusionRequest.getHighlightQuery().getValue();
 
         Map<String, Float> boosts = fusionRequest.getBoosts();
         Locale locale = fusionRequest.getLocale();
         fusionRequest.setParsedQuery(parseQuery(queryStr, boosts, locale, fusionRequest));
-        fusionRequest.setParsedFilterQuery(parseQuery(filterQueryStr, boosts, locale, fusionRequest));
+        List<String> unparsableFilterQueryStrings = new ArrayList<>();
+        fusionRequest.setParsedFilterQuery(
+            parseAllQueries(filterQueryList, boosts, fusionRequest, unparsableFilterQueryStrings));
         fusionRequest.setParsedHighlightQuery(parseQuery(highlightQueryStr, boosts, locale, fusionRequest));
 
         if (fusionRequest.getParsedQuery() == null)
         {
-            fusionResponse.setResponseForQueryParseError(queryStr, fusionRequest.buildErrorMessage());
+            fusionResponse.setResponseForQueryParseError(Arrays.asList(queryStr), fusionRequest.buildErrorMessage());
         }
-        else if (filterQueryStr != null && filterQueryStr.trim().length() > 0 &&
-            fusionRequest.getParsedFilterQuery() == null)
+        else if (unparsableFilterQueryStrings.size() > 0)
         {
-            fusionResponse.setResponseForQueryParseError(filterQueryStr, fusionRequest.buildErrorMessage());
+            fusionResponse.setResponseForQueryParseError(unparsableFilterQueryStrings,
+                fusionRequest.buildErrorMessage());
         }
         else if (highlightQueryStr != null && highlightQueryStr.trim().length() > 0 &&
             fusionRequest.getParsedHighlightQuery() == null)
         {
-            fusionResponse.setResponseForQueryParseError(highlightQueryStr, fusionRequest.buildErrorMessage());
+            fusionResponse.setResponseForQueryParseError(Arrays.asList(highlightQueryStr),
+                fusionRequest.buildErrorMessage());
         }
         else
         {
             processQuery(configuration, fusionRequest, fusionResponse);
         }
+    }
+
+    protected List<Query> parseAllQueries(List<SolrFusionRequestParam> queryParams, Map<String, Float> boosts,
+        FusionRequest fusionRequest, List<String> unparsableQueryStrings)
+    {
+        List<Query> result = null;
+        if (queryParams != null)
+        {
+            result = new ArrayList<>();
+            for (SolrFusionRequestParam sp : queryParams)
+            {
+                String queryStr = sp.getValue();
+                Query q = parseQuery(queryStr, boosts, fusionRequest.getLocale(), fusionRequest);
+                if (queryStr != null && queryStr.trim().length() > 0 && q == null)
+                {
+                    log.error("Ignoring filter query {}, because of parse errors.", queryStr);
+                    unparsableQueryStrings.add(queryStr);
+                }
+                else
+                {
+                    result.add(q);
+                }
+            }
+            if (result.isEmpty())
+            {
+                result = null;
+            }
+        }
+        return result;
     }
 
     protected void processQuery(Configuration configuration, FusionRequest fusionRequest, FusionResponse fusionResponse)
@@ -287,15 +319,15 @@ public class FusionController implements FusionControllerIfc
     protected void requestAllSearchServers(FusionRequest fusionRequest,
         List<SearchServerConfig> configuredSearchServers, ResponseConsolidatorIfc consolidator)
     {
-        log.debug("Requesting all configured servers for query: {}", fusionRequest.getQuery());
+        log.debug("Requesting all configured servers with query: {}", fusionRequest.getQuery());
         ScriptEnv env = getNewScriptEnv(fusionRequest.getLocale());
         Query query = fusionRequest.getParsedQuery();
-        Query filterQuery = fusionRequest.getParsedFilterQuery();
+        List<Query> filterQuery = fusionRequest.getParsedFilterQuery();
         Query highlightQuery = fusionRequest.getParsedHighlightQuery();
         for (SearchServerConfig searchServerConfig : configuredSearchServers)
         {
-            if (mapQuery(query, env, searchServerConfig) && mapQuery(filterQuery, env, searchServerConfig) &&
-                mapQuery(highlightQuery, env, searchServerConfig))
+            if (mapQuery(env, searchServerConfig, Arrays.asList(query, highlightQuery)) &&
+                mapQuery(env, searchServerConfig, filterQuery))
             {
                 XmlResponse result = sendAndReceive(fusionRequest, searchServerConfig);
                 Exception se = result.getErrorReason();
@@ -410,20 +442,26 @@ public class FusionController implements FusionControllerIfc
         }
     }
 
-    protected boolean mapQuery(Query query, ScriptEnv env, SearchServerConfig searchServerConfig)
+    protected boolean mapQuery(ScriptEnv env, SearchServerConfig searchServerConfig, List<Query> queryList)
     {
         boolean result = true;
-        if (query != null)
+        if (queryList != null)
         {
-            try
+            for (Query query : queryList)
             {
-                configuration.getQueryMapper().mapQuery(configuration, searchServerConfig, query, env);
-            }
-            catch (Exception e)
-            {
-                log.error("Caught exception while mapping fusion queryStr to server {}",
-                    searchServerConfig.getSearchServerName(), e);
-                result = false;
+                if (query != null)
+                {
+                    try
+                    {
+                        configuration.getQueryMapper().mapQuery(configuration, searchServerConfig, query, env);
+                    }
+                    catch (Exception e)
+                    {
+                        log.error("Caught exception while mapping fusion query to search server query of server {}",
+                            searchServerConfig.getSearchServerName(), e);
+                        result = false;
+                    }
+                }
             }
         }
         return result;

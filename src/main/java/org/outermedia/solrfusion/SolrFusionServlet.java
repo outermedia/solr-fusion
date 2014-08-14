@@ -161,7 +161,7 @@ public class SolrFusionServlet extends HttpServlet
         }
     }
 
-    private void processRequest(HttpServletResponse response, FusionRequest fusionRequest,
+    protected void processRequest(HttpServletResponse response, FusionRequest fusionRequest,
         FusionResponse fusionResponse, ResponseRendererType rendererType) throws IOException
     {
         if (!fusionRequest.hasErrors())
@@ -320,8 +320,7 @@ public class SolrFusionServlet extends HttpServlet
         FusionRequest fusionRequest)
     {
         fusionRequest.setQuery(getRequiredSingleSearchParamValue(requestParams, QUERY, fusionRequest));
-        fusionRequest.setFilterQuery(
-            getOptionalSingleSearchParamValue(requestParams, FILTER_QUERY, null, fusionRequest));
+        fusionRequest.setFilterQuery(getOptionalMultiSearchParamValue(requestParams, FILTER_QUERY));
         // TODO configure default response type in solrfusion schema?
         fusionRequest.setResponseTypeFromString(
             getOptionalSingleSearchParamValue(requestParams, WRITER_TYPE, "json", fusionRequest), fusionRequest);

@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -28,20 +29,44 @@ import static org.mockito.Mockito.*;
 public class ControllerFilterQueryTest extends AbstractControllerTest
 {
     @Test
-    public void testProcess()
+    public void testProcessWithoutFilterQuery()
         throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
         IllegalAccessException, URISyntaxException
+    {
+        checkFilterQueryHandling(null);
+    }
+
+    @Test
+    public void testProcessWithOneFilterQuery()
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
+    {
+        // with one fq
+        checkFilterQueryHandling(Arrays.asList(new SolrFusionRequestParam("author:Goethe -title:tomorrow")));
+    }
+
+    @Test
+    public void testProcessWithTwoFilterQuery()
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
+    {
+        checkFilterQueryHandling(Arrays.asList(new SolrFusionRequestParam("author:Goethe -title:tomorrow"),
+            new SolrFusionRequestParam("author:Wolfgang")));
+    }
+
+    protected void checkFilterQueryHandling(List<SolrFusionRequestParam> filterQueries)
+        throws IllegalAccessException, ParserConfigurationException, IOException, JAXBException, URISyntaxException,
+        SAXException, InvocationTargetException
     {
         FusionControllerIfc fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
-        fusionRequest.setFilterQuery(new SolrFusionRequestParam("author:Goethe -title:tomorrow"));
+        fusionRequest.setFilterQuery(filterQueries);
         fusionRequest.setSortAsc(false);
         fusionRequest.setSolrFusionSortField("score");
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
-        // System.out.println("ERROR " + fusionResponse.getErrorMessage());
-        Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
+        Assert.assertTrue("Expected no processing error: " + fusionResponse.getErrorMessage(), fusionResponse.isOk());
     }
 
     @Test
@@ -53,14 +78,14 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
         cfg.getSearchServerConfigs().setDisasterLimit(3); // only one server configured
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
-        fusionRequest.setFilterQuery(new SolrFusionRequestParam("author:*:Schiller"));
+        fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam("author:*:Schiller")));
 
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
         Assert.assertFalse("Expected processing error for bad query", fusionResponse.isOk());
         Assert.assertEquals("Found different error message than expected",
-            "Query parsing failed: author:*:Schiller\nCause: ERROR: Parsing of query author:*:Schiller failed.\n" +
+            "Query parsing failed: author:*:Schiller;\nCause: ERROR: Parsing of query author:*:Schiller failed.\n" +
                 "Cannot interpret query 'author:*:Schiller': '*' or '?' not allowed as first character in WildcardQuery\n" +
                 "'*' or '?' not allowed as first character in WildcardQuery", fusionResponse.getErrorMessage().trim());
     }
@@ -93,8 +118,10 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
             "    <str name=\"start\">0</str>\n" +
             "    <str name=\"rows\"><![CDATA[0]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
-            "    <str name=\"fq\"><![CDATA[title:def]]></str>\n" +
             "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
+            "    <arr name=\"fq\">\n" +
+            "        <str>title:def</str>\n" +
+            "    </arr>\n" +
             "    <str name=\"wt\">wt</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "  </lst>\n" +
@@ -132,19 +159,17 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
         searchServerConfigs.add(searchServerConfig9000);
         testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
-        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class),
-            Mockito.anyInt());
+        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class), Mockito.anyInt());
 
         searchServerConfigs.add(searchServerConfig9002);
         testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
-        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class),
-            Mockito.anyInt());
+        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class), Mockito.anyInt());
 
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam(queryStr));
-        fusionRequest.setFilterQuery(new SolrFusionRequestParam(filterQueryStr));
+        fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam(filterQueryStr)));
         fusionRequest.setPageSize(10);
         fusionRequest.setStart(0);
         fusionRequest.setSortAsc(false);

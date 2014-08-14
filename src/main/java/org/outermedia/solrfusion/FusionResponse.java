@@ -48,12 +48,18 @@ public class FusionResponse
     /**
      * Parsing of the fusion query failed.
      *
-     * @param query
+     * @param queryList
      * @param cause
      */
-    public void setResponseForQueryParseError(String query, String cause)
+    public void setResponseForQueryParseError(List<String> queryList, String cause)
     {
-        setError("Query parsing failed: " + query, cause);
+        StringBuilder sb = new StringBuilder();
+        for(String qs : queryList)
+        {
+            sb.append(qs);
+            sb.append(";");
+        }
+        setError("Query parsing failed: " + sb.toString(), cause);
     }
 
     /**

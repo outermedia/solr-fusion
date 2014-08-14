@@ -26,12 +26,12 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 public class FusionRequest
 {
     private SolrFusionRequestParam query;
-    private SolrFusionRequestParam filterQuery;
+    private List<SolrFusionRequestParam> filterQuery;
     private int start;
     private int pageSize;
     private Locale locale;
     private Query parsedQuery;
-    private Query parsedFilterQuery;
+    private List<Query> parsedFilterQuery;
     private ResponseRendererType responseType;
     private String solrFusionSortField;
     private String searchServerSortField;
@@ -62,7 +62,7 @@ public class FusionRequest
         responseType = ResponseRendererType.JSON;
         errors = new ArrayList<>();
         query = new SolrFusionRequestParam(null);
-        filterQuery = new SolrFusionRequestParam(null);
+        filterQuery = new ArrayList<>();
         fieldsToReturn = new SolrFusionRequestParam(null);
         highlightingFieldsToReturn = new SolrFusionRequestParam(null);
         highlightQuery = new SolrFusionRequestParam(null);
@@ -331,6 +331,19 @@ public class FusionRequest
             QueryBuilderIfc queryBuilder = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
             searchServerParams.put(paramName,
                 queryBuilder.buildQueryString(query, configuration, searchServerConfig, locale));
+        }
+    }
+
+    protected void buildSearchServerQuery(List<Query> queryList, SolrFusionRequestParams paramName,
+        Configuration configuration, SearchServerConfig searchServerConfig, Multimap<String> searchServerParams)
+        throws InvocationTargetException, IllegalAccessException
+    {
+        if (queryList != null)
+        {
+            for (Query q : queryList)
+            {
+                buildSearchServerQuery(q, paramName, configuration, searchServerConfig, searchServerParams);
+            }
         }
     }
 

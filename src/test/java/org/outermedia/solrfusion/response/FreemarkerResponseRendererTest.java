@@ -24,10 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
@@ -71,13 +68,9 @@ public class FreemarkerResponseRendererTest
         XmlResponse response9001 = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9001.xml", null);
         List<Document> documents9001 = response9001.getDocuments();
 
-//        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getResult().getNumFound());
         SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9001.getNumFound(), null, null);
-//        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9000.getResult().getDocuments(), info9000);
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             response9001.getDocuments(), info9001);
-
-//        consolidator.addResultStream(configuration, searchServerConfig, docIterator);
 
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator = new MappingClosableIterator(docIterator,
             spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null);
@@ -89,13 +82,15 @@ public class FreemarkerResponseRendererTest
         Assert.assertFalse("xml response should not contain filter query in header",
             xmlResponse.contains("<str name=\"fq\">"));
 
-        req.setFilterQuery(new SolrFusionRequestParam("salat"));
+        req.setFilterQuery(Arrays.asList(new SolrFusionRequestParam("salat"), new SolrFusionRequestParam("tomato")));
         xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, req, new FusionResponse());
+        System.out.println(xmlResponse);
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
         Assert.assertTrue("xml response should contain filter query in header",
-            xmlResponse.contains("<str name=\"fq\"><![CDATA[salat]]></str>"));
-
-        System.out.println(xmlResponse);
+            xmlResponse.contains("<arr name=\"fq\">\n" +
+                "        <str>salat</str>\n" +
+                "        <str>tomato</str>\n" +
+                "    </arr>"));
     }
 
     @Test
@@ -119,16 +114,10 @@ public class FreemarkerResponseRendererTest
 
         XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-freemarker.xml", null);
         List<Document> documents9000 = response9000.getDocuments();
-//        XmlResponse response9001= xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9001.xml", null);
-//        List<Document> documents9001 = response9001.getDocuments();
 
         SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getNumFound(), null, null);
-//        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9000.getNumFound());
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             response9000.getDocuments(), info9000);
-//        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(response9001.getDocuments(), info9001);
-
-//        consolidator.addResultStream(configuration, searchServerConfig, docIterator);
 
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator = new MappingClosableIterator(docIterator,
             spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null);
@@ -139,7 +128,7 @@ public class FreemarkerResponseRendererTest
         FusionResponse res = new FusionResponse();
         res.setOk(true);
         String jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req, res);
-//        System.out.println("JSON " + jsonResponse);
+        // System.out.println("JSON " + jsonResponse);
 
         try
         {
@@ -161,13 +150,15 @@ public class FreemarkerResponseRendererTest
 
         Assert.assertFalse("json response should not contain filter query in header", jsonResponse.contains("\"fq\":"));
 
-        req.setFilterQuery(new SolrFusionRequestParam("salat"));
+        req.setFilterQuery(Arrays.asList(new SolrFusionRequestParam("salat"), new SolrFusionRequestParam("tomato")));
         res = new FusionResponse();
         res.setOk(true);
         jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req, res);
         // System.out.println(jsonResponse);
         Assert.assertTrue("json response should contain filter query in header",
-            jsonResponse.contains("\"fq\":\"salat\","));
+            jsonResponse.contains("\"fq\":[\n" +
+                "        \"salat\",\"tomato\"\n" +
+                "      ],"));
 
         res.setResponseForException(new Exception("An\nerror\noccurred."));
         jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req, res);
