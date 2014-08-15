@@ -229,6 +229,18 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         boolean sortAsc = fusionRequest.isSortAsc();
         Collections.sort(allDocs, new FusionValueDocumentComparator(fusionSortField, sortAsc));
 
+        if (log.isTraceEnabled())
+        {
+            log.trace("Sorted documents by {} {}:", fusionSortField, sortAsc);
+            for (int i = 0; i < allDocs.size(); i++)
+            {
+                Document document = allDocs.get(i);
+                List<String> sortValue = document.getFusionValuesOf(fusionSortField);
+                log.trace("{}. {}", i, sortValue);
+            }
+            log.trace("---");
+        }
+
         // get docs of page
         List<Document> docsOfPage = new ArrayList<>();
         int start = fusionRequest.getStart();
@@ -258,6 +270,19 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
                 }
             }
             docsOfPage.add(d);
+        }
+
+        if (log.isTraceEnabled())
+        {
+            log.trace("Page: Sorted documents by {} {}:", fusionSortField, sortAsc);
+            for (int i = 0; i < docsOfPage.size(); i++)
+            {
+                Document document = docsOfPage.get(i);
+                List<String> sortValue = document.getFusionValuesOf(fusionSortField);
+                List<String> titleShort = document.getFusionValuesOf("title_short");
+                log.trace("{}.\n  {}\n  {}", i, sortValue, titleShort);
+            }
+            log.trace("---");
         }
 
         Map<String, List<WordCount>> sortedFusionFacetFields = mapFacetWordCounts(idGenerator, fusionIdField,
