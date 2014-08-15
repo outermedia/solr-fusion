@@ -467,7 +467,7 @@ public class FusionRequest
     }
 
     /**
-     * Get the sort kind ("index" or "count" for a given fusion field.
+     * Get the sort kind ("index" or "count") for a given fusion field according to solr 4.X rules.
      *
      * @param fusionFacetField
      * @return "index" or "count"
@@ -517,5 +517,30 @@ public class FusionRequest
             }
         }
         return sort;
+    }
+
+    /**
+     * Get the limit for a given fusion field. The default is "100". Negative numbers mean unlimited.
+     *
+     * @param fusionFacetField
+     * @return a string containing the limit
+     */
+    public int getLimitOfFacetField(String fusionFacetField)
+    {
+        int result = 100;
+        String globalFacetLimit = facetLimit.getValue();
+        if (globalFacetLimit != null)
+        {
+            String limitStr = globalFacetLimit;
+            try
+            {
+                result = Integer.parseInt(limitStr);
+            }
+            catch (Exception e)
+            {
+                log.error("Couldn't parse facet.limit '{}'", limitStr, e);
+            }
+        }
+        return result;
     }
 }

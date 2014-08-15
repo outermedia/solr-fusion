@@ -23,9 +23,10 @@ public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
      *
      * @param searchServerQueryStr a query suitable for this search server.
      * @param timeout              a timeout in milliseconds
+     * @param version              the version of the search server
      * @return null for error or a document stream
      */
-    public InputStream sendQuery(Multimap<String> searchServerQueryStr, int timeout)
+    public InputStream sendQuery(Multimap<String> searchServerQueryStr, int timeout, String version)
         throws URISyntaxException, IOException;
 
     public void init(SearchServerConfig config);

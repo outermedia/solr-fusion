@@ -120,9 +120,10 @@ public class ControllerFacetTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", "title", "author9000"), 4000);
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", "title", "author9000"), 4000,
+            "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng", "titleVT_de", "author9002"), 4000);
+            buildParams("titleVT_eng:abc", "titleVT_eng", "titleVT_de", "author9002"), 4000, "3.6");
     }
 
     @Test
@@ -159,9 +160,10 @@ public class ControllerFacetTest extends AbstractControllerTest
             "  ]}\n" +
             "}";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", "title", "author9000"), 4000);
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", "title", "author9000"), 4000,
+            "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng", "titleVT_de", "author9002"), 4000);
+            buildParams("titleVT_eng:abc", "titleVT_eng", "titleVT_de", "author9002"), 4000, "3.6");
     }
 
     protected String testMultipleServers(String queryStr, String responseServer1, String responseServer2,
@@ -189,12 +191,14 @@ public class ControllerFacetTest extends AbstractControllerTest
         searchServerConfigs.add(searchServerConfig9000);
         testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
-        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class), Mockito.anyInt());
+        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class), Mockito.anyInt(),
+            anyString());
 
         searchServerConfigs.add(searchServerConfig9002);
         testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
-        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class), Mockito.anyInt());
+        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class), Mockito.anyInt(),
+            anyString());
 
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
@@ -239,7 +243,7 @@ public class ControllerFacetTest extends AbstractControllerTest
                 new SolrFusionRequestParam("{!tag=format_filter}(format:\"BluRayDisc\")")));
         Multimap<String> expectedParams = buildParams("title:abc", "title", "title", "author");
         expectedParams.put(FILTER_QUERY, "format:\"BluRayDisc\"");
-        verify(testAdapter9000, times(1)).sendQuery(expectedParams, 4000);
+        verify(testAdapter9000, times(1)).sendQuery(expectedParams, 4000, "3.5");
         // System.out.println("XML " + xml);
     }
 }

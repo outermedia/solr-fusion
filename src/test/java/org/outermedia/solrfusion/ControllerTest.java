@@ -67,7 +67,7 @@ public class ControllerTest extends AbstractControllerTest
         searchServerConfigs.clear();
         searchServerConfigs.add(configuredSearchServer);
         when(configuredSearchServer.getInstance()).thenReturn(testAdapter);
-        when(testAdapter.sendQuery(any(Multimap.class), Mockito.anyInt())).thenReturn(testResponse);
+        when(testAdapter.sendQuery(any(Multimap.class), Mockito.anyInt(), anyString())).thenReturn(testResponse);
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
@@ -83,7 +83,7 @@ public class ControllerTest extends AbstractControllerTest
 
         // first fc.process() consumed test response, so re-initConsolidator it and bind the new object to the testAdapter again
         initTestResponse();
-        when(testAdapter.sendQuery(any(Multimap.class), Mockito.anyInt())).thenReturn(testResponse);
+        when(testAdapter.sendQuery(any(Multimap.class), Mockito.anyInt(), anyString())).thenReturn(testResponse);
         // renderer specified, but not configured
         cfg.getSearchServerConfigs().getResponseRendererFactories().clear();
         fusionRequest.setResponseType(ResponseRendererType.JSON);
@@ -159,8 +159,8 @@ public class ControllerTest extends AbstractControllerTest
     {
         testMultipleServers("target/test-classes/test-xml-response-9000.xml",
             "target/test-classes/test-xml-response-9002.xml");
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", null), 4000);
-        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", null), 4000);
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", null), 4000, "3.6");
+        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", null), 4000, "3.6");
     }
 
     @Test
@@ -189,8 +189,8 @@ public class ControllerTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", null), 4000);
-        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", null), 4000);
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", null), 4000, "3.6");
+        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", null), 4000, "3.6");
     }
 
     protected String testMultipleServers(String responseServer1, String responseServer2)
@@ -217,12 +217,14 @@ public class ControllerTest extends AbstractControllerTest
         searchServerConfigs.add(searchServerConfig9000);
         testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
-        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class), Mockito.anyInt());
+        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class), Mockito.anyInt(),
+            anyString());
 
         searchServerConfigs.add(searchServerConfig9002);
         testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
-        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class), Mockito.anyInt());
+        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class), Mockito.anyInt(),
+            anyString());
 
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();

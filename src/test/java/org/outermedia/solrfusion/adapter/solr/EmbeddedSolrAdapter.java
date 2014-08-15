@@ -45,7 +45,7 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
     }
 
     @Override
-    public InputStream sendQuery(Multimap<String> params, int timeout) throws URISyntaxException, IOException
+    public InputStream sendQuery(Multimap<String> params, int timeout, String version) throws URISyntaxException, IOException
     {
         String q = params.getFirst(SolrFusionRequestParams.QUERY);
         String fq = params.getFirst(SolrFusionRequestParams.FILTER_QUERY);

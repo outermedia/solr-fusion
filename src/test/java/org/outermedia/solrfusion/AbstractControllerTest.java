@@ -98,7 +98,8 @@ public class AbstractControllerTest
             searchServerConfigs.clear();
             searchServerConfigs.add(searchServerConfig);
             when(searchServerConfig.getInstance()).thenReturn(testAdapter);
-            when(testAdapter.sendQuery(Mockito.any(Multimap.class), Mockito.anyInt())).thenReturn(testResponse);
+            when(testAdapter.sendQuery(Mockito.any(Multimap.class), Mockito.anyInt(), anyString())).thenReturn(
+                testResponse);
         }
         return cfg.getController();
     }

@@ -168,7 +168,7 @@ public class ResponseMapper implements ResponseMapperIfc
             if (scoreTerm == null || !scoreTerm.isProcessed())
             {
                 // TODO only if score was requested (fl)
-                log.warn("Can't correct score in documents, because document contains no value.");
+                log.debug("Can't correct score, because document contains no value.");
             }
         }
     }

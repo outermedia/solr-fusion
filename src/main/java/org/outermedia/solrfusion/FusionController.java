@@ -388,7 +388,8 @@ public class FusionController implements FusionControllerIfc
             {
                 int timeout = configuration.getSearchServerConfigs().getTimeout();
                 SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
-                InputStream is = adapter.sendQuery(searchServerParams, timeout);
+                InputStream is = adapter.sendQuery(searchServerParams, timeout,
+                    searchServerConfig.getSearchServerVersion());
                 ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
                     configuration.getDefaultResponseParser());
                 result = responseParser.parse(is);

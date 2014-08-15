@@ -22,20 +22,40 @@ public class FacetWordCountSorter
                 String fusionField = entry.getKey();
                 String sortingOfFacetField = fusionRequest.getSortingOfFacetField(fusionField);
                 Map<String, Integer> wordCounts = entry.getValue();
-                List<WordCount> sortableWordCounts = new ArrayList<>();
+                List<WordCount> sortedWordCounts = new ArrayList<>();
                 for (Map.Entry<String, Integer> wordEntry : wordCounts.entrySet())
                 {
                     WordCount wc = new WordCount();
                     wc.setWord(wordEntry.getKey());
                     wc.setCount(wordEntry.getValue());
                     wc.setSortByCount(FusionRequest.SORT_COUNT.equals(sortingOfFacetField));
-                    sortableWordCounts.add(wc);
+                    sortedWordCounts.add(wc);
                 }
-                sortWordCounts(sortableWordCounts, sortingOfFacetField);
-                result.put(fusionField, sortableWordCounts);
+                sortWordCounts(sortedWordCounts, sortingOfFacetField);
+                filterWordCounts(sortedWordCounts, fusionRequest.getLimitOfFacetField(fusionField));
+                result.put(fusionField, sortedWordCounts);
             }
         }
         return result;
+    }
+
+    /**
+     * Remove too many word count entries. {@code limitOfFacetField} controls the length.
+     *
+     * @param sortedWordCounts
+     * @param limitOfFacetField see {@link org.outermedia.solrfusion.FusionRequest#getLimitOfFacetField(String)}
+     */
+    protected void filterWordCounts(List<WordCount> sortedWordCounts, int limitOfFacetField)
+    {
+        if (limitOfFacetField >= 0)
+        {
+            int at = sortedWordCounts.size() - 1;
+            while (at >= 0 && (at + 1) > limitOfFacetField)
+            {
+                sortedWordCounts.remove(at);
+                at--;
+            }
+        }
     }
 
     /**
@@ -46,7 +66,7 @@ public class FacetWordCountSorter
     protected void sortWordCounts(List<WordCount> sortableWordCounts, String sortingOfFacetField)
     {
         Collections.sort(sortableWordCounts);
-        if(sortingOfFacetField.equals(FusionRequest.SORT_COUNT))
+        if (sortingOfFacetField.equals(FusionRequest.SORT_COUNT))
         {
             Collections.reverse(sortableWordCounts);
         }

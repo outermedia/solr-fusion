@@ -97,8 +97,9 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
     {
         testMultipleServers("title:abc", "title:def", "target/test-classes/test-xml-response-9000.xml",
             "target/test-classes/test-xml-response-9002.xml");
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def"), 4000);
-        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", "titleVT_eng:def"), 4000);
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def"), 4000, "3.6");
+        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", "titleVT_eng:def"), 4000,
+            "3.6");
     }
 
     @Test
@@ -130,8 +131,9 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def"), 4000);
-        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", "titleVT_eng:def"), 4000);
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def"), 4000, "3.6");
+        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", "titleVT_eng:def"), 4000,
+            "3.6");
     }
 
     protected String testMultipleServers(String queryStr, String filterQueryStr, String responseServer1,
@@ -159,12 +161,14 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
         searchServerConfigs.add(searchServerConfig9000);
         testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
-        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class), Mockito.anyInt());
+        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class), Mockito.anyInt(),
+            anyString());
 
         searchServerConfigs.add(searchServerConfig9002);
         testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
-        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class), Mockito.anyInt());
+        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class), Mockito.anyInt(),
+            anyString());
 
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();

@@ -54,7 +54,12 @@ public class Multimap<V>
 
     public void set(SolrFusionRequestParams key, V val)
     {
-        map.removeAll(key.getRequestParamName());
+        set(key.getRequestParamName(), val);
+    }
+
+    public void set(String key, V val)
+    {
+        map.removeAll(key);
         put(key, val);
     }
 
@@ -82,10 +87,10 @@ public class Multimap<V>
     public List<Map.Entry<String, V>> filterBy(SolrFusionRequestParams field)
     {
         List<Map.Entry<String, V>> result = new ArrayList<>();
-        for(Map.Entry<String, V> e: map.entries())
+        for (Map.Entry<String, V> e : map.entries())
         {
             String key = e.getKey();
-            if(field.matches(key) != null)
+            if (field.matches(key) != null)
             {
                 result.add(e);
             }
