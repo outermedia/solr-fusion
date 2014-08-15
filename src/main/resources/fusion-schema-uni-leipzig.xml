@@ -1062,7 +1062,7 @@
 
         </om:solr-server>
 
-        <!--
+        <!-- TODO use mapping of DBoD1 except for source_id
         <om:solr-server name="DBoD2" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.Solr1Adapter$Factory">
 
@@ -1074,6 +1074,14 @@
             <om:unique-key>id</om:unique-key>
 
             <om:max-docs>30</om:max-docs>
+
+            <om:field name="source_id" fusion-name="source_id">
+                <om:add>
+                    <om:response type="static-value">
+                        <value>45</value>
+                    </om:response>
+                </om:add>
+            </om:field>
 
         </om:solr-server>
         -->
