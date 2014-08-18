@@ -79,12 +79,12 @@ public class ControllerHighlightTest extends AbstractControllerTest
     {
         testMultipleServers("title:abc", "title:def", "target/test-classes/test-xml-response-9000.xml",
             "target/test-classes/test-xml-response-9002.xml", ResponseRendererType.XML);
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title"), 4000, "3.6");
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title", "xml"), 4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng"), 4000, "3.6");
+            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng", "xml"), 4000, "3.6");
     }
 
-    protected Multimap<String> buildParams(String q, String hlq, String mappedTitle)
+    protected Multimap<String> buildParams(String q, String hlq, String mappedTitle, String responseFormat)
     {
         Multimap<String> result = super.buildParams(q, null);
         result.put(HIGHLIGHT_QUERY, hlq);
@@ -93,6 +93,7 @@ public class ControllerHighlightTest extends AbstractControllerTest
         result.put(HIGHLIGHT, "true");
         result.put(HIGHLIGHT_PRE, "pre");
         result.put(HIGHLIGHT_POST, "post");
+        result.set(WRITER_TYPE, responseFormat);
         return result;
     }
 
@@ -127,9 +128,9 @@ public class ControllerHighlightTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title"), 4000, "3.6");
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title", "xml"), 4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng"), 4000, "3.6");
+            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng", "xml"), 4000, "3.6");
     }
 
     @Test
@@ -155,14 +156,15 @@ public class ControllerHighlightTest extends AbstractControllerTest
             "      \"hl.fl\":\"title\",\n" +
             "      \"hl.q\":\"title:def\",\n" +
             "      \"wt\":\"json\",\n" +
-            "      \"version\":\"2.2\"}},\n" +
-            "  \"response\":{\"numFound\":0,\"start\":0,\"docs\":[\n" +
+            "      \"version\":\"2.2\"}}\n" +
+            "  , \"response\":{\"numFound\":0,\"start\":0,\"docs\":[\n" +
             "  ]}\n" +
             "}";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title"), 4000, "3.6");
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title", "xml"), 4000,
+            "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng"), 4000, "3.6");
+            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng", "xml"), 4000, "3.6");
     }
 
     protected String testMultipleServers(String queryStr, String highlightQueryStr, String responseServer1,

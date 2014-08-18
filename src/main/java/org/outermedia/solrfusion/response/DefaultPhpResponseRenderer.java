@@ -10,40 +10,41 @@ import org.outermedia.solrfusion.response.parser.Document;
 
 /**
  * Transforms a search result into php.
- * 
+ *
  * @author ballmann
- * 
  */
 
 @ToString
 public class DefaultPhpResponseRenderer implements ResponseRendererIfc
 {
 
-	/**
-	 * Factory creates instances only.
-	 */
-	protected DefaultPhpResponseRenderer()
-	{}
+    /**
+     * Factory creates instances only.
+     */
+    protected DefaultPhpResponseRenderer()
+    {
+    }
 
     @Override
-    public String getResponseString(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
+    public String getResponseString(Configuration configuration,
+        ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
         FusionResponse fusionResponse)
     {
         return null; // TODO
     }
 
     public static class Factory
-	{
-		public static DefaultPhpResponseRenderer getInstance()
-		{
-			return new DefaultPhpResponseRenderer();
-		}
-	}
+    {
+        public static DefaultPhpResponseRenderer getInstance()
+        {
+            return new DefaultPhpResponseRenderer();
+        }
+    }
 
-	@Override
-	public void init(ResponseRendererFactory config)
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void init(ResponseRendererFactory config)
+    {
+        // TODO Auto-generated method stub
 
-	}
+    }
 }

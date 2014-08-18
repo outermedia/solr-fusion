@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {"header", "result"})
+@XmlType(name = "", propOrder = {"header", "results"})
 @XmlRootElement(name = "response")
 @ToString
 public class XmlResponse
@@ -24,7 +24,7 @@ public class XmlResponse
     private List<ResponseSection> header;
 
     @XmlElement(name = "result", required = true)
-    private Result result;
+    private List<Result> results;
 
     @XmlTransient @Getter @Setter
     private Exception errorReason;
@@ -78,9 +78,27 @@ public class XmlResponse
         return result;
     }
 
-    public List<Document> getDocuments()
+    protected Result findResultByName(String name)
+    {
+        Result aResult = null;
+        if(results != null)
+        {
+            for(Result result : results)
+            {
+                if(name.equals(result.getResultName()))
+                {
+                    aResult = result;
+                    break;
+                }
+            }
+        }
+        return aResult;
+    }
+
+    protected List<Document> getDocumentsImpl(String resultName)
     {
         List<Document> docs = null;
+        Result result = findResultByName(resultName);
         if (result != null)
         {
             docs = result.getDocuments();
@@ -88,9 +106,30 @@ public class XmlResponse
         return docs;
     }
 
-    public int getNumFound()
+    /**
+     * Get the documents of the result list named "response".
+     *
+     * @return
+     */
+    public List<Document> getDocuments()
+    {
+        return getDocumentsImpl("response");
+    }
+
+    /**
+     * Get the documents of the result list named "match".
+     *
+     * @return
+     */
+    public List<Document> getMatchDocuments()
+    {
+        return getDocumentsImpl("match");
+    }
+
+    protected int getNumFoundImpl(String resultName)
     {
         int nr = 0;
+        Result result = findResultByName(resultName);
         if (result != null)
         {
             nr = result.getNumFound();
@@ -98,13 +137,23 @@ public class XmlResponse
         return nr;
     }
 
-    public String getResultName()
+    /**
+     * Get the numFound value of the result list named "response".
+     *
+     * @return
+     */
+    public int getNumFound()
     {
-        String n = null;
-        if (result != null)
-        {
-            n = result.getResultName();
-        }
-        return n;
+        return getNumFoundImpl("response");
+    }
+
+    /**
+     * Get the numFound value of the result list named "match".
+     *
+     * @return
+     */
+    public int getMatchNumFound()
+    {
+        return getNumFoundImpl("match");
     }
 }

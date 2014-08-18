@@ -10,13 +10,13 @@ import org.outermedia.solrfusion.response.parser.Document;
 
 /**
  * Transforms a search result into a transport format.
- * 
+ *
  * @author ballmann
- * 
  */
 
 public interface ResponseRendererIfc extends Initiable<ResponseRendererFactory>
 {
-	public String getResponseString(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
+    public String getResponseString(Configuration configuration,
+        ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
         FusionResponse fusionResponse);
 }

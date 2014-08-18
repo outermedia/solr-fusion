@@ -30,4 +30,7 @@ public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
         throws URISyntaxException, IOException;
 
     public void init(SearchServerConfig config);
+
+    public void setUrl(String url);
+    public String getUrl();
 }

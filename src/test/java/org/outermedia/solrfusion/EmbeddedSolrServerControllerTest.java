@@ -116,10 +116,10 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         Assert.assertEquals("Found different xml response", expectedXml, xml.trim());
         verify(testAdapter9000, times(1)).sendQuery(
             buildMap(QUERY, "title:xyz", FILTER_QUERY, "title:XYZ", PAGE_SIZE, "10", START, "0", SORT, "score desc",
-                FIELDS_TO_RETURN, "id title score"), 4000, "3.6");
+                FIELDS_TO_RETURN, "id title score", WRITER_TYPE, "xml"), 4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
             buildMap(QUERY, "titleVT_eng:xyz", FILTER_QUERY, "titleVT_eng:XYZ", PAGE_SIZE, "10", START, "0", SORT,
-                "score desc", FIELDS_TO_RETURN, "id titleVT_de titleVT_eng score"), 4000, "3.6");
+                "score desc", FIELDS_TO_RETURN, "id titleVT_de titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
     }
 
     protected Multimap<String> buildMap(Object... v)
@@ -175,10 +175,10 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         Assert.assertEquals("Found different xml response", expected, xml.trim());
         verify(testAdapter9000, times(1)).sendQuery(
             buildMap(QUERY, "title:abc", FILTER_QUERY, "title:abc", PAGE_SIZE, "10", START, "0", SORT, "score desc",
-                FIELDS_TO_RETURN, "id title score"), 4000, "3.6");
+                FIELDS_TO_RETURN, "id title score", WRITER_TYPE, "xml"), 4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
             buildMap(QUERY, "titleVT_eng:abc", FILTER_QUERY, "titleVT_eng:abc", PAGE_SIZE, "10", START, "0", SORT,
-                "score desc", FIELDS_TO_RETURN, "id titleVT_de titleVT_eng score"), 4000, "3.6");
+                "score desc", FIELDS_TO_RETURN, "id titleVT_de titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
     }
 
     protected String testMultipleServers(String queryStr, String filterQueryStr)

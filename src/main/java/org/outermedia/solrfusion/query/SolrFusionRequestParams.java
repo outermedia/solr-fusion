@@ -32,7 +32,8 @@ public enum SolrFusionRequestParams
     FACET_SORT_FIELD("f.([^.]+).facet.sort", true, "f.%s.facet.sort"),
     FACET_SORT("facet.sort", false, null),
     FACET_PREFIX("facet.prefix", false, null),
-    FACET_FIELD("facet.field", false, null);
+    FACET_FIELD("facet.field", false, null),
+    QUERY_TYPE("qt", false, null);
 
     protected String requestParamName;
 

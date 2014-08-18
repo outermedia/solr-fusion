@@ -41,9 +41,9 @@ public class MergeStrategyTest
         docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
         HighlightingMap emptyHighlights = new HighlightingMap();
         emptyHighlights.init(cfg.getIdGenerator());
-        Document mergedDoc = merger.mergeDocuments(cfg, docs, emptyHighlights, null);
+        List<Document> mergedDoc = merger.mergeDocuments("isbn", cfg, docs, emptyHighlights, null);
         // System.out.println("MD " + mergedDoc.buildFusionDocStr());
-        checkDoc(mergedDoc, "BibliothekC" + sep + "3", "title=t3", "isbn=i1", "author=a2");
+        checkDoc(mergedDoc, "BibliothekC" + sep + "3", "title=t3", "isbn[1]=i1", "author=a2");
     }
 
     @Test
@@ -56,12 +56,12 @@ public class MergeStrategyTest
         docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
         HighlightingMap emptyHighlights = new HighlightingMap();
         emptyHighlights.init(cfg.getIdGenerator());
-        Document mergedDoc = merger.mergeDocuments(cfg, docs, emptyHighlights, null);
+        List<Document> mergedDoc = merger.mergeDocuments("isbn", cfg, docs, emptyHighlights, null);
         Assert.assertNotNull("Expected merged document", mergedDoc);
         // System.out.println("MD " + mergedDoc.buildFusionDocStr());
         checkDoc(mergedDoc,
             "id=BibliothekA" + sep + "1" + isep + "BibliothekB" + sep + "2" + isep + "BibliothekC" + sep + "3",
-            "title=t1", "isbn=i1", "author=a1");
+            "title=t1", "isbn[1]=i1", "author=a1");
     }
 
     @Test
@@ -73,10 +73,10 @@ public class MergeStrategyTest
         docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
         HighlightingMap emptyHighlights = new HighlightingMap();
         emptyHighlights.init(cfg.getIdGenerator());
-        Document mergedDoc = merger.mergeDocuments(cfg, docs, emptyHighlights, null);
+        List<Document> mergedDoc = merger.mergeDocuments("isbn", cfg, docs, emptyHighlights, null);
         Assert.assertNotNull("Expected merged document", mergedDoc);
         // System.out.println("MD " + mergedDoc.buildFusionDocStr());
-        checkDoc(mergedDoc, "id=BibliothekA" + sep + "1" + isep + "BibliothekC" + sep + "3", "title=t1", "isbn=i1",
+        checkDoc(mergedDoc, "id=BibliothekA" + sep + "1" + isep + "BibliothekC" + sep + "3", "title=t1", "isbn[1]=i1",
             "author=a2");
     }
 
@@ -89,18 +89,19 @@ public class MergeStrategyTest
         docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
         HighlightingMap emptyHighlights = new HighlightingMap();
         emptyHighlights.init(cfg.getIdGenerator());
-        Document mergedDoc = merger.mergeDocuments(cfg, docs, emptyHighlights, null);
+        List<Document> mergedDoc = merger.mergeDocuments("isbn", cfg, docs, emptyHighlights, null);
         Assert.assertNotNull("Expected merged document", mergedDoc);
         // System.out.println("MD " + mergedDoc.buildFusionDocStr());
         String sep = DefaultIdGenerator.SEPARATOR;
         String isep = DefaultIdGenerator.ID_SEPARATOR;
-        checkDoc(mergedDoc, "BibliothekB" + sep + "2" + isep + "BibliothekC" + sep + "3", "title=t3", "isbn=i1",
+        checkDoc(mergedDoc, "BibliothekB" + sep + "2" + isep + "BibliothekC" + sep + "3", "title=t3", "isbn[1]=i1",
             "author=a1");
     }
 
-    private void checkDoc(Document mergedDoc, String... fields)
+    private void checkDoc(List<Document> mergedDocs, String... fields)
     {
-        String docStr = mergedDoc.buildFusionDocStr();
+        Assert.assertEquals("Expected only one merged doc", 1, mergedDocs.size());
+        String docStr = mergedDocs.get(0).buildFusionDocStr();
         for (String f : fields)
         {
             Assert.assertTrue("Didn't find " + f + " in " + docStr, docStr.contains(f + "\n"));
@@ -133,5 +134,28 @@ public class MergeStrategyTest
             doc.getFieldTermByFusionName(name).setWasMapped(true);
         }
         return doc;
+    }
+
+    @Test
+    public void testMergeSomeSeveralDocsSameServer() throws InvocationTargetException, IllegalAccessException
+    {
+        MergeStrategyIfc merger = cfg.getMerger();
+        Set<Document> docs = new HashSet<>();
+        docs.add(buildDocument("id", fusionId("BibliothekA", "1"), "title", "t1a", "isbn", Arrays.asList("ia", "ic"),
+            "author", "a1"));
+        docs.add(buildDocument("id", fusionId("BibliothekA", "2"), "title", "t1b", "isbn", Arrays.asList("ib", "ic"),
+            "author", "a2"));
+        docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3a", "isbn", Arrays.asList("ic", "id"),
+            "other1", "a3"));
+        docs.add(buildDocument("id", fusionId("BibliothekC", "4"), "title", "t3b", "isbn", Arrays.asList("ic", "ie"),
+            "other2", "a4"));
+        HighlightingMap emptyHighlights = new HighlightingMap();
+        emptyHighlights.init(cfg.getIdGenerator());
+        List<Document> mergedDocs = merger.mergeDocuments("isbn", cfg, docs, emptyHighlights, null);
+        Assert.assertNotNull("Expected merged document", mergedDocs);
+        for (Document d : mergedDocs)
+        {
+            System.out.println("MD " + d.buildFusionDocStr());
+        }
     }
 }

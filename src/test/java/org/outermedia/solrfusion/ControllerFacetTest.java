@@ -61,7 +61,7 @@ public class ControllerFacetTest extends AbstractControllerTest
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
     }
 
-    protected Multimap<String> buildParams(String q, String title1, String title2, String author)
+    protected Multimap<String> buildParams(String q, String title1, String title2, String author, String responseFormat)
     {
         Multimap<String> result = super.buildParams(q, null);
         result.set(FIELDS_TO_RETURN, "* score");
@@ -69,6 +69,7 @@ public class ControllerFacetTest extends AbstractControllerTest
         result.put(FACET_PREFIX, "p1");
         result.put(FACET_MINCOUNT, "2");
         result.put(FACET_LIMIT, "20");
+        result.set(WRITER_TYPE, responseFormat);
         result.put(FACET_SORT, "index");
         result.put(FACET_FIELD, "{!ex=format_filter}" + title1);
         result.put(FACET_FIELD, "{!ex=format_filter}" + title2);
@@ -120,10 +121,10 @@ public class ControllerFacetTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", "title", "author9000"), 4000,
-            "3.6");
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", "title", "author9000", "xml"),
+            4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng", "titleVT_de", "author9002"), 4000, "3.6");
+            buildParams("titleVT_eng:abc", "titleVT_eng", "titleVT_de", "author9002", "xml"), 4000, "3.6");
     }
 
     @Test
@@ -155,15 +156,15 @@ public class ControllerFacetTest extends AbstractControllerTest
             "        \"{!ex=format_filter}title\",\"author\"\n" +
             "      ],\n" +
             "      \"wt\":\"json\",\n" +
-            "      \"version\":\"2.2\"}},\n" +
-            "  \"response\":{\"numFound\":0,\"start\":0,\"docs\":[\n" +
+            "      \"version\":\"2.2\"}}\n" +
+            "  , \"response\":{\"numFound\":0,\"start\":0,\"docs\":[\n" +
             "  ]}\n" +
             "}";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", "title", "author9000"), 4000,
-            "3.6");
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", "title", "author9000", "xml"),
+            4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng", "titleVT_de", "author9002"), 4000, "3.6");
+            buildParams("titleVT_eng:abc", "titleVT_eng", "titleVT_de", "author9002", "xml"), 4000, "3.6");
     }
 
     protected String testMultipleServers(String queryStr, String responseServer1, String responseServer2,
@@ -241,7 +242,7 @@ public class ControllerFacetTest extends AbstractControllerTest
             "target/test-classes/test-schiller-9001.xml", ResponseRendererType.JSON, "fusion-schema-uni-leipzig.xml",
             Arrays.asList(new SolrFusionRequestParam("authorized_mode:\"false\""),
                 new SolrFusionRequestParam("{!tag=format_filter}(format:\"BluRayDisc\")")));
-        Multimap<String> expectedParams = buildParams("title:abc", "title", "title", "author");
+        Multimap<String> expectedParams = buildParams("title:abc", "title", "title", "author", "xml");
         expectedParams.put(FILTER_QUERY, "format:\"BluRayDisc\"");
         verify(testAdapter9000, times(1)).sendQuery(expectedParams, 4000, "3.5");
         // System.out.println("XML " + xml);

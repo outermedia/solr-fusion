@@ -93,7 +93,7 @@ public class AddTest extends AbstractTypeTest
         FusionRequest req = new FusionRequest();
         req.setQuery(new SolrFusionRequestParam("a:dummy"));
         req.setLocale(Locale.GERMAN);
-        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, null);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, null, null);
         ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(Arrays.asList(doc),
             info);
         String xmlDocStr = renderer.getResponseString(cfg, docStream, req, new FusionResponse());
@@ -329,7 +329,7 @@ public class AddTest extends AbstractTypeTest
         // render result
         DefaultXmlResponseRenderer renderer = DefaultXmlResponseRenderer.Factory.getInstance();
         renderer.init(null);
-        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, sortedFacets);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, sortedFacets, null);
         ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(Arrays.asList(doc),
             info);
         FusionResponse fusionResponse = new FusionResponse();

@@ -1,5 +1,7 @@
 package org.outermedia.solrfusion.adapter.solr;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
@@ -51,8 +53,9 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     public String FACET_SORT_PARAMETER = "facet.sort";
     public String FACET_PREFIX_PARAMETER = "facet.prefix";
     public String FACET_FIELD_PARAMETER = "facet.field";
+    public String QUERY_TYPE_PARAMETER = "qt";
 
-
+    @Setter @Getter
     private String url;
 
     /**
@@ -63,7 +66,8 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     }
 
     @Override
-    public InputStream sendQuery(Multimap<String> params, int timeout, String version) throws URISyntaxException, IOException
+    public InputStream sendQuery(Multimap<String> params, int timeout, String version)
+        throws URISyntaxException, IOException
     {
         HttpClient client = newHttpClient();
 
@@ -102,13 +106,17 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
             }
         }
         ub.setParameter(WRITER_TYPE_PARAMETER, params.getFirst(WRITER_TYPE));
-        ub.setParameter(START_PARAMETER, params.getFirst(START));
-        ub.setParameter(ROWS_PARAMETER, params.getFirst(PAGE_SIZE));
-        String sortStr = params.getFirst(SORT);
-        ub.setParameter(SORT_PARAMETER, sortStr);
-        StringTokenizer st = new StringTokenizer(sortStr, " ");
-        String sortField = st.nextToken();
+
+        addIfNotNull(ub, START_PARAMETER, params.getFirst(START));
+        addIfNotNull(ub, ROWS_PARAMETER, params.getFirst(PAGE_SIZE));
+        addIfNotNull(ub, SORT_PARAMETER, params.getFirst(SORT));
+
         ub.setParameter(FIELDS_TO_RETURN_PARAMETER, params.getFirst(FIELDS_TO_RETURN));
+        String queryType = params.getFirst(QUERY_TYPE);
+        if (queryType != null)
+        {
+            ub.setParameter(QUERY_TYPE_PARAMETER, queryType);
+        }
 
         buildHighlightHttpClientParams(params, ub);
 
@@ -119,32 +127,24 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         return ub;
     }
 
+    protected void addIfNotNull(URIBuilder ub, String param, String value)
+    {
+        if (value != null)
+        {
+            ub.setParameter(param, value);
+        }
+    }
+
     protected void buildFacetHttpClientParams(Multimap<String> params, URIBuilder ub)
     {
         String facet = params.getFirst(FACET);
         if ("true".equals(facet))
         {
             ub.setParameter(FACET_PARAMETER, "true");
-            String facetSort = params.getFirst(FACET_SORT);
-            if (facetSort != null)
-            {
-                ub.setParameter(FACET_SORT_PARAMETER, facetSort);
-            }
-            String facetPrefix = params.getFirst(FACET_PREFIX);
-            if (facetPrefix != null)
-            {
-                ub.setParameter(FACET_PREFIX_PARAMETER, facetPrefix);
-            }
-            String facetMincount = params.getFirst(FACET_MINCOUNT);
-            if (facetMincount != null)
-            {
-                ub.setParameter(FACET_MINCOUNT_PARAMETER, facetMincount);
-            }
-            String facetLimit = params.getFirst(FACET_LIMIT);
-            if (facetLimit != null)
-            {
-                ub.setParameter(FACET_LIMIT_PARAMETER, facetLimit);
-            }
+            addIfNotNull(ub, FACET_SORT_PARAMETER, params.getFirst(FACET_SORT));
+            addIfNotNull(ub, FACET_PREFIX_PARAMETER, params.getFirst(FACET_PREFIX));
+            addIfNotNull(ub, FACET_MINCOUNT_PARAMETER, params.getFirst(FACET_MINCOUNT));
+            addIfNotNull(ub, FACET_LIMIT_PARAMETER, params.getFirst(FACET_LIMIT));
             Collection<String> facetFields = params.get(FACET_FIELD);
             if (facetFields != null)
             {
@@ -167,26 +167,10 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         if ("true".equals(doHighlighting))
         {
             ub.setParameter(HL_ON_PARAMETER, "true");
-            String pre = params.getFirst(HIGHLIGHT_PRE);
-            if (pre != null)
-            {
-                ub.setParameter(HL_SIMPLE_PRE_PARAMETER, pre);
-            }
-            String post = params.getFirst(HIGHLIGHT_POST);
-            if (post != null)
-            {
-                ub.setParameter(HL_SIMPLE_POST_PARAMETER, post);
-            }
-            String fields = params.getFirst(HIGHLIGHT_FIELDS_TO_RETURN);
-            if (fields != null)
-            {
-                ub.setParameter(HL_FIELDS_PARAMETER, fields);
-            }
-            String hlq = params.getFirst(HIGHLIGHT_QUERY);
-            if (hlq != null)
-            {
-                ub.setParameter(HL_QUERY_PARAMETER, hlq);
-            }
+            addIfNotNull(ub, HL_SIMPLE_PRE_PARAMETER, params.getFirst(HIGHLIGHT_PRE));
+            addIfNotNull(ub, HL_SIMPLE_POST_PARAMETER, params.getFirst(HIGHLIGHT_POST));
+            addIfNotNull(ub, HL_FIELDS_PARAMETER, params.getFirst(HIGHLIGHT_FIELDS_TO_RETURN));
+            addIfNotNull(ub, HL_QUERY_PARAMETER, params.getFirst(HIGHLIGHT_QUERY));
         }
     }
 

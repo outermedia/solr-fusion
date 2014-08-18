@@ -10,9 +10,8 @@ import org.outermedia.solrfusion.response.parser.Document;
 
 /**
  * Transforms a search result into json.
- * 
+ *
  * @author stephan
- * 
  */
 
 @ToString
@@ -29,7 +28,8 @@ public class DefaultJsonResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(Configuration configuration, ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
+    public String getResponseString(Configuration configuration,
+        ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
         FusionResponse fusionResponse)
     {
         return freemarkerResponseRenderer.getResponseString(configuration, docStream, request, fusionResponse);

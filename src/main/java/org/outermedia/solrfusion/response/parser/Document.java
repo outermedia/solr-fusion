@@ -407,6 +407,18 @@ public class Document implements VisitableDocument
         return result;
     }
 
+    /**
+     * Replaces the values of an already added fusion field.
+     *
+     * @param field
+     * @param values
+     */
+    public void replaceFusionValuesOf(String field, List<String> values)
+    {
+        SolrField solrField = findFieldByFusionName(field);
+        solrField.getTerm().setFusionFieldValue(values);
+    }
+
     public List<String> getSearchServerValuesOf(String field)
     {
         List<String> result = null;

@@ -5,6 +5,7 @@ import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseException;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
+import org.outermedia.solrfusion.adapter.solr.Solr1Adapter;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ControllerFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
@@ -206,6 +207,8 @@ public class FusionController implements FusionControllerIfc
             IdGeneratorIfc idGen = configuration.getIdGenerator();
             List<Throwable> collectedExceptions = new ArrayList<>();
             List<Document> collectedDocuments = new ArrayList<>();
+            boolean isMoreLikeThisQuery = false;
+            ResponseConsolidatorIfc consolidator = getNewResponseConsolidator();
 
             List<String> allServers = idGen.splitMergedId(solrfusionMergedDocId);
             for (String solrfusionDocId : allServers)
@@ -217,11 +220,29 @@ public class FusionController implements FusionControllerIfc
                 idVals.set(0, searchServerDocId);
                 ScriptEnv env = getNewScriptEnv(fusionRequest.getLocale());
                 configuration.getQueryMapper().mapQuery(configuration, searchServerConfig, query, env);
-                XmlResponse result = sendAndReceive(fusionRequest, searchServerConfig);
+                XmlResponse result = sendAndReceive(true, fusionRequest, searchServerConfig);
                 Exception se = result.getErrorReason();
                 if (se == null)
                 {
-                    Document doc = result.getDocuments().get(0);
+                    List<Document> matchDocuments = result.getMatchDocuments();
+                    Document doc = null;
+                    // response format of "more like this" query is different to normal search queries
+                    // if "match" result is not empty, a "more like this" query has been processed
+                    if (matchDocuments != null && matchDocuments.size() > 0)
+                    {
+                        doc = matchDocuments.get(0);
+                        // the "response" result contains all similar documents
+                        SearchServerResponseInfo similarInfo = new SearchServerResponseInfo(result.getNumFound(), null,
+                            null, null);
+                        ClosableIterator<Document, SearchServerResponseInfo> similarDocIt = new ClosableListIterator<>(
+                            result.getDocuments(), similarInfo);
+                        consolidator.addResultStream(searchServerConfig, similarDocIt, fusionRequest, null, null);
+                        isMoreLikeThisQuery = true;
+                    }
+                    else
+                    {
+                        doc = result.getDocuments().get(0);
+                    }
                     // map id, because completelyMapMergedDoc() call below depends on it
                     // the doc may not contain the id field, but doc merging needs it
                     String idFieldName = searchServerConfig.getIdFieldName();
@@ -248,11 +269,21 @@ public class FusionController implements FusionControllerIfc
             }
             else
             {
-                Document mergedDoc = configuration.getResponseConsolidator(configuration).completelyMapMergedDoc(
+                List<Document> mergedDocs = configuration.getResponseConsolidator(configuration).completelyMapMergedDoc(
                     collectedDocuments, null);
-                SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, null);
-                ClosableIterator<Document, SearchServerResponseInfo> response = new ClosableListIterator<>(
-                    Arrays.asList(mergedDoc), info);
+                ClosableIterator<Document, SearchServerResponseInfo> response = null;
+                if (isMoreLikeThisQuery)
+                {
+                    // document of requested id goes to response "match"
+                    response = consolidator.getResponseIterator(fusionRequest);
+                    response.getExtraInfo().setAllMatchDocs(mergedDocs);
+                }
+                else
+                {
+                    SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, null, null);
+                    response = new ClosableListIterator<>(mergedDocs, info);
+                }
+
                 ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(
                     fusionRequest.getResponseType());
                 // set state BEFORE response is rendered, because then the status is read out!
@@ -330,11 +361,12 @@ public class FusionController implements FusionControllerIfc
             if (mapQuery(env, searchServerConfig, Arrays.asList(query, highlightQuery)) &&
                 mapQuery(env, searchServerConfig, filterQuery))
             {
-                XmlResponse result = sendAndReceive(fusionRequest, searchServerConfig);
+                XmlResponse result = sendAndReceive(false, fusionRequest, searchServerConfig);
                 Exception se = result.getErrorReason();
                 if (se == null)
                 {
-                    SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound(), null, null);
+                    SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound(), null, null,
+                        null);
                     ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
                         result.getDocuments(), info);
                     consolidator.addResultStream(searchServerConfig, docIterator, fusionRequest,
@@ -369,15 +401,17 @@ public class FusionController implements FusionControllerIfc
         return new ResetQueryState();
     }
 
-    protected XmlResponse sendAndReceive(FusionRequest fusionRequest, SearchServerConfig searchServerConfig)
+    protected XmlResponse sendAndReceive(boolean isIdQuery, FusionRequest fusionRequest,
+        SearchServerConfig searchServerConfig)
     {
         try
         {
             XmlResponse result;
             Multimap<String> searchServerParams = fusionRequest.buildSearchServerQueryParams(configuration,
-                searchServerConfig);
+                searchServerConfig, isIdQuery);
             String searchServerQuery = searchServerParams.getFirst(SolrFusionRequestParams.QUERY);
-            if (fusionRequest.getParsedQuery() != null && searchServerQuery.trim().length() == 0)
+            if (fusionRequest.getParsedQuery() != null &&
+                (searchServerQuery == null || searchServerQuery.trim().length() == 0))
             {
                 // the mapped query is empty which would return any documents, so don't ask this server
                 result = new XmlResponse();
@@ -387,7 +421,12 @@ public class FusionController implements FusionControllerIfc
             else
             {
                 int timeout = configuration.getSearchServerConfigs().getTimeout();
+                String queryType = searchServerParams.getFirst(SolrFusionRequestParams.QUERY_TYPE);
                 SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
+                if ("dismax".equals(queryType))
+                {
+                    adapter = newSolr1Adapter(adapter.getUrl());
+                }
                 InputStream is = adapter.sendQuery(searchServerParams, timeout,
                     searchServerConfig.getSearchServerVersion());
                 ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
@@ -412,36 +451,53 @@ public class FusionController implements FusionControllerIfc
         }
         catch (SearchServerResponseException se)
         {
-            // try to parse error response if present
-            try
-            {
-                ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
-                    configuration.getDefaultResponseParser());
-                XmlResponse responseError = responseParser.parse(se.getHttpContent());
-                if (responseError != null)
-                {
-                    se.setResponseError(responseError.getResponseErrors());
-                    responseError.setErrorReason(se);
-                    return responseError;
-                }
-            }
-            catch (Exception e)
-            {
-                // depending on solr's version, a well formed error message is provided or not
-                log.warn("Couldn't parse error response", e);
-            }
-            XmlResponse responseError = new XmlResponse();
-            responseError.setErrorReason(se);
-            return responseError;
+            return handleSearchServerResponseException(searchServerConfig, se);
         }
         catch (Exception e)
         {
-            log.error("Caught exception while communicating with server {}", searchServerConfig.getSearchServerName(),
-                e);
-            XmlResponse responseError = new XmlResponse();
-            responseError.setErrorReason(e);
-            return responseError;
+            return handleGeneralResponseException(searchServerConfig, e);
         }
+    }
+
+    private XmlResponse handleGeneralResponseException(SearchServerConfig searchServerConfig, Exception e)
+    {
+        log.error("Caught exception while communicating with server {}", searchServerConfig.getSearchServerName(), e);
+        XmlResponse responseError = new XmlResponse();
+        responseError.setErrorReason(e);
+        return responseError;
+    }
+
+    private XmlResponse handleSearchServerResponseException(SearchServerConfig searchServerConfig,
+        SearchServerResponseException se)
+    {
+        // try to parse error response if present
+        try
+        {
+            ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
+                configuration.getDefaultResponseParser());
+            XmlResponse responseError = responseParser.parse(se.getHttpContent());
+            if (responseError != null)
+            {
+                se.setResponseError(responseError.getResponseErrors());
+                responseError.setErrorReason(se);
+                return responseError;
+            }
+        }
+        catch (Exception e)
+        {
+            // depending on solr's version, a well formed error message is provided or not
+            log.warn("Couldn't parse error response", e);
+        }
+        XmlResponse responseError = new XmlResponse();
+        responseError.setErrorReason(se);
+        return responseError;
+    }
+
+    protected SearchServerAdapterIfc newSolr1Adapter(String url)
+    {
+        SearchServerAdapterIfc result = Solr1Adapter.Factory.getInstance();
+        result.setUrl(url);
+        return result;
     }
 
     protected boolean mapQuery(ScriptEnv env, SearchServerConfig searchServerConfig, List<Query> queryList)

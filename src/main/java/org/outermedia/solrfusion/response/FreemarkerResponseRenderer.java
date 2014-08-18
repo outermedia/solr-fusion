@@ -92,7 +92,8 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
             highlighting = docStream.getExtraInfo().getHighlighting();
             facets = docStream.getExtraInfo().getFacetFields();
         }
-        FreemarkerResponseHighlighting freemarkerHighlighting = new FreemarkerResponseHighlighting(configuration, highlighting);
+        FreemarkerResponseHighlighting freemarkerHighlighting = new FreemarkerResponseHighlighting(configuration,
+            highlighting);
         FreemarkerFacets freemarkerFacets = new FreemarkerFacets(configuration, facets);
 
         input.put("responseHeader", freemarkerResponseHeader);

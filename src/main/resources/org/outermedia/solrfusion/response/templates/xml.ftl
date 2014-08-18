@@ -20,7 +20,17 @@
     <int name="code">${responseError.code}</int>
 </lst>
 </#if>
-<result name="response" numFound="${response.totalHitNumber}" start="0">
+<#if response.matchDocuments?has_content>
+<result name="match" numFound="${response.totalMatchHitNumber?c}" start="0">
+    <#list response.matchDocuments as document>
+    <doc>
+    <@outputSingleValueFields fields=document.singleValuedFields />
+    <@outputMultiValueFields fields=document.multiValuedFields />
+    </doc>
+    </#list>
+</result>
+</#if>
+<result name="response" numFound="${response.totalHitNumber?c}" start="0">
     <#list response.documents as document>
     <doc>
     <@outputSingleValueFields fields=document.singleValuedFields />

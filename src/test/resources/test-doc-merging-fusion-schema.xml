@@ -8,7 +8,7 @@
         <om:field name="id"/>
         <om:field name="title"/>
         <om:field name="score" type="double"/>
-        <om:field name="isbn"/>
+        <om:field name="isbn" multi-value="true"/>
         <om:field name="author"/>
         <om:field name="other1"/>
         <om:field name="other2"/>

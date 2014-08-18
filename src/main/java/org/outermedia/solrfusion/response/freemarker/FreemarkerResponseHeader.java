@@ -47,6 +47,7 @@ public class FreemarkerResponseHeader
         buildMultiValueParam(request.getFilterQuery(), FILTER_QUERY);
         addIfNotNull(SORT, request.getSolrFusionSortField());
         addIfNotNull(FIELDS_TO_RETURN, request.getFieldsToReturn().getValue());
+        addIfNotNull(QUERY_TYPE, request.getQueryType().getValue());
 
         // highlights
         addIfNotNull(SolrFusionRequestParams.HIGHLIGHT, request.getHighlight().getValue());

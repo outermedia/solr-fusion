@@ -1,0 +1,1185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+    <lst name="responseHeader">
+        <int name="status">0</int>
+        <int name="QTime">13</int>
+    </lst>
+    <result name="match" numFound="1" start="0">
+        <doc>
+            <str name="access_facet">Local Holdings</str>
+            <date name="attached_de15">2006-03-03T11:11:49Z</date>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>Bibliotheca Albertina</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Serial</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Journal, E-Journal</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Journal, E-Journal</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Journal, E-Journal</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Serial</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00591cas a2200217
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156245003000164260004200194935001000236983001900246969000700265852005600272980004500328#30;0002688343#30;DE-576#30;20110302221945.0#30;tu#30;060203c20uuuuuuxx
+                m 0ger c#30; #31;a(OCoLC)315092687#30; #31;a(DE-599)BSZ250677571#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;10#31;aJunger Kulturjournalismus#30;
+                #31;aHildesheim :#31;bGlück-&amp;-Schiller-Verl.#30; #31;bdruck#30; #31;a(DE-15)1460581#30; #31;cSE#30;
+                #31;aDE-15#31;x503952338:201403052218#31;z2006-03-03T11:11:49Z#30;
+                #31;a250677571#31;b0#31;c201403052218#31;d201407260052#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0002688343</str>
+            <str name="illustrated">Illustrated</str>
+            <str name="imprint">Hildesheim : Glück-&amp;-Schiller-Verl.</str>
+            <arr name="institution">
+                <str>DE-15</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">s</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>315092687</long>
+            </arr>
+            <str name="publishDateSort">2005</str>
+            <arr name="publishPlace">
+                <str>Hildesheim :</str>
+            </arr>
+            <arr name="publisher">
+                <str>Glück-&amp;-Schiller-Verl.</str>
+            </arr>
+            <str name="record_id">250677571</str>
+            <str name="recordtype">marc</str>
+            <arr name="rsn">
+                <str>(DE-15)1460581</str>
+            </arr>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Junger Kulturjournalismus Hildesheim : Glück-&amp;-Schiller-Verl.</str>
+            <arr name="spellingShingle">
+                <str>Junger Kulturjournalismus</str>
+            </arr>
+            <str name="title">Junger Kulturjournalismus</str>
+            <str name="title_full">Junger Kulturjournalismus</str>
+            <str name="title_fullStr">Junger Kulturjournalismus</str>
+            <str name="title_full_unstemmed">Junger Kulturjournalismus</str>
+            <str name="title_short">Junger Kulturjournalismus</str>
+            <str name="title_sort">junger kulturjournalismus</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+    </result>
+    <result name="response" numFound="8451868" start="0">
+        <doc>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Reus, Gunter</str>
+            <str name="author_letter">Reus, Gunter</str>
+            <str name="authorized_mode">true</str>
+            <arr name="barcode">
+                <str>(DE-Wim8)581794842</str>
+            </arr>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <str name="edition">2., überarb. Aufl.</str>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="footnote">
+                <str>Literaturverz. S. 263 - 340</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">01295nam a2200373 c
+                4500001001100000003000700011005001700018008004100035015001900076015001900095016002200114020005600136020005900192035002100251035001400272040002200286041000800308084001300316100003600329245007900365250002400444260003100468300002400499490003900523500003200562689001100594830002600605856016600631982002300797981002100820981002200841852001200863980004600875#30;0007633636#30;DE-601#30;20130402204000.0#30;981211s1999
+                gw 000 0 ger d#30; #31;a99A470018#31;2dnb#30; #31;a99N010016#31;2dnb#30;7 #31;a954758552#31;2DE-101#30;
+                #31;a3896692453 (brosch.)#31;cDM 45.00, sfr 41.50, S 329.00#30; #31;a9783896692450 (brosch.)#31;cDM
+                45.00, sfr 41.50, S 329.00#30; #31;a(OCoLC)237360018#30; #31;a952175203#30;
+                #31;aGBVCP#31;bger#31;erakwb#30;0 #31;ager#30; #31;a06#31;2sdnb#30;1 #31;aReus,
+                Gunter#31;0(DE-601)081329113#30;10#31;aRessort: Feuilleton :#31;bKulturjournalismus für Massenmedien
+                /#31;cGunter Reus#30; #31;a2., überarb. Aufl.#30;3 #31;aKonstanz#31;bUVK-Medien#31;c1999#30; #31;a366
+                S.#31;bIll.#31;c21 cm#30;0 #31;aReihe praktischer Journalismus#31;v22#30; #31;aLiteraturverz. S. 263 -
+                340#30;1 #31;5DE-101#30;
+                #31;w(DE-601)319303713#31;v22#30;42#31;yInhaltsverzeichnis#31;uhttp://www.dandelon.com/servlet/download/attachments/dandelon/ids/AT0017BA4C6B15E5AADD1C12571380049CC34.pdf#31;mV:DE-601;AGI#31;3Inhaltsverzeichnis#30;
+                #31;a(DE-Wim8)581794842#30; #31;a(DE-Wim8)YkMj 42#30; #31;a(DE-Wim8)T 33.424#30; #31;aDE-Wim8#30;
+                #31;a252501241#31;b21#31;c201304130859#31;d201305060818#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0007633636</str>
+            <str name="illustrated">Illustrated</str>
+            <str name="imprint">Konstanz UVK-Medien 1999</str>
+            <arr name="institution">
+                <str>DE-Wim8</str>
+            </arr>
+            <arr name="isbn">
+                <str>3896692453 (brosch.)</str>
+                <str>9783896692450 (brosch.)</str>
+            </arr>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>GBV Musikdigitalisate</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <arr name="multipart_link">
+                <str>319303713</str>
+            </arr>
+            <arr name="multipart_part">
+                <str>(319303713)22</str>
+            </arr>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>237360018</long>
+            </arr>
+            <arr name="physical">
+                <str>366 S. Ill. 21 cm</str>
+            </arr>
+            <arr name="publishDate">
+                <str>1999</str>
+            </arr>
+            <str name="publishDateSort">1999</str>
+            <arr name="publishPlace">
+                <str>Konstanz</str>
+            </arr>
+            <arr name="publisher">
+                <str>UVK-Medien</str>
+            </arr>
+            <str name="record_id">252501241</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <arr name="series2">
+                <str>Reihe praktischer Journalismus</str>
+            </arr>
+            <arr name="signatur">
+                <str>(DE-Wim8)YkMj 42</str>
+                <str>(DE-Wim8)T 33.424</str>
+            </arr>
+            <str name="source_id">21</str>
+            <str name="spelling">Reus, Gunter (DE-601)081329113 Ressort: Feuilleton : Kulturjournalismus für
+                Massenmedien / Gunter Reus 2., überarb. Aufl. Konstanz UVK-Medien 1999 366 S. Ill. 21 cm Reihe
+                praktischer Journalismus 22 Literaturverz. S. 263 - 340 DE-101 (DE-601)319303713 22
+            </str>
+            <arr name="spellingShingle">
+                <str>Reihe praktischer Journalismus</str>
+                <str>Reus, Gunter</str>
+                <str>Ressort: Feuilleton : Kulturjournalismus für Massenmedien /</str>
+            </arr>
+            <str name="title">Ressort: Feuilleton : Kulturjournalismus für Massenmedien /</str>
+            <str name="title_full">Ressort: Feuilleton : Kulturjournalismus für Massenmedien /</str>
+            <str name="title_fullStr">Ressort: Feuilleton : Kulturjournalismus für Massenmedien /</str>
+            <str name="title_full_unstemmed">Ressort: Feuilleton : Kulturjournalismus für Massenmedien /</str>
+            <str name="title_short">Ressort: Feuilleton :</str>
+            <str name="title_sort">ressort: feuilleton :kulturjournalismus für massenmedien</str>
+            <str name="title_sub">Kulturjournalismus für Massenmedien /</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+            <arr name="url">
+                <str>
+                    http://www.dandelon.com/servlet/download/attachments/dandelon/ids/AT0017BA4C6B15E5AADD1C12571380049CC34.pdf
+                </str>
+            </arr>
+        </doc>
+        <doc>
+            <str name="access_facet">Local Holdings</str>
+            <arr name="author2">
+                <str>Heß, Dieter</str>
+            </arr>
+            <str name="authorized_mode">true</str>
+            <arr name="barcode">
+                <str>(DE-Wim8)581772628</str>
+            </arr>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <str name="edition">2., aktual. Aufl.</str>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">01011nam a2200325 c
+                4500001001100000003000700011005001700018008004100035020001500076035002500091035002100116040002200137041000800159245008900167250002200256260003200278300001700310490003200327689001100359689001100370689001300381700003600394856011300430020001800543982002300561981002100584981002200605852001200627980004600639#30;0007639446#30;DE-601#30;20130214115741.0#30;971208s1997
+                gw 000 0 ger d#30; #31;a3471780556#30; #31;a(DE-599)GBV237686791#30; #31;a(OCoLC)163511714#30;
+                #31;aGBVCP#31;bger#31;erakwb#30;0 #31;ager#30;10#31;aKulturjournalismus :#31;bein Handbuch für
+                Ausbildung und Praxis /#31;cDieter Heß (Hrsg.)#30; #31;a2., aktual. Aufl.#30;3 #31;aMünchen
+                [u.a.]#31;bList#31;c1997#30; #31;a247 S#31;c21 cm#30;0 #31;aList Journalistische Praxis#30;0
+                #31;5DE-101#30;0 #31;5DE-601#30;00#31;aLehrbuch#30;1 #31;aHeß,
+                Dieter#31;0(DE-601)522965504#30;42#31;yInhaltsverzeichnis#31;uhttp://www.gbv.de/dms/weimar/toc/237686791_toc.pdf#31;mV:DE-601;DE-Wim2#31;3Inhaltsverzeichnis#30;
+                #31;a9783471780558#30; #31;a(DE-Wim8)581772628#30; #31;a(DE-Wim8)YkMj 41#30; #31;a(DE-Wim8)T 33.430#30;
+                #31;aDE-Wim8#30; #31;a237686791#31;b21#31;c201304130859#31;d201305060818#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0007639446</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">München [u.a.] List 1997</str>
+            <arr name="institution">
+                <str>DE-Wim8</str>
+            </arr>
+            <arr name="isbn">
+                <str>3471780556</str>
+                <str>9783471780558</str>
+            </arr>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="local_heading_facet_dezwi2">
+                <str>Lehrbuch</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>GBV Musikdigitalisate</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>163511714</long>
+            </arr>
+            <arr name="physical">
+                <str>247 S 21 cm</str>
+            </arr>
+            <arr name="publishDate">
+                <str>1997</str>
+            </arr>
+            <str name="publishDateSort">1997</str>
+            <arr name="publishPlace">
+                <str>München [u.a.]</str>
+            </arr>
+            <arr name="publisher">
+                <str>List</str>
+            </arr>
+            <str name="record_id">237686791</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <arr name="series2">
+                <str>List Journalistische Praxis</str>
+            </arr>
+            <arr name="signatur">
+                <str>(DE-Wim8)YkMj 41</str>
+                <str>(DE-Wim8)T 33.430</str>
+            </arr>
+            <str name="source_id">21</str>
+            <str name="spelling">Kulturjournalismus : ein Handbuch für Ausbildung und Praxis / Dieter Heß (Hrsg.) 2.,
+                aktual. Aufl. München [u.a.] List 1997 247 S 21 cm List Journalistische Praxis DE-101 DE-601 Lehrbuch
+                Heß, Dieter (DE-601)522965504
+            </str>
+            <arr name="spellingShingle">
+                <str>List Journalistische Praxis</str>
+                <str>Kulturjournalismus : ein Handbuch für Ausbildung und Praxis /</str>
+                <str>Heß, Dieter</str>
+                <str>Lehrbuch</str>
+            </arr>
+            <str name="title">Kulturjournalismus : ein Handbuch für Ausbildung und Praxis /</str>
+            <str name="title_full">Kulturjournalismus : ein Handbuch für Ausbildung und Praxis /</str>
+            <str name="title_fullStr">Kulturjournalismus : ein Handbuch für Ausbildung und Praxis /</str>
+            <str name="title_full_unstemmed">Kulturjournalismus : ein Handbuch für Ausbildung und Praxis /</str>
+            <str name="title_short">Kulturjournalismus :</str>
+            <str name="title_sort">kulturjournalismus :ein handbuch für ausbildung und praxis</str>
+            <str name="title_sub">ein Handbuch für Ausbildung und Praxis /</str>
+            <arr name="topic">
+                <str>Lehrbuch</str>
+            </arr>
+            <arr name="topic_facet">
+                <str>Lehrbuch</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+            <arr name="url">
+                <str>http://www.gbv.de/dms/weimar/toc/237686791_toc.pdf</str>
+            </arr>
+        </doc>
+        <doc>
+            <str name="access_facet">Local Holdings</str>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>not assigned</str>
+            </arr>
+            <str name="dewey-sort">not assigned</str>
+            <arr name="dewey-tens">
+                <str>not assigned</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>no subject assigned</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">00657cam a22002172
+                4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156041000800164245011500172260001900287300002200306935001000328852005600338980004500394#30;0011924082#30;DE-576#30;20100517201424.0#30;tu#30;990216s1978
+                xx 00 0 ger c#30; #31;a(OCoLC)313073671#30; #31;a(DE-599)BSZ073884863#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;07#31;adt.#30;10#31;aGrundlagen der
+                Kulturpolitik und des Kulturjournalismus :#31;bStudientexte /#31;cKarl-Marx-Univ., Sekt.
+                Journalistik#30; #31;aLeipzig,#31;c1978#30; #31;a287 S. +#31;e6 Beil.#30; #31;bdruck#30;
+                #31;aDE-14#31;x349219605:201403052251#31;z2014-03-15T23:58:07Z#30;
+                #31;a073884863#31;b0#31;c201403052251#31;d201407260302#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0011924082</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Leipzig, 1978</str>
+            <arr name="institution">
+                <str>DE-14</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>313073671</long>
+            </arr>
+            <arr name="physical">
+                <str>287 S. + 6 Beil.</str>
+            </arr>
+            <arr name="publishDate">
+                <str>1978</str>
+            </arr>
+            <str name="publishDateSort">1978</str>
+            <arr name="publishPlace">
+                <str>Leipzig,</str>
+            </arr>
+            <str name="record_id">073884863</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Grundlagen der Kulturpolitik und des Kulturjournalismus : Studientexte /
+                Karl-Marx-Univ., Sekt. Journalistik Leipzig, 1978 287 S. + 6 Beil.
+            </str>
+            <arr name="spellingShingle">
+                <str>Grundlagen der Kulturpolitik und des Kulturjournalismus : Studientexte /</str>
+            </arr>
+            <str name="title">Grundlagen der Kulturpolitik und des Kulturjournalismus : Studientexte /</str>
+            <str name="title_full">Grundlagen der Kulturpolitik und des Kulturjournalismus : Studientexte /</str>
+            <str name="title_fullStr">Grundlagen der Kulturpolitik und des Kulturjournalismus : Studientexte /</str>
+            <str name="title_full_unstemmed">Grundlagen der Kulturpolitik und des Kulturjournalismus : Studientexte /
+            </str>
+            <str name="title_short">Grundlagen der Kulturpolitik und des Kulturjournalismus :</str>
+            <str name="title_sort">grundlagen der kulturpolitik und des kulturjournalismus :studientexte</str>
+            <str name="title_sub">Studientexte /</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <str name="access_facet">Local Holdings</str>
+            <str name="author">Stegert, Gernot</str>
+            <str name="author_letter">Stegert, Gernot</str>
+            <str name="authorized_mode">true</str>
+            <arr name="barcode">
+                <str>(DE-Wim8)369414594</str>
+                <str>(DE-Wim8)407314059</str>
+            </arr>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="dewey-full">
+                <str>073</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>000 - Computer science, information &amp; general works</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>073 - Newspapers in central Europe; in Germany</str>
+            </arr>
+            <str name="dewey-raw">073</str>
+            <str name="dewey-sort">073.00000000</str>
+            <arr name="dewey-tens">
+                <str>070 - News media, journalism &amp; publishing</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>Allgemeines</str>
+                <str>Allgemeine und vergleichende Sprach- und Literaturwissenschaft, Indogermanistik, Außereuropäische
+                    Sprachen und Literaturen
+                </str>
+            </arr>
+            <arr name="footnote">
+                <str>Literaturverz. S. 294 - 305</str>
+            </arr>
+            <arr name="format">
+                <str>Book</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">01592nam a2200481 c
+                4500001001100000003000700011005001700018008004100035015001900076015001900095016002200114020001500136035002500151035002100176040002200197041000800219050001400227082000800241084003600249084006100285084001700346100002000363245009000383260003000473300002100503490005200524500003200576653003900608653004700647689001100694689005400705689004900759689004900808689006000857830002600917020001800943982002300961981002400984982002301008981002101031852001201052980004601064#30;0007544169#30;DE-601#30;20100505092211.0#30;980820s1998
+                gw 000 0 ger d#30; #31;a98N480016#31;2dnb#30; #31;a99H050016#31;2dnb#30;7 #31;a954963733#31;2DE-101#30;
+                #31;a3484340487#30; #31;a(DE-599)GBV247925608#30; #31;a(OCoLC)231778240#30;
+                #31;aGBVCP#31;bger#31;erakwb#30;0 #31;ager#30; 0#31;aPN5214.F4#30;00#31;a073#30;
+                #31;a05.30#31;9Massenkommunikation#31;2bcl#30; #31;a05.39#31;9Massenkommunikation, Massenmedien:
+                Sonstiges#31;2bcl#30; #31;a06#31;a01#31;2sdnb#30;1 #31;aStegert, Gernot#30;10#31;aFeuilleton für alle
+                :#31;bStrategien im Kulturjournalismus der Presse /#31;cGernot Stegert#30;3
+                #31;aTübingen#31;bNiemeyer#31;c1998#30; #31;aIX, 338 S#31;c22 cm#30;0 #31;aMedien in Forschung und
+                Unterricht#31;aSerie A#31;v48#30; #31;aLiteraturverz. S. 294 - 305#30; 0#31;aFeuilletons#31;aHistory and
+                criticism#30; 0#31;aFeuilletons, German#31;aHistory and criticism#30;0
+                #31;5DE-101#30;00#31;0(DE-601)104704861#31;0(DE-588)4011882-4#31;aDeutschland#30;01#31;0(DE-601)104470348#31;0(DE-588)4125698-0#31;aKultur#30;02#31;0(DE-601)106195492#31;0(DE-588)4047150-0#31;aPresse#30;03#31;0(DE-601)106380176#31;0(DE-588)4005709-4#31;aBerichterstattung#30;
+                #31;w(DE-601)167790250#31;v48#30; #31;a9783484340480#30; #31;a(DE-Wim8)369414594#30; #31;a(DE-Wim8)1 A
+                362833#30; #31;a(DE-Wim8)407314059#30; #31;a(DE-Wim8)YkMj 38#30; #31;aDE-Wim8#30;
+                #31;a247925608#31;b21#31;c201304130859#31;d201305060816#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0007544169</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Tübingen Niemeyer 1998</str>
+            <arr name="institution">
+                <str>DE-Wim8</str>
+            </arr>
+            <arr name="isbn">
+                <str>3484340487</str>
+                <str>9783484340480</str>
+            </arr>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="local_heading_facet_dezwi2">
+                <str>Deutschland</str>
+                <str>Kultur</str>
+                <str>Presse</str>
+                <str>Berichterstattung</str>
+            </arr>
+            <arr name="marc_error">
+                <str>Minor Error : Subfield of zero length encountered, ignoring it. --- [ 689 : n/a ]</str>
+                <str>Minor Error : Subfield of zero length encountered, ignoring it. --- [ 689 : n/a ]</str>
+                <str>Minor Error : Subfield of zero length encountered, ignoring it. --- [ 689 : n/a ]</str>
+                <str>Minor Error : Subfield of zero length encountered, ignoring it. --- [ 689 : n/a ]</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>GBV Musikdigitalisate</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <arr name="multipart_link">
+                <str>167790250</str>
+            </arr>
+            <arr name="multipart_part">
+                <str>(167790250)48</str>
+            </arr>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>231778240</long>
+            </arr>
+            <arr name="physical">
+                <str>IX, 338 S 22 cm</str>
+            </arr>
+            <arr name="publishDate">
+                <str>1998</str>
+            </arr>
+            <str name="publishDateSort">1998</str>
+            <arr name="publishPlace">
+                <str>Tübingen</str>
+            </arr>
+            <arr name="publisher">
+                <str>Niemeyer</str>
+            </arr>
+            <str name="record_id">247925608</str>
+            <str name="recordtype">marc</str>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <arr name="rvk_path">
+                <str>Massenkommunikation</str>
+                <str>Massenkommunikation, Massenmedien: Sonstiges</str>
+            </arr>
+            <arr name="series2">
+                <str>Medien in Forschung und Unterricht</str>
+                <str>Serie A</str>
+            </arr>
+            <arr name="signatur">
+                <str>(DE-Wim8)1 A 362833</str>
+                <str>(DE-Wim8)YkMj 38</str>
+            </arr>
+            <str name="source_id">21</str>
+            <str name="spelling">Stegert, Gernot Feuilleton für alle : Strategien im Kulturjournalismus der Presse /
+                Gernot Stegert Tübingen Niemeyer 1998 IX, 338 S 22 cm Medien in Forschung und Unterricht Serie A 48
+                Literaturverz. S. 294 - 305 Feuilletons History and criticism Feuilletons, German History and criticism
+                DE-101 (DE-601)104704861 (DE-588)4011882-4 Deutschland (DE-601)104470348 (DE-588)4125698-0 Kultur
+                (DE-601)106195492 (DE-588)4047150-0 Presse (DE-601)106380176 (DE-588)4005709-4 Berichterstattung
+                (DE-601)167790250 48
+            </str>
+            <arr name="spellingShingle">
+                <str>Medien in Forschung und Unterricht</str>
+                <str>Serie A</str>
+                <str>Deutschland</str>
+                <str>Kultur</str>
+                <str>Presse</str>
+                <str>Berichterstattung</str>
+                <str>Stegert, Gernot</str>
+                <str>Feuilleton für alle : Strategien im Kulturjournalismus der Presse /</str>
+            </arr>
+            <str name="title">Feuilleton für alle : Strategien im Kulturjournalismus der Presse /</str>
+            <str name="title_full">Feuilleton für alle : Strategien im Kulturjournalismus der Presse /</str>
+            <str name="title_fullStr">Feuilleton für alle : Strategien im Kulturjournalismus der Presse /</str>
+            <str name="title_full_unstemmed">Feuilleton für alle : Strategien im Kulturjournalismus der Presse /</str>
+            <str name="title_short">Feuilleton für alle :</str>
+            <str name="title_sort">feuilleton für alle :strategien im kulturjournalismus der presse</str>
+            <str name="title_sub">Strategien im Kulturjournalismus der Presse /</str>
+            <arr name="topic">
+                <str>Deutschland</str>
+                <str>Kultur</str>
+                <str>Presse</str>
+                <str>Berichterstattung</str>
+            </arr>
+            <arr name="topic_facet">
+                <str>Deutschland</str>
+                <str>Kultur</str>
+                <str>Presse</str>
+                <str>Berichterstattung</str>
+            </arr>
+            <arr name="topic_id">
+                <str>4011882-4</str>
+                <str>4125698-0</str>
+                <str>4047150-0</str>
+                <str>4005709-4</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+        </doc>
+        <doc>
+            <str name="access_facet">Electronic Resources</str>
+            <str name="author">Stegert, Gernot</str>
+            <str name="author_letter">Stegert, Gernot</str>
+            <str name="authorized_mode">true</str>
+            <arr name="branch_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de15">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="branch_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="collcode_dech1">
+                <str>not assigned</str>
+            </arr>
+            <arr name="contents">
+                <str>Ausgangspunkt ist die Beobachtung, daß sich Kultur und Journalismus wandeln und daß das klassische
+                    Zeitungsressort Feuilleton zunehmend unter Innovations- und sogar Legitimationsdruck gerät. Die
+                    Studie untersucht auf breiter Materialbasis mit quantitativen und qualitativen empirischen Methoden,
+                    ob und mit welchen Strategien die Printmedien reagieren. Ergebnis sind zum einen umfassende Daten
+                    zur thematischen, funktionalen und formalen Struktur der Kulturberichterstattung, zum anderen
+                    strategische Profile verschiedener Pressetypen und -organe.
+                </str>
+                <str>The study proceeds from the observation that culture and journalism are in a state of flux and that
+                    the classical "Arts" or "Review" sections are coming under increasing pressure to be more innovative
+                    and indeed to justify their own raison d'être. Drawing on a wealth of material, the author employs
+                    qualitative and quantitative empirical methods to determine whether and how the print media are
+                    making a strategic response to this challenge. The results are a) extensive data on the thematic,
+                    functional and formal structure of 'reporting on the Arts', and b) strategy profiles for different
+                    types and examples of print media.
+                </str>
+            </arr>
+            <arr name="dewey-full">
+                <str>073</str>
+            </arr>
+            <arr name="dewey-hundreds">
+                <str>000 - Computer science, information &amp; general works</str>
+            </arr>
+            <arr name="dewey-ones">
+                <str>073 - Newspapers in central Europe; in Germany</str>
+            </arr>
+            <str name="dewey-raw">073</str>
+            <str name="dewey-sort">073.00000000</str>
+            <arr name="dewey-tens">
+                <str>070 - News media, journalism &amp; publishing</str>
+            </arr>
+            <arr name="finc_class_facet">
+                <str>Allgemeines</str>
+            </arr>
+            <arr name="format">
+                <str>eBook</str>
+            </arr>
+            <arr name="format_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de15">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_de520">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_de540">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_dech1">
+                <str>Elektronische Ressource</str>
+            </arr>
+            <arr name="format_ded117">
+                <str>Book, E-Book</str>
+            </arr>
+            <arr name="format_del152">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_del189">
+                <str>E-Book</str>
+            </arr>
+            <arr name="format_dezi4">
+                <str>not assigned</str>
+            </arr>
+            <arr name="format_dezwi2">
+                <str>not assigned</str>
+            </arr>
+            <str name="fullrecord">02833cam a22005052
+                4500001001100000003000700011005001700018007001500035008004100050016002100091020003700112035002500149040003100174041000800205082000800213100002000221245011700241260003200358300003400390490005200424520055500476520063301031776001801664856006801682912001201750912001901762912001201781912001901793912001201812912001901824912001501843935000901858935000901867020001501876020001501891856010701906856008002013983002302093971001002116971002402126974001702150852005802167852005702225980004502282#30;0012869538#30;DE-576#30;20140708104707.0#30;cr
+                uuu---uuuuu#30;140506s1998 xx s 000 0 ger c#30; #31;a(OCoLC)853236337#30;
+                #31;a9783110922530#31;9978-311-09225-3-0#30; #31;a(DE-599)GBV745521150#30;
+                #31;aDE-576#31;bger#31;cDE-576#31;erakwb#30;0 #31;ager#30;0 #31;a073#30;1 #31;aStegert,
+                Gernot#30;10#31;aFeuilleton für alle#31;h[Elektronische Ressource] :#31;bStrategien im
+                Kulturjournalismus der Presse /#31;cGernot Stegert#30; #31;aBerlin :#31;bDe Gruyter,#31;c1998#30;
+                #31;aOnline-Ressource (IX, 338 S.)#30;0 #31;aMedien in Forschung und Unterricht. Serie A#31;v48#30;
+                #31;aAusgangspunkt ist die Beobachtung, daß sich Kultur und Journalismus wandeln und daß das klassische
+                Zeitungsressort Feuilleton zunehmend unter Innovations- und sogar Legitimationsdruck gerät. Die Studie
+                untersucht auf breiter Materialbasis mit quantitativen und qualitativen empirischen Methoden, ob und mit
+                welchen Strategien die Printmedien reagieren. Ergebnis sind zum einen umfassende Daten zur thematischen,
+                funktionalen und formalen Struktur der Kulturberichterstattung, zum anderen strategische Profile
+                verschiedener Pressetypen und -organe.#30; #31;aThe study proceeds from the observation that culture and
+                journalism are in a state of flux and that the classical "Arts" or "Review" sections are coming under
+                increasing pressure to be more innovative and indeed to justify their own raison d'être. Drawing on a
+                wealth of material, the author employs qualitative and quantitative empirical methods to determine
+                whether and how the print media are making a strategic response to this challenge. The results are a)
+                extensive data on the thematic, functional and formal structure of 'reporting on the Arts', and b)
+                strategy profiles for different types and examples of print media.#30;1
+                #31;z9783484340480#30;40#31;uhttp://www.degruyter.com/doi/book/10.1515/9783110922530#31;xVerlag#30;
+                #31;aPDA1ALL#30; #31;aPDA1ALL_legacy#30; #31;aPDA2HUM#30; #31;aPDA2HUM_legacy#30; #31;aPDA5EBK#30;
+                #31;aPDA5EBK_legacy#30; #31;aZDB-23-DGG#30; #31;bcofz#30; #31;ctext#30; #31;a3110922533#30;
+                #31;z3484340487#30;
+                #31;9DE-L189#31;yHTWK-Zugang#31;uhttp://www.degruyter.com/doi/book/10.1515/9783110922530#31;ind14#31;ind2
+                #31;zHTWK-Zugang#30;
+                #31;9DE-Ch1#31;uhttp://www.degruyter.com/doi/book/10.1515/9783110922530#31;ind14#31;ind2 #30;
+                #31;a(DE-Ch1)1000386865#30; #31;cEBOOK#30; #31;gE-Book DeGruyterPDA#30; #31;kCampuslizenz#30;
+                #31;aDE-L189#31;x79519577X:201407090306#31;z2014-05-07T09:21:07Z#30;
+                #31;aDE-Ch1#31;x795195761:201407090306#31;z2014-05-07T09:21:07Z#30;
+                #31;a40507252X#31;b0#31;c201407090306#31;d201408041009#30;#29;
+            </str>
+            <arr name="geogr_code">
+                <str>not assigned</str>
+            </arr>
+            <arr name="geogr_code_person">
+                <str>not assigned</str>
+            </arr>
+            <str name="id">0012869538</str>
+            <str name="illustrated">Not Illustrated</str>
+            <str name="imprint">Berlin : De Gruyter, 1998</str>
+            <arr name="institution">
+                <str>DE-L189</str>
+                <str>DE-Ch1</str>
+            </arr>
+            <arr name="isbn">
+                <str>9783110922530</str>
+                <str>3110922533</str>
+                <str>9783484340480</str>
+            </arr>
+            <arr name="isbn_canc">
+                <str>3484340487</str>
+            </arr>
+            <str name="itemdata">{}</str>
+            <arr name="language">
+                <str>German</str>
+            </arr>
+            <arr name="mega_collection">
+                <str>Verbunddaten SWB</str>
+            </arr>
+            <arr name="misc_del152">
+                <str/>
+            </arr>
+            <str name="mrc0007">m</str>
+            <str name="multipart_set"></str>
+            <arr name="oclc_num">
+                <long>853236337</long>
+            </arr>
+            <arr name="physical">
+                <str>Online-Ressource (IX, 338 S.)</str>
+            </arr>
+            <arr name="publishDate">
+                <str>1998</str>
+            </arr>
+            <str name="publishDateSort">1998</str>
+            <arr name="publishPlace">
+                <str>Berlin :</str>
+            </arr>
+            <arr name="publisher">
+                <str>De Gruyter,</str>
+            </arr>
+            <str name="record_id">40507252X</str>
+            <str name="recordtype">marc</str>
+            <arr name="rsn">
+                <str>(DE-Ch1)1000386865</str>
+            </arr>
+            <arr name="rvk_facet">
+                <str>No subject assigned</str>
+            </arr>
+            <arr name="series2">
+                <str>Medien in Forschung und Unterricht. Serie A</str>
+            </arr>
+            <str name="source_id">0</str>
+            <str name="spelling">Stegert, Gernot Feuilleton für alle [Elektronische Ressource] : Strategien im
+                Kulturjournalismus der Presse / Gernot Stegert Berlin : De Gruyter, 1998 Online-Ressource (IX, 338 S.)
+                Medien in Forschung und Unterricht. Serie A 48 Ausgangspunkt ist die Beobachtung, daß sich Kultur und
+                Journalismus wandeln und daß das klassische Zeitungsressort Feuilleton zunehmend unter Innovations- und
+                sogar Legitimationsdruck gerät. Die Studie untersucht auf breiter Materialbasis mit quantitativen und
+                qualitativen empirischen Methoden, ob und mit welchen Strategien die Printmedien reagieren. Ergebnis
+                sind zum einen umfassende Daten zur thematischen, funktionalen und formalen Struktur der
+                Kulturberichterstattung, zum anderen strategische Profile verschiedener Pressetypen und -organe. The
+                study proceeds from the observation that culture and journalism are in a state of flux and that the
+                classical "Arts" or "Review" sections are coming under increasing pressure to be more innovative and
+                indeed to justify their own raison d'être. Drawing on a wealth of material, the author employs
+                qualitative and quantitative empirical methods to determine whether and how the print media are making a
+                strategic response to this challenge. The results are a) extensive data on the thematic, functional and
+                formal structure of 'reporting on the Arts', and b) strategy profiles for different types and examples
+                of print media. 9783484340480
+            </str>
+            <arr name="spellingShingle">
+                <str>Medien in Forschung und Unterricht. Serie A</str>
+                <str>Ausgangspunkt ist die Beobachtung, daß sich Kultur und Journalismus wandeln und daß das klassische
+                    Zeitungsressort Feuilleton zunehmend unter Innovations- und sogar Legitimationsdruck gerät. Die
+                    Studie untersucht auf breiter Materialbasis mit quantitativen und qualitativen empirischen Methoden,
+                    ob und mit welchen Strategien die Printmedien reagieren. Ergebnis sind zum einen umfassende Daten
+                    zur thematischen, funktionalen und formalen Struktur der Kulturberichterstattung, zum anderen
+                    strategische Profile verschiedener Pressetypen und -organe.
+                </str>
+                <str>The study proceeds from the observation that culture and journalism are in a state of flux and that
+                    the classical "Arts" or "Review" sections are coming under increasing pressure to be more innovative
+                    and indeed to justify their own raison d'être. Drawing on a wealth of material, the author employs
+                    qualitative and quantitative empirical methods to determine whether and how the print media are
+                    making a strategic response to this challenge. The results are a) extensive data on the thematic,
+                    functional and formal structure of 'reporting on the Arts', and b) strategy profiles for different
+                    types and examples of print media.
+                </str>
+                <str>Stegert, Gernot</str>
+                <str>Feuilleton für alle Strategien im Kulturjournalismus der Presse /</str>
+            </arr>
+            <str name="title">Feuilleton für alle Strategien im Kulturjournalismus der Presse /</str>
+            <str name="title_full">Feuilleton für alle Strategien im Kulturjournalismus der Presse /</str>
+            <str name="title_fullStr">Feuilleton für alle Strategien im Kulturjournalismus der Presse /</str>
+            <str name="title_full_unstemmed">Feuilleton für alle Strategien im Kulturjournalismus der Presse /</str>
+            <str name="title_short">Feuilleton für alle</str>
+            <str name="title_sort">feuilleton für allestrategien im kulturjournalismus der presse</str>
+            <str name="title_sub">Strategien im Kulturjournalismus der Presse /</str>
+            <arr name="topic_facet">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_facet_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_de105">
+                <str>not assigned</str>
+            </arr>
+            <arr name="udk_raw_del189">
+                <str>not assigned</str>
+            </arr>
+            <arr name="url">
+                <str>http://www.degruyter.com/doi/book/10.1515/9783110922530</str>
+            </arr>
+        </doc>
+    </result>
+</response>

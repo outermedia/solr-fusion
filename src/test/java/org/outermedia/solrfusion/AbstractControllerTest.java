@@ -57,6 +57,7 @@ public class AbstractControllerTest
         result.put(START, "0");
         result.put(SORT, "score desc");
         result.put(FIELDS_TO_RETURN, "* score");
+        result.put(WRITER_TYPE, "xml");
         return result;
     }
 

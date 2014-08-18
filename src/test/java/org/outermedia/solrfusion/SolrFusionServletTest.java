@@ -131,6 +131,7 @@ public class SolrFusionServletTest
         }
         String fieldsToReturn = "* score";
         requestParams.put(FIELDS_TO_RETURN.getRequestParamName(), new String[]{fieldsToReturn});
+        requestParams.put(QUERY_TYPE.getRequestParamName(), new String[]{"morelikethis"});
         requestParams.put(HIGHLIGHT.getRequestParamName(), new String[]{"true"});
         requestParams.put(HIGHLIGHT_PRE.getRequestParamName(), new String[]{"pre"});
         requestParams.put(HIGHLIGHT_POST.getRequestParamName(), new String[]{"post"});
@@ -151,7 +152,7 @@ public class SolrFusionServletTest
         // check core params
         Assert.assertNotNull("Expected request object", req);
         Assert.assertEquals("Got different query", q, req.getQuery().getValue());
-        if(fq == null)
+        if (fq == null)
         {
             Assert.assertNull("Expected no filter query list", req.getFilterQuery());
         }
@@ -162,6 +163,7 @@ public class SolrFusionServletTest
         Assert.assertEquals("Got different renderer type than expected", ResponseRendererType.JSON,
             req.getResponseType());
         Assert.assertEquals("Got different fields", fieldsToReturn, req.getFieldsToReturn().getValue());
+        Assert.assertEquals("Got different query type", "morelikethis", req.getQueryType().getValue());
         Assert.assertFalse("Expected no exception, but got " + req.buildErrorMessage(), req.hasErrors());
 
         // check highlighting params

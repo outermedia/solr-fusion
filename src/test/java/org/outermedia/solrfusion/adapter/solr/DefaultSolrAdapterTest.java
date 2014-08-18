@@ -182,6 +182,7 @@ public class DefaultSolrAdapterTest
         params.put(PAGE_SIZE, "12");
         params.put(SORT, "title asc");
         params.put(FIELDS_TO_RETURN, "*,score, title");
+        params.put(QUERY_TYPE, "morelikethis");
         params.put(HIGHLIGHT,"true");
         params.put(HIGHLIGHT_FIELDS_TO_RETURN, "title,score,*");
         params.put(HIGHLIGHT_PRE, "pre");
@@ -201,7 +202,7 @@ public class DefaultSolrAdapterTest
         // System.out.println(ub);
         Assert.assertEquals("Expected other solr query url",
             "http://unit.test.com/?q=*%3A*&fq=title%3Aa&wt=json&start=5&rows=12&sort=title+asc&fl=*%2Cscore%2C+title" +
-                "&hl=true&hl.simple.pre=pre&hl.simple.post=post&hl.fl=title%2Cscore%2C*&hl.q=title%3Agoethe" +
+                "&qt=morelikethis&hl=true&hl.simple.pre=pre&hl.simple.post=post&hl.fl=title%2Cscore%2C*&hl.q=title%3Agoethe" +
                 "&facet=true&facet.sort=index&facet.prefix=p1&facet.mincount=2&facet.limit=20" +
                 "&facet.field=%7B%21ex%3Dformat_de15_filter%7Dformat_de15" +
                 "&facet.field=%7B%21ex%3Dformat_filter%7Dformat&f.finc_class_facet.facet.sort=index1" +

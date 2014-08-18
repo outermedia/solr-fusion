@@ -17,15 +17,17 @@ import java.util.Map;
 @Setter
 public class SearchServerResponseInfo
 {
-    private final Map<String, Document> highlighting;
-    private final Map<String, List<WordCount>> facetFields;
+    private Map<String, Document> highlighting;
+    private Map<String, List<WordCount>> facetFields;
+    private List<Document> allMatchDocs;
     private int totalNumberOfHits;
 
     public SearchServerResponseInfo(int totalNumber, Map<String, Document> allHighlighting,
-        Map<String, List<WordCount>> facetFields)
+        Map<String, List<WordCount>> facetFields, List<Document> allMatchDocs)
     {
         totalNumberOfHits = totalNumber;
         highlighting = allHighlighting;
         this.facetFields = facetFields;
+        this.allMatchDocs = allMatchDocs;
     }
 }

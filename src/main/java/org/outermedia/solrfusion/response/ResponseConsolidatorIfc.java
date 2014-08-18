@@ -37,6 +37,7 @@ public interface ResponseConsolidatorIfc extends Initiable<ResponseConsolidatorF
 
     public String getErrorMsg();
 
-    public Document completelyMapMergedDoc(Collection<Document> sameDocuments, Map<String, Document> highlighting)
+    public List<Document> completelyMapMergedDoc(Collection<Document> sameDocuments, Map<String, Document> highlighting)
         throws InvocationTargetException, IllegalAccessException;
+
 }

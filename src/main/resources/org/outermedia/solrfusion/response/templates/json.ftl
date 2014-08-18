@@ -10,13 +10,25 @@
         <#list responseHeader.multiValueQueryParams[key] as v>"${v?json_string}"<#if v_has_next>,</#if></#list>
       ],</#list>
       "wt":"json",
-      "version":"2.2"}},
+      "version":"2.2"}}
   <#if responseError.error>
-  "error":{
+  , "error":{
       "msg":"${responseError.msg?json_string}",
       "code":${responseError.code}},
   </#if>
-  "response":{"numFound":${response.totalHitNumber?string("0")},"start":0,"docs":[
+  <#if response.matchDocuments?has_content>
+  , "match":{"numFound":${response.totalMatchHitNumber?c},"start":0,"docs":[
+    <#list response.matchDocuments as document>
+    {
+      <@outputMultiValueFields fields=document.multiValuedFields />
+      <#if document.hasMultiValuedFields && document.hasSingleValuedFields >,
+      </#if>
+      <@outputSingleValueFields fields=document.singleValuedFields />
+    }<#if document_has_next>,</#if>
+    </#list>
+    ]}
+  </#if>
+  , "response":{"numFound":${response.totalHitNumber?c},"start":0,"docs":[
   <#list response.documents as document>
   {
     <@outputMultiValueFields fields=document.multiValuedFields />

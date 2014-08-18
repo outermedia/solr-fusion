@@ -65,7 +65,7 @@ public class FreemarkerResponseRendererTest
         XmlResponse response9001 = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-9001.xml", null);
         List<Document> documents9001 = response9001.getDocuments();
 
-        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9001.getNumFound(), null, null);
+        SearchServerResponseInfo info9001 = new SearchServerResponseInfo(response9001.getNumFound(), null, null, null);
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             response9001.getDocuments(), info9001);
 
@@ -112,7 +112,7 @@ public class FreemarkerResponseRendererTest
         XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-freemarker.xml", null);
         List<Document> documents9000 = response9000.getDocuments();
 
-        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getNumFound(), null, null);
+        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getNumFound(), null, null, null);
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             response9000.getDocuments(), info9000);
 
@@ -277,7 +277,7 @@ public class FreemarkerResponseRendererTest
             fusionHighlights.put(doc.getFusionDocId("id"), doc);
         }
         SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getNumFound(), fusionHighlights,
-            null);
+            null, null);
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             response9000.getDocuments(), info9000);
         ClosableIterator<Document, SearchServerResponseInfo> closableDocIterator = new MappingClosableIterator(
@@ -304,7 +304,7 @@ public class FreemarkerResponseRendererTest
             ResponseRendererType.JSON);
         Assert.assertNotNull("responseRenderer should not be null", responseRenderer);
 
-        String jsonResponse = createResponseFacets(spyCfg, responseRenderer);
+        String jsonResponse = createResponseFacets(spyCfg, responseRenderer, "response-with-facets-highlighting.xml");
         // System.out.println(jsonResponse);
 
         Assert.assertTrue("Expected to find facet fields and field collcode_de15, but got: " + jsonResponse,
@@ -330,7 +330,7 @@ public class FreemarkerResponseRendererTest
             ResponseRendererType.XML);
         Assert.assertNotNull("responseRenderer should not be null", responseRenderer);
 
-        String xmlResponse = createResponseFacets(spyCfg, responseRenderer);
+        String xmlResponse = createResponseFacets(spyCfg, responseRenderer, "response-with-facets-highlighting.xml");
         // System.out.println(xmlResponse);
 
         Assert.assertTrue("Expected to find facet fields and field collcode_de15, but got: " + xmlResponse,
@@ -343,11 +343,11 @@ public class FreemarkerResponseRendererTest
             xmlResponse.contains("<int name=\"Software\">66</int>"));
     }
 
-    protected String createResponseFacets(Configuration spyCfg, ResponseRendererIfc responseRenderer)
-        throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException,
+    protected String createResponseFacets(Configuration spyCfg, ResponseRendererIfc responseRenderer,
+        String responseData) throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException,
         InvocationTargetException, IllegalAccessException
     {
-        XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, "response-with-facets-highlighting.xml", null);
+        XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, responseData, null);
         List<FacetHit> facets = response9000.getFacetFields();
         SearchServerConfig searchServerConfig = spyCfg.getConfigurationOfSearchServers().get(0);
         PagingResponseConsolidator consolidator = (PagingResponseConsolidator) spyCfg.getResponseConsolidatorFactory().getInstance();
@@ -359,8 +359,8 @@ public class FreemarkerResponseRendererTest
         Map<String, List<WordCount>> sortedFacets = consolidator.mapFacetWordCounts(cfg.getIdGenerator(),
             cfg.getFusionIdFieldName(), req);
         // System.out.println("FACETS "+sortedFacets);
-        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getNumFound(), null,
-            sortedFacets);
+        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getNumFound(), null, sortedFacets,
+            null);
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             new ArrayList<Document>(), info9000);
         ClosableIterator<Document, SearchServerResponseInfo> closableDocIterator = new MappingClosableIterator(
@@ -370,4 +370,86 @@ public class FreemarkerResponseRendererTest
         return responseRenderer.getResponseString(cfg, closableDocIterator, req, res);
     }
 
+    @Test
+    public void freemarkerXmlMoreLikeThisTest()
+        throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException,
+        InvocationTargetException, IllegalAccessException
+    {
+        cfg = helper.readFusionSchemaWithoutValidation("fusion-schema-uni-leipzig.xml");
+        ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
+        // the mapping is very incomplete, so ignore all unmapped fields
+        testResponseMapper.ignoreMissingMappings();
+        Configuration spyCfg = spy(cfg);
+        when(spyCfg.getResponseMapper()).thenReturn(testResponseMapper);
+        ResponseRendererIfc responseRenderer = spyCfg.getSearchServerConfigs().getResponseRendererByType(
+            ResponseRendererType.XML);
+        Assert.assertNotNull("responseRenderer should not be null", responseRenderer);
+
+        String xmlResponse = createResponseMoreLikeThis(spyCfg, responseRenderer, "test-more-like-this-response.xml");
+        // System.out.println(xmlResponse);
+        Assert.assertTrue("Exptected to find match result:\n" + xmlResponse,
+            xmlResponse.contains("<result name=\"match\" numFound=\"1\" start=\"0\">"));
+        Assert.assertTrue("Exptected to find doc with id UBL_0002688343 in match result:\n" + xmlResponse,
+            xmlResponse.contains("<str name=\"id\">UBL_0002688343</str>"));
+    }
+
+    @Test
+    public void freemarkerJsonMoreLikeThisTest()
+        throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException,
+        InvocationTargetException, IllegalAccessException
+    {
+        cfg = helper.readFusionSchemaWithoutValidation("fusion-schema-uni-leipzig.xml");
+        ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
+        // the mapping is very incomplete, so ignore all unmapped fields
+        testResponseMapper.ignoreMissingMappings();
+        Configuration spyCfg = spy(cfg);
+        when(spyCfg.getResponseMapper()).thenReturn(testResponseMapper);
+        ResponseRendererIfc responseRenderer = spyCfg.getSearchServerConfigs().getResponseRendererByType(
+            ResponseRendererType.JSON);
+        Assert.assertNotNull("responseRenderer should not be null", responseRenderer);
+
+        String xmlResponse = createResponseMoreLikeThis(spyCfg, responseRenderer, "test-more-like-this-response.xml");
+        // System.out.println(xmlResponse);
+        Assert.assertTrue("Exptected to find match result:\n" + xmlResponse,
+            xmlResponse.contains("\"match\":{\"numFound\":1,\"start\":0,\"docs\":["));
+        Assert.assertTrue("Exptected to find doc with id UBL_0002688343 in match result:\n" + xmlResponse,
+            xmlResponse.contains("\"id\":\"UBL_0002688343\","));
+    }
+
+    protected String createResponseMoreLikeThis(Configuration spyCfg, ResponseRendererIfc responseRenderer,
+        String responseData) throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException,
+        InvocationTargetException, IllegalAccessException
+    {
+        XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, responseData, null);
+        List<Document> moreLikeThisDocs = response9000.getMatchDocuments();
+        SearchServerConfig searchServerConfig = spyCfg.getConfigurationOfSearchServers().get(0);
+        PagingResponseConsolidator consolidator = (PagingResponseConsolidator) spyCfg.getResponseConsolidatorFactory().getInstance();
+        consolidator.initConsolidator(cfg);
+
+        // map matched docs
+        List<Document> mappedMoreLikeThisDocs = new ArrayList<>();
+        SearchServerResponseInfo matchInfo9000 = new SearchServerResponseInfo(response9000.getMatchNumFound(), null,
+            null, null);
+        ClosableIterator<Document, SearchServerResponseInfo> matchDocIterator = new ClosableListIterator<>(
+            moreLikeThisDocs, matchInfo9000);
+        ClosableIterator<Document, SearchServerResponseInfo> closableMatchDocIterator = new MappingClosableIterator(
+            matchDocIterator, spyCfg, searchServerConfig, null);
+        while (closableMatchDocIterator.hasNext())
+        {
+            mappedMoreLikeThisDocs.add(closableMatchDocIterator.next());
+        }
+
+        FusionRequest req = new FusionRequest();
+        req.setQuery(new SolrFusionRequestParam("goethe"));
+        req.setFacetLimit(new SolrFusionRequestParam("20"));
+        SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getNumFound(), null, null,
+            mappedMoreLikeThisDocs);
+        ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
+            new ArrayList<Document>(), info9000);
+        ClosableIterator<Document, SearchServerResponseInfo> closableDocIterator = new MappingClosableIterator(
+            docIterator, spyCfg, searchServerConfig, null);
+        FusionResponse res = new FusionResponse();
+        res.setOk(true);
+        return responseRenderer.getResponseString(cfg, closableDocIterator, req, res);
+    }
 }

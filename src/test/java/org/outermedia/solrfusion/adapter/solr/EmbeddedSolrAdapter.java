@@ -35,7 +35,8 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
 
     @Setter @Getter private SolrTestServer testServer;
 
-    String corePath;
+    @Getter @Setter
+    String url;
 
     /**
      * Factory creates instances only.
@@ -45,7 +46,8 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
     }
 
     @Override
-    public InputStream sendQuery(Multimap<String> params, int timeout, String version) throws URISyntaxException, IOException
+    public InputStream sendQuery(Multimap<String> params, int timeout, String version)
+        throws URISyntaxException, IOException
     {
         String q = params.getFirst(SolrFusionRequestParams.QUERY);
         String fq = params.getFirst(SolrFusionRequestParams.FILTER_QUERY);
@@ -69,6 +71,11 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
         fieldsToReturn = mergeField(sortField, fieldsToReturn);
         String fieldsToReturnArr[] = fieldsToReturn.split(" ");
         query.setFields(fieldsToReturnArr);
+        String queryType = params.getFirst(QUERY_TYPE);
+        if (queryType != null)
+        {
+            query.setRequestHandler(queryType);
+        }
 
         log.debug("Sending query: q={} fq={} start={} rows={} sort={} fl={}", q, fq, start, rows, sortStr,
             fieldsToReturn);
@@ -116,7 +123,7 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
     @Override
     public void init(SearchServerConfig config)
     {
-        corePath = config.getUrl();
+        url = config.getUrl();
     }
 
 }

@@ -36,6 +36,7 @@ public class FusionRequest
     private String solrFusionSortField;
     private String searchServerSortField;
     private SolrFusionRequestParam fieldsToReturn;
+    private SolrFusionRequestParam queryType;
 
     private SolrFusionRequestParam highlightingFieldsToReturn;
     private SolrFusionRequestParam highlightQuery;
@@ -77,6 +78,7 @@ public class FusionRequest
         facetLimit = new SolrFusionRequestParam(null);
         facetSort = new SolrFusionRequestParam(null);
         facetPrefix = new SolrFusionRequestParam(null);
+        queryType = new SolrFusionRequestParam(null);
     }
 
     public Map<String, Float> getBoosts()
@@ -106,11 +108,12 @@ public class FusionRequest
     }
 
     public Multimap<String> buildSearchServerQueryParams(Configuration configuration,
-        SearchServerConfig searchServerConfig) throws InvocationTargetException, IllegalAccessException
+        SearchServerConfig searchServerConfig, boolean isIdQuery)
+        throws InvocationTargetException, IllegalAccessException
     {
         Multimap<String> searchServerParams = new Multimap();
 
-        buildCoreSearchServerQueryParams(configuration, searchServerConfig, searchServerParams);
+        buildCoreSearchServerQueryParams(configuration, searchServerConfig, searchServerParams, isIdQuery);
 
         buildHighlightSearchServerQueryParams(configuration, searchServerConfig, searchServerParams);
 
@@ -175,32 +178,36 @@ public class FusionRequest
     }
 
     protected void buildCoreSearchServerQueryParams(Configuration configuration, SearchServerConfig searchServerConfig,
-        Multimap<String> searchServerParams) throws InvocationTargetException, IllegalAccessException
+        Multimap<String> searchServerParams, boolean isIdQuery) throws InvocationTargetException, IllegalAccessException
     {
         buildSearchServerQuery(parsedQuery, QUERY, configuration, searchServerConfig, searchServerParams);
-        buildSearchServerQuery(parsedFilterQuery, FILTER_QUERY, configuration, searchServerConfig, searchServerParams);
-        buildSearchServerQuery(parsedHighlightQuery, HIGHLIGHT_QUERY, configuration, searchServerConfig,
-            searchServerParams);
-        // get all documents from 0..min(MAXDOCS,start+page size)
-        searchServerParams.put(START, String.valueOf(0));
-        int rows = Math.min(searchServerConfig.getMaxDocs(), getStart() + getPageSize());
-        searchServerParams.put(PAGE_SIZE, String.valueOf(rows));
-        // TODO handle 1:n mapping i.e. 1 solrfusion field is mapped to several search server fields?
-        // does it mean to sort by several search server fields?
-        Set<String> searchServerFieldSet = mapFusionFieldToSearchServerField(getSolrFusionSortField(), configuration,
-            searchServerConfig, ResponseMapperIfc.DOC_FIELD_NAME_SCORE);
-        if (searchServerFieldSet.isEmpty())
+        if(!isIdQuery)
         {
-            log.error("Found not mapping for sort field '{}'", getSolrFusionSortField());
+            buildSearchServerQuery(parsedFilterQuery, FILTER_QUERY, configuration, searchServerConfig,
+                searchServerParams);
+            buildSearchServerQuery(parsedHighlightQuery, HIGHLIGHT_QUERY, configuration, searchServerConfig,
+                searchServerParams);
+            // get all documents from 0..min(MAXDOCS,start+page size)
+            searchServerParams.put(START, String.valueOf(0));
+            int rows = Math.min(searchServerConfig.getMaxDocs(), getStart() + getPageSize());
+            searchServerParams.put(PAGE_SIZE, String.valueOf(rows));
+            // TODO handle 1:n mapping i.e. 1 solrfusion field is mapped to several search server fields?
+            // does it mean to sort by several search server fields?
+            Set<String> searchServerFieldSet = mapFusionFieldToSearchServerField(getSolrFusionSortField(), configuration,
+                searchServerConfig, ResponseMapperIfc.DOC_FIELD_NAME_SCORE);
+            if (searchServerFieldSet.isEmpty())
+            {
+                log.error("Found not mapping for sort field '{}'", getSolrFusionSortField());
+            }
+            String searchServerSortField = searchServerFieldSet.iterator().next();
+            if (searchServerFieldSet.size() > 1)
+            {
+                log.error("Found ambiguous mapping for sort field '{}'. Using: {}", getSolrFusionSortField(),
+                    searchServerSortField);
+            }
+            setSearchServerSortField(searchServerSortField);
+            searchServerParams.put(SORT, searchServerSortField + (isSortAsc() ? " asc" : " desc"));
         }
-        String searchServerSortField = searchServerFieldSet.iterator().next();
-        if (searchServerFieldSet.size() > 1)
-        {
-            log.error("Found ambiguous mapping for sort field '{}'. Using: {}", getSolrFusionSortField(),
-                searchServerSortField);
-        }
-        setSearchServerSortField(searchServerSortField);
-        searchServerParams.put(SORT, searchServerSortField + (isSortAsc() ? " asc" : " desc"));
         String fusionFieldsToReturn = fieldsToReturn.getValue();
         if (fusionFieldsToReturn == null)
         {
@@ -215,6 +222,9 @@ public class FusionRequest
         String fieldsToReturn = mapFusionFieldListToSearchServerField(fusionFieldsToReturn, configuration,
             searchServerConfig, null);
         searchServerParams.put(FIELDS_TO_RETURN, fieldsToReturn);
+        searchServerParams.put(QUERY_TYPE, queryType);
+        // solrfusion wants always xml
+        searchServerParams.put(WRITER_TYPE, "xml");
     }
 
     protected void buildHighlightSearchServerQueryParams(Configuration configuration,

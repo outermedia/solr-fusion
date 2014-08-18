@@ -88,7 +88,7 @@ public class ResponseConsolidator extends AbstractResponseConsolidator
         return new DefaultClosableIterator(responseStreams);
     }
 
-    @Override public Document completelyMapMergedDoc(Collection<Document> sameDocuments,
+    @Override public List<Document> completelyMapMergedDoc(Collection<Document> sameDocuments,
         Map<String, Document> highlighting) throws InvocationTargetException, IllegalAccessException
     {
         // not supported

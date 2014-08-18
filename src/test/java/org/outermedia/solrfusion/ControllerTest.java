@@ -267,6 +267,8 @@ public class ControllerTest extends AbstractControllerTest
         fusionRequest.setSolrFusionSortField("title");
         fusionRequest.setSortAsc(true);
         fusionRequest.setFieldsToReturn(new SolrFusionRequestParam("id,title"));
+        fusionRequest.setQueryType(new SolrFusionRequestParam("morelikethis"));
+        fusionRequest.setResponseType(ResponseRendererType.JSON);
         Term hlt = Term.newFusionTerm("title", "abc");
         hlt.setSearchServerFieldName("titleVT_de");
         hlt.setSearchServerFieldValue(Arrays.asList("abc"));
@@ -292,12 +294,14 @@ public class ControllerTest extends AbstractControllerTest
         facetSortFields.add(new SolrFusionRequestParam("index2", "author"));
         fusionRequest.setFacetSortFields(facetSortFields);
 
-        Multimap<String> map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
+        Multimap<String> map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig, false);
         Assert.assertEquals("Expected other sort field", "titleVT_de asc", map.getFirst(SORT));
         Assert.assertEquals("Expected other start value", "0", map.getFirst(START));
         int maxDocs = serverConfig.getMaxDocs();
         Assert.assertEquals("Expected other page size", String.valueOf(maxDocs), map.getFirst(PAGE_SIZE));
         Assert.assertEquals("Expected other search server query", "titleVT_de:abc", map.getFirst(QUERY));
+        Assert.assertEquals("Expected other query type", "morelikethis", map.getFirst(QUERY_TYPE));
+        Assert.assertEquals("Expected other response type", "xml", map.getFirst(WRITER_TYPE));
 
         // check highlights
         Assert.assertEquals("Expected other search server highlight query", "titleVT_de:abc",
@@ -327,19 +331,19 @@ public class ControllerTest extends AbstractControllerTest
         Assert.assertTrue("Please set max-docs >" + start, start < maxDocs);
         fusionRequest.setStart(start);
         fusionRequest.setPageSize(maxDocs - 1 - start);
-        map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
+        map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig, false);
         Assert.assertEquals("Expected other page size", "99", map.getFirst(PAGE_SIZE));
 
         // up to server's max limit, return wanted size
         fusionRequest.setStart(start);
         fusionRequest.setPageSize(maxDocs - start);
-        map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
+        map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig, false);
         Assert.assertEquals("Expected other page size", String.valueOf(maxDocs), map.getFirst(PAGE_SIZE));
 
         // above  server's max limit, return server's limit
         fusionRequest.setStart(start + 1);
         fusionRequest.setPageSize(maxDocs - start);
-        map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
+        map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig, false);
         Assert.assertEquals("Expected other page size", String.valueOf(maxDocs), map.getFirst(PAGE_SIZE));
     }
 
@@ -452,7 +456,8 @@ public class ControllerTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         XmlResponse xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponseStr));
-        doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
+        doReturn(xmlResponse).when(controller).sendAndReceive(anyBoolean(), any(FusionRequest.class),
+            any(SearchServerConfig.class));
         FusionRequest request = new FusionRequest();
         String sep = DefaultIdGenerator.SEPARATOR;
         request.setQuery(new SolrFusionRequestParam("id:\"Bibliothek9000" + sep + "1\""));
@@ -489,7 +494,8 @@ public class ControllerTest extends AbstractControllerTest
         merger.afterUnmarshal(null, null);
         cfg.getSearchServerConfigs().setMerge(merger);
         xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponseStr));
-        doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
+        doReturn(xmlResponse).when(controller).sendAndReceive(anyBoolean(), any(FusionRequest.class),
+            any(SearchServerConfig.class));
         response = new FusionResponse();
         // reset modified query object
         request.setParsedQuery(controller.parseQuery(request.getQuery().getValue(), null, Locale.GERMAN, request));
@@ -532,7 +538,8 @@ public class ControllerTest extends AbstractControllerTest
 
         cfg.getSearchServerConfigs().setMerge(null);
         xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponsWithoutIdStr));
-        doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
+        doReturn(xmlResponse).when(controller).sendAndReceive(anyBoolean(), any(FusionRequest.class),
+            any(SearchServerConfig.class));
         response = new FusionResponse();
         request.setQuery(new SolrFusionRequestParam("id:Bibliothek9000" + sep + "1"));
         request.setParsedQuery(controller.parseQuery(request.getQuery().getValue(), null, Locale.GERMAN, request));
@@ -546,7 +553,8 @@ public class ControllerTest extends AbstractControllerTest
         log.info("--- vufind test with merger ---");
         cfg.getSearchServerConfigs().setMerge(merger);
         xmlResponse = responseParser.parse(new StringBufferInputStream(xmlResponsWithoutIdStr));
-        doReturn(xmlResponse).when(controller).sendAndReceive(any(FusionRequest.class), any(SearchServerConfig.class));
+        doReturn(xmlResponse).when(controller).sendAndReceive(anyBoolean(), any(FusionRequest.class),
+            any(SearchServerConfig.class));
         response = new FusionResponse();
         request.setParsedQuery(controller.parseQuery(request.getQuery().getValue(), null, Locale.GERMAN, request));
         controller.process(cfg, request, response);

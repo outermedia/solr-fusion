@@ -220,7 +220,7 @@ public class PagingResponseConsolidatorMergeTest
 
     protected ClosableIterator<Document, SearchServerResponseInfo> createDocuments(List<Document> docs)
     {
-        SearchServerResponseInfo info = new SearchServerResponseInfo(docs.size(), null, null);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(docs.size(), null, null, null);
         return new ClosableListIterator<>(docs, info);
     }
 }

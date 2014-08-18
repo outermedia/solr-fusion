@@ -71,7 +71,8 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         Set<String> searchServerFieldsToMap = getSingleFieldMapping(request.getSearchServerSortField());
         mapMergeField(config, searchServerConfig, request, searchServerFieldsToMap, fusionMergeField);
 
-        processDocuments(config, searchServerConfig, docIterator, searchServerFieldsToMap);
+        maxDocNr = processDocuments(allDocs, maxDocNr, config, searchServerConfig, docIterator,
+            searchServerFieldsToMap);
 
         processHighlighting(config, searchServerConfig, highlighting);
 
@@ -147,31 +148,36 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         return searchServerFieldsToMap;
     }
 
-    protected void processDocuments(Configuration config, SearchServerConfig searchServerConfig,
-        ClosableIterator<Document, SearchServerResponseInfo> docIterator, Set<String> searchServerFieldsToMap)
+    protected int processDocuments(List<Document> docs, int totalDocNr, Configuration config,
+        SearchServerConfig searchServerConfig, ClosableIterator<Document, SearchServerResponseInfo> docIterator,
+        Set<String> searchServerFieldsToMap)
     {
-        maxDocNr += Math.min(searchServerConfig.getMaxDocs(), docIterator.getExtraInfo().getTotalNumberOfHits());
+        if (docIterator != null)
+        {
+            totalDocNr += Math.min(searchServerConfig.getMaxDocs(), docIterator.getExtraInfo().getTotalNumberOfHits());
 
-        try
-        {
-            // map sort field and id/score only
-            // map merge document field too if needed
-            MappingClosableIterator mapper = getNewMappingClosableIterator(config, searchServerConfig, docIterator,
-                searchServerFieldsToMap);
-            int docCount = 0;
-            while (mapper.hasNext())
+            try
             {
-                allDocs.add(mapper.next());
-                docCount++;
+                // map sort field and id/score only
+                // map merge document field too if needed
+                MappingClosableIterator mapper = getNewMappingClosableIterator(config, searchServerConfig, docIterator,
+                    searchServerFieldsToMap);
+                int docCount = 0;
+                while (mapper.hasNext())
+                {
+                    docs.add(mapper.next());
+                    docCount++;
+                }
+                log.debug("Added {} docs from server {}", docCount, searchServerConfig.getSearchServerName());
             }
-            log.debug("Added {} docs from server {}", docCount, searchServerConfig.getSearchServerName());
+            catch (Exception e)
+            {
+                log.error("Caught exception while mapping documents of server {}",
+                    searchServerConfig.getSearchServerName(), e);
+            }
+            docIterator.close();
         }
-        catch (Exception e)
-        {
-            log.error("Caught exception while mapping documents of server {}", searchServerConfig.getSearchServerName(),
-                e);
-        }
-        docIterator.close();
+        return totalDocNr;
     }
 
     protected MappingClosableIterator getNewMappingClosableIterator(Configuration config,
@@ -223,10 +229,12 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         if (fusionMergeField != null)
         {
             docLookup = mergeDocuments(config, allDocs);
+            log.debug("Merging resulted in {} documents.", allDocs.size());
         }
 
         // sort all docs
         boolean sortAsc = fusionRequest.isSortAsc();
+        log.debug("Sort docs by '{}' {}", fusionSortField, sortAsc ? "asc" : "desc");
         Collections.sort(allDocs, new FusionValueDocumentComparator(fusionSortField, sortAsc));
 
         if (log.isTraceEnabled())
@@ -271,6 +279,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             }
             docsOfPage.add(d);
         }
+        log.debug("Returning {} documents for page size {}", docsOfPage.size(), fusionRequest.getPageSize());
 
         if (log.isTraceEnabled())
         {
@@ -288,7 +297,8 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         Map<String, List<WordCount>> sortedFusionFacetFields = mapFacetWordCounts(idGenerator, fusionIdField,
             fusionRequest);
 
-        SearchServerResponseInfo info = new SearchServerResponseInfo(maxDocNr, highlighting, sortedFusionFacetFields);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(maxDocNr, highlighting, sortedFusionFacetFields,
+            null);
         return new ClosableListIterator<>(docsOfPage, info);
     }
 
@@ -308,7 +318,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         return getNewFacetWordCountSorter().sort(fusionFacetFields, fusionRequest);
     }
 
-    private FacetWordCountSorter getNewFacetWordCountSorter()
+    protected FacetWordCountSorter getNewFacetWordCountSorter()
     {
         return new FacetWordCountSorter();
     }
@@ -337,10 +347,10 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
      * @throws IllegalAccessException
      */
     @Override
-    public Document completelyMapMergedDoc(Collection<Document> sameDocuments, Map<String, Document> highlighting)
+    public List<Document> completelyMapMergedDoc(Collection<Document> sameDocuments, Map<String, Document> highlighting)
         throws InvocationTargetException, IllegalAccessException
     {
-        Document result;
+        List<Document> result;
         MergeStrategyIfc merger = config.getMerger();
         // map documents to merge (d is one entry of sameDocuments)
         for (Document toMerge : sameDocuments)
@@ -355,12 +365,12 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         }
         if (merger != null)
         {
-            result = merger.mergeDocuments(config, sameDocuments, allHighlighting, highlighting);
+            result = merger.mergeDocuments(merger.getFusionField(), config, sameDocuments, allHighlighting, highlighting);
         }
         else
         {
             // no merger configured, sameDocuments contains exactly one document
-            result = sameDocuments.iterator().next();
+            result = Arrays.asList(sameDocuments.iterator().next());
         }
         return result;
     }
@@ -395,7 +405,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         for (Set<Document> sameDocuments : lookup.values())
         {
             // highlights will be merged when docs of page are known, so we pass on empty highlights here
-            newAllDocs.add(merger.mergeDocuments(config, sameDocuments, emptyHighlights, null));
+            newAllDocs.addAll(merger.mergeDocuments(mergeFusionField, config, sameDocuments, emptyHighlights, null));
         }
         allDocs = newAllDocs;
         return lookup;

@@ -1,6 +1,6 @@
 package org.outermedia.solrfusion.response;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.outermedia.solrfusion.configuration.Util;
@@ -34,10 +34,9 @@ public class DefaultResponseParserTest
         XmlResponse response = xmlUtil.unmarshal(XmlResponse.class, "test-xml-response-1.xml", null);
 
         List<Document> documents = response.getDocuments();
-
+        Assert.assertNotNull("Expected documents", documents);
         Assert.assertEquals("Got less result documents than expected", 10, documents.size());
         Assert.assertEquals("Got different numFound than expected", 59612, response.getNumFound());
-        Assert.assertEquals("Got attribut value for name@result than expected", "response", response.getResultName());
         Assert.assertEquals("Got different sourceid in document1 than expected", "beuth_pn_DE30029154",
             documents.get(2).findFieldByName("sourceid").getFirstSearchServerFieldValue());
         Assert.assertEquals("Expected 12  singlevalued fields", 12,
@@ -54,7 +53,6 @@ public class DefaultResponseParserTest
 
         Assert.assertEquals("Got less result documents than expected", 10, documents.size());
         Assert.assertEquals("Got different numFound than expected", 23121, response.getNumFound());
-        Assert.assertEquals("Got attribut value for name@result than expected", "response", response.getResultName());
         Assert.assertEquals("Expected 22 singlevalued fields", 22, documents.get(0).getSolrSingleValuedFields().size());
         Assert.assertEquals("Expected 41 multivalued fields", 41, documents.get(0).getSolrMultiValuedFields().size());
         Assert.assertEquals("Got a different multivalued field than unexpected ", "[DE-15, DE-Ch1]",
@@ -72,7 +70,6 @@ public class DefaultResponseParserTest
 
         Assert.assertEquals("Got less result documents than expected", 10, documents.size());
         Assert.assertEquals("Got different numFound than expected", 91373, response.getNumFound());
-        Assert.assertEquals("Got attribut value for name@result than expected", "response", response.getResultName());
         Assert.assertEquals("Expected 22 singlevalued fields", 16, documents.get(0).getSolrSingleValuedFields().size());
         Assert.assertEquals("Expected 41 multivalued fields", 32, documents.get(0).getSolrMultiValuedFields().size());
         Assert.assertEquals("Got a different multivalued field than unexpected ", "[findex.gbv.de]",
@@ -90,7 +87,6 @@ public class DefaultResponseParserTest
 
         Assert.assertEquals("Got less result documents than expected", 10, documents.size());
         Assert.assertEquals("Got different numFound than expected", 54, response.getNumFound());
-        Assert.assertEquals("Got attribut value for name@result than expected", "response", response.getResultName());
         Assert.assertEquals("Expected 22 singlevalued fields", 11, documents.get(0).getSolrSingleValuedFields().size());
         Assert.assertNull("Expected MultiValuedFields to be null", documents.get(0).getSolrMultiValuedFields());
 
@@ -106,7 +102,6 @@ public class DefaultResponseParserTest
 
         Assert.assertEquals("Got less result documents than expected", 2, documents.size());
         Assert.assertEquals("Got different numFound than expected", 2, response.getNumFound());
-        Assert.assertEquals("Got attribut value for name@result than expected", "response", response.getResultName());
         Assert.assertEquals("Got different sourceid in document1 than expected", "beuth_pn_DE18954967",
             documents.get(0).findFieldByName("sourceid").getFirstSearchServerFieldValue());
         Assert.assertEquals("Expected 11  singlevalued fields", 11,
@@ -178,4 +173,21 @@ public class DefaultResponseParserTest
             hit.getDocument().buildFusionDocStr().trim());
     }
 
+    @Test
+    public void testReadMoreLikeThisResponse()
+        throws FileNotFoundException, JAXBException, SAXException, ParserConfigurationException
+    {
+        XmlResponse response = xmlUtil.unmarshal(XmlResponse.class, "test-more-like-this-response.xml", null);
+
+        List<Document> documents = response.getDocuments();
+        Assert.assertNotNull("Expected documents", documents);
+        List<Document> matchDocuments = response.getMatchDocuments();
+        Assert.assertNotNull("Expected match documents", matchDocuments);
+        Assert.assertEquals("Expected only one match document", 1, matchDocuments.size());
+        Document md = matchDocuments.get(0);
+        Assert.assertEquals("Expected other document", "0002688343", md.getSearchServerDocId("id"));
+        Assert.assertEquals("Expected five documents", 5, documents.size());
+        Assert.assertEquals("Expected other first document", "0007633636", documents.get(0).getSearchServerDocId("id"));
+        Assert.assertEquals("Expected other last document", "0012869538", documents.get(4).getSearchServerDocId("id"));
+    }
 }

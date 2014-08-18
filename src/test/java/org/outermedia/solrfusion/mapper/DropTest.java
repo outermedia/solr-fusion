@@ -52,7 +52,7 @@ public class DropTest extends AbstractTypeTest
         renderer.init(null);
         List<Document> docs = new ArrayList<>();
         docs.add(doc);
-        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, null);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, null, null);
 
         ScriptEnv env = new ScriptEnv();
         SearchServerConfig serverConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);

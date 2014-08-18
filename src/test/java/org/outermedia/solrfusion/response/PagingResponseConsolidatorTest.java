@@ -160,7 +160,7 @@ public class PagingResponseConsolidatorTest
             doc.addField(titleField, t);
             docs.add(doc);
         }
-        SearchServerResponseInfo info = new SearchServerResponseInfo(titles.length, null, null);
+        SearchServerResponseInfo info = new SearchServerResponseInfo(titles.length, null, null, null);
         return new ClosableListIterator<>(docs, info);
     }
 
