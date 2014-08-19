@@ -4,8 +4,7 @@
   <int name="status">0</int>
   <int name="QTime">0</int>
   <lst name="params">
-    <str name="indent">on</str>
-    <str name="start">0</str><#list responseHeader.queryParams?keys as key>
+    <str name="indent">on</str><#list responseHeader.queryParams?keys as key>
     <str name="${key}"><![CDATA[${responseHeader.queryParams[key]}]]></str></#list><#list responseHeader.multiValueQueryParams?keys as key>
     <arr name="${key}"><#list responseHeader.multiValueQueryParams[key] as v>
         <str>${v?xml}</str></#list>

@@ -35,8 +35,7 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
 
     @Setter @Getter private SolrTestServer testServer;
 
-    @Getter @Setter
-    String url;
+    @Getter @Setter String url;
 
     /**
      * Factory creates instances only.
@@ -59,10 +58,22 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
         String responseFormat = params.getFirst(WRITER_TYPE);
         query.set(WRITER_TYPE_PARAMETER, responseFormat);
         String start = params.getFirst(START);
+        if (start == null)
+        {
+            start = "0";
+        }
         query.setStart(Integer.valueOf(start));
         String rows = params.getFirst(PAGE_SIZE);
+        if (rows == null)
+        {
+            rows = "30";
+        }
         query.setRows(Integer.valueOf(rows));
         String sortStr = params.getFirst(SORT);
+        if (sortStr == null)
+        {
+            sortStr = "score desc";
+        }
         StringTokenizer st = new StringTokenizer(sortStr, " ");
         String sortField = st.nextToken();
         String sortDir = st.nextToken();

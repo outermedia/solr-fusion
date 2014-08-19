@@ -14,7 +14,6 @@ import org.outermedia.solrfusion.mapper.ResetQueryState;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 import org.outermedia.solrfusion.query.parser.Query;
-import org.outermedia.solrfusion.query.parser.TermQuery;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
@@ -128,10 +127,6 @@ public class FusionController implements FusionControllerIfc
         {
             fusionResponse.setResponseForNoSearchServerConfiguredError();
         }
-        else if (isIdQuery(fusionRequest.getParsedQuery()))
-        {
-            processIdQuery(fusionRequest, fusionResponse);
-        }
         else
         {
             ResponseConsolidatorIfc consolidator = getNewResponseConsolidator();
@@ -153,152 +148,6 @@ public class FusionController implements FusionControllerIfc
             {
                 fusionResponse.setResponseForException(lastException);
             }
-        }
-    }
-
-    /**
-     * Ensures that processIdQuery() can send an id query. "q" has to be a TermQuery (subclass) with the id field name
-     * configured in the fusion schema. The query must have only one value where the id generator must be able to
-     * extract the search server's name and doc id. The fusion schema contains a section for the extract search server.
-     *
-     * @param q the query being tested
-     * @return true if q is really an id query, otherwise false.
-     */
-    protected boolean isIdQuery(Query q)
-    {
-        boolean ok = false;
-        if (q instanceof TermQuery)
-        {
-            TermQuery tq = (TermQuery) q;
-            try
-            {
-                IdGeneratorIfc idGenerator = configuration.getIdGenerator();
-                if (idGenerator.getFusionIdField().equals(tq.getFusionFieldName()))
-                {
-                    List<String> vals = tq.getFusionFieldValue();
-                    if (vals != null && vals.size() == 1)
-                    {
-                        String fusionId = vals.get(0);
-                        // perhaps fusionId consists of several fusion doc ids when the doc was merged
-                        // but it is sufficient to check the first fusion doc only
-                        String serverName = idGenerator.getSearchServerIdFromFusionId(fusionId);
-                        idGenerator.getSearchServerDocIdFromFusionId(fusionId);
-                        ok = configuration.getSearchServerConfigByName(serverName) != null;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                // NOP
-            }
-        }
-        return ok;
-    }
-
-    protected void processIdQuery(FusionRequest fusionRequest, FusionResponse fusionResponse)
-    {
-        log.debug("Detected id query: {}", fusionRequest.getQuery());
-        // isIdQuery() ensures that the query is a TermQuery with one value and the id field
-        TermQuery query = (TermQuery) fusionRequest.getParsedQuery();
-        try
-        {
-            List<String> idVals = query.getTerm().getFusionFieldValue();
-            String solrfusionMergedDocId = idVals.get(0);
-            IdGeneratorIfc idGen = configuration.getIdGenerator();
-            List<Throwable> collectedExceptions = new ArrayList<>();
-            List<Document> collectedDocuments = new ArrayList<>();
-            boolean isMoreLikeThisQuery = false;
-            ResponseConsolidatorIfc consolidator = getNewResponseConsolidator();
-
-            List<String> allServers = idGen.splitMergedId(solrfusionMergedDocId);
-            for (String solrfusionDocId : allServers)
-            {
-                String searchServerName = idGen.getSearchServerIdFromFusionId(solrfusionDocId);
-                SearchServerConfig searchServerConfig = configuration.getSearchServerConfigByName(searchServerName);
-                String searchServerDocId = idGen.getSearchServerDocIdFromFusionId(solrfusionDocId);
-                // set id for search server
-                idVals.set(0, searchServerDocId);
-                ScriptEnv env = getNewScriptEnv(fusionRequest.getLocale());
-                configuration.getQueryMapper().mapQuery(configuration, searchServerConfig, query, env);
-                XmlResponse result = sendAndReceive(true, fusionRequest, searchServerConfig);
-                Exception se = result.getErrorReason();
-                if (se == null)
-                {
-                    List<Document> matchDocuments = result.getMatchDocuments();
-                    Document doc = null;
-                    // response format of "more like this" query is different to normal search queries
-                    // if "match" result is not empty, a "more like this" query has been processed
-                    if (matchDocuments != null && matchDocuments.size() > 0)
-                    {
-                        doc = matchDocuments.get(0);
-                        // the "response" result contains all similar documents
-                        SearchServerResponseInfo similarInfo = new SearchServerResponseInfo(result.getNumFound(), null,
-                            null, null);
-                        ClosableIterator<Document, SearchServerResponseInfo> similarDocIt = new ClosableListIterator<>(
-                            result.getDocuments(), similarInfo);
-                        consolidator.addResultStream(searchServerConfig, similarDocIt, fusionRequest, null, null);
-                        isMoreLikeThisQuery = true;
-                    }
-                    else
-                    {
-                        doc = result.getDocuments().get(0);
-                    }
-                    // map id, because completelyMapMergedDoc() call below depends on it
-                    // the doc may not contain the id field, but doc merging needs it
-                    String idFieldName = searchServerConfig.getIdFieldName();
-                    if (doc.getSearchServerDocId(idFieldName) == null)
-                    {
-                        log.debug("Setting id={} in doc, because response of id query didn't contain a value.",
-                            searchServerDocId);
-                        doc.setSearchServerDocId(idFieldName, searchServerDocId);
-                    }
-                    configuration.getResponseMapper().mapResponse(configuration, searchServerConfig, doc, env,
-                        Arrays.asList(idFieldName));
-                    collectedDocuments.add(doc);
-                }
-                else
-                {
-                    collectedExceptions.add(se);
-                }
-                getNewResetQueryState().reset(query);
-            }
-
-            if (collectedDocuments.isEmpty())
-            {
-                fusionResponse.setResponseForException(collectedExceptions);
-            }
-            else
-            {
-                List<Document> mergedDocs = configuration.getResponseConsolidator(configuration).completelyMapMergedDoc(
-                    collectedDocuments, null);
-                ClosableIterator<Document, SearchServerResponseInfo> response = null;
-                if (isMoreLikeThisQuery)
-                {
-                    // document of requested id goes to response "match"
-                    response = consolidator.getResponseIterator(fusionRequest);
-                    response.getExtraInfo().setAllMatchDocs(mergedDocs);
-                }
-                else
-                {
-                    SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, null, null);
-                    response = new ClosableListIterator<>(mergedDocs, info);
-                }
-
-                ResponseRendererIfc responseRenderer = configuration.getResponseRendererByType(
-                    fusionRequest.getResponseType());
-                // set state BEFORE response is rendered, because then the status is read out!
-                fusionResponse.setOk();
-                // TODO better to pass in a Writer in order to avoid building of very big String
-                String responseString = responseRenderer.getResponseString(configuration, response, fusionRequest,
-                    fusionResponse);
-                fusionResponse.setOkResponse(responseString);
-                response.close();
-            }
-        }
-        catch (Exception e)
-        {
-            log.error("Caught exception while processing id query {}", fusionRequest.getQuery(), e);
-            fusionResponse.setResponseForException(e);
         }
     }
 
@@ -408,7 +257,7 @@ public class FusionController implements FusionControllerIfc
         {
             XmlResponse result;
             Multimap<String> searchServerParams = fusionRequest.buildSearchServerQueryParams(configuration,
-                searchServerConfig, isIdQuery);
+                searchServerConfig);
             String searchServerQuery = searchServerParams.getFirst(SolrFusionRequestParams.QUERY);
             if (fusionRequest.getParsedQuery() != null &&
                 (searchServerQuery == null || searchServerQuery.trim().length() == 0))

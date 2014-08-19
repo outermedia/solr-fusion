@@ -130,7 +130,7 @@ public class DefaultIdGenerator implements IdGeneratorIfc
 
     @Override public boolean isMergedDocument(String fusionDocId)
     {
-        return fusionDocId.contains(ID_SEPARATOR);
+        return fusionDocId != null && fusionDocId.contains(ID_SEPARATOR);
     }
 
     public static class Factory

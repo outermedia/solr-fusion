@@ -38,8 +38,7 @@ public class ControllerHighlightTest extends AbstractControllerTest
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
         fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam("author:Goethe -title:tomorrow")));
-        fusionRequest.setSortAsc(false);
-        fusionRequest.setSolrFusionSortField("score");
+        fusionRequest.setSortSpec(new SortSpec("score", null, false));
         fusionRequest.setHighlight(new SolrFusionRequestParam("true"));
         fusionRequest.setHighlightQuery(new SolrFusionRequestParam("title:goethe"));
         fusionRequest.setHighlightPre(new SolrFusionRequestParam("pre"));
@@ -89,7 +88,7 @@ public class ControllerHighlightTest extends AbstractControllerTest
         Multimap<String> result = super.buildParams(q, null);
         result.put(HIGHLIGHT_QUERY, hlq);
         result.put(HIGHLIGHT_FIELDS_TO_RETURN, mappedTitle);
-        result.set(FIELDS_TO_RETURN, "* score " + mappedTitle);
+        result.set(FIELDS_TO_RETURN, "* score " + mappedTitle+" id");
         result.put(HIGHLIGHT, "true");
         result.put(HIGHLIGHT_PRE, "pre");
         result.put(HIGHLIGHT_POST, "post");
@@ -111,10 +110,8 @@ public class ControllerHighlightTest extends AbstractControllerTest
             "  <int name=\"QTime\">0</int>\n" +
             "  <lst name=\"params\">\n" +
             "    <str name=\"indent\">on</str>\n" +
-            "    <str name=\"start\">0</str>\n" +
             "    <str name=\"rows\"><![CDATA[0]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
-            "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"hl\"><![CDATA[true]]></str>\n" +
             "    <str name=\"hl.simple.pre\"><![CDATA[pre]]></str>\n" +
             "    <str name=\"hl.simple.post\"><![CDATA[post]]></str>\n" +
@@ -146,10 +143,8 @@ public class ControllerHighlightTest extends AbstractControllerTest
             "    \"QTime\":0,\n" +
             "    \"params\":{\n" +
             "      \"indent\":\"on\",\n" +
-            "      \"start\":\"0\",\n" +
             "      \"rows\":\"0\",\n" +
             "      \"q\":\"title:abc\",\n" +
-            "      \"sort\":\"score\",\n" +
             "      \"hl\":\"true\",\n" +
             "      \"hl.simple.pre\":\"pre\",\n" +
             "      \"hl.simple.post\":\"post\",\n" +
@@ -210,10 +205,9 @@ public class ControllerHighlightTest extends AbstractControllerTest
         fusionRequest.setHighlightQuery(new SolrFusionRequestParam(highlightQueryStr));
         fusionRequest.setHighlightPre(new SolrFusionRequestParam("pre"));
         fusionRequest.setHighlightPost(new SolrFusionRequestParam("post"));
-        fusionRequest.setPageSize(10);
-        fusionRequest.setStart(0);
-        fusionRequest.setSortAsc(false);
-        fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
+        // fusionRequest.setPageSize(10);
+        // fusionRequest.setStart(0);
+        fusionRequest.setSortSpec(new SortSpec(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE, null, false));
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(spyCfg, fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());

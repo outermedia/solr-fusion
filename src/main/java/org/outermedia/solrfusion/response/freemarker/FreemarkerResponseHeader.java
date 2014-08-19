@@ -38,6 +38,10 @@ public class FreemarkerResponseHeader
             rows = docStream.size();
         }
         queryParams.put(PAGE_SIZE.getRequestParamName(), String.valueOf(rows));
+        if (request.getStart().isContainedInRequest())
+        {
+            queryParams.put(START.getRequestParamName(), request.getStart().getValue());
+        }
         String query = request.getQuery().getValue();
         if (query == null)
         {
@@ -45,7 +49,10 @@ public class FreemarkerResponseHeader
         }
         queryParams.put(QUERY.getRequestParamName(), query);
         buildMultiValueParam(request.getFilterQuery(), FILTER_QUERY);
-        addIfNotNull(SORT, request.getSolrFusionSortField());
+        if (request.getSort().isContainedInRequest())
+        {
+            addIfNotNull(SORT, request.getSort().getValue());
+        }
         addIfNotNull(FIELDS_TO_RETURN, request.getFieldsToReturn().getValue());
         addIfNotNull(QUERY_TYPE, request.getQueryType().getValue());
 

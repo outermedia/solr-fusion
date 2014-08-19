@@ -62,8 +62,6 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
         fusionRequest.setFilterQuery(filterQueries);
-        fusionRequest.setSortAsc(false);
-        fusionRequest.setSolrFusionSortField("score");
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error: " + fusionResponse.getErrorMessage(), fusionResponse.isOk());
@@ -116,10 +114,8 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
             "  <int name=\"QTime\">0</int>\n" +
             "  <lst name=\"params\">\n" +
             "    <str name=\"indent\">on</str>\n" +
-            "    <str name=\"start\">0</str>\n" +
             "    <str name=\"rows\"><![CDATA[0]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
-            "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <arr name=\"fq\">\n" +
             "        <str>title:def</str>\n" +
             "    </arr>\n" +
@@ -174,10 +170,6 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam(queryStr));
         fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam(filterQueryStr)));
-        fusionRequest.setPageSize(10);
-        fusionRequest.setStart(0);
-        fusionRequest.setSortAsc(false);
-        fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         fusionRequest.setResponseType(ResponseRendererType.XML);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(spyCfg, fusionRequest, fusionResponse);

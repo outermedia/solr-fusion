@@ -41,7 +41,7 @@ public interface IdGeneratorIfc extends Initiable<IdGeneratorFactory>
      * Split id previously merged by {@link #mergeIds(String, String)}
      *
      * @param mergedIds
-     * @return
+     * @return a perhaps empty list
      */
     public List<String> splitMergedId(String mergedIds);
 

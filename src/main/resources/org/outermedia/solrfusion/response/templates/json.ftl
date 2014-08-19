@@ -3,8 +3,7 @@
     "status":0,
     "QTime":0,
     "params":{
-      "indent":"on",
-      "start":"0",<#list responseHeader.queryParams?keys as key>
+      "indent":"on",<#list responseHeader.queryParams?keys as key>
       "${key}":"${responseHeader.queryParams[key]?json_string}",</#list><#list responseHeader.multiValueQueryParams?keys as key>
       "${key}":[
         <#list responseHeader.multiValueQueryParams[key] as v>"${v?json_string}"<#if v_has_next>,</#if></#list>

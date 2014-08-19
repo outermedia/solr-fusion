@@ -331,14 +331,15 @@ public class SolrFusionServlet extends HttpServlet
         }
         fusionRequest.setLocale(sentLocale);
         SolrFusionRequestParam startParam = getOptionalSingleSearchParamValue(requestParams, START, "0", fusionRequest);
-        fusionRequest.setStartFromString(startParam);
+        fusionRequest.setStart(startParam);
         int defaultPageSize = cfg.getDefaultPageSize();
         SolrFusionRequestParam pageSizeParam = getOptionalSingleSearchParamValue(requestParams, PAGE_SIZE,
             String.valueOf(defaultPageSize), fusionRequest);
-        fusionRequest.setPageSizeFromString(pageSizeParam, defaultPageSize);
+        fusionRequest.setPageSize(pageSizeParam);
         SolrFusionRequestParam sortParam = getOptionalSingleSearchParamValue(requestParams, SORT,
             cfg.getDefaultSortField(), fusionRequest);
-        fusionRequest.setSolrFusionSortingFromString(sortParam);
+        fusionRequest.setSort(sortParam);
+        fusionRequest.setSortSpec(fusionRequest.setSolrFusionSortingFromString(sortParam));
         SolrFusionRequestParam fieldsToReturn = getOptionalSingleSearchParamValue(requestParams, FIELDS_TO_RETURN, null,
             fusionRequest);
         fusionRequest.setFieldsToReturn(fieldsToReturn);
@@ -404,7 +405,7 @@ public class SolrFusionServlet extends HttpServlet
         {
             fusionRequest.addError(
                 buildErrorMessage(ERROR_MSG_FOUND_NO_QUERY_PARAMETER, searchParamName.getRequestParamName()));
-            return new SolrFusionRequestParam(null);
+            return new SolrFusionRequestParam();
         }
         return result;
     }
@@ -416,7 +417,7 @@ public class SolrFusionServlet extends HttpServlet
         SolrFusionRequestParam oneResult = null;
         if (result == null)
         {
-            oneResult = new SolrFusionRequestParam(defaultValue, null);
+            oneResult = new SolrFusionRequestParam(null, defaultValue);
         }
         else if (!result.isEmpty())
         {
@@ -425,7 +426,7 @@ public class SolrFusionServlet extends HttpServlet
                 String requestParamName = searchParamName.getRequestParamName();
                 fusionRequest.addError(
                     buildErrorMessage(ERROR_MSG_FOUND_TOO_MANY_QUERY_PARAMETERS, requestParamName, result.size()));
-                return new SolrFusionRequestParam(null);
+                return new SolrFusionRequestParam();
             }
             oneResult = result.get(0);
         }
@@ -447,7 +448,7 @@ public class SolrFusionServlet extends HttpServlet
                     String[] params = rp.getValue();
                     for (int i = 0; i < params.length; i++)
                     {
-                        result.add(new SolrFusionRequestParam(params[i], patternValue));
+                        result.add(new SolrFusionRequestParam(params[i], patternValue, null));
                     }
                 }
             }
@@ -464,7 +465,7 @@ public class SolrFusionServlet extends HttpServlet
                 result = new ArrayList<>();
                 for (int i = 0; i < params.length; i++)
                 {
-                    result.add(new SolrFusionRequestParam(params[i], null));
+                    result.add(new SolrFusionRequestParam(params[i], null, null));
                 }
             }
         }

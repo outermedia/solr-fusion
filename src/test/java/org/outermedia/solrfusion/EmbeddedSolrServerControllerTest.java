@@ -98,10 +98,8 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "  <int name=\"QTime\">0</int>\n" +
             "  <lst name=\"params\">\n" +
             "    <str name=\"indent\">on</str>\n" +
-            "    <str name=\"start\">0</str>\n" +
             "    <str name=\"rows\"><![CDATA[0]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:xyz]]></str>\n" +
-            "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"fl\"><![CDATA[id title score]]></str>\n" +
             "    <arr name=\"fq\">\n" +
             "        <str>title:XYZ</str>\n" +
@@ -115,11 +113,11 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "</response>";
         Assert.assertEquals("Found different xml response", expectedXml, xml.trim());
         verify(testAdapter9000, times(1)).sendQuery(
-            buildMap(QUERY, "title:xyz", FILTER_QUERY, "title:XYZ", PAGE_SIZE, "10", START, "0", SORT, "score desc",
-                FIELDS_TO_RETURN, "id title score", WRITER_TYPE, "xml"), 4000, "3.6");
+            buildMap(QUERY, "title:xyz", FILTER_QUERY, "title:XYZ", FIELDS_TO_RETURN, "id title score", WRITER_TYPE,
+                "xml"), 4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
-            buildMap(QUERY, "titleVT_eng:xyz", FILTER_QUERY, "titleVT_eng:XYZ", PAGE_SIZE, "10", START, "0", SORT,
-                "score desc", FIELDS_TO_RETURN, "id titleVT_de titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
+            buildMap(QUERY, "titleVT_eng:xyz", FILTER_QUERY, "titleVT_eng:XYZ", FIELDS_TO_RETURN,
+                "id titleVT_de titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
     }
 
     protected Multimap<String> buildMap(Object... v)
@@ -146,10 +144,8 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "  <int name=\"QTime\">0</int>\n" +
             "  <lst name=\"params\">\n" +
             "    <str name=\"indent\">on</str>\n" +
-            "    <str name=\"start\">0</str>\n" +
             "    <str name=\"rows\"><![CDATA[2]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
-            "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"fl\"><![CDATA[id title score]]></str>\n" +
             "    <arr name=\"fq\">\n" +
             "        <str>title:abc</str>\n" +
@@ -174,11 +170,11 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
 
         Assert.assertEquals("Found different xml response", expected, xml.trim());
         verify(testAdapter9000, times(1)).sendQuery(
-            buildMap(QUERY, "title:abc", FILTER_QUERY, "title:abc", PAGE_SIZE, "10", START, "0", SORT, "score desc",
-                FIELDS_TO_RETURN, "id title score", WRITER_TYPE, "xml"), 4000, "3.6");
+            buildMap(QUERY, "title:abc", FILTER_QUERY, "title:abc", FIELDS_TO_RETURN, "id title score", WRITER_TYPE,
+                "xml"), 4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
-            buildMap(QUERY, "titleVT_eng:abc", FILTER_QUERY, "titleVT_eng:abc", PAGE_SIZE, "10", START, "0", SORT,
-                "score desc", FIELDS_TO_RETURN, "id titleVT_de titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
+            buildMap(QUERY, "titleVT_eng:abc", FILTER_QUERY, "titleVT_eng:abc", FIELDS_TO_RETURN,
+                "id titleVT_de titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
     }
 
     protected String testMultipleServers(String queryStr, String filterQueryStr)
@@ -212,16 +208,10 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         fusionRequest.setQuery(new SolrFusionRequestParam(queryStr));
         fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam(filterQueryStr)));
         fusionRequest.setResponseType(ResponseRendererType.XML);
-        fusionRequest.setStart(0);
-        fusionRequest.setPageSize(10);
-        fusionRequest.setSortAsc(false);
-        fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
-        fusionRequest.setFieldsToReturn(
-            new SolrFusionRequestParam("id title " + fusionRequest.getSolrFusionSortField()));
+        fusionRequest.setFieldsToReturn(new SolrFusionRequestParam("id title " + fusionRequest.getFusionSortField()));
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(spyCfg, fusionRequest, fusionResponse);
-        System.out.println("RESPONSE " + fusionResponse.getErrorMessage());
-        Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
+        Assert.assertTrue("Expected no processing error: " + fusionResponse.getErrorMessage(), fusionResponse.isOk());
 
         String result = fusionResponse.getResponseAsString();
         Assert.assertNotNull("Expected XML result, but got nothing", result);

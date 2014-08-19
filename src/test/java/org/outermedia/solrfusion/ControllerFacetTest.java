@@ -38,22 +38,20 @@ public class ControllerFacetTest extends AbstractControllerTest
     {
         FusionControllerIfc fc = createTestFusionController("test-query-mapper-fusion-schema.xml");
         FusionRequest fusionRequest = new FusionRequest();
-        fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen"));
-        fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam("author:Goethe -title:tomorrow")));
-        fusionRequest.setSortAsc(false);
-        fusionRequest.setSolrFusionSortField("score");
-        fusionRequest.setFacet(new SolrFusionRequestParam("true"));
-        fusionRequest.setFacetPrefix(new SolrFusionRequestParam("p1"));
-        fusionRequest.setFacetMincount(new SolrFusionRequestParam("2"));
-        fusionRequest.setFacetLimit(new SolrFusionRequestParam("20"));
-        fusionRequest.setFacetSort(new SolrFusionRequestParam("index"));
+        fusionRequest.setQuery(new SolrFusionRequestParam("author:Schiller -title:morgen", null));
+        fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam("author:Goethe -title:tomorrow", null)));
+        fusionRequest.setFacet(new SolrFusionRequestParam("true", null));
+        fusionRequest.setFacetPrefix(new SolrFusionRequestParam("p1", null));
+        fusionRequest.setFacetMincount(new SolrFusionRequestParam("2", null));
+        fusionRequest.setFacetLimit(new SolrFusionRequestParam("20", null));
+        fusionRequest.setFacetSort(new SolrFusionRequestParam("index", null));
         List<SolrFusionRequestParam> facetFields = new ArrayList<>();
-        facetFields.add(new SolrFusionRequestParam("{!ex=format_filter}format"));
-        facetFields.add(new SolrFusionRequestParam("access_facet"));
+        facetFields.add(new SolrFusionRequestParam("{!ex=format_filter}format", null));
+        facetFields.add(new SolrFusionRequestParam("access_facet", null));
         fusionRequest.setFacetFields(facetFields);
         List<SolrFusionRequestParam> facetSortFields = new ArrayList<>();
-        facetSortFields.add(new SolrFusionRequestParam("index1", "finc_class_facet"));
-        facetSortFields.add(new SolrFusionRequestParam("index2", "format"));
+        facetSortFields.add(new SolrFusionRequestParam("index1", "finc_class_facet", null));
+        facetSortFields.add(new SolrFusionRequestParam("index2", "format", null));
         fusionRequest.setFacetSortFields(facetSortFields);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(cfg, fusionRequest, fusionResponse);
@@ -64,7 +62,7 @@ public class ControllerFacetTest extends AbstractControllerTest
     protected Multimap<String> buildParams(String q, String title1, String title2, String author, String responseFormat)
     {
         Multimap<String> result = super.buildParams(q, null);
-        result.set(FIELDS_TO_RETURN, "* score");
+        result.set(FIELDS_TO_RETURN, "* score id");
         result.put(FACET, "true");
         result.put(FACET_PREFIX, "p1");
         result.put(FACET_MINCOUNT, "2");
@@ -98,10 +96,8 @@ public class ControllerFacetTest extends AbstractControllerTest
             "  <int name=\"QTime\">0</int>\n" +
             "  <lst name=\"params\">\n" +
             "    <str name=\"indent\">on</str>\n" +
-            "    <str name=\"start\">0</str>\n" +
             "    <str name=\"rows\"><![CDATA[0]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
-            "    <str name=\"sort\"><![CDATA[score]]></str>\n" +
             "    <str name=\"facet\"><![CDATA[true]]></str>\n" +
             "    <str name=\"facet.limit\"><![CDATA[20]]></str>\n" +
             "    <str name=\"facet.mincount\"><![CDATA[2]]></str>\n" +
@@ -141,10 +137,8 @@ public class ControllerFacetTest extends AbstractControllerTest
             "    \"QTime\":0,\n" +
             "    \"params\":{\n" +
             "      \"indent\":\"on\",\n" +
-            "      \"start\":\"0\",\n" +
             "      \"rows\":\"0\",\n" +
             "      \"q\":\"title:abc\",\n" +
-            "      \"sort\":\"score\",\n" +
             "      \"facet\":\"true\",\n" +
             "      \"facet.limit\":\"20\",\n" +
             "      \"facet.mincount\":\"2\",\n" +
@@ -204,25 +198,21 @@ public class ControllerFacetTest extends AbstractControllerTest
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
         fusionRequest.setResponseType(format);
-        fusionRequest.setQuery(new SolrFusionRequestParam(queryStr));
-        fusionRequest.setFacet(new SolrFusionRequestParam("true"));
-        fusionRequest.setFacetPrefix(new SolrFusionRequestParam("p1"));
-        fusionRequest.setFacetMincount(new SolrFusionRequestParam("2"));
-        fusionRequest.setFacetLimit(new SolrFusionRequestParam("20"));
-        fusionRequest.setFacetSort(new SolrFusionRequestParam("index"));
+        fusionRequest.setQuery(new SolrFusionRequestParam(queryStr, null));
+        fusionRequest.setFacet(new SolrFusionRequestParam("true", null));
+        fusionRequest.setFacetPrefix(new SolrFusionRequestParam("p1", null));
+        fusionRequest.setFacetMincount(new SolrFusionRequestParam("2", null));
+        fusionRequest.setFacetLimit(new SolrFusionRequestParam("20", null));
+        fusionRequest.setFacetSort(new SolrFusionRequestParam("index", null));
         List<SolrFusionRequestParam> facetFields = new ArrayList<>();
-        facetFields.add(new SolrFusionRequestParam("{!ex=format_filter}title"));
-        facetFields.add(new SolrFusionRequestParam("author"));
+        facetFields.add(new SolrFusionRequestParam("{!ex=format_filter}title", null));
+        facetFields.add(new SolrFusionRequestParam("author", null));
         fusionRequest.setFacetFields(facetFields);
         List<SolrFusionRequestParam> facetSortFields = new ArrayList<>();
-        facetSortFields.add(new SolrFusionRequestParam("index1", "title"));
-        facetSortFields.add(new SolrFusionRequestParam("index2", "author"));
+        facetSortFields.add(new SolrFusionRequestParam("index1", "title", null));
+        facetSortFields.add(new SolrFusionRequestParam("index2", "author", null));
         fusionRequest.setFacetSortFields(facetSortFields);
-        fusionRequest.setPageSize(10);
-        fusionRequest.setStart(0);
-        fusionRequest.setSortAsc(false);
         fusionRequest.setFilterQuery(filterQueries);
-        fusionRequest.setSolrFusionSortField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE);
         FusionResponse fusionResponse = new FusionResponse();
         fc.process(spyCfg, fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
@@ -240,8 +230,8 @@ public class ControllerFacetTest extends AbstractControllerTest
     {
         String xml = testMultipleServers("title:abc", "target/test-classes/test-schiller-9000.xml",
             "target/test-classes/test-schiller-9001.xml", ResponseRendererType.JSON, "fusion-schema-uni-leipzig.xml",
-            Arrays.asList(new SolrFusionRequestParam("authorized_mode:\"false\""),
-                new SolrFusionRequestParam("{!tag=format_filter}(format:\"BluRayDisc\")")));
+            Arrays.asList(new SolrFusionRequestParam("authorized_mode:\"false\"", null),
+                new SolrFusionRequestParam("{!tag=format_filter}(format:\"BluRayDisc\")", null)));
         Multimap<String> expectedParams = buildParams("title:abc", "title", "title", "author", "xml");
         expectedParams.put(FILTER_QUERY, "format:\"BluRayDisc\"");
         verify(testAdapter9000, times(1)).sendQuery(expectedParams, 4000, "3.5");

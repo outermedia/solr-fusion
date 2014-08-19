@@ -3,9 +3,7 @@ package org.outermedia.solrfusion.response;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.outermedia.solrfusion.FusionRequest;
-import org.outermedia.solrfusion.IdGeneratorIfc;
-import org.outermedia.solrfusion.TestHelper;
+import org.outermedia.solrfusion.*;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
@@ -112,10 +110,9 @@ public class PagingResponseConsolidatorTest
         throws InvocationTargetException, IllegalAccessException
     {
         FusionRequest fusionRequest = new FusionRequest();
-        fusionRequest.setSolrFusionSortField("title");
-        fusionRequest.setStart(start);
-        fusionRequest.setPageSize(pageSize);
-        fusionRequest.setSortAsc(sortAsc);
+        fusionRequest.setSortSpec(new SortSpec("title", null, sortAsc));
+        fusionRequest.setStart(new SolrFusionRequestParam(String.valueOf(start)));
+        fusionRequest.setPageSize(new SolrFusionRequestParam(String.valueOf(pageSize)));
         ClosableIterator<Document, SearchServerResponseInfo> docIt = consolidator.getResponseIterator(fusionRequest);
         return collectTitles(docIt);
     }

@@ -149,6 +149,7 @@
     <om:script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh"/>
     <om:script-type name="merge-multi-value" class="org.outermedia.solrfusion.types.MultiValueMerger"/>
     <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
+    <om:script-type name="filter-id" class="org.outermedia.solrfusion.types.IdFilter"/>
 
     <om:default-search-field>allfields</om:default-search-field>
 
@@ -224,7 +225,11 @@
             <om:max-docs>30</om:max-docs>
 
             <om:field name="recordtype" fusion-name="recordtype"/>
-            <om:field name="id" fusion-name="id"/>
+            <om:field name="id" fusion-name="id">
+                <om:change>
+                    <om:query type="filter-id" />
+                </om:change>
+            </om:field>
             <om:field name="mrc0007" fusion-name="mrc0007"/>
             <om:field name="mrc0070" fusion-name="mrc0070"/>
             <om:field name="fullrecord" fusion-name="fullrecord"/>
@@ -618,6 +623,9 @@
                 </om:drop>
             </om:field>
             <om:field name="id" fusion-name="id">
+                <om:change>
+                    <om:query type="filter-id" />
+                </om:change>
             </om:field>
             <om:field fusion-name="illustrated">
                 <om:drop>
@@ -921,7 +929,11 @@
 
             <om:max-docs>30</om:max-docs>
 
-            <om:field name="id" fusion-name="id"/>
+            <om:field name="id" fusion-name="id">
+                <om:change>
+                    <om:query type="filter-id" />
+                </om:change>
+            </om:field>
             <om:field name="dbName" fusion-name="mega_collection"/>
 
             <om:field name="content" fusion-name="allfields">

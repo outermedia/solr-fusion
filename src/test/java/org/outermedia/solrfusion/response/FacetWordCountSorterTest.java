@@ -31,7 +31,7 @@ public class FacetWordCountSorterTest
         Map<String, Map<String, Integer>> facets = buildFacets("b", 2, "a", 3, "c", 1);
         FusionRequest req = new FusionRequest();
         // limit > 0 enables sorting by count
-        req.setFacetLimit(new SolrFusionRequestParam("20"));
+        req.setFacetLimit(new SolrFusionRequestParam("20", null));
         Map<String, List<WordCount>> sortedFacets = new FacetWordCountSorter().sort(facets, req);
         // System.out.println("SF " + sortedFacets);
         Map<String, List<WordCount>> expected = buildSortedFacets("a", 3, "b", 2, "c", 1);
@@ -43,9 +43,9 @@ public class FacetWordCountSorterTest
     {
         Map<String, Map<String, Integer>> facets = buildFacets("b", 2, "a", 3, "c", 1);
         FusionRequest req = new FusionRequest();
-        req.setFacetLimit(new SolrFusionRequestParam("20"));
+        req.setFacetLimit(new SolrFusionRequestParam("20", null));
         // global sorting overwrites defaul sorting
-        req.setFacetSort(new SolrFusionRequestParam("count"));
+        req.setFacetSort(new SolrFusionRequestParam("count", null));
         Map<String, List<WordCount>> sortedFacets = new FacetWordCountSorter().sort(facets, req);
         // System.out.println("SF " + sortedFacets);
         Map<String, List<WordCount>> expected = buildSortedFacets("a", 3, "b", 2, "c", 1);
@@ -57,9 +57,9 @@ public class FacetWordCountSorterTest
     {
         Map<String, Map<String, Integer>> facets = buildFacets("b", 2, "a", 1, "c", 3);
         FusionRequest req = new FusionRequest();
-        req.setFacetLimit(new SolrFusionRequestParam("20"));
+        req.setFacetLimit(new SolrFusionRequestParam("20", null));
         // global sorting overwrites defaul sorting
-        req.setFacetSort(new SolrFusionRequestParam("index"));
+        req.setFacetSort(new SolrFusionRequestParam("index", null));
         Map<String, List<WordCount>> sortedFacets = new FacetWordCountSorter().sort(facets, req);
         // System.out.println("SF " + sortedFacets);
         Map<String, List<WordCount>> expected = buildSortedFacets("a", 1, "b", 2, "c", 3);
@@ -71,10 +71,10 @@ public class FacetWordCountSorterTest
     {
         Map<String, Map<String, Integer>> facets = buildFacets("b", 2, "a", 3, "c", 1);
         FusionRequest req = new FusionRequest();
-        req.setFacetLimit(new SolrFusionRequestParam("20"));
-        req.setFacetSort(new SolrFusionRequestParam("index"));
+        req.setFacetLimit(new SolrFusionRequestParam("20", null));
+        req.setFacetSort(new SolrFusionRequestParam("index", null));
         // field sorting overwrites global index sorting
-        req.setFacetSortFields(Arrays.asList(new SolrFusionRequestParam("count", "any")));
+        req.setFacetSortFields(Arrays.asList(new SolrFusionRequestParam("count", "any", null)));
         Map<String, List<WordCount>> sortedFacets = new FacetWordCountSorter().sort(facets, req);
         // System.out.println("SF " + sortedFacets);
         Map<String, List<WordCount>> expected = buildSortedFacets("a", 3, "b", 2, "c", 1);

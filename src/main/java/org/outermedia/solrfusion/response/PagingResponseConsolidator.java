@@ -222,7 +222,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
     @Override public ClosableIterator<Document, SearchServerResponseInfo> getResponseIterator(
         FusionRequest fusionRequest) throws InvocationTargetException, IllegalAccessException
     {
-        String fusionSortField = fusionRequest.getSolrFusionSortField();
+        String fusionSortField = fusionRequest.getFusionSortField();
         MultiKeyAndValueMap<String, Document> docLookup = null;
 
         // merge all docs (at least id is merged)
@@ -251,11 +251,14 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
 
         // get docs of page
         List<Document> docsOfPage = new ArrayList<>();
-        int start = fusionRequest.getStart();
+        int start = fusionRequest.getStart().getValueAsInt(0);
         final IdGeneratorIfc idGenerator = config.getIdGenerator();
         final String fusionIdField = idGenerator.getFusionIdField();
         Map<String, Document> highlighting = new HashMap<>();
-        for (int i = 0; i < fusionRequest.getPageSize() && (i + start) < allDocs.size(); i++)
+        for (
+            int i = 0;
+            i < fusionRequest.getPageSize().getValueAsInt(allDocs.size()) && (i + start) < allDocs.size(); i++
+            )
         {
             Document d = allDocs.get(start + i);
             // id was mapped too when sort field was mapped
@@ -365,7 +368,8 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         }
         if (merger != null)
         {
-            result = merger.mergeDocuments(merger.getFusionField(), config, sameDocuments, allHighlighting, highlighting);
+            result = merger.mergeDocuments(merger.getFusionField(), config, sameDocuments, allHighlighting,
+                highlighting);
         }
         else
         {

@@ -341,16 +341,16 @@ public class SolrFusionServletTest
         Map<String, String[]> requestParams = new HashMap<>();
         requestParams.put("q", new String[]{"*:*"});
         FusionRequest fusionRequest = servlet.buildFusionRequest(requestParams, headerValues);
-        Assert.assertEquals("Expected other start value", 0, fusionRequest.getStart());
-        Assert.assertEquals("Expected other rows value", searchConfig.getDefaultPageSize(),
-            fusionRequest.getPageSize());
-        Assert.assertEquals("Expected other sort field", "auto", fusionRequest.getSolrFusionSortField());
+        Assert.assertEquals("Expected other start value", "0", fusionRequest.getStart().getValue());
+        Assert.assertEquals("Expected other rows value", String.valueOf(searchConfig.getDefaultPageSize()),
+            fusionRequest.getPageSize().getValue());
+        Assert.assertEquals("Expected other sort field", "auto", fusionRequest.getFusionSortField());
         Assert.assertTrue("Expected other sort dir", fusionRequest.isSortAsc());
 
         // check desc sort direction
         cfg.setDefaultSortField("mobile desc");
         fusionRequest = servlet.buildFusionRequest(requestParams, headerValues);
-        Assert.assertEquals("Expected other sort field", "mobile", fusionRequest.getSolrFusionSortField());
+        Assert.assertEquals("Expected other sort field", "mobile", fusionRequest.getFusionSortField());
         Assert.assertFalse("Expected other sort dir", fusionRequest.isSortAsc());
     }
 

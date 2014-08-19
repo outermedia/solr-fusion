@@ -53,10 +53,7 @@ public class AbstractControllerTest
         {
             result.put(FILTER_QUERY, fq);
         }
-        result.put(PAGE_SIZE, "10");
-        result.put(START, "0");
-        result.put(SORT, "score desc");
-        result.put(FIELDS_TO_RETURN, "* score");
+        result.put(FIELDS_TO_RETURN, "* score id");
         result.put(WRITER_TYPE, "xml");
         return result;
     }

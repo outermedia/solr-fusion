@@ -27,14 +27,13 @@ public class FusionRequest
 {
     private SolrFusionRequestParam query;
     private List<SolrFusionRequestParam> filterQuery;
-    private int start;
-    private int pageSize;
+    private SolrFusionRequestParam start;
+    private SolrFusionRequestParam pageSize;
     private Locale locale;
     private Query parsedQuery;
     private List<Query> parsedFilterQuery;
     private ResponseRendererType responseType;
-    private String solrFusionSortField;
-    private String searchServerSortField;
+    private SolrFusionRequestParam sort;
     private SolrFusionRequestParam fieldsToReturn;
     private SolrFusionRequestParam queryType;
 
@@ -53,8 +52,7 @@ public class FusionRequest
     private List<SolrFusionRequestParam> facetFields;
     private List<SolrFusionRequestParam> facetSortFields;
 
-    // otherwise desc
-    private boolean sortAsc;
+    private SortSpec sortSpec;
 
     private List<String> errors;
 
@@ -63,22 +61,26 @@ public class FusionRequest
 
     public FusionRequest()
     {
+        start = new SolrFusionRequestParam();
+        pageSize = new SolrFusionRequestParam();
+        sort = new SolrFusionRequestParam();
         responseType = ResponseRendererType.JSON;
         errors = new ArrayList<>();
-        query = new SolrFusionRequestParam(null);
+        query = new SolrFusionRequestParam();
         filterQuery = new ArrayList<>();
-        fieldsToReturn = new SolrFusionRequestParam(null);
-        highlightingFieldsToReturn = new SolrFusionRequestParam(null);
-        highlightQuery = new SolrFusionRequestParam(null);
-        highlightPre = new SolrFusionRequestParam(null);
-        highlightPost = new SolrFusionRequestParam(null);
-        highlight = new SolrFusionRequestParam(null);
-        facet = new SolrFusionRequestParam(null);
-        facetMincount = new SolrFusionRequestParam(null);
-        facetLimit = new SolrFusionRequestParam(null);
-        facetSort = new SolrFusionRequestParam(null);
-        facetPrefix = new SolrFusionRequestParam(null);
-        queryType = new SolrFusionRequestParam(null);
+        fieldsToReturn = new SolrFusionRequestParam();
+        highlightingFieldsToReturn = new SolrFusionRequestParam();
+        highlightQuery = new SolrFusionRequestParam();
+        highlightPre = new SolrFusionRequestParam();
+        highlightPost = new SolrFusionRequestParam();
+        highlight = new SolrFusionRequestParam();
+        facet = new SolrFusionRequestParam();
+        facetMincount = new SolrFusionRequestParam();
+        facetLimit = new SolrFusionRequestParam();
+        facetSort = new SolrFusionRequestParam();
+        facetPrefix = new SolrFusionRequestParam();
+        queryType = new SolrFusionRequestParam();
+        sortSpec = new SortSpec(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE, null, false);
     }
 
     public Map<String, Float> getBoosts()
@@ -108,12 +110,11 @@ public class FusionRequest
     }
 
     public Multimap<String> buildSearchServerQueryParams(Configuration configuration,
-        SearchServerConfig searchServerConfig, boolean isIdQuery)
-        throws InvocationTargetException, IllegalAccessException
+        SearchServerConfig searchServerConfig) throws InvocationTargetException, IllegalAccessException
     {
         Multimap<String> searchServerParams = new Multimap();
 
-        buildCoreSearchServerQueryParams(configuration, searchServerConfig, searchServerParams, isIdQuery);
+        buildCoreSearchServerQueryParams(configuration, searchServerConfig, searchServerParams);
 
         buildHighlightSearchServerQueryParams(configuration, searchServerConfig, searchServerParams);
 
@@ -178,60 +179,83 @@ public class FusionRequest
     }
 
     protected void buildCoreSearchServerQueryParams(Configuration configuration, SearchServerConfig searchServerConfig,
-        Multimap<String> searchServerParams, boolean isIdQuery) throws InvocationTargetException, IllegalAccessException
+        Multimap<String> searchServerParams) throws InvocationTargetException, IllegalAccessException
     {
         buildSearchServerQuery(parsedQuery, QUERY, configuration, searchServerConfig, searchServerParams);
-        if(!isIdQuery)
+        buildSearchServerQuery(parsedFilterQuery, FILTER_QUERY, configuration, searchServerConfig, searchServerParams);
+        buildSearchServerQuery(parsedHighlightQuery, HIGHLIGHT_QUERY, configuration, searchServerConfig,
+            searchServerParams);
+        // get all documents from 0..min(MAXDOCS,start+page size)
+        addIfContained(searchServerParams, START, start, null);
+        if (pageSize.isContainedInRequest())
         {
-            buildSearchServerQuery(parsedFilterQuery, FILTER_QUERY, configuration, searchServerConfig,
-                searchServerParams);
-            buildSearchServerQuery(parsedHighlightQuery, HIGHLIGHT_QUERY, configuration, searchServerConfig,
-                searchServerParams);
-            // get all documents from 0..min(MAXDOCS,start+page size)
-            searchServerParams.put(START, String.valueOf(0));
-            int rows = Math.min(searchServerConfig.getMaxDocs(), getStart() + getPageSize());
+            int rows = Math.min(searchServerConfig.getMaxDocs(),
+                getStart().getValueAsInt(0) + getPageSize().getValueAsInt(30));
             searchServerParams.put(PAGE_SIZE, String.valueOf(rows));
-            // TODO handle 1:n mapping i.e. 1 solrfusion field is mapped to several search server fields?
-            // does it mean to sort by several search server fields?
-            Set<String> searchServerFieldSet = mapFusionFieldToSearchServerField(getSolrFusionSortField(), configuration,
-                searchServerConfig, ResponseMapperIfc.DOC_FIELD_NAME_SCORE);
+        }
+        String solrFusionSortField = ResponseMapperIfc.DOC_FIELD_NAME_SCORE;
+        // TODO handle 1:n mapping i.e. 1 solrfusion field is mapped to several search server fields?
+        // does it mean to sort by several search server fields?
+        if (sort.getValue() != null)
+        {
+            sortSpec = setSolrFusionSortingFromString(sort);
+            Set<String> searchServerFieldSet = mapFusionFieldToSearchServerField(sortSpec.getFusionSortField(),
+                configuration, searchServerConfig, ResponseMapperIfc.DOC_FIELD_NAME_SCORE);
+
             if (searchServerFieldSet.isEmpty())
             {
-                log.error("Found not mapping for sort field '{}'", getSolrFusionSortField());
+                log.error("Found not mapping for sort field '{}'", sortSpec.getFusionSortField());
             }
             String searchServerSortField = searchServerFieldSet.iterator().next();
             if (searchServerFieldSet.size() > 1)
             {
-                log.error("Found ambiguous mapping for sort field '{}'. Using: {}", getSolrFusionSortField(),
+                log.error("Found ambiguous mapping for sort field '{}'. Using: {}", sortSpec.getFusionSortField(),
                     searchServerSortField);
             }
-            setSearchServerSortField(searchServerSortField);
-            searchServerParams.put(SORT, searchServerSortField + (isSortAsc() ? " asc" : " desc"));
+            sortSpec.setSearchServerSortField(searchServerSortField);
+            if (sort.isContainedInRequest())
+            {
+                searchServerParams.put(SORT, searchServerSortField + (sortSpec.isSortAsc() ? " asc" : " desc"));
+            }
         }
         String fusionFieldsToReturn = fieldsToReturn.getValue();
         if (fusionFieldsToReturn == null)
         {
             fusionFieldsToReturn = "*";
         }
-        fusionFieldsToReturn += " " + getSolrFusionSortField();
+        fusionFieldsToReturn += " " + solrFusionSortField;
         // TODO still necessary when highlighting is supported?
         if (highlightingFieldsToReturn.getValue() != null)
         {
             fusionFieldsToReturn += " " + highlightingFieldsToReturn.getValue();
         }
         String fieldsToReturn = mapFusionFieldListToSearchServerField(fusionFieldsToReturn, configuration,
-            searchServerConfig, null);
+            searchServerConfig, null, true);
         searchServerParams.put(FIELDS_TO_RETURN, fieldsToReturn);
         searchServerParams.put(QUERY_TYPE, queryType);
         // solrfusion wants always xml
         searchServerParams.put(WRITER_TYPE, "xml");
     }
 
+    protected void addIfContained(Multimap<String> searchServerParams, SolrFusionRequestParams param,
+        SolrFusionRequestParam sp, String newValue)
+    {
+        if (sp.isContainedInRequest())
+        {
+            String value = sp.getValue();
+            if (newValue != null)
+            {
+                value = newValue;
+            }
+            searchServerParams.put(param, value);
+        }
+    }
+
     protected void buildHighlightSearchServerQueryParams(Configuration configuration,
         SearchServerConfig searchServerConfig, Multimap<String> searchServerParams)
     {
         String hlFieldsToReturn = mapFusionFieldListToSearchServerField(highlightingFieldsToReturn.getValue(),
-            configuration, searchServerConfig, null);
+            configuration, searchServerConfig, null, false);
         if (hlFieldsToReturn.length() > 0)
         {
             searchServerParams.put(HIGHLIGHT_FIELDS_TO_RETURN, hlFieldsToReturn);
@@ -242,15 +266,17 @@ public class FusionRequest
     }
 
     /**
-     * Map a list of fusion field names to a list of search server fields.
+     * Map a list of fusion field names to a list of search server fields. The search server's id field is automatically
+     * added.
      *
      * @param fieldList          separated by SPACE or comma or combinations of them
      * @param configuration
      * @param searchServerConfig
+     * @param addIdField
      * @return a string of field names separated by SPACE
      */
     protected String mapFusionFieldListToSearchServerField(String fieldList, Configuration configuration,
-        SearchServerConfig searchServerConfig, String defaultSearchServerField)
+        SearchServerConfig searchServerConfig, String defaultSearchServerField, boolean addIdField)
     {
         // preserve insertion order
         Set<String> fieldSet = new LinkedHashSet<>();
@@ -277,6 +303,12 @@ public class FusionRequest
                 }
             }
         }
+
+        if(addIdField)
+        {
+            fieldSet.add(searchServerConfig.getIdFieldName());
+        }
+
         StringBuilder sb = new StringBuilder();
         for (String s : fieldSet)
         {
@@ -435,25 +467,14 @@ public class FusionRequest
         return sb.toString();
     }
 
-    public void setStartFromString(SolrFusionRequestParam startParam)
-    {
-        start = parseInt(startParam.getValue(), 0);
-    }
-
-    public void setPageSizeFromString(SolrFusionRequestParam pageSizeParam, int defaultPageSize)
-    {
-        pageSize = parseInt(pageSizeParam.getValue(), defaultPageSize);
-    }
-
-    public void setSolrFusionSortingFromString(SolrFusionRequestParam sortParam)
+    public SortSpec setSolrFusionSortingFromString(SolrFusionRequestParam sortParam)
     {
         String sortStr = sortParam.getValue();
         // "<SPACE> desc" in the case a field's name contains "desc" too
         // because sortStr is trimmed a single "desc" would be treated right
         boolean sortAsc = !sortStr.contains(" desc");
         StringTokenizer st = new StringTokenizer(sortStr, " ");
-        setSolrFusionSortField(st.nextToken());
-        setSortAsc(sortAsc);
+        return new SortSpec(st.nextToken(), null, sortAsc);
     }
 
     protected int parseInt(String s, int defaultValue)
@@ -552,5 +573,35 @@ public class FusionRequest
             }
         }
         return result;
+    }
+
+    public String getFusionSortField()
+    {
+        return sortSpec.getFusionSortField();
+    }
+
+    public void setFusionSortField(String s)
+    {
+        sortSpec.setFusionSortField(s);
+    }
+
+    public String getSearchServerSortField()
+    {
+        return sortSpec.getSearchServerSortField();
+    }
+
+    public void setSearchServerSortField(String s)
+    {
+        sortSpec.setSearchServerSortField(s);
+    }
+
+    public boolean isSortAsc()
+    {
+        return sortSpec.isSortAsc();
+    }
+
+    public void setSortAsc(boolean sortAsc)
+    {
+        sortSpec.setSortAsc(sortAsc);
     }
 }

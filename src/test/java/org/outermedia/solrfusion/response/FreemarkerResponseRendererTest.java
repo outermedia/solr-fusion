@@ -74,6 +74,8 @@ public class FreemarkerResponseRendererTest
 
         FusionRequest req = new FusionRequest();
         req.setQuery(new SolrFusionRequestParam("steak"));
+        req.setSort(new SolrFusionRequestParam("title asc"));
+        req.setStart(new SolrFusionRequestParam("7"));
         String xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, req, new FusionResponse());
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
         Assert.assertFalse("xml response should not contain filter query in header",
@@ -81,13 +83,17 @@ public class FreemarkerResponseRendererTest
 
         req.setFilterQuery(Arrays.asList(new SolrFusionRequestParam("salat"), new SolrFusionRequestParam("tomato")));
         xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, req, new FusionResponse());
-        System.out.println(xmlResponse);
+        // System.out.println(xmlResponse);
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
         Assert.assertTrue("xml response should contain filter query in header",
             xmlResponse.contains("<arr name=\"fq\">\n" +
                 "        <str>salat</str>\n" +
                 "        <str>tomato</str>\n" +
                 "    </arr>"));
+        Assert.assertTrue("Expected to find start in header",
+            xmlResponse.contains("<str name=\"start\"><![CDATA[7]]></str>"));
+        Assert.assertTrue("Expected to find sort in header",
+            xmlResponse.contains("<str name=\"sort\"><![CDATA[title asc]]></str>"));
     }
 
     @Test
@@ -136,7 +142,7 @@ public class FreemarkerResponseRendererTest
             jsonResponse = gson.toJson(el); // done
 //            System.out.println(jsonResponse);
 
-            String expected = "{\"responseHeader\":{\"status\":0,\"QTime\":0,\"params\":{\"indent\":\"on\",\"start\":\"0\",\"rows\":\"1\",\"q\":\"Shakespeares\",\"wt\":\"json\",\"version\":\"2.2\"}},\"response\":{\"numFound\":1,\"start\":0,\"docs\":[{\"singlevalueAsMultivalue\":[\"Shakespeare\"],\"multivalueAsMultivalueWithOneValue\":[\"Poe\"],\"multivalueAsMultivalueWithTwoValue\":[\"Poe\",\"Morgenstern\"],\"singlevalueAsSingleValue\":\"Shakespeare\",\"multivalueAsSinglevalueWithOneValue\":\"Poe\"}]}}";
+            String expected = "{\"responseHeader\":{\"status\":0,\"QTime\":0,\"params\":{\"indent\":\"on\",\"rows\":\"1\",\"q\":\"Shakespeares\",\"wt\":\"json\",\"version\":\"2.2\"}},\"response\":{\"numFound\":1,\"start\":0,\"docs\":[{\"singlevalueAsMultivalue\":[\"Shakespeare\"],\"multivalueAsMultivalueWithOneValue\":[\"Poe\"],\"multivalueAsMultivalueWithTwoValue\":[\"Poe\",\"Morgenstern\"],\"singlevalueAsSingleValue\":\"Shakespeare\",\"multivalueAsSinglevalueWithOneValue\":\"Poe\"}]}}";
             Assert.assertEquals("Got different json response than expected", expected, jsonResponse);
 
         }
@@ -249,6 +255,11 @@ public class FreemarkerResponseRendererTest
             "    </lst>";
         Assert.assertTrue("Didn't find multiple highlights of doc id UBL_0007822387",
             xmlResponse.contains(expectedMultipleHighlight));
+
+        Assert.assertFalse("Expected not to find start in header",
+            xmlResponse.contains("<str name=\"start\">"));
+        Assert.assertFalse("Expected to find sort in header",
+            xmlResponse.contains("<str name=\"sort\">"));
     }
 
     // fill fusionHighlights from mapped searchServerHighlights (avoids usage of controller)
