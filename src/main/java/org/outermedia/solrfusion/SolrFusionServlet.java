@@ -40,12 +40,15 @@ public class SolrFusionServlet extends HttpServlet
     public static String ERROR_MSG_FUSION_SCHEMA_FILE_NOT_CONFIGURED = "Fusion schema file not configured.";
     public static String INIT_PARAM_FUSION_SCHEMA = "fusion-schema";
     public static String INIT_PARAM_FUSION_SCHEMA_XSD = "fusion-schema-xsd";
+    public static String INIT_PARAM_APPLY_LATIN1_FIX = "applyLatin1Fix";
+
     // TODO static cfg, so that all servlets share the same config?
     private Configuration cfg;
     private String fusionXsdFileName;
     private long lastModifiedOfLoadedSolrFusionSchema = 0L;
     private long solrFusionSchemaLoadTime = 0L;
     private String fusionSchemaFileName;
+    private boolean applyLatin1Fix = false;
 
     static
     {
@@ -262,6 +265,8 @@ public class SolrFusionServlet extends HttpServlet
             log.warn("Found no servlet init parameter for '{}'. Can't validate fusion schema.",
                 INIT_PARAM_FUSION_SCHEMA_XSD);
         }
+        applyLatin1Fix = "true".equals(config.getInitParameter(INIT_PARAM_APPLY_LATIN1_FIX));
+        log.info("Will use latin1 fix: {}", applyLatin1Fix);
         loadSolrFusionConfig(fusionSchemaFileName, false);
     }
 
@@ -442,13 +447,14 @@ public class SolrFusionServlet extends HttpServlet
             result = new ArrayList<>();
             for (Map.Entry<String, String[]> rp : requestParams.entrySet())
             {
-                String patternValue = reqParam.matches(rp.getKey());
+                String key = fixLatin1Encoding(rp.getKey());
+                String patternValue = reqParam.matches(key);
                 if (patternValue != null)
                 {
                     String[] params = rp.getValue();
                     for (int i = 0; i < params.length; i++)
                     {
-                        result.add(new SolrFusionRequestParam(params[i], patternValue, null));
+                        result.add(new SolrFusionRequestParam(fixLatin1Encoding(params[i]), patternValue, null));
                     }
                 }
             }
@@ -465,11 +471,27 @@ public class SolrFusionServlet extends HttpServlet
                 result = new ArrayList<>();
                 for (int i = 0; i < params.length; i++)
                 {
-                    result.add(new SolrFusionRequestParam(params[i], null, null));
+                    result.add(new SolrFusionRequestParam(fixLatin1Encoding(params[i]), null, null));
                 }
             }
         }
         return result;
+    }
+
+    protected String fixLatin1Encoding(String s)
+    {
+        if (applyLatin1Fix)
+        {
+            try
+            {
+                s = new String(s.getBytes("ISO-8859-1"));
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                log.error("Caught encoding exception. Can't fix encoding of: " + s, e);
+            }
+        }
+        return s;
     }
 
     protected List<SolrFusionRequestParam> getOptionalMultiSearchParamValue(Map<String, String[]> requestParams,
