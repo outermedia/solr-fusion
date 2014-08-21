@@ -8,9 +8,7 @@ import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.FusionResponse;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
-import org.outermedia.solrfusion.response.freemarker.FreemarkerErrorHeader;
-import org.outermedia.solrfusion.response.freemarker.FreemarkerResponse;
-import org.outermedia.solrfusion.response.freemarker.FreemarkerResponseHeader;
+import org.outermedia.solrfusion.response.freemarker.*;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.response.parser.WordCount;
 

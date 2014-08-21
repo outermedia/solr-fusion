@@ -26,70 +26,54 @@ import java.util.List;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder =
-        {
-                "fusionFields", "scriptTypes", "defaultSearchField", "defaultSortField", "defaultOperator",
-                "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory",
-                "queryMapperFactory", "controllerFactory",
-                "searchServerConfigs"
-        })
+@XmlType(name = "",
+    propOrder = {"fusionFields", "scriptTypes", "defaultSearchField", "defaultSortField", "defaultOperator", "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory", "queryMapperFactory", "controllerFactory", "searchServerConfigs"})
 @XmlRootElement(name = "core", namespace = "http://solrfusion.outermedia.org/configuration/")
 @ToString
 public class Configuration
 {
-    @XmlElement(name = "fusion-schema-fields", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter
-    @Setter
+    @XmlElement(name = "fusion-schema-fields", namespace = "http://solrfusion.outermedia.org/configuration/",
+        required = true) @Getter @Setter
     private FusionFieldList fusionFields;
 
     @XmlElement(name = "script-type", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter
-    @Setter
+    @Getter @Setter
     private List<ScriptType> scriptTypes;
 
-    @XmlElement(name = "default-search-field", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter
-    @Setter
+    @XmlElement(name = "default-search-field", namespace = "http://solrfusion.outermedia.org/configuration/",
+        required = true) @Getter @Setter
     private String defaultSearchField;
 
-    @XmlElement(name = "default-sort-field", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter
-    @Setter
+    @XmlElement(name = "default-sort-field", namespace = "http://solrfusion.outermedia.org/configuration/",
+        required = true) @Getter @Setter
     private String defaultSortField;
 
-    @XmlElement(name = "default-operator", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter
-    @Setter
+    @XmlElement(name = "default-operator", namespace = "http://solrfusion.outermedia.org/configuration/",
+        required = true) @Getter @Setter
     private String defaultOperator;
 
     @XmlElement(name = "id-generator", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter
-    @Setter
+    @Getter @Setter
     private IdGeneratorFactory idGeneratorFactory;
 
-    @XmlElement(name = "response-consolidator", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter
-    @Setter
+    @XmlElement(name = "response-consolidator", namespace = "http://solrfusion.outermedia.org/configuration/",
+        required = true) @Getter @Setter
     private ResponseConsolidatorFactory responseConsolidatorFactory;
 
-    @XmlElement(name = "response-mapper", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter
-    @Setter
+    @XmlElement(name = "response-mapper", namespace = "http://solrfusion.outermedia.org/configuration/",
+        required = true) @Getter @Setter
     private ResponseMapperFactory responseMapperFactory;
 
     @XmlElement(name = "query-mapper", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter
-    @Setter
+    @Getter @Setter
     private QueryMapperFactory queryMapperFactory;
 
     @XmlElement(name = "controller", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter
-    @Setter
+    @Getter @Setter
     private ControllerFactory controllerFactory;
 
     @XmlElement(name = "solr-servers", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter
-    @Setter
+    @Getter @Setter
     private GlobalSearchServerConfig searchServerConfigs;
 
     /**
@@ -98,8 +82,8 @@ public class Configuration
      * @param type is either PHP, JSON or XML (see {@link ResponseRendererType})
      * @return null for an error or an instance of {@link ResponseRendererIfc}
      */
-    public ResponseRendererIfc getResponseRendererByType(
-            ResponseRendererType type) throws InvocationTargetException, IllegalAccessException
+    public ResponseRendererIfc getResponseRendererByType(ResponseRendererType type)
+        throws InvocationTargetException, IllegalAccessException
     {
         return searchServerConfigs.getResponseRendererByType(type);
     }
@@ -115,9 +99,8 @@ public class Configuration
     }
 
     /**
-     * The minimal number of search servers which have to respond. If too few
-     * respond the disaster message (see {@link #getDisasterMessage()}) is
-     * thrown.
+     * The minimal number of search servers which have to respond. If too few respond the disaster message (see {@link
+     * #getDisasterMessage()}) is thrown.
      *
      * @return the minimal number of responding servers
      */
@@ -127,8 +110,7 @@ public class Configuration
     }
 
     /**
-     * Get the disaster message (see {@link #getDisasterLimit()}) when too few
-     * server respond.
+     * Get the disaster message (see {@link #getDisasterLimit()}) when too few server respond.
      *
      * @return a Message object which contains a key and the text
      */
@@ -148,8 +130,8 @@ public class Configuration
     }
 
     /**
-     * Get the default response parser. Please note that
-     * {@link SearchServerAdapterIfc} can use a special response parser.
+     * Get the default response parser. Please note that {@link SearchServerAdapterIfc} can use a special response
+     * parser.
      *
      * @return an instance of ResponseParserIfc.
      */
@@ -159,8 +141,7 @@ public class Configuration
     }
 
     /**
-     * Get the default query builder. Please note that
-     * {@link SearchServerAdapterIfc} can use a special query builder.
+     * Get the default query builder. Please note that {@link SearchServerAdapterIfc} can use a special query builder.
      *
      * @return an instance of QueryBuilderIfcs.
      */
@@ -185,7 +166,8 @@ public class Configuration
      *
      * @return an instance of ResponseConsolidatorIfc
      */
-    public ResponseConsolidatorIfc getResponseConsolidator(Configuration config) throws InvocationTargetException, IllegalAccessException
+    public ResponseConsolidatorIfc getResponseConsolidator(Configuration config)
+        throws InvocationTargetException, IllegalAccessException
     {
         ResponseConsolidatorIfc c = getResponseConsolidatorFactory().getInstance();
         c.initConsolidator(config);
@@ -193,9 +175,8 @@ public class Configuration
     }
 
     /**
-     * Get all configured search servers. Every call of this method returns a
-     * new list object, but the {@link SearchServerAdapterIfc} instances are
-     * re-used.
+     * Get all configured search servers. Every call of this method returns a new list object, but the {@link
+     * SearchServerAdapterIfc} instances are re-used.
      *
      * @return a list of SearchServerAdapterIfc
      */
@@ -277,7 +258,7 @@ public class Configuration
     }
 
     /**
-     *  Get a search server's configuration by the server's id.
+     * Get a search server's configuration by the server's id.
      *
      * @param fusionDocId
      * @return null or an object
@@ -305,5 +286,19 @@ public class Configuration
     public String getFusionIdFieldName() throws InvocationTargetException, IllegalAccessException
     {
         return getIdGeneratorFactory().getInstance().getFusionIdField();
+    }
+
+    public ScriptType findScriptTypeByName(String name)
+    {
+        ScriptType result = null;
+        for (ScriptType st : scriptTypes)
+        {
+            if (st.getName().equals(name))
+            {
+                result = st;
+                break;
+            }
+        }
+        return result;
     }
 }

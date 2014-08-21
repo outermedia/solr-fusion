@@ -35,9 +35,12 @@ public class ChangeOperation extends Operation
     {
         if (term.getFusionField() == null)
         {
-            throw new UndeclaredFusionField("Didn't find field '" + term.getFusionFieldName()
+            throw new UndeclaredFusionField("Didn't find field '" + env.getStringBinding(ScriptEnv.ENV_IN_FUSION_FIELD)
                     + "' in fusion schema. Please define it there.");
         }
+        String specificFusionName = env.getStringBinding(ScriptEnv.ENV_IN_FUSION_FIELD);
+        term.setFusionFieldName(specificFusionName);
+        term.setWasMapped(true);
         super.applyAllResponseOperations(term, env);
     }
 

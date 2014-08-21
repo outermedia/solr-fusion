@@ -10,8 +10,8 @@ import java.util.Comparator;
 */
 public class FusionValueDocumentComparator implements Comparator<Document>
 {
-    private final String fusionSortField;
-    private final boolean sortAsc;
+    private String fusionSortField;
+    private boolean sortAsc;
 
     public FusionValueDocumentComparator(String fusionSortField, boolean sortAsc)
     {

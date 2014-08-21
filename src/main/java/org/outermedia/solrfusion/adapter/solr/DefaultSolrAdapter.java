@@ -75,6 +75,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         RequestConfig requestConfig = newRequestConfig(timeout);
 
         request.setConfig(requestConfig);
+
         HttpResponse response = client.execute(request);
 
         StatusLine statusLine = response.getStatusLine();

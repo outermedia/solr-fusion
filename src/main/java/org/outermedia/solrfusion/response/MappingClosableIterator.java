@@ -48,7 +48,7 @@ public class MappingClosableIterator implements ClosableIterator<Document, Searc
         while (documents.hasNext())
         {
             nextDoc = documents.next();
-            ScriptEnv env = new ScriptEnv();
+            ScriptEnv env = getNewScriptEnv();
             try
             {
                 int mappedFieldNr = config.getResponseMapper().mapResponse(config, searchServerConfig, nextDoc, env,
@@ -73,6 +73,11 @@ public class MappingClosableIterator implements ClosableIterator<Document, Searc
         }
         nextDoc = null;
         return false;
+    }
+
+    protected ScriptEnv getNewScriptEnv()
+    {
+        return new ScriptEnv();
     }
 
     @Override

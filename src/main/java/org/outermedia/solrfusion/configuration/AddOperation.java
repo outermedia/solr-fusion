@@ -83,10 +83,13 @@ public class AddOperation extends Operation
             term.setFusionFacetCount(searchServerWordCounts);
             isNew = true;
         }
-        ScriptEnv env = getResponseScriptEnv(fusionFieldName, term, new ScriptEnv());
+        ScriptEnv newEnv = new ScriptEnv();
+        newEnv.setBinding(ScriptEnv.ENV_IN_DOCUMENT, doc);
+        ScriptEnv env = getResponseScriptEnv(fusionFieldName, fusionField, term, newEnv);
         super.applyOneResponseOperation(term, env, t);
         List<String> fusionFieldValue = term.getFusionFieldValue();
-        if (isNew && fusionFieldValue.size() > 0)
+        if (isNew && fusionFieldValue != null && fusionFieldValue.size() > 0 &&
+            doc.getFieldTermByFusionName(fusionFieldName) == null)
         {
             doc.wrapFusionTermWithSolrField(term, fusionField);
             added = true;

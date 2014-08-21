@@ -72,19 +72,18 @@ public class DropTest extends AbstractTypeTest
             "                </arr>";
         Assert.assertFalse("Field f8 was mapped unexpectedly", ds.contains(expectedField));
 
-        // remove <drop> for f8
+        // remove <drop> for f8, but map f8 to text4
         sourceField.resetSearchServerField();
         FieldMapping fm = findByName("f8", serverConfig.getFieldMappings());
         Assert.assertEquals("Found different mapping than expected", "f8", fm.getSearchServersName());
         fm.setFusionName("text4");
         fm.getOperations().clear();
-
         rm.mapResponse(cfg, serverConfig, doc, env, null);
         Assert.assertFalse("Expected that field f8 was not removed", sourceField.isRemoved());
         // System.out.println("W/O DROP "+sourceField.toString());
         docStream = new ClosableListIterator<>(docs, info);
         String s = renderer.getResponseString(cfg, docStream, req, new FusionResponse());
-        Assert.assertTrue("Field f4 was not mapped:\n" + s, s.contains(expectedField));
+        Assert.assertTrue("Field f8 was not mapped:\n" + s, s.contains(expectedField));
     }
 
     protected FieldMapping findByName(String s, List<FieldMapping> mappings)

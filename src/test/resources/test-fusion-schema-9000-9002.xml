@@ -7,6 +7,8 @@
     <om:fusion-schema-fields default-type="text">
         <om:field name="id"/>
         <om:field name="language"/>
+        <om:field name="language_de"/>
+        <om:field name="language_en"/>
         <om:field name="title"/>
         <om:field name="score" type="float"/>
         <om:field name="author" />

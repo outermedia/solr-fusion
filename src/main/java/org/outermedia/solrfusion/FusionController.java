@@ -310,7 +310,7 @@ public class FusionController implements FusionControllerIfc
 
     private XmlResponse handleGeneralResponseException(SearchServerConfig searchServerConfig, Exception e)
     {
-        log.error("Caught exception while communicating with server {}", searchServerConfig.getSearchServerName(), e);
+        log.error("Caught exception while communicating with server " + searchServerConfig.getSearchServerName(), e);
         XmlResponse responseError = new XmlResponse();
         responseError.setErrorReason(e);
         return responseError;
@@ -319,6 +319,8 @@ public class FusionController implements FusionControllerIfc
     private XmlResponse handleSearchServerResponseException(SearchServerConfig searchServerConfig,
         SearchServerResponseException se)
     {
+        log.error("Caught exception while communicating with server " + searchServerConfig.getSearchServerName(), se);
+        
         // try to parse error response if present
         try
         {

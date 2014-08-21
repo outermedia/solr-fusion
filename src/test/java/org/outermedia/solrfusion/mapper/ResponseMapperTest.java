@@ -59,6 +59,7 @@ public class ResponseMapperTest
         Set<String> mapFields = new HashSet<>();
         mapFields.add("Titel");
         int mappedNr = rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, mapFields);
+        // System.out.println("MAPPED DOC " + doc.buildFusionDocStr());
         // id is mapped automatically
         Assert.assertEquals("Wrong number of mapped fields", 2, mappedNr);
         Assert.assertTrue("id should be mapped", sfId.getTerm().isWasMapped());

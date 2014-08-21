@@ -407,6 +407,18 @@ public class Document implements VisitableDocument
         return result;
     }
 
+    public List<Integer> getFusionFacetWordCountsOf(String field)
+    {
+        List<Integer> result = null;
+
+        Term fieldValueTerm = getFieldTermByFusionName(field);
+        if (fieldValueTerm != null)
+        {
+            result = fieldValueTerm.getFusionFacetCount();
+        }
+        return result;
+    }
+
     /**
      * Replaces the values of an already added fusion field.
      *

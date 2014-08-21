@@ -187,7 +187,8 @@ public class FieldMapping
         term.setFusionField(fusionField);
 
         // initialize term with mapped name and original search server value
-        term.setFusionFieldName(specificFusionName);
+        // don't map field when <om:add> is the operation,otherwise duplicate fields would be created
+        // term.setFusionFieldName(specificFusionName);
         List<String> searchServerFieldValues = term.getSearchServerFieldValue();
         if (searchServerFieldValues != null)
         {
@@ -202,19 +203,27 @@ public class FieldMapping
             initialFacetCount.addAll(searchServerFacets);
             term.setFusionFacetCount(initialFacetCount);
         }
-        term.setWasMapped(true);
 
         ScriptEnv newEnv = new ScriptEnv(env);
-        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD, term.getFusionFieldName());
+        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD, specificFusionName);
         newEnv.setBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD, term.getSearchServerFieldName());
-        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD_DECLARATION, term.getFusionField());
+        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD_DECLARATION, fusionField);
         newEnv.setBinding(ScriptEnv.ENV_IN_DOC_TERM, term);
         // don't apply operations on null value (empty list is OK)
-        if (operations != null && searchServerFieldValues != null)
+        if (searchServerFieldValues != null)
         {
-            for (Operation o : operations)
+            if (operations != null && operations.size() > 0)
             {
-                o.applyAllResponseOperations(term, newEnv);
+                for (Operation o : operations)
+                {
+                    o.applyAllResponseOperations(term, newEnv);
+                }
+            }
+            else
+            {
+                // without any operations means "change"
+                ChangeOperation changeOp = new ChangeOperation();
+                changeOp.applyAllResponseOperations(term, newEnv);
             }
         }
     }

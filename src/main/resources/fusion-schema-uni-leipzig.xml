@@ -150,6 +150,8 @@
     <om:script-type name="merge-multi-value" class="org.outermedia.solrfusion.types.MultiValueMerger"/>
     <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
     <om:script-type name="filter-id" class="org.outermedia.solrfusion.types.IdFilter"/>
+    <om:script-type name="field-merger" class="org.outermedia.solrfusion.types.FieldMerger"/>
+    <om:script-type name="normalizer" class="org.outermedia.solrfusion.types.Normalizer"/>
 
     <om:default-search-field>allfields</om:default-search-field>
 
@@ -207,9 +209,7 @@
             <om:target prio="1" target-name="UBL"/>
             <om:target prio="2" target-name="GBV"/>
             <om:target prio="3" target-name="DBoD1"/>
-            <!-- TODO uncomment if added below
             <om:target prio="4" target-name="DBoD2"/>
-            -->
         </om:merge>
 
         <om:solr-server name="UBL" version="3.5"
@@ -222,7 +222,7 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>30</om:max-docs>
+            <om:max-docs>100</om:max-docs>
 
             <om:field name="recordtype" fusion-name="recordtype"/>
             <om:field name="id" fusion-name="id">
@@ -326,7 +326,16 @@
             <om:field name="title_uniform" fusion-name="title_uniform"/>
             <om:field name="title_old" fusion-name="title_old"/>
             <om:field name="title_new" fusion-name="title_new"/>
-            <om:field name="title_sort" fusion-name="title_sort"/>
+            <om:field name="title_sort" fusion-name="title_sort">
+                <om:change>
+                    <om:response type="normalizer">
+                        <trim>true</trim>
+                        <to-lower-case>true</to-lower-case>
+                        <start-chars-to-del>&#32;&#160;."-</start-chars-to-del>
+                    </om:response>
+                </om:change>
+                <om:change><om:query /></om:change>
+            </om:field>
             <om:field name="title_orig" fusion-name="title_orig"/>
             <om:field name="series" fusion-name="series"/>
             <om:field name="series2" fusion-name="series2"/>
@@ -377,12 +386,12 @@
 
             <om:url>http://findex.gbv.de:9001/index/ubl/select</om:url>
 
-            <om:score factor="1.0"
+            <om:score factor="1.3515588925"
                       class="org.outermedia.solrfusion.DefaultScore$Factory"/>
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>30</om:max-docs>
+            <om:max-docs>100</om:max-docs>
 
             <om:field name="format_facet" fusion-name="access_facet">
             </om:field>
@@ -412,10 +421,27 @@
             </om:field>
             <om:field name="author2" fusion-name="author_corp2_orig">
             </om:field>
-            <!-- TODO split-merge case author_facet -->
+
+            <!-- split-merge case author_facet -->
             <om:field name="author" fusion-name="author_facet">
+                <om:add level="inside"><om:query /></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
-            <om:field name="author2" fusion-name="author_facet" />
+            <om:field name="author2" fusion-name="author_facet">
+                <om:add level="inside"><om:query /></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field fusion-name="author_facet">
+                <om:add>
+                    <om:response type="field-merger">
+                        <separator>;</separator>
+                        <field>author</field>
+                        <field>author2</field>
+                    </om:response>
+                </om:add>
+                <om:drop><om:query /></om:drop>
+            </om:field>
+
             <om:field fusion-name="author_id">
                 <om:drop>
                     <om:query/>
@@ -441,11 +467,7 @@
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field fusion-name="authorStr">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
+            <om:field name="authorStr" fusion-name="authorStr" />
             <om:field fusion-name="barcode">
                 <om:drop>
                     <om:query/>
@@ -854,6 +876,14 @@
             <om:field name="title_short" fusion-name="title_short">
             </om:field>
             <om:field name="title_sort" fusion-name="title_sort">
+                <om:change>
+                    <om:response type="normalizer">
+                        <trim>true</trim>
+                        <to-lower-case>true</to-lower-case>
+                        <start-chars-to-del>&#32;&#160;."-</start-chars-to-del>
+                    </om:response>
+                </om:change>
+                <om:change><om:query /></om:change>
             </om:field>
             <om:field name="title_sub" fusion-name="title_sub">
             </om:field>
@@ -918,7 +948,7 @@
 
             <om:url>http://findex.gbv.de:9002/te/select</om:url>
 
-            <om:score factor="1.0"
+            <om:score factor="2.9744758135"
                       class="org.outermedia.solrfusion.DefaultScore$Factory"/>
 
             <!-- we use q.alt instead of q which supports the edismax query syntax
@@ -927,7 +957,7 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>30</om:max-docs>
+            <om:max-docs>100</om:max-docs>
 
             <om:field name="id" fusion-name="id">
                 <om:change>
@@ -936,94 +966,160 @@
             </om:field>
             <om:field name="dbName" fusion-name="mega_collection"/>
 
+            <!-- merge/split allfields -->
             <om:field name="content" fusion-name="allfields">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field name="dbName" fusion-name="allfields">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field name="description" fusion-name="allfields">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field name="edition" fusion-name="allfields">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field name="keywords" fusion-name="allfields">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field name="publisher" fusion-name="allfields">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field name="subjects" fusion-name="allfields">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field name="titleVT_de" fusion-name="allfields">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field name="titleVT_eng" fusion-name="allfields">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field fusion-name="allfields">
+                <om:add>
+                    <om:response type="field-merger">
+                        <separator>;</separator>
+                        <field>content</field>
+                        <field>dbName</field>
+                        <field>description</field>
+                        <field>edition</field>
+                        <field>keywords</field>
+                        <field>publisher</field>
+                        <field>subjects</field>
+                        <field>titleVT_de</field>
+                        <field>titleVT_eng</field>
+                    </om:response>
+                </om:add>
                 <om:drop><om:query /></om:drop>
             </om:field>
-            <!-- TODO merge search server response of fields above into one fusion field allfields -->
 
             <om:field name="subjects" fusion-name="finc_class_facet" />
 
+            <!-- split/merge fulltext -->
             <om:field name="content" fusion-name="fulltext">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field name="description" fusion-name="fulltext">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field fusion-name="fulltext">
+                <om:add>
+                    <om:response type="field-merger">
+                        <separator>;</separator>
+                        <field>content</field>
+                        <field>description</field>
+                    </om:response>
+                </om:add>
                 <om:drop><om:query /></om:drop>
             </om:field>
-            <!-- TODO merge search server response of fields above into one fusion field fulltext -->
 
             <om:field name="permission" fusion-name="institution" />
 
-            <!-- TODO merge fusion-names into one search server field
-            <om:field name="edition" fusion-name="publishDate" />
-            <om:field name="edition" fusion-name="publishDateSort" />
-            -->
+            <!-- publishDateSort is used for sorting -->
+            <!-- this is not a split/merge case -->
+            <om:field name="edition" fusion-name="publishDateSort" >
+            </om:field>
+            <om:field name="edition" fusion-name="publishDate" >
+            </om:field>
 
             <om:field name="publisher" fusion-name="publisher" />
 
+            <!-- split/merge title -->
             <om:field name="titleVT_de" fusion-name="title">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field name="titleVT_eng" fusion-name="title">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field fusion-name="title">
+                <om:add>
+                    <om:response type="field-merger">
+                        <separator>;</separator>
+                        <field>titleVT_de</field>
+                        <field>titleVT_eng</field>
+                    </om:response>
+                </om:add>
                 <om:drop><om:query /></om:drop>
             </om:field>
-            <!-- TODO merge search server response of fields above into one fusion field title -->
 
             <!-- vufind uses title_short to display titles, but DBoD has no title_short values -->
+            <!-- split/merge title_short -->
             <om:field name="titleVT_de" fusion-name="title_short">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field name="titleVT_eng" fusion-name="title_short">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field fusion-name="title_short">
+                <om:add>
+                    <om:response type="field-merger">
+                        <separator>;</separator>
+                        <field>titleVT_de</field>
+                        <field>titleVT_eng</field>
+                    </om:response>
+                </om:add>
                 <om:drop><om:query /></om:drop>
             </om:field>
-            <!-- TODO merge search server response of fields above into one fusion field title_short -->
 
             <!-- vufind uses title_sort to sort books, but DBoD has no title_sort values -->
+            <!-- split/merge title_sort -->
             <om:field name="titleVT_de" fusion-name="title_sort">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field name="titleVT_eng" fusion-name="title_sort">
                 <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
             </om:field>
             <om:field fusion-name="title_sort">
+                <om:add>
+                    <om:response type="field-merger">
+                        <separator>;</separator>
+                        <field>titleVT_de</field>
+                        <field>titleVT_eng</field>
+                    </om:response>
+                    <om:response type="normalizer">
+                        <trim>true</trim>
+                        <to-lower-case>true</to-lower-case>
+                        <start-chars-to-del>&#32;&#160;."-</start-chars-to-del>
+                    </om:response>
+                </om:add>
                 <om:drop><om:query /></om:drop>
             </om:field>
-            <!-- TODO merge search server response of fields above into one fusion field title_sort -->
 
             <!-- vufind uses the following fields in a simple search, which don't exist in DBoD -->
             <om:field fusion-name="format">
@@ -1074,18 +1170,217 @@
 
         </om:solr-server>
 
-        <!-- TODO use mapping of DBoD1 except for source_id
+        <!-- mapping of DBoD1 except for source_id -->
         <om:solr-server name="DBoD2" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.Solr1Adapter$Factory">
 
             <om:url>http://findex.gbv.de:9003/solr/select</om:url>
 
-            <om:score factor="1.0"
+            <om:score factor="2.9744758135"
                       class="org.outermedia.solrfusion.DefaultScore$Factory"/>
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>30</om:max-docs>
+            <om:max-docs>100</om:max-docs>
+
+            <om:field name="id" fusion-name="id">
+                <om:change>
+                    <om:query type="filter-id" />
+                </om:change>
+            </om:field>
+
+            <om:field name="dbName" fusion-name="mega_collection"/>
+
+            <!-- merge/split allfields -->
+            <om:field name="content" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field name="dbName" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field name="description" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field name="edition" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field name="keywords" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field name="publisher" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field name="subjects" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field name="titleVT_de" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field name="titleVT_eng" fusion-name="allfields">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field fusion-name="allfields">
+                <om:add>
+                    <om:response type="field-merger">
+                        <separator>;</separator>
+                        <field>content</field>
+                        <field>dbName</field>
+                        <field>description</field>
+                        <field>edition</field>
+                        <field>keywords</field>
+                        <field>publisher</field>
+                        <field>subjects</field>
+                        <field>titleVT_de</field>
+                        <field>titleVT_eng</field>
+                    </om:response>
+                </om:add>
+                <om:drop><om:query /></om:drop>
+            </om:field>
+
+            <om:field name="subjects" fusion-name="finc_class_facet" />
+
+            <!-- split/merge fulltext -->
+            <om:field name="content" fusion-name="fulltext">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field name="description" fusion-name="fulltext">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field fusion-name="fulltext">
+                <om:add>
+                    <om:response type="field-merger">
+                        <separator>;</separator>
+                        <field>content</field>
+                        <field>description</field>
+                    </om:response>
+                </om:add>
+                <om:drop><om:query /></om:drop>
+            </om:field>
+
+            <om:field name="permission" fusion-name="institution" />
+
+            <!-- publishDateSort is used for sorting -->
+            <!-- this is not a split/merge case -->
+            <om:field name="edition" fusion-name="publishDateSort" >
+            </om:field>
+            <om:field name="edition" fusion-name="publishDate" >
+            </om:field>
+
+            <om:field name="publisher" fusion-name="publisher" />
+
+            <!-- split/merge title -->
+            <om:field name="titleVT_de" fusion-name="title">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field name="titleVT_eng" fusion-name="title">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field fusion-name="title">
+                <om:add>
+                    <om:response type="field-merger">
+                        <separator>;</separator>
+                        <field>titleVT_de</field>
+                        <field>titleVT_eng</field>
+                    </om:response>
+                </om:add>
+                <om:drop><om:query /></om:drop>
+            </om:field>
+
+            <!-- vufind uses title_short to display titles, but DBoD has no title_short values -->
+            <!-- split/merge title_short -->
+            <om:field name="titleVT_de" fusion-name="title_short">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field name="titleVT_eng" fusion-name="title_short">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field fusion-name="title_short">
+                <om:add>
+                    <om:response type="field-merger">
+                        <separator>;</separator>
+                        <field>titleVT_de</field>
+                        <field>titleVT_eng</field>
+                    </om:response>
+                </om:add>
+                <om:drop><om:query /></om:drop>
+            </om:field>
+
+            <!-- vufind uses title_sort to sort books, but DBoD has no title_sort values -->
+            <!-- split/merge title_sort -->
+            <om:field name="titleVT_de" fusion-name="title_sort">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field name="titleVT_eng" fusion-name="title_sort">
+                <om:add level="inside"><om:query/></om:add>
+                <om:drop><om:response /></om:drop>
+            </om:field>
+            <om:field fusion-name="title_sort">
+                <om:add>
+                    <om:response type="field-merger">
+                        <separator>;</separator>
+                        <field>titleVT_de</field>
+                        <field>titleVT_eng</field>
+                    </om:response>
+                    <om:response type="normalizer">
+                        <trim>true</trim>
+                        <to-lower-case>true</to-lower-case>
+                        <start-chars-to-del>&#32;&#160;."-</start-chars-to-del>
+                    </om:response>
+                </om:add>
+                <om:drop><om:query /></om:drop>
+            </om:field>
+
+            <!-- vufind uses the following fields in a simple search, which don't exist in DBoD -->
+            <om:field fusion-name="format">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="format_de15">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="access_facet">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="mega_toplevel">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="branch_de15">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="language">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="author_facet">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="publishDateSort">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+            <om:field fusion-name="collcode_de15">
+                <om:drop><om:query/></om:drop>
+            </om:field>
+            <om:field fusion-name="isbn">
+                <om:drop><om:query/></om:drop>
+            </om:field>
+
+            <om:field name="keywords" fusion-name="topic" />
+
+            <om:field name="deeplink" fusion-name="url" />
 
             <om:field name="source_id" fusion-name="source_id">
                 <om:add>
@@ -1096,7 +1391,6 @@
             </om:field>
 
         </om:solr-server>
-        -->
 
     </om:solr-servers>
 </om:core>

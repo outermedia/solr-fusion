@@ -46,6 +46,7 @@ public class DropOperation extends Operation
         {
             term.setRemoved(true);
             term.setFusionFieldValue(null);
+            term.setWasMapped(true);
         }
     }
 

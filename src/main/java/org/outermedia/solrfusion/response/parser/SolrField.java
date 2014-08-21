@@ -40,11 +40,11 @@ public abstract class SolrField
 
     public List<String> getAllSearchServerFieldValue()
     {
-        List<String> result = new ArrayList<>();
+        List<String> result = null;
         List<String> values = term.getSearchServerFieldValue();
         if (values != null)
         {
-            result.addAll(values);
+            result = new ArrayList<>(values);
         }
         return result;
     }
@@ -90,4 +90,9 @@ public abstract class SolrField
     public boolean isProcessed() { return term.isProcessed(); }
 
     public boolean isRemoved() { return term.isRemoved(); }
+
+    public List<Integer> getSearchServerFacetWordCounts()
+    {
+        return term.getSearchServerFacetCount();
+    }
 }

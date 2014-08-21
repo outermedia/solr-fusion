@@ -186,7 +186,10 @@ public class FusionRequest
         buildSearchServerQuery(parsedHighlightQuery, HIGHLIGHT_QUERY, configuration, searchServerConfig,
             searchServerParams);
         // get all documents from 0..min(MAXDOCS,start+page size)
-        addIfContained(searchServerParams, START, start, null);
+        if(start.isContainedInRequest())
+        {
+            searchServerParams.set(START, "0");
+        }
         if (pageSize.isContainedInRequest())
         {
             int rows = Math.min(searchServerConfig.getMaxDocs(),

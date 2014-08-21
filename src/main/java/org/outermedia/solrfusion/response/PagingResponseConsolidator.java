@@ -85,6 +85,8 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         String searchServerIdField = searchServerConfig.getIdFieldName();
         if (facetFields != null)
         {
+            log.debug("Received {} facet fields from search server {}", facetFields.size(),
+                searchServerConfig.getSearchServerName());
             // generate dummy search server ids
             String idField = searchServerConfig.getIdFieldName();
             Set<String> searchServerFieldsToMap = getSingleFieldMapping(idField);
@@ -114,6 +116,9 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
     {
         if (highlighting != null && highlighting.size() > 0)
         {
+            log.debug("Received {} highlights from search server {}", highlighting.size(),
+                searchServerConfig.getSearchServerName());
+
             String idField = searchServerConfig.getIdFieldName();
             List<Document> highlightingDocs = new ArrayList<>();
             for (Highlighting hl : highlighting)
@@ -237,16 +242,16 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         log.debug("Sort docs by '{}' {}", fusionSortField, sortAsc ? "asc" : "desc");
         Collections.sort(allDocs, new FusionValueDocumentComparator(fusionSortField, sortAsc));
 
-        if (log.isTraceEnabled())
+        if (log.isDebugEnabled())
         {
-            log.trace("Sorted documents by {} {}:", fusionSortField, sortAsc);
+            log.debug("Sorted documents by {} asc={}:", fusionSortField, sortAsc);
             for (int i = 0; i < allDocs.size(); i++)
             {
                 Document document = allDocs.get(i);
                 List<String> sortValue = document.getFusionValuesOf(fusionSortField);
-                log.trace("{}. {}", i, sortValue);
+                log.debug("{}. {}={}", i, document.getFusionDocId(fusionIdField), sortValue);
             }
-            log.trace("---");
+            log.debug("---");
         }
 
         // get docs of page
@@ -255,10 +260,8 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         final IdGeneratorIfc idGenerator = config.getIdGenerator();
         final String fusionIdField = idGenerator.getFusionIdField();
         Map<String, Document> highlighting = new HashMap<>();
-        for (
-            int i = 0;
-            i < fusionRequest.getPageSize().getValueAsInt(allDocs.size()) && (i + start) < allDocs.size(); i++
-            )
+        int rows = fusionRequest.getPageSize().getValueAsInt(allDocs.size());
+        for (int i = 0; i < rows && (i + start) < allDocs.size(); i++)
         {
             Document d = allDocs.get(start + i);
             // id was mapped too when sort field was mapped
@@ -284,21 +287,22 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         }
         log.debug("Returning {} documents for page size {}", docsOfPage.size(), fusionRequest.getPageSize());
 
-        if (log.isTraceEnabled())
+        if (log.isDebugEnabled())
         {
-            log.trace("Page: Sorted documents by {} {}:", fusionSortField, sortAsc);
+            log.debug("Page: Sorted documents by {} asc={}: start={}, rows={}", fusionSortField, sortAsc, start, rows);
             for (int i = 0; i < docsOfPage.size(); i++)
             {
                 Document document = docsOfPage.get(i);
                 List<String> sortValue = document.getFusionValuesOf(fusionSortField);
                 List<String> titleShort = document.getFusionValuesOf("title_short");
-                log.trace("{}.\n  {}\n  {}", i, sortValue, titleShort);
+                log.debug("{}.\n  {}\n  {}", i, sortValue, titleShort);
             }
             log.trace("---");
         }
 
         Map<String, List<WordCount>> sortedFusionFacetFields = mapFacetWordCounts(idGenerator, fusionIdField,
             fusionRequest);
+        log.debug("Total number of merged/sorted/filtered facets: {}", sortedFusionFacetFields.size());
 
         SearchServerResponseInfo info = new SearchServerResponseInfo(maxDocNr, highlighting, sortedFusionFacetFields,
             null);

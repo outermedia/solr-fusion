@@ -205,4 +205,26 @@ public abstract class AbstractType implements Initiable<ScriptType>
         }
         return result;
     }
+
+    protected List<String> parseFields(List<Element> typeConfig, Util util, String xpathStr)
+    {
+        List<String> fieldList = new ArrayList<>();
+        try
+        {
+            List<Element> elements = util.xpathElements(xpathStr, typeConfig);
+            for (Element e : elements)
+            {
+                fieldList.add(e.getTextContent());
+            }
+        }
+        catch (Exception e)
+        {
+            log.error("Caught exception while parsing configuration: " + elementListToString(typeConfig), e);
+        }
+        if(fieldList.isEmpty())
+        {
+            fieldList = null;
+        }
+        return fieldList;
+    }
 }

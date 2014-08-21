@@ -1,9 +1,8 @@
-package org.outermedia.solrfusion.response;
+package org.outermedia.solrfusion.response.freemarker;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.response.freemarker.FreemarkerDocument;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.types.ScriptEnv;
 

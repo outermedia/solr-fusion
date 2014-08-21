@@ -167,8 +167,7 @@ public class ResponseMapper implements ResponseMapperIfc
         {
             if (scoreTerm == null || !scoreTerm.isProcessed())
             {
-                // TODO only if score was requested (fl)
-                log.debug("Can't correct score, because document contains no value.");
+                log.trace("Can't correct score, because document contains no value.");
             }
         }
     }
@@ -197,6 +196,7 @@ public class ResponseMapper implements ResponseMapperIfc
     protected FusionField getFusionField(ScriptEnv env, FieldMapping m)
     {
         FusionField fusionField = env.getConfiguration().findFieldByName(m.getSpecificFusionName());
+        // log.error("FIELD "+m.getSpecificFusionName()+" "+m.getFusionName()+" -> "+fusionField); // TEST REMOVE
         return fusionField;
     }
 
@@ -268,7 +268,16 @@ public class ResponseMapper implements ResponseMapperIfc
             {
                 for (FieldMapping m : mappings)
                 {
+                    boolean traceEnabled = log.isTraceEnabled();
+                    if (traceEnabled)
+                    {
+                        log.trace("APPLY field={} mapping[line={}]={}", fieldName, m.getLocator().getLineNumber(), m);
+                    }
                     m.applyResponseMappings(t, env, getFusionField(env, m));
+                    if (traceEnabled)
+                    {
+                        log.trace("AFTER APPLY {}", doc.buildFusionDocStr());
+                    }
                 }
                 t.setProcessed(true);
                 numberOfMappedFields++;

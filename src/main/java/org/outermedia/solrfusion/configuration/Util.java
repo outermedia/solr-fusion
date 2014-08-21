@@ -169,7 +169,7 @@ public class Util
 
     /**
      * Get the value for a given xpath and a list of elements. VERY IMPORTANT: Use the ":" e.g. in //:script, otherwise
-     * no xpath will match. The value is trimmed.
+     * no xpath will match. The value is trimmed if the trim parameter is true.
      *
      * @param xpathStr   is the xpath.
      * @param typeConfig is a list of dom w3c elements

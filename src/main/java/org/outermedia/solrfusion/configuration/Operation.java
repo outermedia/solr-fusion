@@ -175,7 +175,7 @@ public abstract class Operation
 
     public void applyAllResponseOperations(Term term, ScriptEnv env)
     {
-        ScriptEnv newEnv = getResponseScriptEnv(null, term, env);
+        ScriptEnv newEnv = getResponseScriptEnv(null, null, term, env);
         List<Target> queryTargets = getResponseTargets();
         for (Target t : queryTargets)
         {
@@ -183,7 +183,8 @@ public abstract class Operation
         }
     }
 
-    public ScriptEnv getResponseScriptEnv(String fusionFieldName, Term term, ScriptEnv env)
+    public ScriptEnv getResponseScriptEnv(String fusionFieldName, FusionField fusionField, Term term,
+        ScriptEnv env)
     {
         ScriptEnv newEnv = new ScriptEnv(env);
         newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD, fusionFieldName);
@@ -191,6 +192,7 @@ public abstract class Operation
         newEnv.setBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_VALUE, term.getSearchServerFieldValue());
         newEnv.setBinding(ScriptEnv.ENV_IN_CONVERSION, ConversionDirection.SEARCH_TO_FUSION);
         newEnv.setBinding(ScriptEnv.ENV_IN_DOC_TERM, term);
+        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD_DECLARATION, fusionField);
         return newEnv;
     }
 
