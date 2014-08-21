@@ -316,7 +316,7 @@ public class SolrFusionServlet extends HttpServlet
         return fusionRequest;
     }
 
-    private void buildCoreFusionRequest(Map<String, String[]> requestParams, Map<String, Object> headerValues,
+    protected void buildCoreFusionRequest(Map<String, String[]> requestParams, Map<String, Object> headerValues,
         FusionRequest fusionRequest)
     {
         fusionRequest.setQuery(getRequiredSingleSearchParamValue(requestParams, QUERY, fusionRequest));

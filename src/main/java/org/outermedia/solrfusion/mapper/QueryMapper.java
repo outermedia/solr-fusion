@@ -86,7 +86,8 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
             else if (noMappingPolicy.equals(NO_MAPPING_DELETE))
             {
                 t.setRemoved(true);
-                log.warn("Found no mapping for fusion field '{}'. Deleting query part.", fusionFieldName);
+                log.warn("Found no mapping of fusion field '{}' for server {}. Deleting query part.", fusionFieldName,
+                    serverConfig.getSearchServerName());
             }
         }
         ScriptEnv newEnv = new ScriptEnv(env);

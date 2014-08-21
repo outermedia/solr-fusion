@@ -186,7 +186,7 @@ public class FusionRequest
         buildSearchServerQuery(parsedHighlightQuery, HIGHLIGHT_QUERY, configuration, searchServerConfig,
             searchServerParams);
         // get all documents from 0..min(MAXDOCS,start+page size)
-        if(start.isContainedInRequest())
+        if (start.isContainedInRequest())
         {
             searchServerParams.set(START, "0");
         }
@@ -307,7 +307,7 @@ public class FusionRequest
             }
         }
 
-        if(addIdField)
+        if (addIdField)
         {
             fieldSet.add(searchServerConfig.getIdFieldName());
         }
@@ -354,7 +354,7 @@ public class FusionRequest
                 for (FieldMapping fm : mappings)
                 {
                     foundMapping = true;
-                    String searchServersName = fm.getSearchServersName();
+                    String searchServersName = fm.getSpecificSearchServerName();
                     if (searchServersName != null)
                     {
                         result.add(searchServersName);
@@ -387,7 +387,8 @@ public class FusionRequest
                 {
                     if (!foundMapping)
                     {
-                        log.warn("Didn't find mapping for '{}'.", fusionField);
+                        log.warn("Didn't find mapping of fusion field '{}' for server.", fusionField,
+                            searchServerConfig.getSearchServerName());
                     }
                 }
             }

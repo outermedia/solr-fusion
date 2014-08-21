@@ -41,8 +41,11 @@ public class FieldMappingTest
     public void testValidAttributeCombinations()
     {
         assertMappingType(createFieldMapping("a", null, null, null, null, null), MappingType.EXACT_NAME_ONLY);
+        assertMappingType(createFieldMapping("a*", null, null, null, null, null), MappingType.WILDCARD_NAME_ONLY);
         assertMappingType(createFieldMapping(null, "a", null, null, null, null), MappingType.EXACT_FUSION_NAME_ONLY);
+        assertMappingType(createFieldMapping(null, "a*", null, null, null, null), MappingType.WILDCARD_FUSION_NAME_ONLY);
         assertMappingType(createFieldMapping("a", "b", null, null, null, null), MappingType.EXACT_NAME_AND_FUSION_NAME);
+        assertMappingType(createFieldMapping("a*", "b*", null, null, null, null), MappingType.WILDCARD_NAME_AND_FUSION_NAME);
         assertMappingType(createFieldMapping(null, null, "a", "b", "c", "d"), MappingType.REG_EXP_ALL);
         assertMappingType(createFieldMapping(null, null, "a", null, null, null), MappingType.REG_EXP_NAME_ONLY);
         assertMappingType(createFieldMapping(null, null, null, null, null, "d"), MappingType.REG_EXP_FUSION_NAME_ONLY);
@@ -54,13 +57,21 @@ public class FieldMappingTest
         assertException(createFieldMapping(null, null, null, null, null, null));
 
         assertException(createFieldMapping("a", null, "b", null, null, null));
+        assertException(createFieldMapping("a*", null, "b", null, null, null));
         assertException(createFieldMapping(null, "a", "b", null, null, null));
+        assertException(createFieldMapping(null, "a*", "b", null, null, null));
         assertException(createFieldMapping("a", null, null, "b", null, null));
+        assertException(createFieldMapping("a*", null, null, "b", null, null));
         assertException(createFieldMapping(null, "a", null, "b", null, null));
+        assertException(createFieldMapping(null, "a*", null, "b", null, null));
         assertException(createFieldMapping("a", null, null, null, "b", null));
+        assertException(createFieldMapping("a*", null, null, null, "b", null));
         assertException(createFieldMapping(null, "a", null, null, "b", null));
+        assertException(createFieldMapping(null, "a*", null, null, "b", null));
         assertException(createFieldMapping("a", null, null, null, null, "b"));
+        assertException(createFieldMapping("a*", null, null, null, null, "b"));
         assertException(createFieldMapping(null, "a", null, null, null, "b"));
+        assertException(createFieldMapping(null, "a*", null, null, null, "b"));
 
         assertException(createFieldMapping(null, null, null, "b", null, null));
         assertException(createFieldMapping(null, null, null, null, "b", null));
@@ -78,6 +89,9 @@ public class FieldMappingTest
         assertException(createFieldMapping(null, null, null, "a", "b", "c"));
 
         assertException(createFieldMapping("A", "B", "a", "b", "c", "d"));
+        assertException(createFieldMapping("A*", "B", "a", "b", "c", "d"));
+        assertException(createFieldMapping("A", "B*", "a", "b", "c", "d"));
+        assertException(createFieldMapping("A*", "B", "a", "b", "c", "d"));
     }
 
     private void assertException(TestFieldMapping fm)

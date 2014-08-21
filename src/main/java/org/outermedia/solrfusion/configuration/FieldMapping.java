@@ -239,23 +239,28 @@ public class FieldMapping
      */
     protected void afterUnmarshal(Unmarshaller u, Object parent) throws UnmarshalException
     {
-        boolean nameSet = searchServersName != null;
-        boolean fusionSet = fusionName != null;
         boolean namePatSet = searchServersNamePattern != null;
         boolean fusionReplSet = fusionNameReplacement != null;
         boolean nameReplSet = searchServersNameReplacement != null;
         boolean fusionPatSet = fusionNamePattern != null;
+        boolean nameWildCardSet = searchServersName != null && searchServersName.contains("*");
+        boolean nameSet = searchServersName != null && !nameWildCardSet;
+        boolean fusionWildCarSet = fusionName != null && fusionName.contains("*");
+        boolean fusionSet = fusionName != null && !fusionWildCarSet;
 
         mappingType = MappingType.getMappingType(nameSet, fusionSet, namePatSet, fusionReplSet, nameReplSet,
-            fusionPatSet);
+            fusionPatSet, nameWildCardSet, fusionWildCarSet);
         int case1 = (mappingType == MappingType.EXACT_NAME_ONLY) ? 1 : 0;
         int case2 = (mappingType == MappingType.EXACT_FUSION_NAME_ONLY) ? 1 : 0;
         int case3 = (mappingType == MappingType.EXACT_NAME_AND_FUSION_NAME) ? 1 : 0;
         int case4 = (mappingType == MappingType.REG_EXP_ALL) ? 1 : 0;
         int case5 = (mappingType == MappingType.REG_EXP_NAME_ONLY) ? 1 : 0;
         int case6 = (mappingType == MappingType.REG_EXP_FUSION_NAME_ONLY) ? 1 : 0;
+        int case7 = (mappingType == MappingType.WILDCARD_FUSION_NAME_ONLY) ? 1 : 0;
+        int case8 = (mappingType == MappingType.WILDCARD_NAME_ONLY) ? 1 : 0;
+        int case9 = (mappingType == MappingType.WILDCARD_NAME_AND_FUSION_NAME) ? 1 : 0;
 
-        int trueCasesSum = case1 + case2 + case3 + case4 + case5 + case6;
+        int trueCasesSum = case1 + case2 + case3 + case4 + case5 + case6 + case7 + case8 + case9;
         boolean noCaseIsTrue = trueCasesSum == 0;
         boolean moreThanOneCaseIsTrue = trueCasesSum > 1;
 

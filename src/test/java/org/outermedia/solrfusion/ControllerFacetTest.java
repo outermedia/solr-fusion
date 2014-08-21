@@ -219,7 +219,7 @@ public class ControllerFacetTest extends AbstractControllerTest
 
         String result = fusionResponse.getResponseAsString();
         Assert.assertNotNull("Expected XML result, but got nothing", result);
-        // System.out.println("RESPONSE " + result);
+        System.out.println("RESPONSE " + result);
         return result;
     }
 

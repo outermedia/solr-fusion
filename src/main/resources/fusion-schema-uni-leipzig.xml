@@ -224,108 +224,22 @@
 
             <om:max-docs>100</om:max-docs>
 
-            <om:field name="recordtype" fusion-name="recordtype"/>
+            <!-- keep all fields in general -->
+            <om:field name="*" fusion-name="*" />
+
+            <!-- but with the following exceptions -->
             <om:field name="id" fusion-name="id">
                 <om:change>
                     <om:query type="filter-id" />
                 </om:change>
             </om:field>
-            <om:field name="mrc0007" fusion-name="mrc0007"/>
-            <om:field name="mrc0070" fusion-name="mrc0070"/>
-            <om:field name="fullrecord" fusion-name="fullrecord"/>
-            <om:field name="itemdata" fusion-name="itemdata"/>
-            <om:field name="marc_error" fusion-name="marc_error"/>
-            <om:field name="allfields" fusion-name="allfields"/>
-            <om:field name="allfields_unstemmed" fusion-name="allfields_unstemmed"/>
-            <om:field name="fulltext" fusion-name="fulltext"/>
-            <om:field name="spelling" fusion-name="spelling"/>
-            <om:field name="spellingShingle" fusion-name="spellingShingle"/>
-            <om:field name="mega_collection" fusion-name="mega_collection"/>
-            <om:field name="mega_toplevel" fusion-name="mega_toplevel"/>
-            <om:field name="record_id" fusion-name="record_id"/>
-            <om:field name="source_id" fusion-name="source_id"/>
-	    <!-- TODO dropped, because user is not logged in, is this OK? -->
+	        <!-- TODO dropped, because user is not logged in, is this OK? -->
             <om:field name="authorized_mode" fusion-name="authorized_mode">
                 <om:drop>
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field name="institution" fusion-name="institution"/>
-            <om:field name="signatur" fusion-name="signatur"/>
-            <om:field name="barcode" fusion-name="barcode"/>
-            <om:field name="rsn" fusion-name="rsn"/>
-            <om:field name="access_facet" fusion-name="access_facet"/>
-            <om:field name="author_id" fusion-name="author_id"/>
-            <om:field name="topic_id" fusion-name="topic_id"/>
-            <om:field name="author_ref" fusion-name="author_ref"/>
-            <om:field name="author_corp_ref" fusion-name="author_corp_ref"/>
-            <om:field name="topic_ref" fusion-name="topic_ref"/>
-            <om:field name="multipart_set" fusion-name="multipart_set"/>
-            <om:field name="multipart_link" fusion-name="multipart_link"/>
-            <om:field name="multipart_part" fusion-name="multipart_part"/>
-            <om:field name="purchase" fusion-name="purchase"/>
-            <om:field name="timecode" fusion-name="timecode"/>
-            <om:field name="misc_dech1" fusion-name="misc_dech1"/>
-            <om:field name="misc_del152" fusion-name="misc_del152"/>
-            <om:field name="misc_de105" fusion-name="misc_de105"/>
-            <om:field name="branch_de15" fusion-name="branch_de15"/>
-            <om:field name="branch_dech1" fusion-name="branch_dech1"/>
-            <om:field name="branch_de105" fusion-name="branch_de105"/>
-            <om:field name="branch_de520" fusion-name="branch_de520"/>
-            <om:field name="branch_dezwi2" fusion-name="branch_dezwi2"/>
-            <om:field name="branch_dezi4" fusion-name="branch_dezi4"/>
-            <om:field name="collcode_de15" fusion-name="collcode_de15"/>
-            <om:field name="collcode_dech1" fusion-name="collcode_dech1"/>
-            <om:field name="collcode_de105" fusion-name="collcode_de105"/>
-            <om:field name="collcode_de520" fusion-name="collcode_de520"/>
-            <om:field name="collcode_dezwi2" fusion-name="collcode_dezwi2"/>
-            <om:field name="collcode_dezi4" fusion-name="collcode_dezi4"/>
-            <om:field name="format_de15" fusion-name="format_de15"/>
-            <om:field name="format_del152" fusion-name="format_del152"/>
-            <om:field name="format_dech1" fusion-name="format_dech1"/>
-            <om:field name="format_de105" fusion-name="format_de105"/>
-            <om:field name="format_de520" fusion-name="format_de520"/>
-            <om:field name="format_del189" fusion-name="format_del189"/>
-            <om:field name="format_dezwi2" fusion-name="format_dezwi2"/>
-            <om:field name="format_dezi4" fusion-name="format_dezi4"/>
-            <om:field name="format_de540" fusion-name="format_de540"/>
-            <om:field name="format_ded117" fusion-name="format_ded117"/>
-            <om:field name="local_heading_facet_del152" fusion-name="local_heading_facet_del152"/>
-            <om:field name="local_heading_dezwi2" fusion-name="local_heading_dezwi2"/>
-            <om:field name="local_heading_facet_dezwi2" fusion-name="local_heading_facet_dezwi2"/>
-            <om:field name="local_heading_del242" fusion-name="local_heading_del242"/>
-            <om:field name="local_class_del242" fusion-name="local_class_del242"/>
-            <om:field name="udk_raw_de105" fusion-name="udk_raw_de105"/>
-            <om:field name="udk_facet_de105" fusion-name="udk_facet_de105"/>
-            <om:field name="udk_raw_del189" fusion-name="udk_raw_del189"/>
-            <om:field name="finc_class_facet" fusion-name="finc_class_facet"/>
-            <om:field name="zdb" fusion-name="zdb"/>
-            <om:field name="language" fusion-name="language" />
-            <om:field name="format" fusion-name="format"/>
-            <om:field name="author" fusion-name="author"/>
-            <om:field name="author_orig" fusion-name="author_orig"/>
-            <om:field name="authorStr" fusion-name="authorStr"/>
-            <om:field name="author2" fusion-name="author2"/>
-            <om:field name="author2_orig" fusion-name="author2_orig"/>
-            <om:field name="author_corp" fusion-name="author_corp"/>
-            <om:field name="author_corp_orig" fusion-name="author_corp_orig"/>
-            <om:field name="author_corp2" fusion-name="author_corp2"/>
-            <om:field name="author_corp2_orig" fusion-name="author_corp2_orig"/>
-            <om:field name="author2-role" fusion-name="author2-role"/>
-            <om:field name="author_letter" fusion-name="author_letter"/>
-            <om:field name="author_facet" fusion-name="author_facet"/>
-            <om:field name="author_browse" fusion-name="author_browse"/>
-            <om:field name="title" fusion-name="title"/>
-            <om:field name="title_part" fusion-name="title_part"/>
-            <om:field name="title_sub" fusion-name="title_sub"/>
-            <om:field name="title_short" fusion-name="title_short"/>
-            <om:field name="title_full" fusion-name="title_full"/>
-            <om:field name="title_full_unstemmed" fusion-name="title_full_unstemmed"/>
-            <om:field name="title_fullStr" fusion-name="title_fullStr"/>
-            <om:field name="title_alt" fusion-name="title_alt"/>
-            <om:field name="title_uniform" fusion-name="title_uniform"/>
-            <om:field name="title_old" fusion-name="title_old"/>
-            <om:field name="title_new" fusion-name="title_new"/>
+            <!-- normalize title sort field -->
             <om:field name="title_sort" fusion-name="title_sort">
                 <om:change>
                     <om:response type="normalizer">
@@ -336,51 +250,8 @@
                 </om:change>
                 <om:change><om:query /></om:change>
             </om:field>
-            <om:field name="title_orig" fusion-name="title_orig"/>
-            <om:field name="series" fusion-name="series"/>
-            <om:field name="series2" fusion-name="series2"/>
-            <om:field name="series_orig" fusion-name="series_orig"/>
-            <om:field name="edition" fusion-name="edition"/>
-            <om:field name="publisher" fusion-name="publisher"/>
-            <om:field name="publishDate" fusion-name="publishDate"/>
-            <om:field name="publishDateSort" fusion-name="publishDateSort"/>
-            <om:field name="imprint" fusion-name="imprint"/>
-            <om:field name="dateSpan" fusion-name="dateSpan"/>
-            <om:field name="publishPlace" fusion-name="publishPlace"/>
-            <om:field name="physical" fusion-name="physical"/>
-            <om:field name="footnote" fusion-name="footnote"/>
-            <om:field name="dissertation_note" fusion-name="dissertation_note"/>
-            <om:field name="performer_note" fusion-name="performer_note"/>
-            <om:field name="illustrated" fusion-name="illustrated"/>
-            <om:field name="contents" fusion-name="contents"/>
-            <om:field name="url" fusion-name="url"/>
-            <om:field name="isbn" fusion-name="isbn"/>
-            <om:field name="issn" fusion-name="issn"/>
-            <om:field name="isbn_canc" fusion-name="isbn_canc"/>
-            <om:field name="ismn" fusion-name="ismn"/>
-            <om:field name="issn_canc" fusion-name="issn_canc"/>
-            <om:field name="oclc_num" fusion-name="oclc_num"/>
-            <om:field name="topic" fusion-name="topic"/>
-            <om:field name="topic_unstemmed" fusion-name="topic_unstemmed"/>
-            <om:field name="topic_facet" fusion-name="topic_facet"/>
-            <om:field name="geogr_code" fusion-name="geogr_code"/>
-            <om:field name="geogr_code_person" fusion-name="geogr_code_person"/>
-            <om:field name="music_heading" fusion-name="music_heading"/>
-            <om:field name="music_heading_browse" fusion-name="music_heading_browse"/>
-            <om:field name="film_heading" fusion-name="film_heading"/>
-            <om:field name="dewey-hundreds" fusion-name="dewey-hundreds"/>
-            <om:field name="dewey-tens" fusion-name="dewey-tens"/>
-            <om:field name="dewey-ones" fusion-name="dewey-ones"/>
-            <om:field name="dewey-full" fusion-name="dewey-full"/>
-            <om:field name="dewey-sort" fusion-name="dewey-sort"/>
-            <om:field name="dewey-raw" fusion-name="dewey-raw"/>
-            <om:field name="rvk_facet" fusion-name="rvk_facet"/>
-            <om:field name="rvk_label" fusion-name="rvk_label"/>
-            <om:field name="rvk_path" fusion-name="rvk_path"/>
-            <om:field name="attached_de15" fusion-name="attached_de15"/>
         </om:solr-server>
 
-        <!-- except TODO mapping below is complete -->
         <om:solr-server name="GBV" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
@@ -473,62 +344,12 @@
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field fusion-name="branch_de105">
+            <om:field fusion-name="branch_de*">
                 <om:drop>
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field fusion-name="branch_de15">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="branch_de520">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="branch_dech1">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="branch_dezi4">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="branch_dezwi2">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="collcode_de105">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="collcode_de15">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="collcode_de520">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="collcode_dech1">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="collcode_dezi4">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="collcode_dezwi2">
+            <om:field fusion-name="collcode_de*">
                 <om:drop>
                     <om:query/>
                 </om:drop>
@@ -587,42 +408,7 @@
             </om:field>
             <om:field name="format_facet" fusion-name="format_de15">
             </om:field>
-            <om:field fusion-name="format_de520">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="format_de540">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="format_dech1">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="format_ded117">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="format_del152">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="format_del189">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="format_dezi4">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="format_dezwi2">
+            <om:field fusion-name="format_de*">
                 <om:drop>
                     <om:query/>
                 </om:drop>
@@ -679,27 +465,7 @@
             </om:field>
             <om:field name="language" fusion-name="language">
             </om:field>
-            <om:field fusion-name="local_class_del242">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="local_heading_del242">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="local_heading_dezwi2">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="local_heading_facet_del152">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="local_heading_facet_dezwi2">
+            <om:field fusion-name="local*">
                 <om:drop>
                     <om:query/>
                 </om:drop>
@@ -716,17 +482,7 @@
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field fusion-name="misc_de105">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="misc_dech1">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="misc_del152">
+            <om:field fusion-name="misc*">
                 <om:drop>
                     <om:query/>
                 </om:drop>
@@ -741,17 +497,7 @@
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field fusion-name="multipart_link">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="multipart_part">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="multipart_set">
+            <om:field fusion-name="multipart*">
                 <om:drop>
                     <om:query/>
                 </om:drop>
@@ -800,17 +546,7 @@
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field fusion-name="rvk_facet">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="rvk_label">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="rvk_path">
+            <om:field fusion-name="rvk*">
                 <om:drop>
                     <om:query/>
                 </om:drop>
@@ -911,17 +647,7 @@
                     <om:query/>
                 </om:drop>
             </om:field>
-            <om:field fusion-name="udk_facet_de105">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="udk_raw_de105">
-                <om:drop>
-                    <om:query/>
-                </om:drop>
-            </om:field>
-            <om:field fusion-name="udk_raw_del189">
+            <om:field fusion-name="udk*">
                 <om:drop>
                     <om:query/>
                 </om:drop>
@@ -942,7 +668,6 @@
         </om:solr-server>
 
 
-        <!-- except TODOs mapping below is complete -->
         <om:solr-server name="DBoD1" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.Solr1Adapter$Factory">
 
@@ -1122,10 +847,7 @@
             </om:field>
 
             <!-- vufind uses the following fields in a simple search, which don't exist in DBoD -->
-            <om:field fusion-name="format">
-                <om:drop><om:query /></om:drop>
-            </om:field>
-            <om:field fusion-name="format_de15">
+            <om:field fusion-name="format*">
                 <om:drop><om:query /></om:drop>
             </om:field>
             <om:field fusion-name="access_facet">
@@ -1170,7 +892,7 @@
 
         </om:solr-server>
 
-        <!-- mapping of DBoD1 except for source_id -->
+        <!-- same mapping of DBoD1 except static source_id -->
         <om:solr-server name="DBoD2" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.Solr1Adapter$Factory">
 
@@ -1347,10 +1069,7 @@
             </om:field>
 
             <!-- vufind uses the following fields in a simple search, which don't exist in DBoD -->
-            <om:field fusion-name="format">
-                <om:drop><om:query /></om:drop>
-            </om:field>
-            <om:field fusion-name="format_de15">
+            <om:field fusion-name="format*">
                 <om:drop><om:query /></om:drop>
             </om:field>
             <om:field fusion-name="access_facet">
