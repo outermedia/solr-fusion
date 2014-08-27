@@ -113,19 +113,13 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
 
         // Write output to the string
         StringWriter stringWriter = new StringWriter();
-        // TODO: error handling
         try
         {
             template.process(input, stringWriter);
-
         }
-        catch (TemplateException e)
+        catch (Exception e)
         {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
+            log.error("Caught exception while applying template " + templateFile, e);
         }
 
         return stringWriter.getBuffer().toString();
@@ -135,34 +129,6 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
     public void init(ResponseRendererFactory config)
     {
         initFreemarkerConfiguration();
-
-        // TODO: use settings from fusion-schema configuration to overwrite defaults ?
-//        Util xmlUtil = new Util();
-//
-//        String templateFile = null, encoding = null, locale = null;
-//        try
-//        {
-//            templateFile = xmlUtil.getValueOfXpath("//:template-file/text()", config.getFactoryConfig());
-//            encoding = xmlUtil.getValueOfXpath("//:encoding/text()", config.getFactoryConfig());
-//            locale = xmlUtil.getValueOfXpath("//:locale/text()", config.getFactoryConfig());
-//        }
-//        catch (XPathExpressionException e)
-//        {
-//            log.debug("Caught exception while reading freemarker response renderer configuration.", e);
-//        }
-//
-//        if (templateFile != null)
-//        {
-//            this.setTemplateFile(templateFile);
-//        }
-//        if (encoding != null)
-//        {
-//            this.setEncoding(encoding);
-//        }
-//        if (locale!= null)
-//        {
-//            this.setLocale(locale);
-//        }
     }
 
     private void initFreemarkerConfiguration()

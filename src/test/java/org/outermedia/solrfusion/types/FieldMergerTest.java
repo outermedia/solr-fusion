@@ -143,7 +143,6 @@ public class FieldMergerTest extends AbstractTypeTest
             fusionDocStr.contains("title= ...Ja aber doch;\"..Aber ja"));
     }
 
-    // TODO test handling of facet word counts
     @Test
     public void testFacetWordCountMerging()
         throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,

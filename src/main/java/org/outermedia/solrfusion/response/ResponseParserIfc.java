@@ -18,6 +18,5 @@ import java.io.InputStream;
  */
 public interface ResponseParserIfc extends Initiable<ResponseParserFactory>
 {
-    // TODO: it may make sense to define a ResponseIfc for return Value
     public abstract XmlResponse parse(InputStream input) throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException;
 }
