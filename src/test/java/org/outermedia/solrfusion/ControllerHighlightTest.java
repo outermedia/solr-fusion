@@ -210,7 +210,8 @@ public class ControllerHighlightTest extends AbstractControllerTest
         // fusionRequest.setPageSize(10);
         // fusionRequest.setStart(0);
         fusionRequest.setSortSpec(new SortSpec(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE, null, false));
-        FusionResponse fusionResponse = new FusionResponse();
+        FusionResponse fusionResponse = spy(new FusionResponse());
+        doReturn(0l).when(fusionResponse).getQueryTime();
         fc.process(spyCfg, fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
 

@@ -2,7 +2,7 @@
 <response>
 <lst name="responseHeader">
   <int name="status">0</int>
-  <int name="QTime">0</int>
+  <int name="QTime">${responseHeader.queryTime?c}</int>
   <lst name="params">
     <str name="indent">on</str><#list responseHeader.queryParams?keys as key>
     <str name="${key}"><![CDATA[${responseHeader.queryParams[key]}]]></str></#list><#list responseHeader.multiValueQueryParams?keys as key>

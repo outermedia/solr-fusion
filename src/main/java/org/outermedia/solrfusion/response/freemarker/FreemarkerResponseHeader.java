@@ -2,6 +2,7 @@ package org.outermedia.solrfusion.response.freemarker;
 
 import lombok.Getter;
 import org.outermedia.solrfusion.FusionRequest;
+import org.outermedia.solrfusion.FusionResponse;
 import org.outermedia.solrfusion.SolrFusionRequestParam;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
@@ -26,11 +27,15 @@ public class FreemarkerResponseHeader
     private Map<String, String> queryParams;
     private Map<String, List<String>> multiValueQueryParams;
 
+    private long queryTime;
+
     public FreemarkerResponseHeader(ClosableIterator<Document, SearchServerResponseInfo> docStream,
-        FusionRequest request)
+        FusionRequest request, FusionResponse fusionResponse)
     {
         queryParams = new LinkedHashMap<>();
         multiValueQueryParams = new LinkedHashMap<>();
+
+        queryTime = fusionResponse.getQueryTime();
 
         int rows = 0;
         if (docStream != null)

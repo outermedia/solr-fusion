@@ -1,7 +1,7 @@
 {
   "responseHeader":{
     "status":0,
-    "QTime":0,
+    "QTime":${responseHeader.queryTime?c},
     "params":{
       "indent":"on",<#list responseHeader.queryParams?keys as key>
       "${key}":"${responseHeader.queryParams[key]?json_string}",</#list><#list responseHeader.multiValueQueryParams?keys as key>

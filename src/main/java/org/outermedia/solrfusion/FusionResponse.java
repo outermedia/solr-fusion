@@ -22,6 +22,9 @@ public class FusionResponse
 
     private boolean ok;
 
+    private long qStart;
+    private long qEnd;
+
     public FusionResponse()
     {
         ok = false;
@@ -32,6 +35,7 @@ public class FusionResponse
     {
         ok = true;
         errorMessage = null;
+        qEnd = System.currentTimeMillis();
     }
 
     protected void setError(String message, String cause)
@@ -43,6 +47,7 @@ public class FusionResponse
         {
             this.errorMessage += "\nCause: " + cause;
         }
+        qEnd = System.currentTimeMillis();
     }
 
     /**
@@ -54,7 +59,7 @@ public class FusionResponse
     public void setResponseForQueryParseError(List<String> queryList, String cause)
     {
         StringBuilder sb = new StringBuilder();
-        for(String qs : queryList)
+        for (String qs : queryList)
         {
             sb.append(qs);
             sb.append(";");
@@ -152,4 +157,8 @@ public class FusionResponse
         setError("Internal processing error. Reason: " + reason, null);
     }
 
+    public long getQueryTime()
+    {
+        return qEnd - qStart;
+    }
 }

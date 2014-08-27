@@ -209,7 +209,8 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam(filterQueryStr)));
         fusionRequest.setResponseType(ResponseRendererType.XML);
         fusionRequest.setFieldsToReturn(new SolrFusionRequestParam("id title " + fusionRequest.getFusionSortField()));
-        FusionResponse fusionResponse = new FusionResponse();
+        FusionResponse fusionResponse = spy(new FusionResponse());
+        doReturn(0l).when(fusionResponse).getQueryTime();
         fc.process(spyCfg, fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error: " + fusionResponse.getErrorMessage(), fusionResponse.isOk());
 

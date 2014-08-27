@@ -180,7 +180,7 @@ public class FusionController implements FusionControllerIfc
             {
                 ClosableIterator<Document, SearchServerResponseInfo> response = consolidator.getResponseIterator(
                     fusionRequest);
-                // set state BEFORE response is rendered, because their the status is read out!
+                // set state BEFORE response is rendered, because their the status is read out! the query time too.
                 fusionResponse.setOk();
                 // TODO better to pass in a Writer in order to avoid building of very big String
                 String responseString = responseRenderer.getResponseString(configuration, response, fusionRequest,

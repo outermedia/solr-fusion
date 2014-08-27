@@ -171,7 +171,8 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
         fusionRequest.setQuery(new SolrFusionRequestParam(queryStr));
         fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam(filterQueryStr)));
         fusionRequest.setResponseType(ResponseRendererType.XML);
-        FusionResponse fusionResponse = new FusionResponse();
+        FusionResponse fusionResponse = spy(new FusionResponse());
+        doReturn(0l).when(fusionResponse).getQueryTime();
         fc.process(spyCfg, fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
 

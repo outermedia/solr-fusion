@@ -208,7 +208,8 @@ public class ControllerFacetTest extends AbstractControllerTest
             anyString());
 
         FusionControllerIfc fc = cfg.getController();
-        FusionResponse fusionResponse = new FusionResponse();
+        FusionResponse fusionResponse = spy(new FusionResponse());
+        doReturn(0l).when(fusionResponse).getQueryTime();
         fc.process(spyCfg, fusionRequest, fusionResponse);
         Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
 

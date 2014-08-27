@@ -86,6 +86,7 @@ public class SolrFusionServlet extends AbstractServlet
             log.debug("Received request: {}\nHeader:\n{}\nParams:\n{}", url, buildPrintableParamMap(headerValues),
                 buildPrintableParamMap(parameterMap));
         }
+        long startTime = System.currentTimeMillis();
         FusionRequest fusionRequest = buildFusionRequest(parameterMap, headerValues);
         ResponseRendererType rendererType = fusionRequest.getResponseType();
         log.debug("Sending back response in {}", rendererType.toString());
@@ -93,6 +94,7 @@ public class SolrFusionServlet extends AbstractServlet
 
         PrintWriter pw = response.getWriter();
         FusionResponse fusionResponse = getNewFusionResponse();
+        fusionResponse.setQStart(startTime);
         processRequest(response, fusionRequest, fusionResponse, rendererType);
         String responseStr = fusionResponse.getResponseAsString();
         if (responseStr != null && fusionResponse.isOk())

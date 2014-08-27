@@ -81,7 +81,7 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
         Map<String, Object> input = new HashMap<String, Object>();
 
         FreemarkerResponse freemarkerResponse = new FreemarkerResponse(configuration, docStream);
-        FreemarkerResponseHeader freemarkerResponseHeader = new FreemarkerResponseHeader(docStream, request);
+        FreemarkerResponseHeader freemarkerResponseHeader = new FreemarkerResponseHeader(docStream, request, fusionResponse);
         FreemarkerErrorHeader freemarkerErrorHeader = new FreemarkerErrorHeader(fusionResponse);
         Map<String, Document> highlighting = null;
         Map<String, List<WordCount>> facets = null;
