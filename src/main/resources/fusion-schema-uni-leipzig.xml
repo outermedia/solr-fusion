@@ -106,7 +106,8 @@
         <om:field name="edition"/>
         <om:field name="publisher" multi-value="true"/>
         <om:field name="publishDate" multi-value="true"/>
-        <om:field name="publishDateSort"/>
+        <!-- publishDateSort needs to be an int for year range query in vufinds extended search -->
+        <om:field name="publishDateSort" type="int"/>
         <om:field name="imprint" multi-value="false"/>
         <om:field name="dateSpan" multi-value="true"/>
         <om:field name="publishPlace" multi-value="true"/>
