@@ -33,6 +33,7 @@ public class FusionRequest
     private SolrFusionRequestParam sort;
     private SolrFusionRequestParam fieldsToReturn;
     private SolrFusionRequestParam queryType;
+    private SolrFusionRequestParam queryFields;
 
     private SolrFusionRequestParam highlightingFieldsToReturn;
     private SolrFusionRequestParam highlightQuery;
@@ -65,6 +66,7 @@ public class FusionRequest
         errors = new ArrayList<>();
         query = new SolrFusionRequestParam();
         filterQuery = new ArrayList<>();
+        queryFields = new SolrFusionRequestParam();
         fieldsToReturn = new SolrFusionRequestParam();
         highlightingFieldsToReturn = new SolrFusionRequestParam();
         highlightQuery = new SolrFusionRequestParam();
@@ -235,6 +237,13 @@ public class FusionRequest
         searchServerParams.put(QUERY_TYPE, queryType);
         // solrfusion wants always xml
         searchServerParams.put(WRITER_TYPE, "xml");
+
+        if (queryFields.getValue() != null)
+        {
+            String mappedBoosts = mapFusionBoostFieldListToSearchServerField(queryFields.getValue(), configuration,
+                searchServerConfig);
+            searchServerParams.put(QUERY_FIELD, mappedBoosts);
+        }
     }
 
     protected void addIfContained(Multimap<String> searchServerParams, SolrFusionRequestParams param,

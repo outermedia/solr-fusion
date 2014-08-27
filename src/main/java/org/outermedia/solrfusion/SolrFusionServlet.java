@@ -259,6 +259,9 @@ public class SolrFusionServlet extends AbstractServlet
         SolrFusionRequestParam queryType = getOptionalSingleSearchParamValue(requestParams, QUERY_TYPE, null,
             fusionRequest);
         fusionRequest.setQueryType(queryType);
+        SolrFusionRequestParam queryFields = getOptionalSingleSearchParamValue(requestParams, QUERY_FIELD, null,
+            fusionRequest);
+        fusionRequest.setQueryFields(queryFields);
     }
 
     protected void buildFacetFusionRequest(Map<String, String[]> requestParams, FusionRequest fusionRequest)
