@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.types;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.*;
@@ -68,6 +69,9 @@ public class BshTest extends AbstractTypeTest
         Term sourceField = buildResponseField(doc, "f1", "something", "other");
 
         ScriptEnv env = new ScriptEnv();
+        env.setBinding(ScriptEnv.ENV_IN_FUSION_REQUEST, new FusionRequest());
+        env.setBinding(ScriptEnv.ENV_IN_MAP_FACET, true);
+        env.setBinding(ScriptEnv.ENV_IN_MAP_HIGHLIGHT, true);
         rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null);
         Assert.assertTrue("Expected that term was mapped", sourceField.isWasMapped());
         // System.out.println(sourceField.toString());
@@ -90,6 +94,9 @@ public class BshTest extends AbstractTypeTest
         Query query = new TermQuery(term);
 
         ScriptEnv env = new ScriptEnv();
+        env.setBinding(ScriptEnv.ENV_IN_FUSION_REQUEST, new FusionRequest());
+        env.setBinding(ScriptEnv.ENV_IN_MAP_FACET, true);
+        env.setBinding(ScriptEnv.ENV_IN_MAP_HIGHLIGHT, true);
         qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), query, env, null);
         Assert.assertTrue("Expected that term was mapped", term.isWasMapped());
         // System.out.println(term.toString());

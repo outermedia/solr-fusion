@@ -22,9 +22,11 @@ import java.util.Map;
  * #ENV_IN_VALUES} - a List of String</li> <li>{@value #ENV_IN_CONVERSION} - a ConversionDirection</li><li>{@value
  * #ENV_IN_LOCALE} - a Locale</li> <li>{@value #ENV_IN_DOCUMENT} - a Document</li><li>{@value #ENV_IN_TERM_QUERY_PART} -
  * a TermQuery</li> <li>{@value #ENV_IN_SEARCH_SERVER_CONFIG} - a SearchServerConfig</li><li>{@value #ENV_IN_WORD_COUNT}
- * - a list of int</li><li>{@value #ENV_IN_DOC_TERM} - a Term</li></ul> A ScriptType has to set the following entries:
- * <ul><li>{@value #ENV_OUT_NEW_VALUES} - null or a list of processed values</li> <li>{@value #ENV_OUT_NEW_WORD_COUNTS}
- * - a list of new word counts (default value is copied from {@value #ENV_IN_WORD_COUNT})</li></ul>
+ * - a list of int</li><li>{@value #ENV_IN_DOC_TERM} - a Term</li><li>{@value #ENV_IN_FUSION_REQUEST} - a
+ * FusionRequest</li> <li>{@value #ENV_IN_MAP_FACET} - a Boolean</li> <li>{@value #ENV_IN_MAP_HIGHLIGHT} - a
+ * Boolean</li></ul> A ScriptType has to set the following entries: <ul><li>{@value #ENV_OUT_NEW_VALUES} - null or
+ * a list of processed values</li> <li>{@value #ENV_OUT_NEW_WORD_COUNTS} - a list of new word counts (default value is
+ * copied from {@value #ENV_IN_WORD_COUNT})</li>
  */
 @ToString
 public class ScriptEnv
