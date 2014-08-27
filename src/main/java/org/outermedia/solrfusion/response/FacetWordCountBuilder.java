@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
-* Created by ballmann on 8/11/14.
-*/
+ * Created by ballmann on 8/11/14.
+ */
 @Slf4j
 public class FacetWordCountBuilder implements FieldVisitor
 {
@@ -47,7 +47,8 @@ public class FacetWordCountBuilder implements FieldVisitor
                 List<String> values = sf.getAllFusionFieldValue();
                 if (wordCount.size() != values.size())
                 {
-                    log.error("Mapping didn't fix facet word count for field: '{}' of server {}. Facet's word count is ignored.",
+                    log.error(
+                        "Mapping didn't fix facet word count for field: '{}' of server {}. Facet's word count is ignored.",
                         sf.getTerm().getSearchServerFieldName(),
                         idGenerator.getSearchServerIdFromFusionId(doc.getFusionDocId(fusionIdField)));
                 }
@@ -55,18 +56,26 @@ public class FacetWordCountBuilder implements FieldVisitor
                 {
                     String fusionFieldName = sf.getFusionFieldName();
                     Map<String, Integer> fusionWordCount = fusionFacetFields.get(fusionFieldName);
-                    if(fusionWordCount == null)
+                    if (fusionWordCount == null)
                     {
                         fusionWordCount = new HashMap<>();
                         fusionFacetFields.put(fusionFieldName, fusionWordCount);
                     }
-                    for(int i=0; i<wordCount.size(); i++)
+                    for (int i = 0; i < wordCount.size(); i++)
                     {
                         String word = values.get(i);
                         Integer wcObj = fusionWordCount.get(word);
                         int wc = 0;
-                        if(wcObj != null) wc = wcObj;
+                        if (wcObj != null)
+                        {
+                            wc = wcObj;
+                        }
                         wc += wordCount.get(i);
+                        if (log.isDebugEnabled() && wc != wordCount.get(i))
+                        {
+                            log.debug("MERGED FACET WORD COUNTS OF {}: {} to {}+{}={}", sf.getFusionFieldName(), word,
+                                wcObj, wordCount.get(i), wc);
+                        }
                         fusionWordCount.put(word, wc);
                     }
                 }

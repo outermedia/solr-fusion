@@ -20,7 +20,9 @@ import java.util.regex.Pattern;
 
 
 /**
- * Data holder class to store one field mapping configuration.
+ * Data holder class to store one field mapping configuration. This class is not thread safe especially because of the
+ * fields specificFusionName and  specificFusionName which are set by the last call of applicableToSearchServerField and
+ * applicableToFusionField.
  *
  * @author ballmann
  */
@@ -59,21 +61,11 @@ public class FieldMapping
     private Pattern fusionNameRegExp;
 
     @XmlTransient
-    protected MappingType mappingType;
+    private MappingType mappingType;
 
-    @XmlTransient @XmlLocation Locator locator;
+    @XmlTransient @XmlLocation
+    private Locator locator;
 
-    /**
-     * This field is set, when {@link #applicableToSearchServerField(String)} has been called.
-     */
-    @XmlTransient
-    private String specificFusionName;
-
-    /**
-     * This field is set, when {@link #applicableToFusionField(String)} has been called.
-     */
-    @XmlTransient
-    private String specificSearchServerName;
 
     @XmlElements(value = {@XmlElement(name = "add", type = AddOperation.class,
         namespace = "http://solrfusion.outermedia.org/configuration/"), @XmlElement(name = "drop",
@@ -85,33 +77,30 @@ public class FieldMapping
 
     /**
      * Is 'this' mapping applicable to the specified fusion field? If true, then the field {@link
-     * #specificSearchServerName} is set to store the corresponding search server field name which is maybe constructed
+     * org.outermedia.solrfusion.configuration.ApplicableResult#destinationFieldName} is set to store the corresponding search server field name which is maybe constructed
      * by a regular expression or wildcard.
      *
      * @param fusionFieldName
      * @return true if applicable else false
      */
-    public boolean applicableToFusionField(String fusionFieldName)
+    public ApplicableResult applicableToFusionField(String fusionFieldName)
     {
-        ApplicableResult matchResult = mappingType.applicableToFusionField(fusionFieldName, this);
-        if (matchResult != null)
+        ApplicableResult result = mappingType.applicableToFusionField(fusionFieldName, this);
+        if (result != null)
         {
-            specificSearchServerName = matchResult.getDestinationFieldName();
+            result.setMapping(this);
         }
-        return matchResult != null;
+        return result;
     }
 
     /**
-     * This method applies 'this' mapping to a given query term. Please note that a previous call of {@link
-     * #applicableToFusionField(String)} is expected, because {@link #specificSearchServerName} is then set.
+     * This method applies 'this' mapping to a given query term.
      *
      * @param term
      * @param env
      */
-    public void applyQueryMappings(Term term, ScriptEnv env)
+    public void applyQueryOperations(Term term, ScriptEnv env, ApplicableResult applicableResult)
     {
-        // initialize term with mapped name and original fusion value
-        term.setSearchServerFieldName(specificSearchServerName);
         List<String> fusionFieldValues = term.getFusionFieldValue();
         if (fusionFieldValues != null)
         {
@@ -120,10 +109,15 @@ public class FieldMapping
             term.setSearchServerFieldValue(initialSearchServerValues);
         }
         term.setWasMapped(true);
+        String destinationFieldName = applicableResult.getDestinationFieldName();
+        if(destinationFieldName != null)
+        {
+            term.setSearchServerFieldName(destinationFieldName);
+        }
 
         ScriptEnv newEnv = new ScriptEnv(env);
         newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD, term.getFusionFieldName());
-        newEnv.setBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD, term.getSearchServerFieldName());
+        newEnv.setBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD, destinationFieldName);
         newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD_DECLARATION, term.getFusionField());
         // don't apply operations on null value (empty list is OK)
         if (operations != null && fusionFieldValues != null)
@@ -145,44 +139,40 @@ public class FieldMapping
 
     /**
      * Is 'this' mapping applicable to the specified search server field? If true, then the field {@link
-     * #specificFusionName} is set to store the corresponding fusion field name which is maybe constructed by a regular
-     * expression or wildcard.
+     * org.outermedia.solrfusion.configuration.ApplicableResult#destinationFieldName} is set to store the corresponding
+     * fusion field name which is maybe constructed by a regular expression or wildcard.
      *
      * @param searchServerFieldName
-     * @return true if applicable else false
+     * @return a non null value if applicable else null
      */
-    public boolean applicableToSearchServerField(String searchServerFieldName)
+    public ApplicableResult applicableToSearchServerField(String searchServerFieldName)
     {
-        ApplicableResult matchResult = mappingType.applicableToSearchServerField(searchServerFieldName, this);
-        if (matchResult != null)
+        ApplicableResult result = mappingType.applicableToSearchServerField(searchServerFieldName, this);
+        if (result != null)
         {
-            String destinationFieldName = matchResult.getDestinationFieldName();
-            // don't wipe out already set mapped field name (e.g. <om:drop><om:response> without fusion field name)
-            if (destinationFieldName != null)
-            {
-                specificFusionName = destinationFieldName;
-            }
+            result.setMapping(this);
         }
-        return matchResult != null;
+        return result;
     }
 
-    public void applyResponseMappings(List<Term> terms, ScriptEnv env, FusionField fusionField)
+    public void applyResponseMappings(List<Term> terms, ScriptEnv env, FusionField fusionField,
+        ApplicableResult applicableResult)
     {
         for (Term t : terms)
         {
-            applyResponseMappings(t, env, fusionField);
+            applyResponseOperations(t, env, fusionField, applicableResult);
         }
     }
 
     /**
-     * This method applies 'this' mapping to a given response term. Please note that a previous call of {@link
-     * #applicableToSearchServerField(String)} is expected, because {@link #specificFusionName} is then set.
+     * This method applies 'this' mapping to a given response term.
      *
      * @param term
      * @param env
      * @param fusionField
      */
-    public void applyResponseMappings(Term term, ScriptEnv env, FusionField fusionField)
+    public void applyResponseOperations(Term term, ScriptEnv env, FusionField fusionField,
+        ApplicableResult applicableResult)
     {
         term.setFusionField(fusionField);
 
@@ -205,7 +195,7 @@ public class FieldMapping
         }
 
         ScriptEnv newEnv = new ScriptEnv(env);
-        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD, specificFusionName);
+        newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD, applicableResult.getDestinationFieldName());
         newEnv.setBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD, term.getSearchServerFieldName());
         newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD_DECLARATION, fusionField);
         newEnv.setBinding(ScriptEnv.ENV_IN_DOC_TERM, term);
@@ -239,6 +229,13 @@ public class FieldMapping
      */
     protected void afterUnmarshal(Unmarshaller u, Object parent) throws UnmarshalException
     {
+        searchServersNamePattern = trim(searchServersNamePattern);
+        fusionNameReplacement = trim(fusionNameReplacement);
+        searchServersNameReplacement = trim(searchServersNameReplacement);
+        fusionNamePattern = trim(fusionNamePattern);
+        searchServersName = trim(searchServersName);
+        fusionName = trim(fusionName);
+
         boolean namePatSet = searchServersNamePattern != null;
         boolean fusionReplSet = fusionNameReplacement != null;
         boolean nameReplSet = searchServersNameReplacement != null;
@@ -290,6 +287,15 @@ public class FieldMapping
         }
     }
 
+    protected String trim(String s)
+    {
+        if (s != null)
+        {
+            s = s.trim();
+        }
+        return s;
+    }
+
     protected Pattern parseRegExp(String regExp) throws UnmarshalException
     {
         Pattern pat = null;
@@ -324,7 +330,13 @@ public class FieldMapping
         return atLine;
     }
 
-    public List<Target> getAllAddQueryMappings(AddLevel level)
+    /**
+     * Find all add query targets for the given level.
+     *
+     * @param level
+     * @return a perhaps empty list
+     */
+    public List<Target> getAllAddQueryTargets(AddLevel level)
     {
         List<Target> result = new ArrayList<>();
         if (operations != null)
@@ -333,7 +345,7 @@ public class FieldMapping
             {
                 if (o instanceof AddOperation)
                 {
-                    if (((AddOperation) o).getLevel() == level)
+                    if (level.equals(((AddOperation) o).getLevel()))
                     {
                         result.addAll(o.getQueryTargets());
                     }
@@ -343,7 +355,49 @@ public class FieldMapping
         return result;
     }
 
-    public TargetsOfMapping getAllAddResponseMappings()
+    /**
+     * Find all change query targets.
+     *
+     * @return a perhaps empty list
+     */
+    public List<Target> getAllChangeQueryTargets()
+    {
+        List<Target> result = new ArrayList<>();
+        if (operations != null)
+        {
+            for (Operation o : operations)
+            {
+                if (o instanceof ChangeOperation)
+                {
+                    result.addAll(o.getQueryTargets());
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Find all change response targets.
+     *
+     * @return a perhaps empty list
+     */
+    public List<Target> getAllChangeResponseTargets()
+    {
+        List<Target> result = new ArrayList<>();
+        if (operations != null)
+        {
+            for (Operation o : operations)
+            {
+                if (o instanceof ChangeOperation)
+                {
+                    result.addAll(o.getResponseTargets());
+                }
+            }
+        }
+        return result;
+    }
+
+    public TargetsOfMapping getAllAddResponseTargets()
     {
         TargetsOfMapping result = new TargetsOfMapping();
         result.setMappingsSearchServerFieldName(searchServersName);
@@ -353,6 +407,24 @@ public class FieldMapping
             for (Operation o : operations)
             {
                 if (o instanceof AddOperation)
+                {
+                    result.addAll(o.getResponseTargets());
+                }
+            }
+        }
+        return result;
+    }
+
+    public TargetsOfMapping getAllDropResponseTargets()
+    {
+        TargetsOfMapping result = new TargetsOfMapping();
+        result.setMappingsSearchServerFieldName(searchServersName);
+        result.setMappingsFusionFieldName(fusionName);
+        if (operations != null)
+        {
+            for (Operation o : operations)
+            {
+                if (o instanceof DropOperation)
                 {
                     result.addAll(o.getResponseTargets());
                 }

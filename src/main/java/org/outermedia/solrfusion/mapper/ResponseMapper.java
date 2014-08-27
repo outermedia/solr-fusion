@@ -172,9 +172,10 @@ public class ResponseMapper implements ResponseMapperIfc
         }
     }
 
-    protected List<FieldMapping> getFieldMappings(String searchServerFieldName)
+    protected List<ApplicableResult> getFieldMappings(String searchServerFieldName)
     {
-        List<FieldMapping> mappings = serverConfig.findAllMappingsForSearchServerField(searchServerFieldName);
+        List<ApplicableResult> mappings = filterForResponse(
+            serverConfig.findAllMappingsForSearchServerField(searchServerFieldName));
         if (mappings.isEmpty())
         {
             if (missingMappingPolicy == MISSING_MAPPING_POLICY_THROW_EXCEPTION)
@@ -193,10 +194,9 @@ public class ResponseMapper implements ResponseMapperIfc
         return mappings;
     }
 
-    protected FusionField getFusionField(ScriptEnv env, FieldMapping m)
+    protected FusionField getFusionField(ScriptEnv env, ApplicableResult ar)
     {
-        FusionField fusionField = env.getConfiguration().findFieldByName(m.getSpecificFusionName());
-        // log.error("FIELD "+m.getSpecificFusionName()+" "+m.getFusionName()+" -> "+fusionField); // TEST REMOVE
+        FusionField fusionField = env.getConfiguration().findFieldByName(ar.getDestinationFieldName());
         return fusionField;
     }
 
@@ -263,17 +263,18 @@ public class ResponseMapper implements ResponseMapperIfc
     {
         if (fieldName != null && processField(fieldName, t))
         {
-            List<FieldMapping> mappings = getFieldMappings(fieldName);
+            List<ApplicableResult> mappings = getFieldMappings(fieldName);
             if (mappings.size() > 0)
             {
-                for (FieldMapping m : mappings)
+                for (ApplicableResult ar : mappings)
                 {
+                    FieldMapping m = ar.getMapping();
                     boolean traceEnabled = log.isTraceEnabled();
                     if (traceEnabled)
                     {
                         log.trace("APPLY field={} mapping[line={}]={}", fieldName, m.getLocator().getLineNumber(), m);
                     }
-                    m.applyResponseMappings(t, env, getFusionField(env, m));
+                    m.applyResponseOperations(t, env, getFusionField(env, ar), ar);
                     if (traceEnabled)
                     {
                         log.trace("AFTER APPLY {}", doc.buildFusionDocStr());
@@ -283,6 +284,48 @@ public class ResponseMapper implements ResponseMapperIfc
                 numberOfMappedFields++;
             }
         }
+    }
+
+    protected List<ApplicableResult> filterForResponse(List<ApplicableResult> allMappingsForSearchServerField)
+    {
+        for (int i = allMappingsForSearchServerField.size() - 1; i >= 0; i--)
+        {
+            boolean forQueryOk = false;
+            ApplicableResult ar = allMappingsForSearchServerField.get(i);
+            FieldMapping m = ar.getMapping();
+            // a search server name must be present!
+            if (ar.getDestinationFieldName() != null)
+            {
+                List<Operation> ops = m.getOperations();
+                // no operations = <om:change>
+                if (ops == null || ops.size() == 0)
+                {
+                    forQueryOk = true;
+                }
+                else
+                {
+                    if (m.getAllChangeResponseTargets().size() > 0)
+                    {
+                        forQueryOk = true;
+                    }
+                }
+            }
+            // find <om:change><om:query /> or <om:add level="inside"><om:query />
+            if (m.getAllAddResponseTargets().size() > 0)
+            {
+                forQueryOk = true;
+            }
+            if (m.getAllDropResponseTargets().size() > 0)
+            {
+                forQueryOk = true;
+            }
+
+            if (!forQueryOk)
+            {
+                allMappingsForSearchServerField.remove(i);
+            }
+        }
+        return allMappingsForSearchServerField;
     }
 
     // ---- Visitor methods --------------------------------------------------------------------------------------------

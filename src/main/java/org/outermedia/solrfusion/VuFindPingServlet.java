@@ -5,17 +5,17 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
+import java.util.Map;
 
 @Slf4j
 @Getter
 @Setter
-public class VuFindPingServlet extends HttpServlet
+public class VuFindPingServlet extends AbstractServlet
 {
     /**
      * Default serialization id.
@@ -33,6 +33,15 @@ public class VuFindPingServlet extends HttpServlet
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException
     {
+        if (log.isDebugEnabled())
+        {
+            Map<String, Object> headerValues = collectHeader(request);
+            Map<String, String[]> parameterMap = request.getParameterMap();
+            String url = rebuildRequestUrl(request, parameterMap);
+            log.debug("Received request: {}\nHeader:\n{}\nParams:\n{}", url, buildPrintableParamMap(headerValues),
+                buildPrintableParamMap(parameterMap));
+        }
+
         // set encoding/content type BEFORE getWriter() is called!
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");

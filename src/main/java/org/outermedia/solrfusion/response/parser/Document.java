@@ -473,4 +473,17 @@ public class Document implements VisitableDocument
         }
     }
 
+    public int size()
+    {
+        int result = 0;
+        if (solrSingleValuedFields != null)
+        {
+            result += solrSingleValuedFields.size();
+        }
+        if (solrMultiValuedFields != null)
+        {
+            result += solrMultiValuedFields.size();
+        }
+        return result;
+    }
 }

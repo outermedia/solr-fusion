@@ -35,12 +35,12 @@ public class ResetQueryState implements QueryVisitor
     @Override
     public void visitQuery(TermQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm());
+        visitTermQuery(t);
     }
 
-    protected boolean visitQuery(Term t)
+    protected boolean visitTermQuery(TermQuery tq)
     {
-        t.resetQuery();
+        tq.resetQuery();
         return true;
     }
 
@@ -53,7 +53,7 @@ public class ResetQueryState implements QueryVisitor
     @Override
     public void visitQuery(FuzzyQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm());
+        visitTermQuery(t);
     }
 
     @Override
@@ -65,55 +65,61 @@ public class ResetQueryState implements QueryVisitor
     @Override
     public void visitQuery(IntRangeQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm());
+        visitTermQuery(t);
     }
 
     @Override
     public void visitQuery(LongRangeQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm());
+        visitTermQuery(t);
     }
 
     @Override
     public void visitQuery(FloatRangeQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm());
+        visitTermQuery(t);
     }
 
     @Override
     public void visitQuery(DoubleRangeQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm());
+        visitTermQuery(t);
     }
 
     @Override
     public void visitQuery(DateRangeQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm());
+        visitTermQuery(t);
     }
 
     @Override
     public void visitQuery(PhraseQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm());
+        visitTermQuery(t);
     }
 
     @Override
     public void visitQuery(PrefixQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm());
+        visitTermQuery(t);
     }
 
     @Override
     public void visitQuery(WildcardQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm());
+        visitTermQuery(t);
     }
 
     @Override
     public void visitQuery(BooleanClause booleanClause, ScriptEnv env)
     {
         booleanClause.accept(this, env);
+    }
+
+    @Override
+    public void visitQuery(SubQuery t, ScriptEnv env)
+    {
+        t.getQuery().accept(this, env);
     }
 
 }

@@ -275,7 +275,7 @@ public class ControllerTest extends AbstractControllerTest
         fusionRequest.setFacetSortFields(facetSortFields);
 
         Multimap<String> map = fusionRequest.buildSearchServerQueryParams(cfg, serverConfig);
-        Assert.assertEquals("Expected other sort field", "titleVT_de asc", map.getFirst(SORT));
+        Assert.assertEquals("Expected other sort field", "titleVT_eng asc", map.getFirst(SORT));
         Assert.assertNull("Expected no start value", map.getFirst(START));
         int maxDocs = serverConfig.getMaxDocs();
         Assert.assertNull("Expected no page size", map.getFirst(PAGE_SIZE));
@@ -289,7 +289,7 @@ public class ControllerTest extends AbstractControllerTest
         Assert.assertEquals("Expected other search server highlight pre", "pre", map.getFirst(HIGHLIGHT_PRE));
         Assert.assertEquals("Expected other search server highlight post", "post", map.getFirst(HIGHLIGHT_POST));
         Assert.assertEquals("Expected other search server highlight value", "true", map.getFirst(HIGHLIGHT));
-        Assert.assertEquals("Expected other search server highlight fields", "titleVT_de titleVT_eng id",
+        Assert.assertEquals("Expected other search server highlight fields", "titleVT_eng id",
             map.getFirst(HIGHLIGHT_FIELDS_TO_RETURN));
 
         // check facet params
@@ -298,12 +298,11 @@ public class ControllerTest extends AbstractControllerTest
         Assert.assertEquals("Expected other search server facet min", "2", map.getFirst(FACET_MINCOUNT));
         Assert.assertEquals("Expected other search server facet limit", "20", map.getFirst(FACET_LIMIT));
         Assert.assertEquals("Expected other search server facet sort", "index", map.getFirst(FACET_SORT));
-        List<String> expected = Arrays.asList("{!ex=format_filter}titleVT_de", "{!ex=format_de15_filter}author9002",
-            "{!ex=format_filter}titleVT_eng");
+        List<String> expected = Arrays.asList("{!ex=format_de15_filter}author9002", "{!ex=format_filter}titleVT_eng");
         Assert.assertEquals("Got different facet fields", expected, new ArrayList<>(map.get(FACET_FIELD)));
         List<Map.Entry<String, String>> collectedFacetSortFields = map.filterBy(FACET_SORT_FIELD);
         String actualStr = collectedFacetSortFields.toString();
-        String expectedStr = "[f.titleVT_eng.facet.sort=index1, f.author9002.facet.sort=index2, f.titleVT_de.facet.sort=index1]";
+        String expectedStr = "[f.titleVT_eng.facet.sort=index1, f.author9002.facet.sort=index2]";
         Assert.assertEquals("Got different facet sort fields", expectedStr, actualStr);
 
         // below server's max limit, return wanted size
@@ -341,7 +340,7 @@ public class ControllerTest extends AbstractControllerTest
         FusionRequest request = new FusionRequest();
 
         String searchServerField = mapField("title", request, cfg, serverConfig);
-        Assert.assertEquals("Mapping returned other field than expected", "titleVT_de", searchServerField);
+        Assert.assertEquals("Mapping returned other field than expected", "titleVT_eng", searchServerField);
 
         searchServerField = mapField("language_de", request, cfg, serverConfig);
         Assert.assertEquals("Mapping returned other field than expected", "language", searchServerField);
@@ -364,7 +363,7 @@ public class ControllerTest extends AbstractControllerTest
 
         // title is mapped to two fields, preserve order of textual order of mappings
         fl = request.mapFusionFieldListToSearchServerField("title id", cfg, serverConfig, null, false);
-        Assert.assertEquals("Mapping returned other field than expected", "titleVT_de titleVT_eng id", fl);
+        Assert.assertEquals("Mapping returned other field than expected", "titleVT_eng id", fl);
     }
 
     protected String mapField(String field, FusionRequest request, Configuration cfg, SearchServerConfig serverConfig)

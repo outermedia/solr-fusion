@@ -67,14 +67,15 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
      * @param fusionFieldName is the field for which mappings shall be returned
      * @return a list with mappings, perhaps empty
      */
-    public List<FieldMapping> findAllMappingsForFusionField(String fusionFieldName)
+    public List<ApplicableResult> findAllMappingsForFusionField(String fusionFieldName)
     {
-        List<FieldMapping> result = new ArrayList<>();
+        List<ApplicableResult> result = new ArrayList<>();
         for (FieldMapping m : fieldMappings)
         {
-            if (m.applicableToFusionField(fusionFieldName))
+            ApplicableResult applicable = m.applicableToFusionField(fusionFieldName);
+            if (applicable != null)
             {
-                result.add(m);
+                result.add(applicable);
             }
         }
         return result;
@@ -86,14 +87,15 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
      * @param searchServerFieldName is the field for which mappings shall be returned
      * @return a list with mappings, perhaps empty
      */
-    public List<FieldMapping> findAllMappingsForSearchServerField(String searchServerFieldName)
+    public List<ApplicableResult> findAllMappingsForSearchServerField(String searchServerFieldName)
     {
-        List<FieldMapping> result = new ArrayList<>();
+        List<ApplicableResult> result = new ArrayList<>();
         for (FieldMapping m : fieldMappings)
         {
-            if (m.applicableToSearchServerField(searchServerFieldName))
+            ApplicableResult applicable = m.applicableToSearchServerField(searchServerFieldName);
+            if (applicable != null)
             {
-                result.add(m);
+                result.add(applicable);
             }
         }
         return result;
@@ -141,7 +143,7 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
             result = new LinkedHashMap<>();
             for (FieldMapping m : fieldMappings)
             {
-                List<Target> queryTargets = m.getAllAddQueryMappings(level);
+                List<Target> queryTargets = m.getAllAddQueryTargets(level);
                 if (queryTargets.size() > 0)
                 {
                     List<Target> existingQueryTargets = result.get(m.getSearchServersName());
@@ -174,7 +176,7 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
             result = new LinkedHashMap<>();
             for (FieldMapping m : fieldMappings)
             {
-                TargetsOfMapping responseTargets = m.getAllAddResponseMappings();
+                TargetsOfMapping responseTargets = m.getAllAddResponseTargets();
                 if (responseTargets.size() > 0)
                 {
                     List<Target> existingTargets = result.get(m.getFusionName());

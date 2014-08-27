@@ -3,10 +3,7 @@ package org.outermedia.solrfusion;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.FieldMapping;
-import org.outermedia.solrfusion.configuration.ResponseRendererType;
-import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
@@ -212,8 +209,8 @@ public class FusionRequest
             String searchServerSortField = searchServerFieldSet.iterator().next();
             if (searchServerFieldSet.size() > 1)
             {
-                log.error("Found ambiguous mapping for sort field '{}'. Using: {}", sortSpec.getFusionSortField(),
-                    searchServerSortField);
+                log.error("Found ambiguous mapping {} for sort field '{}'. Using: {}", searchServerFieldSet,
+                    sortSpec.getFusionSortField(), searchServerSortField);
             }
             sortSpec.setSearchServerSortField(searchServerSortField);
             if (sort.isContainedInRequest())
@@ -312,6 +309,11 @@ public class FusionRequest
             fieldSet.add(searchServerConfig.getIdFieldName());
         }
 
+        return mergeFields(fieldSet);
+    }
+
+    protected String mergeFields(Set<String> fieldSet)
+    {
         StringBuilder sb = new StringBuilder();
         for (String s : fieldSet)
         {
@@ -322,6 +324,48 @@ public class FusionRequest
             sb.append(s);
         }
         return sb.toString();
+    }
+
+    public String mapFusionBoostFieldListToSearchServerField(String fieldList, Configuration configuration,
+        SearchServerConfig searchServerConfig)
+    {
+        Set<String> fieldSet = new LinkedHashSet<>();
+        if (fieldList != null)
+        {
+            // support " " and "," and combinations of them as separator
+            StringTokenizer st = new StringTokenizer(fieldList, " ,");
+            while (st.hasMoreTokens())
+            {
+                String fusionFieldAndBoost = null;
+                try
+                {
+                    fusionFieldAndBoost = st.nextToken();
+                    String boost = "";
+                    String fusionField = fusionFieldAndBoost;
+                    int caretPos = fusionFieldAndBoost.indexOf('^');
+                    if (caretPos >= 0)
+                    {
+                        fusionField = fusionFieldAndBoost.substring(0, caretPos);
+                        boost = "^" + fusionFieldAndBoost.substring(caretPos + 1);
+                    }
+                    if (!fusionField.isEmpty())
+                    {
+                        Set<String> searchServerFields = mapFusionFieldToSearchServerField(fusionField, configuration,
+                            searchServerConfig, null);
+                        for (String sf : searchServerFields)
+                        {
+                            fieldSet.add(sf + boost);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    log.error("Caught exception while mapping query field {}. Ignoring field.", fusionFieldAndBoost);
+                }
+            }
+        }
+
+        return mergeFields(fieldSet);
     }
 
     /**
@@ -347,18 +391,15 @@ public class FusionRequest
         }
         else
         {
-            List<FieldMapping> mappings = searchServerConfig.findAllMappingsForFusionField(fusionField);
+            List<ApplicableResult> mappings = filterForQuery(
+                searchServerConfig.findAllMappingsForFusionField(fusionField));
             boolean foundMapping = false;
             if (mappings.size() > 0)
             {
-                for (FieldMapping fm : mappings)
+                for (ApplicableResult ar : mappings)
                 {
                     foundMapping = true;
-                    String searchServersName = fm.getSpecificSearchServerName();
-                    if (searchServersName != null)
-                    {
-                        result.add(searchServersName);
-                    }
+                    result.add(ar.getDestinationFieldName());
                 }
             }
             else
@@ -387,13 +428,57 @@ public class FusionRequest
                 {
                     if (!foundMapping)
                     {
-                        log.warn("Didn't find mapping of fusion field '{}' for server.", fusionField,
+                        log.warn("Didn't find mapping of fusion field '{}' for server {}.", fusionField,
                             searchServerConfig.getSearchServerName());
                     }
                 }
             }
         }
         return result;
+    }
+
+    protected List<ApplicableResult> filterForQuery(List<ApplicableResult> allMappingsForFusionField)
+    {
+        // last <om:change> counts, because it overwrites the previous mapping
+        boolean foundOkChangeMapping = false;
+        for (int i = allMappingsForFusionField.size() - 1; i >= 0; i--)
+        {
+            boolean forQueryOk = false;
+            ApplicableResult ar = allMappingsForFusionField.get(i);
+            // a search server name must be present!
+            if (ar.getDestinationFieldName() != null)
+            {
+                FieldMapping m = ar.getMapping();
+                List<Operation> ops = m.getOperations();
+                // no operations = <om:change>
+                if (ops == null || ops.size() == 0)
+                {
+                    if (!foundOkChangeMapping)
+                    {
+                        forQueryOk = true;
+                        foundOkChangeMapping = true;
+                    }
+                }
+                else
+                {
+                    // find <om:change><om:query /> or <om:add level="inside"><om:query />
+                    if (m.getAllAddQueryTargets(AddLevel.INSIDE).size() > 0)
+                    {
+                        forQueryOk = true;
+                    }
+                    if (!foundOkChangeMapping && m.getAllChangeQueryTargets().size() > 0)
+                    {
+                        forQueryOk = true;
+                        foundOkChangeMapping = true;
+                    }
+                }
+            }
+            if (!forQueryOk)
+            {
+                allMappingsForFusionField.remove(i);
+            }
+        }
+        return allMappingsForFusionField;
     }
 
     protected void buildSearchServerQuery(Query query, SolrFusionRequestParams paramName, Configuration configuration,
@@ -403,7 +488,10 @@ public class FusionRequest
         if (query != null)
         {
             QueryBuilderIfc queryBuilder = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
-            String queryStr = queryBuilder.buildQueryString(query, configuration, searchServerConfig, locale);
+            Set<String> defaultSearchServerFields = mapFusionFieldToSearchServerField(
+                configuration.getDefaultSearchField(), configuration, searchServerConfig, null);
+            String queryStr = queryBuilder.buildQueryString(query, configuration, searchServerConfig, locale,
+                defaultSearchServerFields);
             if (queryStr.length() > 0)
             {
                 searchServerParams.put(paramName, queryStr);

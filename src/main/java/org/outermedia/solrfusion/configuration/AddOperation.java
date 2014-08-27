@@ -145,6 +145,10 @@ public class AddOperation extends Operation
         List<Target> queries = getQueryTargets();
         if (queries.size() > 0)
         {
+            if (level == null)
+            {
+                msg = "Please specify the level attribute when <om:add> is used for queries. Possible values are 'inside' and 'outside'.";
+            }
             if (level == AddLevel.INSIDE && fieldMapping.getFusionName() == null)
             {
                 msg =

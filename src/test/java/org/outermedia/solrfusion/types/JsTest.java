@@ -89,7 +89,7 @@ public class JsTest extends AbstractTypeTest
         Query query = new TermQuery(term);
 
         ScriptEnv env = new ScriptEnv();
-        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), query, env);
+        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), query, env, null);
         Assert.assertTrue("Expected that term was mapped", term.isWasMapped());
         // System.out.println(term.toString());
         Assert.assertEquals("Found wrong field name mapping", "f3", term.getSearchServerFieldName());

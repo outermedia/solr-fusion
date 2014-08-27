@@ -359,7 +359,7 @@ public class FreemarkerResponseRendererTest
         InvocationTargetException, IllegalAccessException
     {
         XmlResponse response9000 = xmlUtil.unmarshal(XmlResponse.class, responseData, null);
-        List<FacetHit> facets = response9000.getFacetFields();
+        Document facets = response9000.getFacetFields("id", 1);
         SearchServerConfig searchServerConfig = spyCfg.getConfigurationOfSearchServers().get(0);
         PagingResponseConsolidator consolidator = (PagingResponseConsolidator) spyCfg.getResponseConsolidatorFactory().getInstance();
         consolidator.initConsolidator(cfg);

@@ -7,10 +7,7 @@ import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Map a fusion query to a solr request which is parsable by an edismax parser.
@@ -24,6 +21,7 @@ public class QueryBuilder implements QueryBuilderIfc
     protected Configuration configuration;
     protected SearchServerConfig searchServerConfig;
     protected Locale locale;
+    protected Set<String> defaultSearchServerSearchFields;
 
     /**
      * Build the query string for a search server.
@@ -35,9 +33,10 @@ public class QueryBuilder implements QueryBuilderIfc
      */
     @Override
     public String buildQueryString(Query query, Configuration configuration, SearchServerConfig searchServerConfig,
-        Locale locale)
+        Locale locale, Set<String> defaultSearchServerSearchFields)
     {
-        String result = buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale);
+        String result = buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale,
+            defaultSearchServerSearchFields);
 
         // inside add queried have been processed, now add the outside queries
         List<String> newQueriesToAdd = new ArrayList<>();
@@ -77,12 +76,13 @@ public class QueryBuilder implements QueryBuilderIfc
 
     @Override
     public String buildQueryStringWithoutNew(Query query, Configuration configuration,
-        SearchServerConfig searchServerConfig, Locale locale)
+        SearchServerConfig searchServerConfig, Locale locale, Set<String> defaultSearchServerSearchFields)
     {
         queryBuilder = new StringBuilder();
         this.configuration = configuration;
         this.searchServerConfig = searchServerConfig;
         this.locale = locale;
+        this.defaultSearchServerSearchFields = defaultSearchServerSearchFields;
         query.accept(this, null);
         return queryBuilder.toString();
     }
@@ -128,13 +128,14 @@ public class QueryBuilder implements QueryBuilderIfc
             if (!term.isRemoved())
             {
                 String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(origQuery, configuration,
-                    searchServerConfig, locale);
+                    searchServerConfig, locale, defaultSearchServerSearchFields);
                 insideClauses.add(clauseQueryStr);
             }
             added = handleNewQueries(newQueries, insideClauses);
         }
         else if (term.isWasMapped() && !term.isRemoved() && term.getSearchServerFieldValue() != null)
         {
+            handleMetaInfo(origQuery.getMetaInfo(), queryBuilder);
             added = true;
             queryBuilder.append(term.getSearchServerFieldName());
             queryBuilder.append(":");
@@ -153,7 +154,15 @@ public class QueryBuilder implements QueryBuilderIfc
         return added;
     }
 
-    private boolean handleNewQueries(List<String> newQueries, List<String> insideClauses)
+    protected void handleMetaInfo(MetaInfo metaInfo, StringBuilder builder)
+    {
+        if (metaInfo != null)
+        {
+            metaInfo.buildSearchServerQueryString(builder);
+        }
+    }
+
+    protected boolean handleNewQueries(List<String> newQueries, List<String> insideClauses)
     {
         boolean added = false;
         for (String qs : newQueries)
@@ -212,7 +221,7 @@ public class QueryBuilder implements QueryBuilderIfc
         {
             QueryBuilderIfc newClauseQueryBuilder = newQueryBuilder();
             String clauseQueryStr = newClauseQueryBuilder.buildQueryStringWithoutNew(booleanClause.getQuery(),
-                configuration, searchServerConfig, locale);
+                configuration, searchServerConfig, locale, defaultSearchServerSearchFields);
             if (clauseQueryStr.length() > 0)
             {
                 if (boolQueryStringBuilder.length() > 0)
@@ -302,6 +311,34 @@ public class QueryBuilder implements QueryBuilderIfc
         // NOP, not used
     }
 
+    @Override
+    public void visitQuery(SubQuery t, ScriptEnv env)
+    {
+        queryBuilder.append("_query_:\"");
+        Query subQuery = t.getQuery();
+        QueryBuilderIfc newQueryBuilder = null;
+        if (subQuery.isDismaxQuery())
+        {
+            newQueryBuilder = DisMaxQueryBuilder.Factory.getInstance();
+        }
+        else
+        {
+            try
+            {
+                newQueryBuilder = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
+            }
+            catch (Exception e)
+            {
+                log.error("Caught exception while creating new query builder.", e);
+            }
+        }
+
+        String subQueryStr = newQueryBuilder.buildQueryString(subQuery, configuration, searchServerConfig, locale,
+            defaultSearchServerSearchFields);
+        queryBuilder.append(subQueryStr.replace("\"", "\\\""));
+        queryBuilder.append("\"");
+    }
+
     protected void buildSearchServerRangeQuery(NumericRangeQuery<?> rq)
     {
         Term term = rq.getTerm();
@@ -314,7 +351,7 @@ public class QueryBuilder implements QueryBuilderIfc
             if (!term.isRemoved())
             {
                 String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(rq, configuration,
-                    searchServerConfig, locale);
+                    searchServerConfig, locale, defaultSearchServerSearchFields);
                 insideClauses.add(clauseQueryStr);
             }
             handleNewQueries(newQueries, insideClauses);
@@ -362,4 +399,5 @@ public class QueryBuilder implements QueryBuilderIfc
     {
         buildSearchServerRangeQuery(t);
     }
+
 }

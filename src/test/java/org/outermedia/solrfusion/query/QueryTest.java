@@ -1,11 +1,14 @@
 package org.outermedia.solrfusion.query;
 
+import com.google.common.collect.Sets;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryParserFactory;
+import org.outermedia.solrfusion.mapper.QueryBuilder;
+import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.query.parser.*;
 import org.xml.sax.SAXException;
 
@@ -429,10 +432,94 @@ public class QueryTest
         p.init(new QueryParserFactory());
         Map<String, Float> boosts = new HashMap<String, Float>();
         Query q = p.parse(cfg, boosts, query, Locale.GERMAN, null);
-        System.out.println("Q " + q);
+        // System.out.println("Q " + q);
         MetaInfo mi = q.getMetaInfo();
         Assert.assertNotNull("Expected to find meta info", mi);
         Assert.assertEquals("Found different meta info name", "ex", mi.getName());
         Assert.assertEquals("Found different meta info value", "format_filter", mi.getValue());
+    }
+
+    @Test
+    public void parseMetaDismax()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException, ParseException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+        String query = "{!dismax qf=\"title_full_unstemmed^150 title_full^100 title^900 title_alt^200 title_new^100 title_old title_orig^400 series^100 series2 series_orig^100\"}Schiller";
+        EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
+        p.init(new QueryParserFactory());
+        Map<String, Float> boosts = new HashMap<String, Float>();
+        Query q = p.parse(cfg, boosts, query, Locale.GERMAN, null);
+        // System.out.println("Q " + q);
+        checkDismaxQfQuery((TermQuery) q, "Schiller",
+            "title_full_unstemmed^150 title_full^100 title^900 title_alt^200 title_new^100 title_old title_orig^400 series^100 series2 series_orig^100");
+    }
+
+    protected void checkDismaxQfQuery(TermQuery tq, String queryStr, String subQueryStr)
+    {
+        Assert.assertEquals("Expected other term", queryStr, tq.getFusionFieldValue().get(0));
+        MetaInfo mi = tq.getMetaInfo();
+        Assert.assertEquals("Expected other meta key", "dismax", mi.getName());
+        Map<String, String> expected = new LinkedHashMap<>();
+        expected.put("qf", subQueryStr);
+        Assert.assertEquals("Expected other params", expected, mi.getFusionParameterMap());
+    }
+
+    @Test
+    public void parseSubQuery()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException, ParseException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema.xml");
+        String subQueryStr = "title_full_unstemmed^150 title_full^100 title^900 title_alt^200 title_new^100 title_old title_orig^400 series^100 series2 series_orig^100";
+        String query = "((_query_:\"{!dismax qf=\\\"" + subQueryStr + "\\\"}Schiller\"))";
+        EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
+        p.init(new QueryParserFactory());
+        Map<String, Float> boosts = new HashMap<String, Float>();
+        SubQuery q = (SubQuery) p.parse(cfg, boosts, query, Locale.GERMAN, null);
+        // System.out.println("Q " + q);
+        checkDismaxQfQuery((TermQuery) q.getQuery(), "Schiller", subQueryStr);
+    }
+
+    @Test
+    public void parseMultipleSubQueries()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException, ParseException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("fusion-schema-uni-leipzig.xml");
+        String goetheSubQuery = "title_full_unstemmed^150 title_full^100 title^900 title_alt^200 title_new^100 title_old title_orig^400 series^100 series2 series_orig^100";
+        String raeuberSubQuery = "topic_unstemmed^150 topic^100 topic_id^100 topic_ref^100";
+        String query =
+            "((_query_:\"{!dismax qf=\\\"" + goetheSubQuery + "\\\"}Goethe\") AND (_query_:\"{!dismax qf=\\\"" +
+                raeuberSubQuery + "\\\"}Räuber\"))";
+        EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
+        p.init(new QueryParserFactory());
+        Map<String, Float> boosts = new HashMap<String, Float>();
+        Query q = p.parse(cfg, boosts, query, Locale.GERMAN, null);
+        // System.out.println("Q " + q);
+        BooleanQuery bq = (BooleanQuery) q;
+        List<BooleanClause> clauses = bq.getClauses();
+        TermQuery query1 = (TermQuery) ((SubQuery) clauses.get(0).getQuery()).getQuery();
+        checkDismaxQfQuery(query1, "Goethe", goetheSubQuery);
+        TermQuery query2 = (TermQuery) ((SubQuery) clauses.get(1).getQuery()).getQuery();
+        checkDismaxQfQuery(query2, "Räuber", raeuberSubQuery);
+
+        // simulate mapping which means for UBL to do (almost) nothing
+        query1.getTerm().setWasMapped(true);
+        query1.getTerm().setSearchServerFieldValue(query1.getFusionFieldValue());
+        query1.setSearchServerFieldName(cfg.getDefaultSearchField());
+        MetaInfo mi1 = query1.getMetaInfo();
+        mi1.setSearchServerParams(mi1.getFusionParams());
+
+        query2.getTerm().setWasMapped(true);
+        query2.getTerm().setSearchServerFieldValue(query2.getFusionFieldValue());
+        query2.setSearchServerFieldName(cfg.getDefaultSearchField());
+        MetaInfo mi2 = query2.getMetaInfo();
+        mi2.setSearchServerParams(mi2.getFusionParams());
+
+        QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
+        String qs = qb.buildQueryString(q, cfg, cfg.getSearchServerConfigByName("UBL"), Locale.GERMAN,
+            Sets.newHashSet("allfields"));
+        // System.out.println("QUERY: "+qs);
+        Assert.assertEquals("",
+            "(+_query_:\"{!dismax qf=\\\"" + goetheSubQuery + "\\\"}Goethe\" AND +_query_:\"{!dismax qf=\\\"" +
+                raeuberSubQuery + "\\\"}Räuber\")", qs);
     }
 }

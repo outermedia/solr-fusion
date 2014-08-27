@@ -117,7 +117,7 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
                 "xml"), 4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
             buildMap(QUERY, "titleVT_eng:xyz", FILTER_QUERY, "titleVT_eng:XYZ", FIELDS_TO_RETURN,
-                "id titleVT_de titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
+                "id titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
     }
 
     protected Multimap<String> buildMap(Object... v)
@@ -174,7 +174,7 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
                 "xml"), 4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
             buildMap(QUERY, "titleVT_eng:abc", FILTER_QUERY, "titleVT_eng:abc", FIELDS_TO_RETURN,
-                "id titleVT_de titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
+                "id titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
     }
 
     protected String testMultipleServers(String queryStr, String filterQueryStr)

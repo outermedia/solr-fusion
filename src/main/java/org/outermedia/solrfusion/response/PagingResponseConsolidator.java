@@ -35,7 +35,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
     protected Configuration config;
     protected String fusionIdField;
     protected String fusionMergeField;
-    protected List<FacetHit> facetFields;
+    protected List<Document> facetFields;
 
     /**
      * Factory creates instances only.
@@ -65,7 +65,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
 
     @Override public void addResultStream(SearchServerConfig searchServerConfig,
         ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request,
-        List<Highlighting> highlighting, List<FacetHit> facetFields)
+        List<Highlighting> highlighting, Document facetFields)
     {
         streamCounter++;
         Set<String> searchServerFieldsToMap = getSingleFieldMapping(request.getSearchServerSortField());
@@ -79,35 +79,28 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         processFacetFields(config, searchServerConfig, facetFields);
     }
 
-    protected void processFacetFields(Configuration config, SearchServerConfig searchServerConfig,
-        List<FacetHit> facetFields)
+    protected void processFacetFields(Configuration config, SearchServerConfig searchServerConfig, Document facetFields)
     {
-        String searchServerIdField = searchServerConfig.getIdFieldName();
         if (facetFields != null)
         {
             log.debug("Received {} facet fields from search server {}", facetFields.size(),
                 searchServerConfig.getSearchServerName());
-            // generate dummy search server ids
             String idField = searchServerConfig.getIdFieldName();
             Set<String> searchServerFieldsToMap = getSingleFieldMapping(idField);
-            for (int i = 0; i < facetFields.size(); i++)
+            try
             {
-                Document d = facetFields.get(i).getDocument(searchServerIdField, i + 1);
-                try
-                {
-                    config.getResponseMapper().mapResponse(config, searchServerConfig, d, getNewScriptEnv(),
-                        searchServerFieldsToMap);
-                }
-                catch (Exception e)
-                {
-                    log.error("Couldn't create/get response mapper instance", e);
-                }
+                config.getResponseMapper().mapResponse(config, searchServerConfig, facetFields, getNewScriptEnv(),
+                    searchServerFieldsToMap);
+            }
+            catch (Exception e)
+            {
+                log.error("Couldn't create/get response mapper instance", e);
             }
             if (this.facetFields == null)
             {
                 this.facetFields = new ArrayList<>();
             }
-            this.facetFields.addAll(facetFields);
+            this.facetFields.add(facetFields);
         }
     }
 
@@ -275,11 +268,11 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             }
             else
             {
-                completelyMapDoc(config, d, fusionDocId);
+                completelyMapDoc(config, d, fusionDocId, null);
                 Document hl = allHighlighting.get(fusionDocId);
                 if (hl != null)
                 {
-                    completelyMapDoc(config, hl, fusionDocId);
+                    completelyMapDoc(config, hl, fusionDocId, ScriptEnv.ENV_IN_MAP_HIGHLIGHT);
                     highlighting.put(fusionDocId, hl);
                 }
             }
@@ -315,10 +308,9 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         Map<String, Map<String, Integer>> fusionFacetFields = new LinkedHashMap<>();
         if (facetFields != null)
         {
-            for (FacetHit fh : facetFields)
+            for (Document doc : facetFields)
             {
-                final Document doc = fh.getDocument();
-                completelyMapDoc(config, doc, doc.getFusionDocId(fusionIdField));
+                completelyMapDoc(config, doc, doc.getFusionDocId(fusionIdField), ScriptEnv.ENV_IN_MAP_FACET);
                 doc.accept(getFacetBuilder(idGenerator, fusionIdField, fusionFacetFields, doc), null);
             }
         }
@@ -336,11 +328,16 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         return new FacetWordCountBuilder(fusionIdField, idGenerator, doc, fusionFacetFields);
     }
 
-    protected void completelyMapDoc(Configuration config, Document d, String fusionDocId)
+    protected void completelyMapDoc(Configuration config, Document d, String fusionDocId, String mapType)
         throws InvocationTargetException, IllegalAccessException
     {
         SearchServerConfig searchServerConfig = config.getSearchServerConfigByFusionDocId(fusionDocId);
-        config.getResponseMapper().mapResponse(config, searchServerConfig, d, getNewScriptEnv(), null);
+        ScriptEnv newScriptEnv = getNewScriptEnv();
+        if (mapType != null)
+        {
+            newScriptEnv.setBinding(mapType, Boolean.TRUE);
+        }
+        config.getResponseMapper().mapResponse(config, searchServerConfig, d, newScriptEnv, null);
     }
 
     /**
@@ -363,11 +360,11 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         for (Document toMerge : sameDocuments)
         {
             String fusionDocId = toMerge.getFusionDocId(fusionIdField);
-            completelyMapDoc(config, toMerge, fusionDocId);
+            completelyMapDoc(config, toMerge, fusionDocId, null);
             Document hl = allHighlighting.get(fusionDocId);
             if (hl != null)
             {
-                completelyMapDoc(config, hl, fusionDocId);
+                completelyMapDoc(config, hl, fusionDocId, ScriptEnv.ENV_IN_MAP_HIGHLIGHT);
             }
         }
         if (merger != null)

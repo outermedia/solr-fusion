@@ -50,13 +50,13 @@ public class XmlResponse
         return result;
     }
 
-    public List<FacetHit> getFacetFields()
+    public Document getFacetFields(String searchServerIdField, int docId)
     {
-        List<FacetHit> result = null;
+        Document result = null;
         ResponseSection section = findSectionByName("facet_counts");
         if (section != null)
         {
-            result = section.getFacetHits();
+            result = section.getFacetDocument(searchServerIdField, docId);
         }
         return result;
     }

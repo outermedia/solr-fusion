@@ -37,4 +37,17 @@ public abstract class Query implements VisitableQuery
     {
         return addInside != null && addInside;
     }
+
+    public void resetQuery()
+    {
+        if (metaInfo != null)
+        {
+            metaInfo.resetQuery();
+        }
+    }
+
+    public boolean isDismaxQuery()
+    {
+        return metaInfo != null && metaInfo.isDismax();
+    }
 }

@@ -47,18 +47,15 @@ public class FieldMerger extends AbstractType
     {
         TypeResult result = null;
         FusionField fusionField = (FusionField) env.getBinding(ScriptEnv.ENV_IN_FUSION_FIELD_DECLARATION);
-        if(dir == ConversionDirection.SEARCH_TO_FUSION)
+        if (dir == ConversionDirection.SEARCH_TO_FUSION)
         {
             Document currentDoc = (Document) env.getBinding(ScriptEnv.ENV_IN_DOCUMENT);
-            if (fusionField.isSingleValue())
+            result = joinFieldsToMultiValue(currentDoc);
+            boolean isHighlightDoc = env.getBoolBinding(ScriptEnv.ENV_IN_MAP_HIGHLIGHT);
+            boolean isFacetDoc = env.getBoolBinding(ScriptEnv.ENV_IN_MAP_FACET);
+            if (!isHighlightDoc && !isFacetDoc && fusionField.isSingleValue())
             {
-                result = joinFieldsToMultiValue(currentDoc);
                 reduceMultiValuesToSingleValue(result);
-            }
-            else
-            {
-                // multi value field
-                result = joinFieldsToMultiValue(currentDoc);
             }
         }
         return result;
@@ -73,7 +70,7 @@ public class FieldMerger extends AbstractType
     protected void reduceMultiValuesToSingleValue(TypeResult result)
     {
         List<String> fieldValues = result.getValues();
-        if(fieldValues != null)
+        if (fieldValues != null)
         {
             StringBuilder sb = new StringBuilder();
             List<Integer> wordCounts = result.getWordCounts();

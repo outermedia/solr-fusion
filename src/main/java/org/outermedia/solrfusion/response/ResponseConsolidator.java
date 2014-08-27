@@ -8,7 +8,6 @@ import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.FacetHit;
 import org.outermedia.solrfusion.response.parser.Highlighting;
 
 import java.lang.reflect.InvocationTargetException;
@@ -47,7 +46,7 @@ public class ResponseConsolidator extends AbstractResponseConsolidator
     @Override
     public void addResultStream(SearchServerConfig searchServerConfig,
         ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request,
-        List<Highlighting> highlighting, List<FacetHit> facetFields)
+        List<Highlighting> highlighting,Document facetFields)
     {
         try
         {

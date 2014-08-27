@@ -10,6 +10,7 @@ import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.response.parser.FacetHit;
+import org.outermedia.solrfusion.response.parser.ResponseSection;
 import org.outermedia.solrfusion.response.parser.WordCount;
 import org.xml.sax.SAXException;
 
@@ -27,6 +28,14 @@ public class PagingResponseConsolidatorTest
 {
     TestHelper helper;
     Configuration cfg;
+
+    static class TestResponseSection extends ResponseSection
+    {
+        @Override protected void addFacetValueAsDocField(Document facetDocument, FacetHit hit)
+        {
+            super.addFacetValueAsDocField(facetDocument, hit);
+        }
+    }
 
     @Before
     public void setup() throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
@@ -101,8 +110,8 @@ public class PagingResponseConsolidatorTest
     protected void createResponses(ResponseConsolidatorIfc consolidator, String[] titles1, String[] titles2,
         List<FacetHit> facetFields1, List<FacetHit> facetFields2)
     {
-        addAnswerFromServer("Bibliothek9000", consolidator, titles1, facetFields1);
-        addAnswerFromServer("Bibliothek9002", consolidator, titles2, facetFields2);
+        addAnswerFromServer("Bibliothek9000", consolidator, titles1, buildFacetDoc(facetFields1));
+        addAnswerFromServer("Bibliothek9002", consolidator, titles2, buildFacetDoc(facetFields2));
         Assert.assertEquals("Number of added responses is different", 2, consolidator.numberOfResponseStreams());
     }
 
@@ -129,7 +138,7 @@ public class PagingResponseConsolidatorTest
     }
 
     protected void addAnswerFromServer(String serverName, ResponseConsolidatorIfc consolidator, String[] titles,
-        List<FacetHit> facetFields)
+        Document facetFields)
     {
         SearchServerConfig serverConfig = cfg.getSearchServerConfigByName(serverName);
         FusionRequest fusionRequest = new FusionRequest();
@@ -195,6 +204,23 @@ public class PagingResponseConsolidatorTest
         Assert.assertEquals("Expected other facets", expectedMap, fusionFacetFields.get("language"));
     }
 
+    protected Document buildFacetDoc(List<FacetHit> facets)
+    {
+        if (facets == null)
+        {
+            return null;
+        }
+
+        TestResponseSection rs = new TestResponseSection();
+        Document facetDoc = new Document();
+        for (FacetHit fh : facets)
+        {
+            rs.addFacetValueAsDocField(facetDoc, fh);
+        }
+        facetDoc.setSearchServerDocId("id", "1");
+        return facetDoc;
+    }
+
     protected FacetHit buildFaceHit(String searchServerField, String w1, String w2) throws UnmarshalException
     {
         FacetHit fh = new FacetHit();
@@ -203,7 +229,6 @@ public class PagingResponseConsolidatorTest
         fieldCounts.add(buildWordCount(w1, 1));
         fieldCounts.add(buildWordCount(w2, 2));
         fh.setFieldCounts(fieldCounts);
-        fh.afterUnmarshal(null, null);
         return fh;
     }
 

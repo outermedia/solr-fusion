@@ -110,7 +110,7 @@ public class DefaultResponseParserTest
     }
 
     @Test
-    public void testHighlightingParsing()
+    public void testHighlightingAndFacetsParsing()
         throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException
     {
         XmlResponse response = xmlUtil.unmarshal(XmlResponse.class, "response-with-facets-highlighting.xml", null);
@@ -140,37 +140,38 @@ public class DefaultResponseParserTest
         Assert.assertEquals("Expected other first title_full highlighting", expected,
             lastHl.getSearchServerValuesOf("title_full"));
 
-        List<FacetHit> facetFields = response.getFacetFields();
+        Document facetFields = response.getFacetFields("id", 1);
         Assert.assertNotNull("Expected parsed facet fields", facetFields);
-        Assert.assertEquals("Found different number of facet fields", 3, facetFields.size());
-        FacetHit hit1 = facetFields.get(0);
-        String expectedDocStr = "UNMAP: branch_de15[25]=not assigned,Bibliotheca Albertina,Deutsches Literaturinstitut Leipzig,Kunst,Musik,Orientwissenschaften,Geographie,Campus-Bibliothek,Sudhoffinstitut,Theaterwissenschaften,Archäologie,Erziehungswissenschaft,Rechtswissenschaft,Chemie/Physik,Orientwissenschaften, Ägyptologie,Geowissenschaften,Veterinärmedizin,Zentralbibliothek Medizin,Mineralogie,Museum für Musikinstrumente,Orientwissenschaften, Altorientalistik,Sportwissenschaft,Biowissenschaften,Theoretische Physik,Zentralbibliothek Medizin 2";
-        checkFacetField(hit1, "branch_de15", 25, "not assigned", 18484, "Zentralbibliothek Medizin 2", 1,
-            expectedDocStr);
-        FacetHit hitLast = facetFields.get(facetFields.size() - 1);
-        expectedDocStr = "UNMAP: collcode_de15[3]=Magazin / Sonstige,Freihand,Lehrbuchsammlung";
-        checkFacetField(hitLast, "collcode_de15", 3, "Magazin / Sonstige", 8023, "Lehrbuchsammlung", 19,
-            expectedDocStr);
+        // -1 for id field
+        Assert.assertEquals("Found different number of facet fields", 3, facetFields.size()-1);
+        SolrField hit1 = facetFields.getSolrMultiValuedFields().get(0);
+        checkFacetField(hit1, "branch_de15", 25, "not assigned", 18484, "Zentralbibliothek Medizin 2", 1);
+        SolrField hitLast = facetFields.getSolrMultiValuedFields().get(3 - 1);
+        checkFacetField(hitLast, "collcode_de15", 3, "Magazin / Sonstige", 8023, "Lehrbuchsammlung", 19);
+        String expectedDocStr = "UNMAP: branch_de15[25]=not assigned,Bibliotheca Albertina,Deutsches Literaturinstitut Leipzig,Kunst,Musik,Orientwissenschaften,Geographie,Campus-Bibliothek,Sudhoffinstitut,Theaterwissenschaften,Archäologie,Erziehungswissenschaft,Rechtswissenschaft,Chemie/Physik,Orientwissenschaften, Ägyptologie,Geowissenschaften,Veterinärmedizin,Zentralbibliothek Medizin,Mineralogie,Museum für Musikinstrumente,Orientwissenschaften, Altorientalistik,Sportwissenschaft,Biowissenschaften,Theoretische Physik,Zentralbibliothek Medizin 2\n";
+        // System.out.println("DOC " + hit.getDocument().buildFusionDocStr());
+        Assert.assertTrue("Got different facet hit document: "+facetFields.buildFusionDocStr(),
+            facetFields.buildFusionDocStr().contains(expectedDocStr));
+        expectedDocStr = "UNMAP: collcode_de15[3]=Magazin / Sonstige,Freihand,Lehrbuchsammlung\n";
+        Assert.assertTrue("Got different facet hit document: "+facetFields.buildFusionDocStr(),
+            facetFields.buildFusionDocStr().contains(expectedDocStr));
     }
 
-    protected void checkFacetField(FacetHit hit, String searchServerField, int wordCount, String firstWord,
-        int firstWordCount, String lastWord, int lastWordCount, String expectedDocStr)
+    protected void checkFacetField(SolrField hit, String searchServerField, int wordCount, String firstWord,
+        int firstWordCount, String lastWord, int lastWordCount)
     {
         Assert.assertEquals("First search server field is different", searchServerField,
-            hit.getSearchServerFieldName());
-        List<WordCount> hit1WordCounts = hit.getFieldCounts();
+            hit.getTerm().getSearchServerFieldName());
+        List<Integer> hit1WordCounts = hit.getSearchServerFacetWordCounts();
         Assert.assertNotNull("Expected parsed facet field word counts", hit1WordCounts);
         Assert.assertEquals("Found different number of facet field word counts", wordCount, hit1WordCounts.size());
-        Assert.assertEquals("Word of first facet hit is different", firstWord, hit1WordCounts.get(0).getWord());
-        Assert.assertEquals("Word count of first facet hit is different", firstWordCount,
-            hit1WordCounts.get(0).getCount());
+        Assert.assertEquals("Word of first facet hit is different", firstWord, hit.getFirstSearchServerFieldValue());
+        Assert.assertEquals("Word count of first facet hit is different", (Integer)firstWordCount,
+            hit.getSearchServerFacetWordCounts().get(0));
         Assert.assertEquals("Word of last facet hit is different", lastWord,
-            hit1WordCounts.get(wordCount - 1).getWord());
-        Assert.assertEquals("Word count of last facet hit is different", lastWordCount,
-            hit1WordCounts.get(wordCount - 1).getCount());
-        // System.out.println("DOC " + hit.getDocument().buildFusionDocStr());
-        Assert.assertEquals("Got different facet hit document", expectedDocStr,
-            hit.getDocument().buildFusionDocStr().trim());
+            hit.getAllSearchServerFieldValue().get(wordCount - 1));
+        Assert.assertEquals("Word count of last facet hit is different", (Integer)lastWordCount,
+            hit.getSearchServerFacetWordCounts().get(wordCount - 1));
     }
 
     @Test

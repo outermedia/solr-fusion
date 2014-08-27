@@ -71,4 +71,10 @@ public class TermQuery extends Query
     {
         return shallowCloneImpl(new TermQuery());
     }
+
+    public void resetQuery()
+    {
+        super.resetQuery();
+        term.resetQuery();
+    }
 }

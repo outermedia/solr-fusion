@@ -1,27 +1,29 @@
 package org.outermedia.solrfusion.mapper;
 
-import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.QueryBuilderFactory;
-import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.query.parser.*;
+import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Map a fusion query to a solr request.
  * <p/>
  *
- * @author stephan
+ * @author stephan / sballmann
  */
+@Slf4j
 public class DisMaxQueryBuilder implements QueryBuilderIfc
 {
     protected List<Query> newQueries;
     protected StringBuilder queryBuilder;
     protected Configuration configuration;
+    protected Locale locale;
+    protected SearchServerConfig searchServerConfig;
+    protected Set<String> defaultSearchServerSearchFields;
 
     /**
      * Build the query string for a search server.
@@ -33,18 +35,57 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
      */
     @Override
     public String buildQueryString(Query query, Configuration configuration, SearchServerConfig searchServerConfig,
-        Locale locale)
+        Locale locale, Set<String> defaultSearchServerSearchFields)
     {
-        // TODO implement <om:add> see QueryBuilder
-        return buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale);
+        String result =  buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale,
+            defaultSearchServerSearchFields);
+
+        // inside add queried have been processed, now add the outside queries
+        List<String> newQueriesToAdd = new ArrayList<>();
+        AddOperation addOp = new AddOperation();
+        Map<String, List<Target>> allAddQueryTargets = searchServerConfig.findAllAddQueryMappings(AddLevel.OUTSIDE);
+        for (Map.Entry<String, List<Target>> entry : allAddQueryTargets.entrySet())
+        {
+            String searchServerFieldName = entry.getKey();
+            List<Target> addQuery = entry.getValue();
+            for (Target t : addQuery)
+            {
+                newQueriesToAdd.addAll(addOp.addToQuery(configuration, searchServerFieldName, t, locale));
+            }
+        }
+        if (newQueriesToAdd.size() > 0)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (result.length() > 0)
+            {
+                sb.append('(');
+                sb.append(result);
+                sb.append(')');
+            }
+            for (String qs : newQueriesToAdd)
+            {
+                if (sb.length() > 0)
+                {
+                    sb.append(" AND ");
+                }
+                sb.append(qs);
+            }
+            result = sb.toString();
+        }
+
+
+        return result;
     }
 
     @Override public String buildQueryStringWithoutNew(Query query, Configuration configuration,
-        SearchServerConfig searchServerConfig, Locale locale)
+        SearchServerConfig searchServerConfig, Locale locale, Set<String> defaultSearchServerSearchFields)
     {
         newQueries = new ArrayList<>();
         queryBuilder = new StringBuilder();
+        this.searchServerConfig = searchServerConfig;
         this.configuration = configuration;
+        this.defaultSearchServerSearchFields = defaultSearchServerSearchFields;
+        this.locale = locale;
         query.accept(this, null);
         return queryBuilder.toString();
     }
@@ -75,43 +116,96 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(TermQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, t.getBoostValue());
+        buildSearchServerTermQuery(t.getTerm(), false, t.getBoostValue(), t);
     }
 
-    protected boolean visitQuery(Term term, ScriptEnv env, Float boost)
-    {
-        boolean added = buildSearchServerTermQuery(term, false, boost);
-        return added;
-    }
-
-    protected boolean buildSearchServerTermQuery(Term term, boolean quoted, Float boost)
+    protected boolean buildSearchServerTermQuery(Term term, boolean quoted, Float boost, Query origQuery)
     {
         boolean added = false;
-        if (term.isWasMapped() && !term.isRemoved() && term.getSearchServerFieldValue() != null)
+
+        List<String> searchServerFieldValue = term.getSearchServerFieldValue();
+        List<String> newQueries = term.getNewQueries();
+        // avoid endless recursion
+        term.setNewQueries(null);
+        if (term.isWasMapped() && newQueries != null)
         {
-            added = true;
-            if (quoted)
+            List<String> insideClauses = new ArrayList<>();
+            if (!term.isRemoved())
             {
-                queryBuilder.append('"');
+                String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(origQuery, configuration,
+                    searchServerConfig, locale, defaultSearchServerSearchFields);
+                insideClauses.add(clauseQueryStr);
             }
-            queryBuilder.append(term.getSearchServerFieldValue().get(0));
-            if (quoted)
+            added = handleNewQueries(newQueries, insideClauses);
+        }
+        else
+        if (term.isWasMapped() && !term.isRemoved() && searchServerFieldValue != null)
+        {
+            // TODO filter out duplicate search words?!
+            if (defaultSearchServerSearchFields.contains(term.getSearchServerFieldName()))
             {
-                queryBuilder.append('"');
+                handleMetaInfo(origQuery.getMetaInfo(), queryBuilder);
+                added = true;
+                if (quoted)
+                {
+                    queryBuilder.append('"');
+                }
+                queryBuilder.append(searchServerFieldValue.get(0));
+                if (quoted)
+                {
+                    queryBuilder.append('"');
+                }
+                if (boost != null)
+                {
+                    queryBuilder.append("^");
+                    queryBuilder.append(boost);
+                }
             }
-            if (boost != null)
+            else
             {
-                queryBuilder.append("^");
-                queryBuilder.append(boost);
+                log.debug("Can't add field, because it is not the default search field: {}:{} ",
+                    term.getSearchServerFieldName(), searchServerFieldValue);
             }
         }
         return added;
     }
 
+    protected boolean handleNewQueries(List<String> newQueries, List<String> insideClauses)
+    {
+        boolean added = false;
+        for (String qs : newQueries)
+        {
+            // inside only
+            insideClauses.add(qs);
+        }
+        if (insideClauses.size() > 0)
+        {
+            added = true;
+            for (int i = 0; i < insideClauses.size(); i++)
+            {
+                String qs = insideClauses.get(i);
+                if (i > 0)
+                {
+                    queryBuilder.append(" ");
+                }
+                // no "+" means "or"
+                queryBuilder.append(qs);
+            }
+        }
+        return added;
+    }
+
+    protected void handleMetaInfo(MetaInfo metaInfo, StringBuilder builder)
+    {
+        if (metaInfo != null)
+        {
+            metaInfo.buildSearchServerQueryString(builder);
+        }
+    }
+
     @Override
     public void visitQuery(BooleanQuery t, ScriptEnv env)
     {
-        // TODO
         t.visitQueryClauses(this, env);
     }
 
@@ -128,15 +222,15 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     }
 
     @Override
-    public void visitQuery(PhraseQuery pq, ScriptEnv env)
+    public void visitQuery(PhraseQuery t, ScriptEnv env)
     {
-        buildSearchServerTermQuery(pq.getTerm(), true, pq.getBoostValue());
+        buildSearchServerTermQuery(t.getTerm(), true, t.getBoostValue(), t);
     }
 
     @Override
     public void visitQuery(PrefixQuery t, ScriptEnv env)
     {
-        // TODO
+        // NOP, leave empty
 
     }
 
@@ -149,7 +243,6 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(BooleanClause booleanClause, ScriptEnv env)
     {
-        // TODO
         queryBuilder.append(" ");
         switch (booleanClause.getOccur())
         {
@@ -166,32 +259,48 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     }
 
     @Override
+    public void visitQuery(SubQuery t, ScriptEnv env)
+    {
+        queryBuilder.append("_query_:\"");
+        Query subQuery = t.getQuery();
+        String subQueryStr = newQueryBuilder().buildQueryString(subQuery, configuration, searchServerConfig, locale,
+            defaultSearchServerSearchFields);
+        queryBuilder.append(subQueryStr.replace("\"", "\\\""));
+        queryBuilder.append("\"");
+    }
+
+    protected QueryBuilderIfc newQueryBuilder()
+    {
+        return DisMaxQueryBuilder.Factory.getInstance();
+    }
+
+    @Override
     public void visitQuery(IntRangeQuery t, ScriptEnv env)
     {
-        // TODO
+        // NOP, not supported by dismax
     }
 
     @Override
     public void visitQuery(LongRangeQuery t, ScriptEnv env)
     {
-        // TODO
+        // NOP, not supported by dismax
     }
 
     @Override
     public void visitQuery(FloatRangeQuery t, ScriptEnv env)
     {
-        // TODO
+        // NOP, not supported by dismax
     }
 
     @Override
     public void visitQuery(DoubleRangeQuery t, ScriptEnv env)
     {
-        // TODO
+        // NOP, not supported by dismax
     }
 
     @Override
     public void visitQuery(DateRangeQuery t, ScriptEnv env)
     {
-        // TODO
+        // NOP, not supported by dismax
     }
 }

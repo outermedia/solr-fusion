@@ -5,10 +5,12 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -19,8 +21,12 @@ import org.outermedia.solrfusion.configuration.SearchServerConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
@@ -71,7 +77,8 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     {
         HttpClient client = newHttpClient();
 
-        HttpGet request = newHttpGet(buildHttpClientParams(params));
+        URIBuilder uriBuilder = buildHttpClientParams(params);
+        HttpPost request = newHttpPost(url, uriBuilder);
         RequestConfig requestConfig = newRequestConfig(timeout);
 
         request.setConfig(requestConfig);
@@ -186,9 +193,13 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
             timeout).build();
     }
 
-    protected HttpGet newHttpGet(URIBuilder ub) throws URISyntaxException
+    protected HttpPost newHttpPost(String url, URIBuilder ub) throws URISyntaxException, UnsupportedEncodingException
     {
-        return new HttpGet(ub.build());
+        HttpPost result = new HttpPost(url);
+        List<NameValuePair> params = ub.getQueryParams();
+        result.setEntity(new UrlEncodedFormEntity(params, Charset.forName("UTF-8")));
+
+        return result;
     }
 
     public static class Factory

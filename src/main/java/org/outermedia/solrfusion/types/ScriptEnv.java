@@ -46,7 +46,10 @@ public class ScriptEnv
     public final static String ENV_IN_TERM_QUERY_PART = "termQueryPart"; // a TermQuery
     public final static String ENV_IN_SEARCH_SERVER_CONFIG = "searchServerConfig"; // a SearchServerConfig
     public final static String ENV_IN_WORD_COUNT = "facetWordCount"; // a List<Integer> for facets only
-    public final static String ENV_IN_DOC_TERM = "docFieldTerm";
+    public final static String ENV_IN_DOC_TERM = "docFieldTerm"; // a Term
+    public final static String ENV_IN_FUSION_REQUEST = "fusionRequest"; // a FusionRequest
+    public final static String ENV_IN_MAP_FACET = "mapFacetValue"; // a Boolean
+    public final static String ENV_IN_MAP_HIGHLIGHT = "mapHighlightValue"; // a Boolean
 
     // variables set by a script
     public final static String ENV_OUT_NEW_VALUES = "returnValues";
@@ -91,6 +94,16 @@ public class ScriptEnv
     {
         Object result = getBinding(name);
         return (String) result;
+    }
+
+    public boolean getBoolBinding(String name)
+    {
+        Boolean boolResult = (Boolean) getBinding(name);
+        if (boolResult == null)
+        {
+            return false;
+        }
+        return boolResult;
     }
 
     public void setConfiguration(Configuration cfg)

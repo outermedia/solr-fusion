@@ -8,6 +8,7 @@ import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.query.parser.Query;
 
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by ballmann on 6/17/14.
@@ -23,7 +24,7 @@ public interface QueryBuilderIfc extends QueryVisitor, Initiable<QueryBuilderFac
      * @return
      */
     public String buildQueryString(Query query, Configuration configuration, SearchServerConfig searchServerConfig,
-        Locale locale);
+        Locale locale, Set<String> defaultSearchFields);
 
     /**
      * Builds a query string which contains the string of query but &lt;om:add&gt; mappings are ignored.
@@ -33,5 +34,5 @@ public interface QueryBuilderIfc extends QueryVisitor, Initiable<QueryBuilderFac
      * @param locale
      */
     public String buildQueryStringWithoutNew(Query query, Configuration configuration,
-        SearchServerConfig searchServerConfig, Locale locale);
+        SearchServerConfig searchServerConfig, Locale locale, Set<String> defaultSearchFields);
 }

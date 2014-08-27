@@ -13,4 +13,6 @@ import lombok.Setter;
 public class ApplicableResult
 {
     private String destinationFieldName;
+
+    private FieldMapping mapping;
 }

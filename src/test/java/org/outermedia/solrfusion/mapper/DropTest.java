@@ -131,12 +131,12 @@ public class DropTest extends AbstractTypeTest
 
         ScriptEnv env = new ScriptEnv();
         SearchServerConfig serverConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
-        qm.mapQuery(cfg, serverConfig, q, env);
+        qm.mapQuery(cfg, serverConfig, q, env, null);
         // System.out.println(term.toString());
         Assert.assertTrue("Expected that field text4 was removed", term.isRemoved());
         Assert.assertTrue("Expected that field text5-abc was removed", term2.isRemoved());
         QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
-        String ds = qb.buildQueryString(query, cfg, searchServerConfig, Locale.GERMAN);
+        String ds = qb.buildQueryString(query, cfg, searchServerConfig, Locale.GERMAN, null);
         // the original query was removed, but two queries are added!
         Assert.assertEquals("Expected no query", "+t11:\"searched text\"~2^75 AND t13:hello", ds);
 
@@ -147,10 +147,10 @@ public class DropTest extends AbstractTypeTest
         fm.setSearchServersName("f8");
         fm.getOperations().clear();
 
-        qm.mapQuery(cfg, serverConfig, query, env);
+        qm.mapQuery(cfg, serverConfig, query, env, null);
         // System.out.println(term.toString());
         Assert.assertFalse("Expected that field text4 was not removed", term.isRemoved());
-        String s = qb.buildQueryString(query, cfg, searchServerConfig, Locale.GERMAN);
+        String s = qb.buildQueryString(query, cfg, searchServerConfig, Locale.GERMAN, null);
         Assert.assertEquals("Found different query than expected",
             "(f8:bla1) AND +t11:\"searched text\"~2^75 AND t13:hello", s);
     }
@@ -163,7 +163,7 @@ public class DropTest extends AbstractTypeTest
         SearchServerConfig searchServerConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
 
         // make bad drop query
-        FieldMapping text9Mapping = searchServerConfig.findAllMappingsForFusionField("text9").get(0);
+        FieldMapping text9Mapping = searchServerConfig.findAllMappingsForFusionField("text9").get(0).getMapping();
         text9Mapping.setFusionName(null);
         text9Mapping.setMappingType(MappingType.EXACT_NAME_ONLY);
         // System.out.println("BAD DROP " + text9Mapping);
@@ -181,7 +181,7 @@ public class DropTest extends AbstractTypeTest
         }
 
         // make bad drop query
-        FieldMapping text10Mapping = searchServerConfig.findAllMappingsForFusionField("text10").get(0);
+        FieldMapping text10Mapping = searchServerConfig.findAllMappingsForFusionField("text10").get(0).getMapping();
         text10Mapping.setSearchServersName(null);
         text10Mapping.setMappingType(MappingType.EXACT_FUSION_NAME_ONLY);
         // System.out.println("BAD DROP " + text10Mapping);

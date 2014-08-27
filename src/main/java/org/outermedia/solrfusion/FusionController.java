@@ -200,15 +200,15 @@ public class FusionController implements FusionControllerIfc
         List<SearchServerConfig> configuredSearchServers, ResponseConsolidatorIfc consolidator)
     {
         log.debug("Requesting all configured servers with query: {}", fusionRequest.getQuery());
-        ScriptEnv env = getNewScriptEnv(fusionRequest.getLocale());
+        ScriptEnv env = getNewScriptEnv(fusionRequest);
         Query query = fusionRequest.getParsedQuery();
         List<Query> filterQuery = fusionRequest.getParsedFilterQuery();
         Query highlightQuery = fusionRequest.getParsedHighlightQuery();
         for (SearchServerConfig searchServerConfig : configuredSearchServers)
         {
             log.info("Processing query for search server {}", searchServerConfig.getSearchServerName());
-            if (mapQuery(env, searchServerConfig, Arrays.asList(query, highlightQuery)) &&
-                mapQuery(env, searchServerConfig, filterQuery))
+            if (mapQuery(env, searchServerConfig, Arrays.asList(query, highlightQuery), fusionRequest) &&
+                mapQuery(env, searchServerConfig, filterQuery, fusionRequest))
             {
                 XmlResponse result = sendAndReceive(false, fusionRequest, searchServerConfig);
                 Exception se = result.getErrorReason();
@@ -219,7 +219,7 @@ public class FusionController implements FusionControllerIfc
                     ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
                         result.getDocuments(), info);
                     consolidator.addResultStream(searchServerConfig, docIterator, fusionRequest,
-                        result.getHighlighting(), result.getFacetFields());
+                        result.getHighlighting(), result.getFacetFields(searchServerConfig.getIdFieldName(),1));
                 }
                 else
                 {
@@ -238,10 +238,11 @@ public class FusionController implements FusionControllerIfc
         }
     }
 
-    protected ScriptEnv getNewScriptEnv(Locale locale)
+    protected ScriptEnv getNewScriptEnv(FusionRequest fusionRequest)
     {
         ScriptEnv env = new ScriptEnv();
         env.setConfiguration(configuration);
+        env.setBinding(ScriptEnv.ENV_IN_FUSION_REQUEST, fusionRequest);
         return env;
     }
 
@@ -320,7 +321,7 @@ public class FusionController implements FusionControllerIfc
         SearchServerResponseException se)
     {
         log.error("Caught exception while communicating with server " + searchServerConfig.getSearchServerName(), se);
-        
+
         // try to parse error response if present
         try
         {
@@ -351,7 +352,8 @@ public class FusionController implements FusionControllerIfc
         return result;
     }
 
-    protected boolean mapQuery(ScriptEnv env, SearchServerConfig searchServerConfig, List<Query> queryList)
+    protected boolean mapQuery(ScriptEnv env, SearchServerConfig searchServerConfig, List<Query> queryList,
+        FusionRequest fusionRequest)
     {
         boolean result = true;
         if (queryList != null)
@@ -362,7 +364,8 @@ public class FusionController implements FusionControllerIfc
                 {
                     try
                     {
-                        configuration.getQueryMapper().mapQuery(configuration, searchServerConfig, query, env);
+                        configuration.getQueryMapper().mapQuery(configuration, searchServerConfig, query, env,
+                            fusionRequest);
                     }
                     catch (Exception e)
                     {

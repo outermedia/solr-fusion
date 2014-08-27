@@ -77,10 +77,11 @@ public class ControllerHighlightTest extends AbstractControllerTest
         IllegalAccessException, URISyntaxException
     {
         testMultipleServers("title:abc", "title:def", "target/test-classes/test-xml-response-9000.xml",
-            "target/test-classes/test-xml-response-9002.xml", ResponseRendererType.XML);
+            "target/test-classes/test-xml-response-9002.xml", ResponseRendererType.XML,
+            "test-fusion-schema-9000-9002.xml", 0, 1);
         verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title", "xml"), 4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng", "xml"), 4000, "3.6");
+            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_eng", "xml"), 4000, "3.6");
     }
 
     protected Multimap<String> buildParams(String q, String hlq, String mappedTitle, String responseFormat)
@@ -88,7 +89,7 @@ public class ControllerHighlightTest extends AbstractControllerTest
         Multimap<String> result = super.buildParams(q, null);
         result.put(HIGHLIGHT_QUERY, hlq);
         result.put(HIGHLIGHT_FIELDS_TO_RETURN, mappedTitle);
-        result.set(FIELDS_TO_RETURN, "* score " + mappedTitle+" id");
+        result.set(FIELDS_TO_RETURN, "* score " + mappedTitle + " id");
         result.put(HIGHLIGHT, "true");
         result.put(HIGHLIGHT_PRE, "pre");
         result.put(HIGHLIGHT_POST, "post");
@@ -102,7 +103,8 @@ public class ControllerHighlightTest extends AbstractControllerTest
         IllegalAccessException, URISyntaxException
     {
         String xml = testMultipleServers("title:abc", "title:def", "target/test-classes/test-empty-xml-response.xml",
-            "target/test-classes/test-empty-xml-response.xml", ResponseRendererType.XML);
+            "target/test-classes/test-empty-xml-response.xml", ResponseRendererType.XML,
+            "test-fusion-schema-9000-9002.xml", 0, 1);
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<response>\n" +
             "<lst name=\"responseHeader\">\n" +
@@ -127,7 +129,7 @@ public class ControllerHighlightTest extends AbstractControllerTest
         Assert.assertEquals("Found different xml response", expected, xml.trim());
         verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title", "xml"), 4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng", "xml"), 4000, "3.6");
+            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_eng", "xml"), 4000, "3.6");
     }
 
     @Test
@@ -136,7 +138,8 @@ public class ControllerHighlightTest extends AbstractControllerTest
         IllegalAccessException, URISyntaxException
     {
         String xml = testMultipleServers("title:abc", "title:def", "target/test-classes/test-empty-xml-response.xml",
-            "target/test-classes/test-empty-xml-response.xml", ResponseRendererType.JSON);
+            "target/test-classes/test-empty-xml-response.xml", ResponseRendererType.JSON,
+            "test-fusion-schema-9000-9002.xml", 0, 1);
         String expected = "{\n" +
             "  \"responseHeader\":{\n" +
             "    \"status\":0,\n" +
@@ -156,14 +159,13 @@ public class ControllerHighlightTest extends AbstractControllerTest
             "  ]}\n" +
             "}";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title", "xml"), 4000,
-            "3.6");
+        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def", "title", "xml"), 4000, "3.6");
         verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_de titleVT_eng", "xml"), 4000, "3.6");
+            buildParams("titleVT_eng:abc", "titleVT_eng:def", "titleVT_eng", "xml"), 4000, "3.6");
     }
 
     protected String testMultipleServers(String queryStr, String highlightQueryStr, String responseServer1,
-        String responseServer2, ResponseRendererType format)
+        String responseServer2, ResponseRendererType format, String fusionSchema, int indexServer1, int indexServer2)
         throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
         IllegalAccessException, URISyntaxException
     {
@@ -172,7 +174,7 @@ public class ControllerHighlightTest extends AbstractControllerTest
         ByteArrayInputStream documents9000Stream = new ByteArrayInputStream(documents9000);
         ByteArrayInputStream documents9002Stream = new ByteArrayInputStream(documents9002);
 
-        cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-9000-9002.xml");
+        cfg = helper.readFusionSchemaWithoutValidation(fusionSchema);
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
         // the mapping is very incomplete, so ignore all unmapped fields
         testResponseMapper.ignoreMissingMappings();
@@ -180,8 +182,8 @@ public class ControllerHighlightTest extends AbstractControllerTest
         when(spyCfg.getResponseMapper()).thenReturn(testResponseMapper);
 
         List<SearchServerConfig> searchServerConfigs = spyCfg.getSearchServerConfigs().getSearchServerConfigs();
-        SearchServerConfig searchServerConfig9000 = spy(searchServerConfigs.get(0));
-        SearchServerConfig searchServerConfig9002 = spy(searchServerConfigs.get(1));
+        SearchServerConfig searchServerConfig9000 = spy(searchServerConfigs.get(indexServer1));
+        SearchServerConfig searchServerConfig9002 = spy(searchServerConfigs.get(indexServer2));
         searchServerConfigs.clear();
 
         searchServerConfigs.add(searchServerConfig9000);
@@ -216,5 +218,21 @@ public class ControllerHighlightTest extends AbstractControllerTest
         Assert.assertNotNull("Expected XML result, but got nothing", result);
         // System.out.println("RESPONSE " + result);
         return result;
+    }
+
+    @Test
+    public void testAddInHighlightResponse()
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
+    {
+        String xml = testMultipleServers("title:abc", "title:def", "target/test-classes/test-schiller-9000.xml",
+            "target/test-classes/test-schiller-9001.xml", ResponseRendererType.XML, "fusion-schema-uni-leipzig.xml", 0,
+            1);
+        // System.out.println("XML " + xml);
+        String expectedHighlight = "<arr name=\"author_facet\">\n" +
+            "        <str>{{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}, Friedrich</str>\n" +
+            "        <str>Goethe- und {{{{START_HILITE}}}}Schiller{{{{END_HILITE}}}}-Archiv</str>\n" +
+            "                </arr>";
+        Assert.assertTrue("Didn't find expected highlight", xml.contains(expectedHighlight));
     }
 }

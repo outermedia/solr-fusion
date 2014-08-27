@@ -7,7 +7,6 @@ import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.FacetHit;
 import org.outermedia.solrfusion.response.parser.Highlighting;
 
 import java.lang.reflect.InvocationTargetException;
@@ -24,7 +23,7 @@ public interface ResponseConsolidatorIfc extends Initiable<ResponseConsolidatorF
 
     public void addResultStream(SearchServerConfig searchServerConfig,
         ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request,
-        List<Highlighting> highlighting, List<FacetHit> facetFields);
+        List<Highlighting> highlighting, Document facetFields);
 
     public int numberOfResponseStreams();
 

@@ -1,12 +1,11 @@
 package org.outermedia.solrfusion.mapper;
 
 import lombok.extern.slf4j.Slf4j;
-import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.FieldMapping;
-import org.outermedia.solrfusion.configuration.QueryMapperFactory;
-import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.FusionRequest;
+import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.query.parser.*;
+import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,13 +17,14 @@ import java.util.List;
  * Created by ballmann on 03.06.14.
  */
 @Slf4j
-public class QueryMapper implements QueryVisitor, QueryMapperIfc
+public class QueryMapper implements QueryVisitor, QueryMapperIfc, MetaParamsVisitor<MetaParams>
 {
     private final static String NO_MAPPING_THROW_EXCEPTION = "error";
     private final static String NO_MAPPING_DELETE = "delete";
 
-
+    private FusionRequest fusionRequest;
     private SearchServerConfig serverConfig;
+    private Configuration configuration;
 
     private String noMappingPolicy = NO_MAPPING_DELETE;
 
@@ -38,13 +38,17 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     /**
      * Map a query to a certain search server (serverConfig).
      *
-     * @param serverConfig the currently used server's configuration
-     * @param query        the query to map to process
-     * @param env          the environment needed by the scripts which transform values
+     * @param serverConfig  the currently used server's configuration
+     * @param query         the query to map to process
+     * @param env           the environment needed by the scripts which transform values
+     * @param fusionRequest
      */
-    public void mapQuery(Configuration config, SearchServerConfig serverConfig, Query query, ScriptEnv env)
+    public void mapQuery(Configuration config, SearchServerConfig serverConfig, Query query, ScriptEnv env,
+        FusionRequest fusionRequest)
     {
+        this.configuration = config;
         this.serverConfig = serverConfig;
+        this.fusionRequest = fusionRequest;
         env.setConfiguration(config);
         ScriptEnv newEnv = new ScriptEnv(env);
         newEnv.setSearchServerConfig(serverConfig);
@@ -65,18 +69,19 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
         }
     }
 
-    // ---- Visitor methods --------------------------------------------------------------------------------------------
+    // ---- Query visitor methods --------------------------------------------------------------------------------------
 
     @Override
     public void visitQuery(TermQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, t.getBoostValue(), t);
+        visitTermQuery(env, t.getBoostValue(), t);
     }
 
-    protected boolean visitQuery(Term t, ScriptEnv env, Float boost, TermQuery tq)
+    protected boolean visitTermQuery(ScriptEnv env, Float boost, TermQuery tq)
     {
+        Term t = tq.getTerm();
         String fusionFieldName = t.getFusionFieldName();
-        List<FieldMapping> mappings = serverConfig.findAllMappingsForFusionField(fusionFieldName);
+        List<ApplicableResult> mappings = serverConfig.findAllMappingsForFusionField(fusionFieldName);
         if (mappings.isEmpty())
         {
             if (noMappingPolicy.equals(NO_MAPPING_THROW_EXCEPTION))
@@ -92,11 +97,27 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
         }
         ScriptEnv newEnv = new ScriptEnv(env);
         newEnv.setBinding(ScriptEnv.ENV_IN_TERM_QUERY_PART, tq);
-        for (FieldMapping m : mappings)
+        for (ApplicableResult ar : mappings)
         {
-            m.applyQueryMappings(t, newEnv);
+            FieldMapping m = ar.getMapping();
+            boolean traceEnabled = log.isTraceEnabled();
+            if (traceEnabled)
+            {
+                log.trace("APPLY field={} -> {} mapping[line={}]={}", m.getFusionName(), ar.getDestinationFieldName(),
+                    m.getLocator().getLineNumber(), m);
+            }
+            m.applyQueryOperations(t, newEnv, ar);
+            if (traceEnabled)
+            {
+                log.trace("AFTER APPLY {}", t);
+            }
         }
         t.setProcessed(true);
+        MetaInfo metaInfo = tq.getMetaInfo();
+        if (metaInfo != null)
+        {
+            metaInfo.accept(this);
+        }
         return true;
     }
 
@@ -109,7 +130,7 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     @Override
     public void visitQuery(FuzzyQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null, t);
+        visitTermQuery(env, null, t);
     }
 
     @Override
@@ -121,19 +142,19 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     @Override
     public void visitQuery(PhraseQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null, t);
+        visitTermQuery(env, null, t);
     }
 
     @Override
     public void visitQuery(PrefixQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null, t);
+        visitTermQuery(env, null, t);
     }
 
     @Override
     public void visitQuery(WildcardQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null, t);
+        visitTermQuery(env, null, t);
     }
 
     @Override
@@ -143,32 +164,59 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc
     }
 
     @Override
+    public void visitQuery(SubQuery t, ScriptEnv env)
+    {
+        t.getQuery().accept(this, env);
+    }
+
+    @Override
     public void visitQuery(IntRangeQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null, t);
+        visitTermQuery(env, null, t);
     }
 
     @Override
     public void visitQuery(LongRangeQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null, t);
+        visitTermQuery(env, null, t);
     }
 
     @Override
     public void visitQuery(FloatRangeQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null, t);
+        visitTermQuery(env, null, t);
     }
 
     @Override
     public void visitQuery(DoubleRangeQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null, t);
+        visitTermQuery(env, null, t);
     }
 
     @Override
     public void visitQuery(DateRangeQuery t, ScriptEnv env)
     {
-        visitQuery(t.getTerm(), env, null, t);
+        visitTermQuery(env, null, t);
     }
+
+
+    // ---- MetaInfo params visitor ------------------------------------------------------------------------------------
+
+    @Override public void visitEntry(String key, String value, MetaParams mappedMetaParams)
+    {
+        if ("qf".equals(key))
+        {
+            String mappedValue = fusionRequest.mapFusionBoostFieldListToSearchServerField(value, configuration,
+                serverConfig);
+            if (mappedValue != null && mappedValue.length() > 0)
+            {
+                mappedMetaParams.addEntry(key, mappedValue);
+            }
+        }
+        else
+        {
+            mappedMetaParams.addEntry(key, value);
+        }
+    }
+
 }

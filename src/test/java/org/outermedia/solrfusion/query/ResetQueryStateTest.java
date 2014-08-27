@@ -261,4 +261,21 @@ public class ResetQueryStateTest
         TermQuery tq = new TermQuery(term);
         return new BooleanClause(tq, BooleanClause.Occur.OCCUR_MUST_NOT);
     }
+
+    @Test
+    public void testSubQuery()
+    {
+        ResetQueryState qb = new ResetQueryState();
+        Term term = Term.newSearchServerTerm("title", "abc?");
+        term.setWasMapped(true);
+        WildcardQuery pq = new WildcardQuery(term);
+        SubQuery sq = new SubQuery(pq);
+        MetaInfo mi = new MetaInfo();
+        mi.setSearchServerParams(new MetaParams());
+        mi.addSearchServerEntry("a","1");
+        pq.setMetaInfo(mi);
+        qb.reset(sq);
+        Assert.assertFalse("Term not cleaned", term.isWasMapped());
+        Assert.assertNull("MetaInfo not cleaned", mi.getSearchServerParameterMap());
+    }
 }

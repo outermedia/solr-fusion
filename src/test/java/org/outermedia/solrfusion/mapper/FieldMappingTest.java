@@ -126,20 +126,24 @@ public class FieldMappingTest
         TestFieldMapping fm = createFieldMapping("a", "fb", null, null, null, null);
         fm.afterUnmarshal(null, null);
 
-        boolean ok = fm.applicableToSearchServerField("a");
+        ApplicableResult a = fm.applicableToSearchServerField("a");
+        boolean ok = a != null;
         Assert.assertTrue("RegExp failed, but should match", ok);
         Assert.assertEquals("Search server field was mapped to different fusion field than expected", "fb",
-                fm.getSpecificFusionName());
+                a.getDestinationFieldName());
 
-        ok = fm.applicableToFusionField("fb");
+        a = fm.applicableToFusionField("fb");
+        ok = a != null;
         Assert.assertTrue("RegExp failed, but should match", ok);
         Assert.assertEquals("Fusion field was mapped to different search server field than expected", "a",
-                fm.getSpecificSearchServerName());
+                a.getDestinationFieldName());
 
-        ok = fm.applicableToFusionField("fc");
+        a = fm.applicableToFusionField("fc");
+        ok = a !=null;
         Assert.assertFalse("RegExp match succeeded, but should fail", ok);
 
-        ok = fm.applicableToSearchServerField("b");
+        a = fm.applicableToSearchServerField("b");
+        ok = a != null;
         Assert.assertFalse("RegExp match succeeded, but should fail", ok);
     }
 
@@ -150,21 +154,21 @@ public class FieldMappingTest
                 "from([0-9]+)");
         fm.afterUnmarshal(null, null);
 
-        boolean ok = fm.applicableToSearchServerField("VAL4START");
-        Assert.assertTrue("RegExp failed, but should match", ok);
+        ApplicableResult ar = fm.applicableToSearchServerField("VAL4START");
+        Assert.assertTrue("RegExp failed, but should match", ar != null);
         Assert.assertEquals("Search server field was mapped to different fusion field than expected", "from4",
-                fm.getSpecificFusionName());
+                ar.getDestinationFieldName());
 
-        ok = fm.applicableToFusionField("from52");
-        Assert.assertTrue("RegExp failed, but should match", ok);
+        ar = fm.applicableToFusionField("from52");
+        Assert.assertTrue("RegExp failed, but should match", ar != null);
         Assert.assertEquals("Fusion field was mapped to different search server field than expected", "VAL52START",
-                fm.getSpecificSearchServerName());
+                ar.getDestinationFieldName());
 
-        ok = fm.applicableToSearchServerField("VAL4END");
-        Assert.assertFalse("RegExp match succeeded, but should fail", ok);
+        ar = fm.applicableToSearchServerField("VAL4END");
+        Assert.assertFalse("RegExp match succeeded, but should fail", ar != null);
 
-        ok = fm.applicableToFusionField("end52");
-        Assert.assertFalse("RegExp match succeeded, but should fail", ok);
+        ar = fm.applicableToFusionField("end52");
+        Assert.assertFalse("RegExp match succeeded, but should fail", ar != null);
     }
 
     @Test

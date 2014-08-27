@@ -1,6 +1,7 @@
 package org.outermedia.solrfusion.types;
 
 import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.configuration.Util;
@@ -10,6 +11,7 @@ import org.w3c.dom.Element;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by ballmann on 8/1/14.
@@ -36,9 +38,11 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
         TypeResult result = null;
         try
         {
+            FusionRequest fusionRequest = (FusionRequest) env.getBinding(ScriptEnv.ENV_IN_FUSION_REQUEST);
             QueryBuilderIfc qb = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
+            Set<String> defaultSearchServerSearchFields = fusionRequest.mapFusionFieldToSearchServerField(configuration.getDefaultSearchField(), configuration, searchServerConfig, null);
             String qs = qb.buildQueryStringWithoutNew(searchServerTermQuery, configuration, searchServerConfig,
-                env.getLocale());
+                env.getLocale(),defaultSearchServerSearchFields);
             newValues = new ArrayList<>();
             newValues.add(qs);
             result = new TypeResult(newValues, facetWordCounts);

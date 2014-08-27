@@ -822,6 +822,7 @@ PARSER_END(QueryParser)
 | <BAREOPER:  ("+"|"-"|"!") <_WHITESPACE> >
 | <LPAREN:    "(" >
 | <RPAREN:    ")" >
+| <SUBQUERY:  "_query_" >
 | <COLON:     ":" >
 | <EQUAL:     "=" >
 | <STAR:      "*" >
@@ -829,6 +830,7 @@ PARSER_END(QueryParser)
 | <QUOTED:     "\"" (<_QUOTED_CHAR>)* "\"">
 | <META_EX:   "ex" >
 | <META_TAG:  "tag" >
+| <META_DISMAX: "dismax" >
 | <TERM:      <_TERM_START_CHAR> (<_TERM_CHAR>)*  >
 | <FUZZY_SLOP:     "~" ( (<_NUM_CHAR>)+ ( "." (<_NUM_CHAR>)+ )? )? >
 | <ALL_DOCS:  <STAR> <COLON> <STAR> >
@@ -955,7 +957,7 @@ Query Query(String field) :
   MetaInfo mi = null;
 }
 {
-  (mi = metaInfo())? mods=Modifiers() q=Clause(field)
+  ( mi = metaInfo() )? mods=Modifiers() q=Clause(field)
   {
     addClause(clauses, CONJ_NONE, mods, q);
     if (mods == MOD_NONE)
@@ -977,10 +979,24 @@ Query Query(String field) :
     }
 }
 
+SubQuery subQuery() : {
+  Token q;
+}
+{
+    < SUBQUERY > < COLON > q = < QUOTED >
+    {
+        String qs = q.image.substring(1, q.image.length()-1).replace("\\\"", "\"");
+        QueryParser parser = new QueryParser(field, configuration, boosts, operator, false);
+        parser.setLocale(locale);
+        return new SubQuery(parser.parse(qs));
+    }
+}
+
 MetaInfo metaInfo() : {
   Token n;
   Token v;
   MetaInfo mi = new MetaInfo();
+  MetaParams params;
 }
 {
     < META_START >
@@ -999,10 +1015,39 @@ MetaInfo metaInfo() : {
             mi.setName(n.image);
             mi.setValue(v.image);
         }
+    |   n = < META_DISMAX >
+        params = metaParams()
+        {
+            mi.setName(n.image);
+            mi.setFusionParams(params);
+        }
     )
     < META_END >
     {
       return mi;
+    }
+}
+
+MetaParams metaParams() : {
+    MetaParams metaParams = new MetaParams();
+    Token val, key;
+}
+{
+    (
+        key = <TERM>
+        < EQUAL >
+        ( val = <QUOTED>
+            {
+                metaParams.addEntry(key.image, val.image.substring(1, val.image.length()-1));
+            }
+        | val = <TERM>
+            {
+                metaParams.addEntry(key.image, val.image);
+            }
+        )
+    )*
+    {
+        return metaParams;
     }
 }
 
@@ -1015,6 +1060,11 @@ Query Clause(String field) : {
     < ALL_DOCS >
     {
       return new MatchAllDocsQuery();
+    }
+  |
+    q = subQuery()
+    {
+        return q;
     }
   |
     [

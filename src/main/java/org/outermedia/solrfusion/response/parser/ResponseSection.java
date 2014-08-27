@@ -40,6 +40,9 @@ public class ResponseSection
     @Getter @XmlTransient
     private List<FacetHit> facetHits;
 
+    @XmlTransient
+    private Document facetDocument;
+
     public String getErrorCode()
     {
         return findFieldValue("code");
@@ -81,12 +84,14 @@ public class ResponseSection
                     NodeList lstList = node.getElementsByTagName("lst");
                     if (lstList != null)
                     {
+                        facetDocument = new Document();
                         for (int i = 0; i < lstList.getLength(); i++)
                         {
                             try
                             {
                                 FacetHit hit = xmlUtil.unmarshal(FacetHit.class, lstList.item(i));
                                 facetHits.add(hit);
+                                addFacetValueAsDocField(facetDocument, hit);
                             }
                             catch (JAXBException e)
                             {
@@ -130,5 +135,32 @@ public class ResponseSection
                 }
             }
         }
+    }
+
+    protected void addFacetValueAsDocField(Document facetDocument, FacetHit hit)
+    {
+        List<WordCount> fieldCounts = hit.getFieldCounts();
+        if(fieldCounts != null)
+        {
+            SolrMultiValuedField multiValuedField = new SolrMultiValuedField();
+            List<String> values = new ArrayList<>();
+            List<Integer> wordCounts = new ArrayList<>();
+            for(WordCount wc : fieldCounts)
+            {
+                values.add(wc.getWord());
+                wordCounts.add(wc.getCount());
+            }
+            multiValuedField.setFieldName(hit.getSearchServerFieldName());
+            multiValuedField.setValues(values);
+            multiValuedField.afterUnmarshal(null, null);
+            multiValuedField.getTerm().setSearchServerFacetCount(wordCounts);
+            facetDocument.addMultiField(multiValuedField);
+        }
+    }
+
+    public Document getFacetDocument(String searchServerIdField, int docId)
+    {
+        facetDocument.setSearchServerDocId(searchServerIdField, String.valueOf(docId));
+        return facetDocument;
     }
 }

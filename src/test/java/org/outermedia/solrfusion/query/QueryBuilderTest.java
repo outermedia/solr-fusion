@@ -1,11 +1,13 @@
 package org.outermedia.solrfusion.query;
 
+import com.google.common.collect.Sets;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.mapper.DisMaxQueryBuilder;
 import org.outermedia.solrfusion.mapper.QueryBuilder;
 import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.mapper.Term;
@@ -43,14 +45,14 @@ public class QueryBuilderTest
         Term term = Term.newSearchServerTerm("title", "abc");
         term.setWasMapped(true);
         FuzzyQuery fq = new FuzzyQuery(term, null);
-        String qs = qb.buildQueryString(fq, cfg, searchServerConfig, locale);
+        String qs = qb.buildQueryString(fq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different fuzzy query than expected", "title:abc~", qs);
 
         qb = QueryBuilder.Factory.getInstance();
         term = Term.newSearchServerTerm("title", "abc");
         term.setWasMapped(true);
         fq = new FuzzyQuery(term, 3);
-        qs = qb.buildQueryString(fq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(fq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different fuzzy query than expected", "title:abc~", qs);
 
         qb = QueryBuilder.Factory.getInstance();
@@ -58,7 +60,7 @@ public class QueryBuilderTest
         term.setWasMapped(true);
         fq = new FuzzyQuery(term, 3);
         fq.setBoost(3.5f);
-        qs = qb.buildQueryString(fq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(fq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different fuzzy query than expected", "title:abc^3.5~", qs);
     }
 
@@ -67,7 +69,7 @@ public class QueryBuilderTest
     {
         QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
         MatchAllDocsQuery fq = new MatchAllDocsQuery();
-        String qs = qb.buildQueryString(fq, cfg, searchServerConfig, locale);
+        String qs = qb.buildQueryString(fq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different *:* query than expected", "*:*", qs);
     }
 
@@ -78,7 +80,7 @@ public class QueryBuilderTest
         Term term = Term.newSearchServerTerm("title", "abc");
         term.setWasMapped(true);
         PhraseQuery pq = new PhraseQuery(term);
-        String qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale);
+        String qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different phrase query than expected", "title:\"abc\"", qs);
 
         qb = QueryBuilder.Factory.getInstance();
@@ -86,7 +88,7 @@ public class QueryBuilderTest
         term.setWasMapped(true);
         pq = new PhraseQuery(term);
         pq.setBoost(3.5f);
-        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different phrase query than expected", "title:\"abc\"^3.5", qs);
     }
 
@@ -97,16 +99,16 @@ public class QueryBuilderTest
         Term term = Term.newSearchServerTerm("title", "abc*");
         term.setWasMapped(true);
         PrefixQuery pq = new PrefixQuery(term);
-        String qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale);
-        Assert.assertEquals("Got different phrase query than expected", "title:abc*", qs);
+        String qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, null);
+        Assert.assertEquals("Got different prefix query than expected", "title:abc*", qs);
 
         qb = QueryBuilder.Factory.getInstance();
         term = Term.newSearchServerTerm("title", "abc*");
         term.setWasMapped(true);
         pq = new PrefixQuery(term);
         pq.setBoost(3.5f);
-        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale);
-        Assert.assertEquals("Got different phrase query than expected", "title:abc*^3.5", qs);
+        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, null);
+        Assert.assertEquals("Got different prefix query than expected", "title:abc*^3.5", qs);
     }
 
     @Test
@@ -116,16 +118,16 @@ public class QueryBuilderTest
         Term term = Term.newSearchServerTerm("title", "abc?");
         term.setWasMapped(true);
         WildcardQuery pq = new WildcardQuery(term);
-        String qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale);
-        Assert.assertEquals("Got different phrase query than expected", "title:abc?", qs);
+        String qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, null);
+        Assert.assertEquals("Got different wildcard query than expected", "title:abc?", qs);
 
         qb = QueryBuilder.Factory.getInstance();
         term = Term.newSearchServerTerm("title", "abc?");
         term.setWasMapped(true);
         pq = new WildcardQuery(term);
         pq.setBoost(3.5f);
-        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale);
-        Assert.assertEquals("Got different phrase query than expected", "title:abc?^3.5", qs);
+        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, null);
+        Assert.assertEquals("Got different wildcard query than expected", "title:abc?^3.5", qs);
     }
 
     @Test
@@ -157,7 +159,7 @@ public class QueryBuilderTest
             minMax.setWasMapped(true);
             minMax.setSearchServerFieldName("title");
             minMax.setSearchServerFieldValue(minMax.getFusionFieldValue());
-            String qs = qb.buildQueryString(nq, cfg, searchServerConfig, locale);
+            String qs = qb.buildQueryString(nq, cfg, searchServerConfig, locale, null);
             String expected = expectedMinMax[at++];
             if (boost != null)
             {
@@ -173,28 +175,28 @@ public class QueryBuilderTest
         // empty case
         QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
         BooleanQuery bq = new BooleanQuery();
-        String qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
+        String qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different bool query than expected", "", qs);
 
         // one MUST clause
         qb = QueryBuilder.Factory.getInstance();
         bq = new BooleanQuery();
         bq.add(createMustBooleanClause("abc", true));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different bool query than expected", "(+title:abc)", qs);
 
         // one SHOULD clause
         qb = QueryBuilder.Factory.getInstance();
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause("abc", true));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different bool query than expected", "(title:abc)", qs);
 
         // one MUST NOT clause
         qb = QueryBuilder.Factory.getInstance();
         bq = new BooleanQuery();
         bq.add(createMustNotBooleanClause("abc", true));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different bool query than expected", "(-title:abc)", qs);
 
         // several MUST clauses
@@ -203,7 +205,7 @@ public class QueryBuilderTest
         bq.add(createMustBooleanClause("abc", true));
         bq.add(createMustBooleanClause("def", true));
         bq.add(createMustNotBooleanClause("ghi", true));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different bool query than expected", "(+title:abc AND +title:def AND -title:ghi)", qs);
 
         // several SHOULD clauses
@@ -211,7 +213,7 @@ public class QueryBuilderTest
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause("abc", true));
         bq.add(createShouldBooleanClause("def", true));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different bool query than expected", "(title:abc OR title:def)", qs);
 
         // several MUST NOT clauses
@@ -221,7 +223,7 @@ public class QueryBuilderTest
         bq.add(createMustNotBooleanClause("def", true));
         bq.add(createMustBooleanClause("ghi", true));
         bq.add(createShouldBooleanClause("jkl", true));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different bool query than expected", "(-title:abc AND -title:def AND +title:ghi OR title:jkl)", qs);
 
         // nested bool queries
@@ -235,7 +237,7 @@ public class QueryBuilderTest
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause(bq1));
         bq.add(createShouldBooleanClause(bq2));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different bool query than expected", "((+title:abc AND +title:def) OR (+title:ghi AND +title:jkl))", qs);
 
         // several deleted clauses
@@ -246,7 +248,7 @@ public class QueryBuilderTest
         bq.add(createShouldBooleanClause("ghi", false)); // del
         bq.add(createShouldBooleanClause("jkl", true));
         bq.add(createMustBooleanClause("mno", false)); // del
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different bool query than expected", "(+title:def OR title:jkl)", qs);
 
         // delete whole bool query
@@ -260,7 +262,7 @@ public class QueryBuilderTest
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause(bq1));
         bq.add(createShouldBooleanClause(bq2));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different bool query than expected", "((+title:abc AND +title:def))", qs);
 
         // delete all bool queries
@@ -274,7 +276,7 @@ public class QueryBuilderTest
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause(bq1));
         bq.add(createShouldBooleanClause(bq2));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale);
+        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different bool query than expected", "", qs);
     }
 
@@ -305,5 +307,66 @@ public class QueryBuilderTest
         term.setWasMapped(mapped);
         TermQuery tq = new TermQuery(term);
         return new BooleanClause(tq, BooleanClause.Occur.OCCUR_MUST_NOT);
+    }
+
+    @Test
+    public void testSubQuery()
+    {
+        QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
+        Term term = Term.newSearchServerTerm("title", "abc?");
+        term.setWasMapped(true);
+        PhraseQuery pq = new PhraseQuery(term);
+        SubQuery sq = new SubQuery(pq);
+        String qs = qb.buildQueryString(sq, cfg, searchServerConfig, locale, null);
+        Assert.assertEquals("Got different sub query than expected", "_query_:\"title:\\\"abc?\\\"\"", qs);
+
+        qb = QueryBuilder.Factory.getInstance();
+        term = Term.newSearchServerTerm("title", "abc?");
+        term.setWasMapped(true);
+        pq = new PhraseQuery(term);
+        pq.setBoost(3.5f);
+        sq = new SubQuery(pq);
+        qs = qb.buildQueryString(sq, cfg, searchServerConfig, locale, null);
+        Assert.assertEquals("Got different sub query than expected", "_query_:\"title:\\\"abc?\\\"^3.5\"", qs);
+    }
+
+    @Test
+    public void testMetaInfo()
+    {
+        QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
+        Term term = Term.newSearchServerTerm("title", "abc");
+        term.setWasMapped(true);
+        PhraseQuery pq = new PhraseQuery(term);
+        MetaInfo mi = new MetaInfo();
+        mi.setSearchServerParams(new MetaParams());
+        mi.addSearchServerEntry("a","1");
+        pq.setMetaInfo(mi);
+        String qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, null);
+        Assert.assertEquals("Got different phrase query than expected", "{!a=1}title:\"abc\"", qs);
+
+        // name set in MetaInfo
+        qb = DisMaxQueryBuilder.Factory.getInstance();
+        mi.setName("dismax");
+        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        Assert.assertEquals("Got different phrase query than expected", "{!dismax a=1}\"abc\"", qs);
+
+        // name not set, but value
+        qb = QueryBuilder.Factory.getInstance();
+        mi.setName(null);
+        mi.setValue("abc");
+        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, null);
+        Assert.assertEquals("Got different phrase query than expected", "{!a=1}title:\"abc\"", qs);
+
+        // name, value and params set
+        mi.setName("dismax");
+        qb = DisMaxQueryBuilder.Factory.getInstance();
+        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        Assert.assertEquals("Got different phrase query than expected", "{!dismax=abc a=1}\"abc\"", qs);
+
+        // several params set
+        qb = DisMaxQueryBuilder.Factory.getInstance();
+        mi.addSearchServerEntry("b","2");
+        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        Assert.assertEquals("Got different phrase query than expected", "{!dismax=abc a=1 b=2}\"abc\"", qs);
     }
 }

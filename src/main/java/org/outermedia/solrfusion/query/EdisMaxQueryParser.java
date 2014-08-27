@@ -45,7 +45,7 @@ public class EdisMaxQueryParser implements QueryParserIfc
     @Override
     public void init(QueryParserFactory config)
     {
-        // TODO Auto-generated method stub
+        // NOP
 
     }
 

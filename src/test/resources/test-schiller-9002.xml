@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+    <lst name="responseHeader">
+        <int name="status">0</int>
+        <int name="QTime">1</int>
+        <lst name="params">
+            <str name="q.alt">(content:Schiller OR dbName:Schiller OR description:Schiller OR edition:Schiller OR
+                keywords:Schiller OR publisher:Schiller OR subjects:Schiller OR titleVT_de:Schiller OR
+                titleVT_eng:Schiller)
+            </str>
+            <str name="hl.simple.pre">{{{{START_HILITE}}}}</str>
+            <str name="hl.fl">*</str>
+            <str name="wt">xml</str>
+            <str name="hl">true</str>
+            <str name="rows">20</str>
+            <str name="fl">score * id</str>
+            <str name="start">0</str>
+            <str name="hl.simple.post">{{{{END_HILITE}}}}</str>
+            <str name="qt">dismax</str>
+        </lst>
+    </lst>
+    <result name="response" numFound="70" start="0" maxScore="1.1286824">
+        <doc>
+            <float name="score">1.1286824</float>
+            <str name="dbName">Datenbank(en) der Direct Media Reihe</str>
+            <str name="dbodid">digbib</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=digbib_schiller</str>
+            <str name="description">Diese CD-ROM enthält unter anderem:
+                Gedichte: Gedichte 1776-1788 und 1789-1805, Rätsel aus Turandot
+                Dramen: Die Räuber, Kabale und Liebe, Don Carlos, Wallenstein, Maria Stuart, Die Jungfrau von Orleans,
+                Wilhelm Tell
+                Erzählungen: Der Verbrecher aus verlorener Ehre, Der Geisterseher, Merkwürdiges Beispiel einer
+                weiblichen Rache
+                Theoretische Schriften: Was kann eine gute stehende Schaubühne eigentlich wirken?, Ankündigung der
+                Rheinischen Thalia, Philosophische Briefe, Über die tragische Kunst
+                ( Digitale Bibliothek Band 103 )
+            </str>
+            <str name="id">45331</str>
+            <str name="keywords">Schiller, Friedrich, Werke</str>
+            <str name="publisher">Digitale Bibliothek</str>
+            <str name="sourceid">digbib_schiller</str>
+            <str name="titleVT_de">DB Band 103: Schiller: Werke</str>
+        </doc>
+        <doc>
+            <float name="score">0.78591174</float>
+            <str name="dbName">DBIS</str>
+            <str name="dbodid">dbis</str>
+            <str name="deeplink">http://rzblx10.uni-regensburg.de/dbinfo/detail.php?titel_id=3783</str>
+            <str name="description">Diese CD-ROM enthält unter anderem:
+                Gedichte: Gedichte 1776-1788 und 1789-1805, Rätsel aus Turandot
+                Dramen: Die Räuber, Kabale und Liebe, Don Carlos, Wallenstein, Maria Stuart, Die Jungfrau von Orleans,
+                Wilhelm Tell
+                Erzählungen: Der Verbrecher aus verlorener Ehre, Der Geisterseher, Merkwürdiges Beispiel einer
+                weiblichen Rache
+                Theoretische Schriften: Was kann eine gute stehende Schaubühne eigentlich wirken?, Ankündigung der
+                Rheinischen Thalia, Philosophische Briefe, Über die tragische Kunst
+                ( Digitale Bibliothek Band 103 )
+            </str>
+            <str name="id">50359</str>
+            <str name="keywords">Schiller, Friedrich, Werke</str>
+            <str name="publisher">DBIS</str>
+            <str name="sourceid">dbis3783</str>
+            <str name="titleVT_de">Schiller, Friedrich: Werke</str>
+        </doc>
+        <doc>
+            <float name="score">0.11442036</float>
+            <str name="dbName">Datenbank(en) der Direct Media Reihe</str>
+            <str name="dbodid">digbib</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=digbib_qugerklas</str>
+            <str name="description">Der Band "Klassik" aus der Reihe "Quellen Germanistik" ermöglicht einen schnellen
+                und komfortablen Zugriff auf die wichtigsten Grundlagentexte der Klassik. Die Werke sind im Volltext
+                erfasst. Die Datenbank umfasst Texte von Goethe, Herder, Hölderlin, Humboldt, Jean Paul, Kant, Kotzebue,
+                Schiller und einigen Schriftstellern mehr.Sonderband 56 der Reihe Digitale Bibliothek
+            </str>
+            <str name="id">45369</str>
+            <str name="keywords">Deutschland, Klassik, Literatur, Volltext</str>
+            <str name="publisher">Digitale Bibliothek</str>
+            <str name="sourceid">digbib_qugerklas</str>
+            <str name="titleVT_de">Quellen Germanistik: Klassik</str>
+        </doc>
+        <doc>
+            <float name="score">0.09164817</float>
+            <str name="dbName">Datenbank(en) der Direct Media Reihe</str>
+            <str name="dbodid">digbib</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=digbib_qugeresd</str>
+            <str name="description">Der Band "Empfindsamkeit, Sturm und Drang" aus der Reihe "Quellen Germanistik"
+                ermöglicht einen schnellen und komfortablen Zugriff auf die wichtigsten Grundlagentexte der
+                Empfindsamkeit und der Sturm-und-Drang-Epoche. Die Werke sind im Volltext erfasst. Die Datenbank umfasst
+                Texte von Claudius, Gellert, Goethe, Herder, Klopstock, La Roche, Lichtenberg, Schiller, Wieland und
+                einigen Schriftstellern mehr.Sonderband 56 der Reihe Digitale Bibliothek
+            </str>
+            <str name="id">45363</str>
+            <str name="keywords">Deutschland, Empfindsamkeit, Sturm und Drang, Literatur, Volltext</str>
+            <str name="publisher">Digitale Bibliothek</str>
+            <str name="sourceid">digbib_qugeresd</str>
+            <str name="titleVT_de">Quellen Germanistik: Empfindsamkeit / Sturm und Drang</str>
+        </doc>
+        <doc>
+            <float name="score">0.053819116</float>
+            <str name="dbName">DBIS</str>
+            <str name="dbodid">dbis</str>
+            <str name="deeplink">http://rzblx10.uni-regensburg.de/dbinfo/detail.php?titel_id=3444</str>
+            <str name="description">Der Band "Klassik" aus der Reihe "Quellen Germanistik" ermöglicht einen schnellen
+                und komfortablen Zugriff auf die wichtigsten Grundlagentexte der Klassik. Die Werke sind im Volltext
+                erfasst. Die Datenbank umfasst Texte von Goethe, Herder, Hölderlin, Humboldt, Jean Paul, Kant, Kotzebue,
+                Schiller und einigen Schriftstellern mehr.Sonderband 56 der Reihe Digitale Bibliothek
+            </str>
+            <str name="id">50537</str>
+            <str name="keywords">Deutschland, Klassik, Literatur, Volltext</str>
+            <str name="publisher">DBIS</str>
+            <str name="sourceid">dbis3444</str>
+            <str name="titleVT_de">Quellen Germanistik / Klassik</str>
+        </doc>
+        <doc>
+            <float name="score">0.043055292</float>
+            <str name="dbName">DBIS</str>
+            <str name="dbodid">dbis</str>
+            <str name="deeplink">http://rzblx10.uni-regensburg.de/dbinfo/detail.php?titel_id=3443</str>
+            <str name="description">Der Band "Empfindsamkeit, Sturm und Drang" aus der Reihe "Quellen Germanistik"
+                ermöglicht einen schnellen und komfortablen Zugriff auf die wichtigsten Grundlagentexte der
+                Empfindsamkeit und der Sturm-und-Drang-Epoche. Die Werke sind im Volltext erfasst. Die Datenbank umfasst
+                Texte von Claudius, Gellert, Goethe, Herder, Klopstock, La Roche, Lichtenberg, Schiller, Wieland und
+                einigen Schriftstellern mehr.Sonderband 56 der Reihe Digitale Bibliothek
+            </str>
+            <str name="id">50520</str>
+            <str name="keywords">Deutschland, Empfindsamkeit, Sturm und Drang, Literatur, Volltext</str>
+            <str name="publisher">DBIS</str>
+            <str name="sourceid">dbis3443</str>
+            <str name="titleVT_de">Quellen Germanistik / Empfindsamkeit, Sturm und Drang</str>
+        </doc>
+        <doc>
+            <float name="score">0.043055292</float>
+            <str name="dbName">DBIS</str>
+            <str name="dbodid">dbis</str>
+            <str name="deeplink">http://rzblx10.uni-regensburg.de/dbinfo/detail.php?titel_id=1566</str>
+            <str name="description">Im Vordergrund der hier getroffenen Gedichtauswahl steht das Thema »Liebe«, welches
+                in den Gedichten auf unterschiedlichste Art und Weise behandelt wird. Neben erzählenden Balladen und
+                innigen Liebesklagen finden sich zahlreiche kleine Gelegenheitsdichtungen auf Hochzeiten, naive Lieder
+                oder ironische Sprüche.
+                Mit insgesamt 137 deutschsprachigen Autoren vom 17. bis 20. Jahrhundert sind nicht nur die bekanntesten
+                wie Goethe, Schiller, Heine und Rilke vertreten, sondern auch in Vergessenheit geratene
+                Dichterpersönlichkeiten, die insbesondere durch ihre Liebesdichtungen zeitgenössisch äußerst wirksam
+                waren.
+                Digitale Bibliothek
+            </str>
+            <str name="id">50559</str>
+            <str name="keywords">Deutsch, Lyrik, Liebe &lt;Motiv&gt;, Geschichte 1600-1930, Anthologie</str>
+            <str name="publisher">DBIS</str>
+            <str name="sourceid">dbis1566</str>
+            <str name="titleVT_de">1000 Liebesgedichte</str>
+        </doc>
+        <doc>
+            <float name="score">0.021927718</float>
+            <str name="dbName">Canadiana-Bibliographie 1900-2000</str>
+            <str name="dbodid">zks_canadiana</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=zks_canadiana&amp;param=300</str>
+            <str name="description">kanadische Nationalbibliographie CD 1 enthält Amtsdruckschriften, Periodika,
+                Musikalien, Karten, Retrospective National Bibliography (Bestand der National Library of Canada bis
+                1901), Early Canadiana (Mikroformen) und andere Canadiana vor 1950. CD 2 enthält sämtliche anderen
+                Canadiana nach 1949.
+            </str>
+            <str name="id">48621</str>
+            <str name="keywords">Kanada,, Bibliographie</str>
+            <str name="publisher">Zentrum für Kanada-Studien an der Universität Trier</str>
+            <str name="sourceid">zks_canadiana300</str>
+            <str name="titleVT_de">Canadiana-Bibliographie 1900-2000; Seite 300</str>
+        </doc>
+        <doc>
+            <float name="score">0.017720273</float>
+            <str name="dbName">Canadiana-Bibliographie 1900-2000</str>
+            <str name="dbodid">zks_canadiana</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=zks_canadiana&amp;param=309</str>
+            <str name="description">kanadische Nationalbibliographie CD 1 enthält Amtsdruckschriften, Periodika,
+                Musikalien, Karten, Retrospective National Bibliography (Bestand der National Library of Canada bis
+                1901), Early Canadiana (Mikroformen) und andere Canadiana vor 1950. CD 2 enthält sämtliche anderen
+                Canadiana nach 1949.
+            </str>
+            <str name="id">48630</str>
+            <str name="keywords">Kanada,, Bibliographie</str>
+            <str name="publisher">Zentrum für Kanada-Studien an der Universität Trier</str>
+            <str name="sourceid">zks_canadiana309</str>
+            <str name="titleVT_de">Canadiana-Bibliographie 1900-2000; Seite 309</str>
+        </doc>
+        <doc>
+            <float name="score">0.017720273</float>
+            <str name="dbName">Canadiana-Bibliographie 1900-2000</str>
+            <str name="dbodid">zks_canadiana</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=zks_canadiana&amp;param=299</str>
+            <str name="description">kanadische Nationalbibliographie CD 1 enthält Amtsdruckschriften, Periodika,
+                Musikalien, Karten, Retrospective National Bibliography (Bestand der National Library of Canada bis
+                1901), Early Canadiana (Mikroformen) und andere Canadiana vor 1950. CD 2 enthält sämtliche anderen
+                Canadiana nach 1949.
+            </str>
+            <str name="id">48620</str>
+            <str name="keywords">Kanada,, Bibliographie</str>
+            <str name="publisher">Zentrum für Kanada-Studien an der Universität Trier</str>
+            <str name="sourceid">zks_canadiana299</str>
+            <str name="titleVT_de">Canadiana-Bibliographie 1900-2000; Seite 299</str>
+        </doc>
+        <doc>
+            <float name="score">0.0155052375</float>
+            <str name="dbName">Canadiana-Bibliographie 1900-2000</str>
+            <str name="dbodid">zks_canadiana</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=zks_canadiana&amp;param=292</str>
+            <str name="description">kanadische Nationalbibliographie CD 1 enthält Amtsdruckschriften, Periodika,
+                Musikalien, Karten, Retrospective National Bibliography (Bestand der National Library of Canada bis
+                1901), Early Canadiana (Mikroformen) und andere Canadiana vor 1950. CD 2 enthält sämtliche anderen
+                Canadiana nach 1949.
+            </str>
+            <str name="id">48613</str>
+            <str name="keywords">Kanada,, Bibliographie</str>
+            <str name="publisher">Zentrum für Kanada-Studien an der Universität Trier</str>
+            <str name="sourceid">zks_canadiana292</str>
+            <str name="titleVT_de">Canadiana-Bibliographie 1900-2000; Seite 292</str>
+        </doc>
+        <doc>
+            <float name="score">0.013290204</float>
+            <str name="dbName">Datenbank(en) der Direct Media Reihe</str>
+            <str name="dbodid">digbib</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=digbib_dtliteratur</str>
+            <str name="description">Auf den 116 Farbtafeln zeigen über 200 Schaubilder Zeitdiagramme, Wirkungsschemata
+                und natürlich auch Karten, gleichberechtigt neben dem Text, die Entwicklung der deutschen Literatur von
+                den Anfängen bis zur Gegenwart. Übersichten der Stilepochen werden ergänzt durch die Darstellung von
+                Leben und Werk einzelner Dichter, von Inhalt und formalem Aufbau wichtiger Werke sowie von der
+                Geschichte literarischer Stoffe, Strömungen und Gattungen. Wechselwirkungen mit Politik, Wissenschaft
+                und Gesellschaft werden deutlich gemacht.
+                ( Digitale Bibliothek Band 153 )
+            </str>
+            <str name="id">45386</str>
+            <str name="keywords">Deutsch, Literatur, Geschichte, Literaturgeschichte, Deutschland, Atlas</str>
+            <str name="publisher">Digitale Bibliothek</str>
+            <str name="sourceid">digbib_dtliteratur</str>
+            <str name="titleVT_de">DB Band 153: Atlas Deutsche Literatur</str>
+        </doc>
+        <doc>
+            <float name="score">0.012530125</float>
+            <str name="dbName">Canadiana-Bibliographie 1900-2000</str>
+            <str name="dbodid">zks_canadiana</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=zks_canadiana&amp;param=298</str>
+            <str name="description">kanadische Nationalbibliographie CD 1 enthält Amtsdruckschriften, Periodika,
+                Musikalien, Karten, Retrospective National Bibliography (Bestand der National Library of Canada bis
+                1901), Early Canadiana (Mikroformen) und andere Canadiana vor 1950. CD 2 enthält sämtliche anderen
+                Canadiana nach 1949.
+            </str>
+            <str name="id">48619</str>
+            <str name="keywords">Kanada,, Bibliographie</str>
+            <str name="publisher">Zentrum für Kanada-Studien an der Universität Trier</str>
+            <str name="sourceid">zks_canadiana298</str>
+            <str name="titleVT_de">Canadiana-Bibliographie 1900-2000; Seite 298</str>
+        </doc>
+        <doc>
+            <float name="score">0.012431848</float>
+            <str name="dbName">Datenbank(en) der Direct Media Reihe</str>
+            <str name="dbodid">digbib</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=digbib_geschdtlit</str>
+            <str name="description">Die digitale Ausgabe des 3-bändigen Standardwerks von 1978 - 1984 behandelt die
+                Entwicklung der deutschen Literatur von der Frühaufklärung bis in die achtziger Jahre des 20. Jh.,
+                bettet sie in den sozialgeschichtlichen Kontext ein und macht die Voraussetzungen und besonderen
+                Prozeduren des literarischen Wandels in diesen drei Jahrhunderten erkennbar.
+                (Digitale Bibliothek, Band 24)
+            </str>
+            <str name="id">45360</str>
+            <str name="keywords">Deutsch, Literatur, Geschichte 1700-1980</str>
+            <str name="publisher">Digitale Bibliothek</str>
+            <str name="sourceid">digbib_geschdtlit</str>
+            <str name="titleVT_de">DB Band 24: Geschichte der deutschen Literatur</str>
+        </doc>
+        <doc>
+            <float name="score">0.010963859</float>
+            <str name="dbName">Aluminium Taschenbuch</str>
+            <str name="dbodid">alum_alumtb</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=alum_alumtb&amp;param=1656</str>
+            <str name="description">Gewinnung, Eigenschaften, Zustandsdiagramme, Legierungssysteme Beeinflussung durch
+                thermische und mechanische Behandlung Entwicklungsrichtungen Chemisches Verhalten Werkstoffbezeichnungen
+                und -kennwerte Werkstoffprüfung, Gütesicherung Zusammensetzung und Gegenüberstellung vergleichbarer
+                Aluminium-Werkstoffe
+            </str>
+            <str name="id">47008</str>
+            <str name="keywords">Aluminium</str>
+            <str name="publisher">Aluminium Verlag</str>
+            <str name="sourceid">alum_alumtb1656</str>
+            <str name="titleVT_de">Aluminium Taschenbuch; Seite 1656</str>
+        </doc>
+        <doc>
+            <float name="score">0.010963859</float>
+            <str name="dbName">Canadiana-Bibliographie 1900-2000</str>
+            <str name="dbodid">zks_canadiana</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=zks_canadiana&amp;param=410</str>
+            <str name="description">kanadische Nationalbibliographie CD 1 enthält Amtsdruckschriften, Periodika,
+                Musikalien, Karten, Retrospective National Bibliography (Bestand der National Library of Canada bis
+                1901), Early Canadiana (Mikroformen) und andere Canadiana vor 1950. CD 2 enthält sämtliche anderen
+                Canadiana nach 1949.
+            </str>
+            <str name="id">48731</str>
+            <str name="keywords">Kanada,, Bibliographie</str>
+            <str name="publisher">Zentrum für Kanada-Studien an der Universität Trier</str>
+            <str name="sourceid">zks_canadiana410</str>
+            <str name="titleVT_de">Canadiana-Bibliographie 1900-2000; Seite 410</str>
+        </doc>
+        <doc>
+            <float name="score">0.010963859</float>
+            <str name="dbName">Canadiana-Bibliographie 1900-2000</str>
+            <str name="dbodid">zks_canadiana</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=zks_canadiana&amp;param=307</str>
+            <str name="description">kanadische Nationalbibliographie CD 1 enthält Amtsdruckschriften, Periodika,
+                Musikalien, Karten, Retrospective National Bibliography (Bestand der National Library of Canada bis
+                1901), Early Canadiana (Mikroformen) und andere Canadiana vor 1950. CD 2 enthält sämtliche anderen
+                Canadiana nach 1949.
+            </str>
+            <str name="id">48628</str>
+            <str name="keywords">Kanada,, Bibliographie</str>
+            <str name="publisher">Zentrum für Kanada-Studien an der Universität Trier</str>
+            <str name="sourceid">zks_canadiana307</str>
+            <str name="titleVT_de">Canadiana-Bibliographie 1900-2000; Seite 307</str>
+        </doc>
+        <doc>
+            <float name="score">0.010963859</float>
+            <str name="dbName">Canadiana-Bibliographie 1900-2000</str>
+            <str name="dbodid">zks_canadiana</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=zks_canadiana&amp;param=111</str>
+            <str name="description">kanadische Nationalbibliographie CD 1 enthält Amtsdruckschriften, Periodika,
+                Musikalien, Karten, Retrospective National Bibliography (Bestand der National Library of Canada bis
+                1901), Early Canadiana (Mikroformen) und andere Canadiana vor 1950. CD 2 enthält sämtliche anderen
+                Canadiana nach 1949.
+            </str>
+            <str name="id">48435</str>
+            <str name="keywords">Kanada,, Bibliographie</str>
+            <str name="publisher">Zentrum für Kanada-Studien an der Universität Trier</str>
+            <str name="sourceid">zks_canadiana111</str>
+            <str name="titleVT_de">Canadiana-Bibliographie 1900-2000; Seite 111</str>
+        </doc>
+        <doc>
+            <float name="score">0.009591379</float>
+            <str name="dbName">Datenbank(en) der Direct Media Reihe</str>
+            <str name="dbodid">digbib</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=digbib_datdtdicht</str>
+            <str name="description">Die "Daten deutscher Dichtung" sind seit ihrem ersten Erscheinen 1953 eines der am
+                weitesten verbreiteten Nachschlagewerke zur deutschen Literatur. Die Verfasser Herbert A. und Elisabeth
+                Frenzel behandeln die Geschichte der deutschen Literatur von den Anfängen über Klassik und Romantik bis
+                zum Realismus und Naturalismus. Sie interpretieren und ordnen die deutsche Dichtung des 20. Jahrhunderts
+                bis in die Gegenwart nach dem gleichen Prinzip. Neben den Angaben über die Erstveröffentlichung eines
+                Werks oder Termin und Ort der Uraufführung eines Schauspiels werden Inhalt, Form und Wirkung
+                dargestellt. Dies und die zusammenfassenden Einleitungen und Biographien charakterisieren die Autoren
+                und ihren Bezug zur dargestellten Epoche der deutschen Literatur.
+                Die CD-ROM basiert auf der im Deutschen Taschenbuch Verlag veröffentlichten 34. Auflage der Buchausgabe
+                vom Oktober 2004. Die 35. Auflage hat der Verlag wegen umstrittener Tendenzen zurückgezogen.
+                (Digitale Bibliothek Band 147)
+            </str>
+            <str name="id">45419</str>
+            <str name="keywords">Deutschland, Literatur, Geschichte Anfänge-2004, Lyrik, Drama, Zeittafel</str>
+            <str name="publisher">Digitale Bibliothek</str>
+            <str name="sourceid">digbib_datdtdicht</str>
+            <str name="titleVT_de">DB Band 147: Frenzel: Daten deutscher Dichtung</str>
+        </doc>
+        <doc>
+            <float name="score">0.008860136</float>
+            <str name="dbName">Datenbank(en) der Direct Media Reihe</str>
+            <str name="dbodid">digbib</str>
+            <str name="deeplink">http://www.dbod.de/db/start.php?database=digbib_goetheluw</str>
+            <str name="description">Volltextausgabe der Werke von Johann Wolfgang von Goethe nach der »Weimarer
+                Ausgabe«. Die CD-ROM erweitert den in Johann Wolfgang Goethe: Werke enthaltenen Textbestand um Briefe,
+                Tagebücher und Gespräche, eine aktuelle Biographie sowie das Lexikon »Who's who bei Goethe« aus dem dtv
+                Verlag.
+
+                Briefe: Ca. 13.500 Briefe aus den Jahren 1764&amp;#150;1832 nach dem Editionsstand der »Weimarer
+                Ausgabe«
+                Tagebücher: Tagebücher aus 57 Jahren (1775&amp;#150;1832) nach dem Editionsstand der »Weimarer Ausgabe«.
+                Gespräche: 1.800 Berichte von Zeitgenossen über Gespräche mit Goethe aus der Zeit von 1755 bis kurz vor
+                seinem Tod.
+                Personenverzeichnis zu den Briefen, Tagebüchern und Gesprächen: Ein Verzeichnis der erwähnten Personen
+                mit Lebensdaten und Angaben zur beruflichen Tätigkeit (über 8.000 Einträge)
+
+                (Digitale Bibliothek : Sonderband)
+            </str>
+            <str name="id">45364</str>
+            <str name="keywords">Goethe, Johann Wolfgang von, Briefsammlung 1764-­1832, Tagebuch 1775-­1832, Biographie,
+                Literarische Gestalt, Wörterbuch
+            </str>
+            <str name="publisher">Digitale Bibliothek</str>
+            <str name="sourceid">digbib_goetheluw</str>
+            <str name="titleVT_de">DB Sonderband: Goethe: Leben und Werk</str>
+        </doc>
+    </result>
+</response>
