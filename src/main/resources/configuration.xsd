@@ -156,6 +156,7 @@
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="query-param-name" type="xs:string"/>
     <xs:attribute name="version" type="xs:string" use="required"/>
+    <xs:attribute name="enabled" type="xs:boolean"/>
   </xs:complexType>
 
   <xs:complexType name="scoreFactory">
@@ -256,8 +257,8 @@
 
   <xs:simpleType name="addLevel">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="inside"/>
       <xs:enumeration value="outside"/>
+      <xs:enumeration value="inside"/>
     </xs:restriction>
   </xs:simpleType>
 </xs:schema>

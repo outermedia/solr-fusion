@@ -35,6 +35,9 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
     @XmlAttribute(name = "version", required = true)
     private String searchServerVersion;
 
+    @XmlAttribute(name = "enabled", required = false)
+    private Boolean enabled = true;
+
     @XmlElement(name = "url", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private String url;
 

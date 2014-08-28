@@ -205,6 +205,7 @@
             <om:target prio="2" target-name="GBV"/>
             <om:target prio="3" target-name="DBoD1"/>
             <om:target prio="4" target-name="DBoD2"/>
+            <om:target prio="5" target-name="UBL4"/>
         </om:merge>
 
         <om:solr-server name="UBL" version="3.5"
@@ -663,7 +664,7 @@
         </om:solr-server>
 
 
-        <om:solr-server name="DBoD1" version="3.6" query-param-name="q.alt"
+        <om:solr-server name="DBoD1" version="3.6" query-param-name="q.alt" enabled="true"
                         class="org.outermedia.solrfusion.adapter.solr.Solr1Adapter$Factory">
 
             <om:url>http://findex.gbv.de:9002/te/select</om:url>
@@ -888,7 +889,7 @@
         </om:solr-server>
 
         <!-- same mapping of DBoD1 except static source_id -->
-        <om:solr-server name="DBoD2" version="3.6" query-param-name="q.alt"
+        <om:solr-server name="DBoD2" version="1.4" query-param-name="q.alt"
                         class="org.outermedia.solrfusion.adapter.solr.Solr1Adapter$Factory">
 
             <om:url>http://findex.gbv.de:9003/solr/select</om:url>
@@ -1104,6 +1105,46 @@
                 </om:add>
             </om:field>
 
+        </om:solr-server>
+
+        <om:solr-server name="UBL4" version="4.3"
+            class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+
+            <om:url>http://findex.gbv.de:9005/solr/biblio/select</om:url>
+
+            <om:score factor="1.0"
+                class="org.outermedia.solrfusion.DefaultScore$Factory"/>
+
+            <om:unique-key>id</om:unique-key>
+
+            <om:max-docs>100</om:max-docs>
+
+            <!-- keep all fields in general -->
+            <om:field name="*" fusion-name="*" />
+
+            <!-- but with the following exceptions -->
+            <om:field name="id" fusion-name="id">
+                <om:change>
+                    <om:query type="filter-id" />
+                </om:change>
+            </om:field>
+            <!-- TODO dropped, because user is not logged in, is this OK? -->
+            <om:field name="authorized_mode" fusion-name="authorized_mode">
+                <om:drop>
+                    <om:query/>
+                </om:drop>
+            </om:field>
+            <!-- normalize title sort field -->
+            <om:field name="title_sort" fusion-name="title_sort">
+                <om:change>
+                    <om:response type="normalizer">
+                        <trim>true</trim>
+                        <to-lower-case>true</to-lower-case>
+                        <start-chars-to-del>&#32;&#160;."-</start-chars-to-del>
+                    </om:response>
+                </om:change>
+                <om:change><om:query /></om:change>
+            </om:field>
         </om:solr-server>
 
     </om:solr-servers>

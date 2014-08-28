@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.MergeStrategyIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
@@ -10,6 +11,8 @@ import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 
+import javax.xml.bind.UnmarshalException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -30,6 +33,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Slf4j
 public class GlobalSearchServerConfig
 {
     @XmlElement(name = "timeout", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
@@ -181,5 +185,21 @@ public class GlobalSearchServerConfig
     public QueryBuilderIfc getDismaxQueryBuilder() throws InvocationTargetException, IllegalAccessException
     {
         return dismaxQueryBuilderFactory.getInstance();
+    }
+
+    protected void afterUnmarshal(Unmarshaller u, Object parent) throws UnmarshalException
+    {
+        if(searchServerConfigs != null)
+        {
+            for(int i=searchServerConfigs.size()-1; i>=0; i--)
+            {
+                SearchServerConfig searchServerConfig = searchServerConfigs.get(i);
+                if(!searchServerConfig.getEnabled())
+                {
+                    log.info("Removed disabled search server config '{}'", searchServerConfig.getSearchServerName());
+                    searchServerConfigs.remove(i);
+                }
+            }
+        }
     }
 }
