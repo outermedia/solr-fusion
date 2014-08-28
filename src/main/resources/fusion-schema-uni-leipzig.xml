@@ -889,7 +889,7 @@
 
         <!-- same mapping of DBoD1 except static source_id -->
         <om:solr-server name="DBoD2" version="3.6" query-param-name="q.alt"
-                        class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+                        class="org.outermedia.solrfusion.adapter.solr.Solr1Adapter$Factory">
 
             <om:url>http://findex.gbv.de:9003/solr/select</om:url>
 
