@@ -117,4 +117,20 @@ public class MetaInfo implements MetaParamsVisitor<StringBuilder>
     {
         return DISMAX_PARSER.equals(name);
     }
+
+    public MetaInfo shallowClone()
+    {
+        MetaInfo result = new MetaInfo();
+        result.setName(name);
+        result.setValue(value);
+        if (searchServerParams != null)
+        {
+            result.setSearchServerParams(searchServerParams.shallowClone());
+        }
+        if (fusionParams != null)
+        {
+            result.setFusionParams(fusionParams.shallowClone());
+        }
+        return result;
+    }
 }

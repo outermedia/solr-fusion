@@ -29,6 +29,9 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
     @XmlAttribute(name = "name", required = true)
     private String searchServerName;
 
+    @XmlAttribute(name = "query-param-name", required = false)
+    private String queryParamName;
+
     @XmlAttribute(name = "version", required = true)
     private String searchServerVersion;
 

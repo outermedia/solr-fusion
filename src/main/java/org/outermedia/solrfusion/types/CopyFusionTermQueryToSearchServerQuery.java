@@ -31,6 +31,8 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
         TermQuery tq = (TermQuery) env.getBinding(ScriptEnv.ENV_IN_TERM_QUERY_PART);
         String searchServerFieldName = env.getStringBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD);
         TermQuery searchServerTermQuery = tq.shallowClone();
+        // the original MetaInfo is used! don't repeat output of MetaInfo for <om:add> inside queries
+        searchServerTermQuery.setMetaInfo(null);
         searchServerTermQuery.setSearchServerFieldName(searchServerFieldName);
         Configuration configuration = env.getConfiguration();
         SearchServerConfig searchServerConfig = env.getSearchServerConfig();
@@ -39,10 +41,19 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
         try
         {
             FusionRequest fusionRequest = (FusionRequest) env.getBinding(ScriptEnv.ENV_IN_FUSION_REQUEST);
-            QueryBuilderIfc qb = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
-            Set<String> defaultSearchServerSearchFields = fusionRequest.mapFusionFieldToSearchServerField(configuration.getDefaultSearchField(), configuration, searchServerConfig, null);
+            QueryBuilderIfc qb;
+            if (tq.isDismaxQuery())
+            {
+                qb = configuration.getDismaxQueryBuilder();
+            }
+            else
+            {
+                qb = fusionRequest.getQueryBuilder(configuration, searchServerConfig, false);
+            }
+            Set<String> defaultSearchServerSearchFields = fusionRequest.mapFusionFieldToSearchServerField(
+                configuration.getDefaultSearchField(), configuration, searchServerConfig, null);
             String qs = qb.buildQueryStringWithoutNew(searchServerTermQuery, configuration, searchServerConfig,
-                env.getLocale(),defaultSearchServerSearchFields);
+                env.getLocale(), defaultSearchServerSearchFields);
             newValues = new ArrayList<>();
             newValues.add(qs);
             result = new TypeResult(newValues, facetWordCounts);

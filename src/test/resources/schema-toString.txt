@@ -53,13 +53,14 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  type=JSON, factoryConfig=null),
  ResponseRendererFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory, typeClassFactory=class org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory),
  type=PHP, factoryConfig=null)], queryBuilderFactory=QueryBuilderFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.QueryBuilder$Factory, typeClassFactory=class org.outermedia.solrfusion.mapper.QueryBuilder$Factory)),
+ dismaxQueryBuilderFactory=QueryBuilderFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory, typeClassFactory=class org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory)),
  merge=Merge(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultMergeStrategy$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultMergeStrategy$Factory),
  fusionName=ISBN, targets=[
  MergeTarget(prio=1, targetName=Bibliothek A),
  MergeTarget(prio=2, targetName=Bibliothek B)]),
  searchServerConfigs=[
  SearchServerConfig(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory, typeClassFactory=class org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory),
- searchServerName=Bibliothek A, searchServerVersion=3.6, url=http://host:port/solr/xyz, scoreFactory=ScoreFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultScore$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultScore$Factory),
+ searchServerName=Bibliothek A, queryParamName=null, searchServerVersion=3.6, url=http://host:port/solr/xyz, scoreFactory=ScoreFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultScore$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultScore$Factory),
  factor=1.2),
  responseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.SpecialResponseParser$Factory, typeClassFactory=class org.outermedia.solrfusion.SpecialResponseParser$Factory)),
  queryBuilderFactory=null, idFieldName=id, maxDocs=100, fieldMappings=[

@@ -37,7 +37,7 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     public String buildQueryString(Query query, Configuration configuration, SearchServerConfig searchServerConfig,
         Locale locale, Set<String> defaultSearchServerSearchFields)
     {
-        String result =  buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale,
+        String result = buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale,
             defaultSearchServerSearchFields);
 
         // inside add queried have been processed, now add the outside queries
@@ -136,10 +136,14 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
                     searchServerConfig, locale, defaultSearchServerSearchFields);
                 insideClauses.add(clauseQueryStr);
             }
+            else
+            {
+                // preserve {!...} for all newly added queries
+                handleMetaInfo(origQuery.getMetaInfo(), queryBuilder);
+            }
             added = handleNewQueries(newQueries, insideClauses);
         }
-        else
-        if (term.isWasMapped() && !term.isRemoved() && searchServerFieldValue != null)
+        else if (term.isWasMapped() && !term.isRemoved() && searchServerFieldValue != null)
         {
             // TODO filter out duplicate search words?!
             if (defaultSearchServerSearchFields.contains(term.getSearchServerFieldName()))
@@ -271,7 +275,15 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
 
     protected QueryBuilderIfc newQueryBuilder()
     {
-        return DisMaxQueryBuilder.Factory.getInstance();
+        try
+        {
+            return configuration.getDismaxQueryBuilder();
+        }
+        catch (Exception e)
+        {
+            log.error("Caught exception while creating new dismax query builder instance", e);
+            return null;
+        }
     }
 
     @Override

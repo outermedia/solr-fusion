@@ -26,7 +26,7 @@ import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "globalSearchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/",
-    propOrder = {"timeout", "disasterLimit", "disasterMessage", "defaultPageSize", "queryParserFactory", "defaultResponseParserFactory", "responseRendererFactories", "queryBuilderFactory", "merge", "searchServerConfigs"})
+    propOrder = {"timeout", "disasterLimit", "disasterMessage", "defaultPageSize", "queryParserFactory", "defaultResponseParserFactory", "responseRendererFactories", "queryBuilderFactory", "dismaxQueryBuilderFactory", "merge", "searchServerConfigs"})
 @Getter
 @Setter
 @ToString
@@ -57,6 +57,10 @@ public class GlobalSearchServerConfig
 
     @XmlElement(name = "query-builder", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private QueryBuilderFactory queryBuilderFactory;
+
+    @XmlElement(name = "dismax-query-builder", namespace = "http://solrfusion.outermedia.org/configuration/",
+        required = true)
+    private QueryBuilderFactory dismaxQueryBuilderFactory;
 
     @XmlElement(name = "merge", namespace = "http://solrfusion.outermedia.org/configuration/", required = false)
     private Merge merge;
@@ -172,5 +176,10 @@ public class GlobalSearchServerConfig
             }
         }
         return result;
+    }
+
+    public QueryBuilderIfc getDismaxQueryBuilder() throws InvocationTargetException, IllegalAccessException
+    {
+        return dismaxQueryBuilderFactory.getInstance();
     }
 }

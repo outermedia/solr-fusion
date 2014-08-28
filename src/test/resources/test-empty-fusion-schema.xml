@@ -52,5 +52,7 @@
 
         <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
 
+        <om:dismax-query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory"/>
+
     </om:solr-servers>
 </om:core>

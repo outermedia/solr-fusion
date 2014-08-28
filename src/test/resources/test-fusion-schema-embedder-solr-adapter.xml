@@ -62,6 +62,8 @@
 
         <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
 
+        <om:dismax-query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory"/>
+
         <om:solr-server name="Bibliothek9000" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.EmbeddedSolrAdapter$Factory">
 

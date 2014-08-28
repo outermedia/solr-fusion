@@ -78,8 +78,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         <om:response-renderer type="php"
             class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory" />
 
-        <!-- A search server specific search String is created from an already mapped query -->
+        <!-- An edismax search String is created from an already mapped query -->
         <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory" />
+
+        <!-- A dismax search String is created from an already mapped query -->
+        <om:dismax-query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory"/>
 
         <!-- merge solr documents of different solrs into one -->
         <!-- "prio" controls which non empty value to use at first -->

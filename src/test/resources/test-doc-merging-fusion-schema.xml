@@ -56,17 +56,11 @@
 
         <om:response-renderer type="xml"
             class="org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory" >
-            <map-type fusion-type="float" key="float"/>
-            <map-type fusion-type="double" key="float"/>
-            <map-type fusion-type="int" key="int"/>
-            <map-type fusion-type="long" key="int"/>
-            <map-type fusion-type="boolean" key="bool"/>
-            <map-type fusion-type="date" key="date"/>
-            <map-type fusion-type="text" key="str"/>
-            <map-multi-value-type key="arr"/>
         </om:response-renderer>
 
         <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
+
+        <om:dismax-query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory"/>
 
         <om:merge fusion-name="isbn"
             class="org.outermedia.solrfusion.DefaultMergeStrategy$Factory">

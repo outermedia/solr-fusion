@@ -27,7 +27,9 @@ public class TermQuery extends Query
         this.term = term;
     }
 
-    protected TermQuery() {}
+    protected TermQuery()
+    {
+    }
 
     @Override
     public void accept(QueryVisitor visitor, ScriptEnv env)
@@ -64,6 +66,10 @@ public class TermQuery extends Query
     {
         result.setTerm(getTerm().shallowClone());
         result.setBoostValue(getBoostValue());
+        if (getMetaInfo() != null)
+        {
+            result.setMetaInfo(getMetaInfo().shallowClone());
+        }
         return result;
     }
 

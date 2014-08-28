@@ -301,4 +301,9 @@ public class Configuration
         }
         return result;
     }
+
+    public QueryBuilderIfc getDismaxQueryBuilder() throws InvocationTargetException, IllegalAccessException
+    {
+        return searchServerConfigs.getDismaxQueryBuilder();
+    }
 }

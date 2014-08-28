@@ -216,6 +216,10 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     public void init(SearchServerConfig config)
     {
         url = config.getUrl();
+        if(config.getQueryParamName() != null)
+        {
+            QUERY_PARAMETER = config.getQueryParamName();
+        }
     }
 
 }

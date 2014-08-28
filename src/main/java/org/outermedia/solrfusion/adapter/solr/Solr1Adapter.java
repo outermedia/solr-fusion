@@ -27,7 +27,6 @@ public class Solr1Adapter extends DefaultSolrAdapter
      */
     protected Solr1Adapter()
     {
-        QUERY_PARAMETER = "q.alt";
     }
 
     @Override public InputStream sendQuery(Multimap<String> params, int timeout, String version)

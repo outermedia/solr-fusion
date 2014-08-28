@@ -131,6 +131,11 @@ public class QueryBuilder implements QueryBuilderIfc
                     searchServerConfig, locale, defaultSearchServerSearchFields);
                 insideClauses.add(clauseQueryStr);
             }
+            else
+            {
+                // preserve {!...} for all newly added queries
+                handleMetaInfo(origQuery.getMetaInfo(), queryBuilder);
+            }
             added = handleNewQueries(newQueries, insideClauses);
         }
         else if (term.isWasMapped() && !term.isRemoved() && term.getSearchServerFieldValue() != null)
@@ -319,7 +324,14 @@ public class QueryBuilder implements QueryBuilderIfc
         QueryBuilderIfc newQueryBuilder = null;
         if (subQuery.isDismaxQuery())
         {
-            newQueryBuilder = DisMaxQueryBuilder.Factory.getInstance();
+            try
+            {
+                newQueryBuilder = configuration.getDismaxQueryBuilder();
+            }
+            catch (Exception e)
+            {
+                log.error("Caught exception while creating new dismax query builder instance", e);
+            }
         }
         else
         {

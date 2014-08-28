@@ -13,6 +13,7 @@ import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
+import org.outermedia.solrfusion.query.parser.MetaInfo;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
@@ -273,7 +274,7 @@ public class FusionController implements FusionControllerIfc
                 int timeout = configuration.getSearchServerConfigs().getTimeout();
                 String queryType = searchServerParams.getFirst(SolrFusionRequestParams.QUERY_TYPE);
                 SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
-                if ("dismax".equals(queryType))
+                if (MetaInfo.DISMAX_PARSER.equals(queryType))
                 {
                     adapter = newSolr1Adapter(adapter.getUrl());
                 }

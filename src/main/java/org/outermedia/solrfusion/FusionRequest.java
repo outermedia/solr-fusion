@@ -7,6 +7,7 @@ import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
+import org.outermedia.solrfusion.query.parser.MetaInfo;
 import org.outermedia.solrfusion.query.parser.Query;
 
 import java.lang.reflect.InvocationTargetException;
@@ -180,10 +181,13 @@ public class FusionRequest
     protected void buildCoreSearchServerQueryParams(Configuration configuration, SearchServerConfig searchServerConfig,
         Multimap<String> searchServerParams) throws InvocationTargetException, IllegalAccessException
     {
-        buildSearchServerQuery(parsedQuery, QUERY, configuration, searchServerConfig, searchServerParams);
-        buildSearchServerQuery(parsedFilterQuery, FILTER_QUERY, configuration, searchServerConfig, searchServerParams);
+        QueryBuilderIfc queryBuilder = getQueryBuilder(configuration, searchServerConfig, false);
+        QueryBuilderIfc otherQueryBuilder = getQueryBuilder(configuration, searchServerConfig, true);
+        buildSearchServerQuery(parsedQuery, QUERY, configuration, searchServerConfig, searchServerParams, queryBuilder);
+        buildSearchServerQuery(parsedFilterQuery, FILTER_QUERY, configuration, searchServerConfig, searchServerParams,
+            otherQueryBuilder);
         buildSearchServerQuery(parsedHighlightQuery, HIGHLIGHT_QUERY, configuration, searchServerConfig,
-            searchServerParams);
+            searchServerParams, otherQueryBuilder);
         // get all documents from 0..min(MAXDOCS,start+page size)
         if (start.isContainedInRequest())
         {
@@ -491,12 +495,12 @@ public class FusionRequest
     }
 
     protected void buildSearchServerQuery(Query query, SolrFusionRequestParams paramName, Configuration configuration,
-        SearchServerConfig searchServerConfig, Multimap<String> searchServerParams)
+        SearchServerConfig searchServerConfig, Multimap<String> searchServerParams, QueryBuilderIfc queryBuilderToUse)
         throws InvocationTargetException, IllegalAccessException
     {
         if (query != null)
         {
-            QueryBuilderIfc queryBuilder = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
+            QueryBuilderIfc queryBuilder = queryBuilderToUse;
             Set<String> defaultSearchServerFields = mapFusionFieldToSearchServerField(
                 configuration.getDefaultSearchField(), configuration, searchServerConfig, null);
             String queryStr = queryBuilder.buildQueryString(query, configuration, searchServerConfig, locale,
@@ -508,15 +512,32 @@ public class FusionRequest
         }
     }
 
+    public QueryBuilderIfc getQueryBuilder(Configuration configuration, SearchServerConfig searchServerConfig,
+        boolean ignoreQT) throws InvocationTargetException, IllegalAccessException
+    {
+        boolean useDismaxQueryBuilder = MetaInfo.DISMAX_PARSER.equals(queryType.getValue());
+        QueryBuilderIfc queryBuilder = null;
+        if (useDismaxQueryBuilder)
+        {
+            queryBuilder = configuration.getDismaxQueryBuilder();
+        }
+        else
+        {
+            queryBuilder = searchServerConfig.getQueryBuilder(configuration.getDefaultQueryBuilder());
+        }
+        return queryBuilder;
+    }
+
     protected void buildSearchServerQuery(List<Query> queryList, SolrFusionRequestParams paramName,
-        Configuration configuration, SearchServerConfig searchServerConfig, Multimap<String> searchServerParams)
-        throws InvocationTargetException, IllegalAccessException
+        Configuration configuration, SearchServerConfig searchServerConfig, Multimap<String> searchServerParams,
+        QueryBuilderIfc queryBuilderToUse) throws InvocationTargetException, IllegalAccessException
     {
         if (queryList != null)
         {
             for (Query q : queryList)
             {
-                buildSearchServerQuery(q, paramName, configuration, searchServerConfig, searchServerParams);
+                buildSearchServerQuery(q, paramName, configuration, searchServerConfig, searchServerParams,
+                    queryBuilderToUse);
             }
         }
     }

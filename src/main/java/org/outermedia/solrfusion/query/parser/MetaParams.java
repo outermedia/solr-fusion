@@ -39,4 +39,14 @@ public class MetaParams
     {
         return keyValue.isEmpty();
     }
+
+    public MetaParams shallowClone()
+    {
+        MetaParams result = new MetaParams();
+        for(Map.Entry<String, String> entry : keyValue.entrySet())
+        {
+           result.addEntry(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
 }
