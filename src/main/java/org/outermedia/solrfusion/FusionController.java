@@ -220,7 +220,7 @@ public class FusionController implements FusionControllerIfc
                     ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
                         result.getDocuments(), info);
                     consolidator.addResultStream(searchServerConfig, docIterator, fusionRequest,
-                        result.getHighlighting(), result.getFacetFields(searchServerConfig.getIdFieldName(),1));
+                        result.getHighlighting(), result.getFacetFields(searchServerConfig.getIdFieldName(), 1));
                 }
                 else
                 {
@@ -290,8 +290,18 @@ public class FusionController implements FusionControllerIfc
                 }
                 if (log.isDebugEnabled())
                 {
-                    log.debug("Received from {}: {}", searchServerConfig.getSearchServerName(),
-                        (result.getDocuments() != null) ? result.getDocuments().size() : -1);
+                    int docNr = -1;
+                    int maxDocNr = -1;
+                    if (result != null)
+                    {
+                        if (result.getDocuments() != null)
+                        {
+                            docNr = result.getDocuments().size();
+                        }
+                        maxDocNr = result.getNumFound();
+                    }
+                    log.debug("Received from {}: {} of max {}", searchServerConfig.getSearchServerName(), docNr,
+                        maxDocNr);
                 }
                 if (log.isTraceEnabled())
                 {

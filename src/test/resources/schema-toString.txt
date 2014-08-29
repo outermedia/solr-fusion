@@ -26,15 +26,7 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.TableFile, typeClassFactory=class org.outermedia.solrfusion.types.TableFile),
  name=static-table-file),
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.Table, typeClassFactory=class org.outermedia.solrfusion.types.Table),
- name=static-table),
- ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=extract-width),
- ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=extract-height),
- ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=extract-depth),
- ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=merge-measure-units)], defaultSearchField=title, defaultSortField=score desc, defaultOperator=AND, idGeneratorFactory=IdGeneratorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultIdGenerator$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultIdGenerator$Factory),
+ name=static-table)], defaultSearchField=title, defaultSortField=score desc, defaultOperator=AND, idGeneratorFactory=IdGeneratorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultIdGenerator$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultIdGenerator$Factory),
  fusionFieldName=id),
  responseConsolidatorFactory=ResponseConsolidatorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.PagingResponseConsolidator$Factory, typeClassFactory=class org.outermedia.solrfusion.response.PagingResponseConsolidator$Factory)),
  responseMapperFactory=ResponseMapperFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.ResponseMapper$Factory, typeClassFactory=class org.outermedia.solrfusion.mapper.ResponseMapper$Factory),
@@ -130,42 +122,6 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  [
  file: null]]))]),
  level=OUTSIDE)]),
- FieldMapping(searchServersName=w,h,d, fusionName=measure, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=EXACT_NAME_AND_FUSION_NAME, operations=[
- ChangeOperation(super=Operation(targets=[
- Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=extract-width),
- name=w, fusionName=null, typeConfig=null)),
- Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=extract-height),
- name=h, fusionName=null, typeConfig=null)),
- Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=extract-depth),
- name=d, fusionName=null, typeConfig=null)),
- Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=merge-measure-units),
- name=null, fusionName=null, typeConfig=[
- [
- width-field: null], [
- height-field: null], [
- depth-field: null]]))]))]),
- FieldMapping(searchServersName=measure, fusionName=w,h,d, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=EXACT_NAME_AND_FUSION_NAME, operations=[
- ChangeOperation(super=Operation(targets=[
- Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=extract-width),
- name=null, fusionName=w, typeConfig=null)),
- Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=extract-height),
- name=null, fusionName=h, typeConfig=null)),
- Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=extract-depth),
- name=null, fusionName=d, typeConfig=null)),
- Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.DummyType, typeClassFactory=class org.outermedia.solrfusion.types.DummyType),
- name=merge-measure-units),
- name=null, fusionName=null, typeConfig=[
- [
- width-field: null], [
- height-field: null], [
- depth-field: null]]))]))]),
  FieldMapping(searchServersName=null, fusionName=null, searchServersNamePattern=val([
  0-9]+)Start, fusionNameReplacement=valueFrom(\1),
  searchServersNameReplacement=val(\1)Start, fusionNamePattern=valueFrom([

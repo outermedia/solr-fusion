@@ -58,16 +58,11 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
             StringBuilder sb = new StringBuilder();
             if (result.length() > 0)
             {
-                sb.append('(');
                 sb.append(result);
-                sb.append(')');
             }
             for (String qs : newQueriesToAdd)
             {
-                if (sb.length() > 0)
-                {
-                    sb.append(" AND ");
-                }
+                sb.append(" ");
                 sb.append(qs);
             }
             result = sb.toString();
@@ -210,7 +205,46 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(BooleanQuery t, ScriptEnv env)
     {
-        t.visitQueryClauses(this, env);
+        List<BooleanClause> clauses = t.getClauses();
+        if (clauses != null)
+        {
+            StringBuilder boolQueryStringBuilder = handleBoolClauses(clauses);
+            if (boolQueryStringBuilder.length() > 0)
+            {
+                queryBuilder.append(boolQueryStringBuilder);
+            }
+        }
+    }
+
+    protected StringBuilder handleBoolClauses(List<BooleanClause> clauses)
+    {
+        StringBuilder boolQueryStringBuilder = new StringBuilder();
+        for (BooleanClause booleanClause : clauses)
+        {
+            QueryBuilderIfc newClauseQueryBuilder = newQueryBuilder();
+            String clauseQueryStr = newClauseQueryBuilder.buildQueryStringWithoutNew(booleanClause.getQuery(),
+                configuration, searchServerConfig, locale, defaultSearchServerSearchFields);
+            if (clauseQueryStr.length() > 0)
+            {
+                if (boolQueryStringBuilder.length() > 0)
+                {
+                    boolQueryStringBuilder.append(" ");
+                }
+                // "+" is redundant for AND, but in the case that all previous clauses were deleted, it
+                // is not possible to decide whether to print out a "+" or not
+                if (booleanClause.getOccur() == BooleanClause.Occur.OCCUR_MUST)
+                {
+                    boolQueryStringBuilder.append("+");
+                }
+                if (booleanClause.getOccur() == BooleanClause.Occur.OCCUR_MUST_NOT)
+                {
+                    boolQueryStringBuilder.append("-");
+                }
+                boolQueryStringBuilder.append(clauseQueryStr);
+            }
+        }
+
+        return boolQueryStringBuilder;
     }
 
     @Override
@@ -247,30 +281,13 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(BooleanClause booleanClause, ScriptEnv env)
     {
-        queryBuilder.append(" ");
-        switch (booleanClause.getOccur())
-        {
-            case OCCUR_MUST:
-                queryBuilder.append("+");
-                break;
-            case OCCUR_MUST_NOT:
-                queryBuilder.append("-");
-                break;
-            default:
-                // NOP
-        }
-        booleanClause.accept(this, env);
+        // NOP, not used
     }
 
     @Override
     public void visitQuery(SubQuery t, ScriptEnv env)
     {
-        queryBuilder.append("_query_:\"");
-        Query subQuery = t.getQuery();
-        String subQueryStr = newQueryBuilder().buildQueryString(subQuery, configuration, searchServerConfig, locale,
-            defaultSearchServerSearchFields);
-        queryBuilder.append(subQueryStr.replace("\"", "\\\""));
-        queryBuilder.append("\"");
+        // NOP, not supported by dismax
     }
 
     protected QueryBuilderIfc newQueryBuilder()

@@ -134,40 +134,6 @@
         </om:add>
     </om:field>
 
-    <!-- split "B x H x T" into 3 fields -->
-    <!-- it is not possible to join the response -->
-    <!-- if three <field> rules were used -->
-    <!-- name contains three field names: w(idth), -->
-    <!-- h(eight) and d(epth) -->
-    <om:field name="w,h,d" fusion-name="measure">
-        <om:change>
-            <!-- rewrite default field(s) to a certain one -->
-            <!-- the value of "as-name" is a member of "name" -->
-            <om:query type="extract-width" name="w"/>
-            <om:query type="extract-height" name="h"/>
-            <om:query type="extract-depth" name="d"/>
-            <om:response type="merge-measure-units">
-                <width-field>w</width-field>
-                <height-field>h</height-field>
-                <depth-field>d</depth-field>
-            </om:response>
-        </om:change>
-    </om:field>
-
-    <!-- merge 3 fields into "B x H x T" -->
-    <om:field name="measure" fusion-name="w,h,d">
-        <om:change>
-            <om:response type="extract-width" fusion-name="w"/>
-            <om:response type="extract-height" fusion-name="h"/>
-            <om:response type="extract-depth" fusion-name="d"/>
-            <om:query type="merge-measure-units">
-                <width-field>w</width-field>
-                <height-field>h</height-field>
-                <depth-field>d</depth-field>
-            </om:query>
-        </om:change>
-    </om:field>
-
     <om:field
             name-pattern="val([0-9]+)Start" fusion-name-replacement="valueFrom(\1)"
             name-replacement="val(\1)Start" fusion-name-pattern="valueFrom([0-9]+)"

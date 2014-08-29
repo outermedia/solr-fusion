@@ -371,7 +371,7 @@
             <om:field name="t14" fusion-name="text14">
                 <om:change>
                     <om:query type="static-value">
-                        <value>hello0</value>
+                        <value>hello1</value>
                     </om:query>
                 </om:change>
             </om:field>

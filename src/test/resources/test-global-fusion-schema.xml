@@ -32,12 +32,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <om:script-type name="regexp" class="org.outermedia.solrfusion.types.RegularExpression" />
     <om:script-type name="static-table-file" class="org.outermedia.solrfusion.types.TableFile"/>
     <om:script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/>
-    
-    <!-- specific script types -->
-    <om:script-type name="extract-width" class="org.outermedia.solrfusion.types.DummyType"/>
-    <om:script-type name="extract-height" class="org.outermedia.solrfusion.types.DummyType"/>
-    <om:script-type name="extract-depth" class="org.outermedia.solrfusion.types.DummyType"/>
-    <om:script-type name="merge-measure-units" class="org.outermedia.solrfusion.types.DummyType"/>
 
     <om:default-search-field>title</om:default-search-field>
 

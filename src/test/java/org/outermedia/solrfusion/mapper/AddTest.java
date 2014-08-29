@@ -1,5 +1,6 @@
 package org.outermedia.solrfusion.mapper;
 
+import com.google.common.collect.Sets;
 import org.junit.Assert;
 import org.junit.Test;
 import org.outermedia.solrfusion.FusionRequest;
@@ -151,6 +152,24 @@ public class AddTest extends AbstractTypeTest
     }
 
     @Test
+    public void testAddQueryOutsideDismax()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+        InvocationTargetException, IllegalAccessException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
+        SearchServerConfig searchServerConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
+        TermQuery q = new TermQuery(Term.newFusionTerm("title", "abc123"));
+        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, new ScriptEnv(), null);
+        QueryBuilderIfc qb = cfg.getDismaxQueryBuilder();
+        String qs = qb.buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN, Sets.newHashSet("Titel"));
+        // System.out.println("QS "+qs);
+        // TODO how can map rules respect dismax and edismax? currently they return the whole query which is wrong
+        // for dismax queries
+        String expected = "abc123 +t11:\"searched text\"~2^75 t13:hello";
+        Assert.assertEquals("Got different query than expected", expected, qs);
+    }
+
+    @Test
     public void testAddQueryInsideWithChange()
         throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
         InvocationTargetException, IllegalAccessException
@@ -161,8 +180,27 @@ public class AddTest extends AbstractTypeTest
         cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, new ScriptEnv(), null);
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
         String qs = qb.buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN, null);
+        // System.out.println("QS " + qs);
+        String expected = "((t14:hello1 OR t14a:helloA OR t14b:helloB)) AND +t11:\"searched text\"~2^75 AND t13:hello";
+        Assert.assertEquals("Got different query than expected", expected, qs);
+    }
+
+    @Test
+    public void testAddQueryInsideWithChangeForMustQuery()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+        InvocationTargetException, IllegalAccessException
+    {
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
+        SearchServerConfig searchServerConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
+        TermQuery tq = buildTermQuery(cfg, "text14", "abc123");
+        BooleanClause bc = new BooleanClause(tq, BooleanClause.Occur.OCCUR_MUST);
+        BooleanQuery q = new BooleanQuery();
+        q.add(bc);
+        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, new ScriptEnv(), null);
+        QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
+        String qs = qb.buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN, null);
         System.out.println("QS " + qs);
-        String expected = "((t14:hello0 OR t14a:helloA OR t14b:helloB)) AND +t11:\"searched text\"~2^75 AND t13:hello";
+        String expected = "((+(t14:hello1 OR t14a:helloA OR t14b:helloB))) AND +t11:\"searched text\"~2^75 AND t13:hello";
         Assert.assertEquals("Got different query than expected", expected, qs);
     }
 
@@ -178,7 +216,7 @@ public class AddTest extends AbstractTypeTest
         cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, env, null);
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
         String qs = qb.buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN, null);
-        System.out.println("QS " + qs);
+        // System.out.println("QS " + qs);
         String expected = "((t15a:helloA OR t15b:helloB)) AND +t11:\"searched text\"~2^75 AND t13:hello";
         Assert.assertEquals("Got different query than expected", expected, qs);
     }
