@@ -77,8 +77,8 @@ public class FieldMapping
 
     /**
      * Is 'this' mapping applicable to the specified fusion field? If true, then the field {@link
-     * org.outermedia.solrfusion.configuration.ApplicableResult#destinationFieldName} is set to store the corresponding search server field name which is maybe constructed
-     * by a regular expression or wildcard.
+     * org.outermedia.solrfusion.configuration.ApplicableResult#destinationFieldName} is set to store the corresponding
+     * search server field name which is maybe constructed by a regular expression or wildcard.
      *
      * @param fusionFieldName
      * @return true if applicable else false
@@ -110,7 +110,7 @@ public class FieldMapping
         }
         term.setWasMapped(true);
         String destinationFieldName = applicableResult.getDestinationFieldName();
-        if(destinationFieldName != null)
+        if (destinationFieldName != null)
         {
             term.setSearchServerFieldName(destinationFieldName);
         }
@@ -301,7 +301,7 @@ public class FieldMapping
         Pattern pat = null;
         try
         {
-            pat = Pattern.compile(regExp);
+            pat = Pattern.compile(regExp, Pattern.CASE_INSENSITIVE);
         }
         catch (Exception e)
         {

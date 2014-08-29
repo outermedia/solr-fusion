@@ -24,11 +24,11 @@ public enum MatchType
         switch (this)
         {
             case LITERAL:
-                if (fusionFieldName.equals(fieldMapping.getFusionName()))
+                if (fusionFieldName.equalsIgnoreCase(fieldMapping.getFusionName()))
                 {
                     destinationField = fieldMapping.getSearchServersName();
                     // even is destination field is empty e.g. for a <drop>, but the field was mapped
-                    result = new ApplicableResult(destinationField, (FieldMapping)null);
+                    result = new ApplicableResult(destinationField, (FieldMapping) null);
                 }
                 break;
             case REG_EXP:
@@ -44,7 +44,7 @@ public enum MatchType
                 String mappingSearchServerNameReplacement = buildWildcardReplacement(
                     fieldMapping.getSearchServersName());
                 result = getApplicableResult(mappingSearchServerNameReplacement,
-                    Pattern.compile(mappingFusionFieldNamePattern).matcher(fusionFieldName));
+                    Pattern.compile(mappingFusionFieldNamePattern, Pattern.CASE_INSENSITIVE).matcher(fusionFieldName));
                 break;
         }
         return result;
@@ -57,7 +57,7 @@ public enum MatchType
 
     protected String buildWildcardReplacement(String replacement)
     {
-        if(replacement != null)
+        if (replacement != null)
         {
             int groupRef = 1;
             int pos = -1;
@@ -83,7 +83,7 @@ public enum MatchType
                 destinationField = matcher.replaceAll(replacement);
             }
             // even is destination field is empty e.g. for a <drop>, but the field was mapped
-            result = new ApplicableResult(destinationField, (FieldMapping)null);
+            result = new ApplicableResult(destinationField, (FieldMapping) null);
         }
         return result;
     }
@@ -102,11 +102,11 @@ public enum MatchType
         switch (this)
         {
             case LITERAL:
-                if (fieldMapping.getSearchServersName().equals(searchServerFieldName))
+                if (fieldMapping.getSearchServersName().equalsIgnoreCase(searchServerFieldName))
                 {
                     destinationField = fieldMapping.getFusionName();
                     // even is destination field is empty e.g. for a <drop>, but the field was mapped
-                    result = new ApplicableResult(destinationField, (FieldMapping)null);
+                    result = new ApplicableResult(destinationField, (FieldMapping) null);
                 }
                 break;
             case REG_EXP:
@@ -121,7 +121,8 @@ public enum MatchType
                 String mappingSearchServerNamePattern = buildWildcardPattern(fieldMapping.getSearchServersName());
                 String mappingFusionNameReplacement = buildWildcardReplacement(fieldMapping.getFusionName());
                 result = getApplicableResult(mappingFusionNameReplacement,
-                    Pattern.compile(mappingSearchServerNamePattern).matcher(searchServerFieldName));
+                    Pattern.compile(mappingSearchServerNamePattern, Pattern.CASE_INSENSITIVE).matcher(
+                        searchServerFieldName));
                 break;
         }
         return result;
