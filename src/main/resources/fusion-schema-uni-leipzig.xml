@@ -861,9 +861,6 @@
             <om:field fusion-name="author_facet">
                 <om:drop><om:query /></om:drop>
             </om:field>
-            <om:field fusion-name="publishDateSort">
-                <om:drop><om:query /></om:drop>
-            </om:field>
             <om:field fusion-name="collcode_de15">
                 <om:drop><om:query/></om:drop>
             </om:field>
@@ -1081,9 +1078,6 @@
                 <om:drop><om:query /></om:drop>
             </om:field>
             <om:field fusion-name="author_facet">
-                <om:drop><om:query /></om:drop>
-            </om:field>
-            <om:field fusion-name="publishDateSort">
                 <om:drop><om:query /></om:drop>
             </om:field>
             <om:field fusion-name="collcode_de15">

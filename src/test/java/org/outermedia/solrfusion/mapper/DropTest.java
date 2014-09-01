@@ -142,6 +142,7 @@ public class DropTest extends AbstractTypeTest
 
         // remove <drop> for text4
         term.resetQuery();
+        term.setFusionField(cfg.findFieldByName(term.getFusionFieldName()));
         FieldMapping fm = findByFusionName("text4", serverConfig.getFieldMappings());
         Assert.assertEquals("Found different mapping than expected", "text4", fm.getFusionName());
         fm.setSearchServersName("f8");

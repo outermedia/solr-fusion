@@ -1,5 +1,6 @@
 package org.outermedia.solrfusion.mapper;
 
+import org.outermedia.solrfusion.ParsedQuery;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -19,13 +20,13 @@ public class ResetQueryState implements QueryVisitor
         query.accept(this, null);
     }
 
-    public void reset(List<Query> queryList)
+    public void reset(List<ParsedQuery> queryList)
     {
-        for (Query query : queryList)
+        for (ParsedQuery query : queryList)
         {
-            if (query != null)
+            if (query != null && query.getQuery() != null)
             {
-                query.accept(this, null);
+                query.getQuery().accept(this, null);
             }
         }
     }

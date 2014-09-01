@@ -29,7 +29,7 @@ public class FusionRequest
     private SolrFusionRequestParam pageSize;
     private Locale locale;
     private Query parsedQuery;
-    private List<Query> parsedFilterQuery;
+    private List<ParsedQuery> parsedFilterQuery;
     private ResponseRendererType responseType;
     private SolrFusionRequestParam sort;
     private SolrFusionRequestParam fieldsToReturn;
@@ -183,11 +183,12 @@ public class FusionRequest
     {
         QueryBuilderIfc queryBuilder = getQueryBuilder(configuration, searchServerConfig, false);
         QueryBuilderIfc otherQueryBuilder = getQueryBuilder(configuration, searchServerConfig, true);
-        buildSearchServerQuery(parsedQuery, QUERY, configuration, searchServerConfig, searchServerParams, queryBuilder);
+        buildSearchServerQuery(new ParsedQuery(query.getValue(), parsedQuery), QUERY, configuration, searchServerConfig,
+            searchServerParams, queryBuilder);
         buildSearchServerQuery(parsedFilterQuery, FILTER_QUERY, configuration, searchServerConfig, searchServerParams,
             otherQueryBuilder);
-        buildSearchServerQuery(parsedHighlightQuery, HIGHLIGHT_QUERY, configuration, searchServerConfig,
-            searchServerParams, otherQueryBuilder);
+        buildSearchServerQuery(new ParsedQuery(highlightQuery.getValue(), parsedHighlightQuery), HIGHLIGHT_QUERY,
+            configuration, searchServerConfig, searchServerParams, otherQueryBuilder);
         // get all documents from 0..min(MAXDOCS,start+page size)
         if (start.isContainedInRequest())
         {
@@ -494,20 +495,26 @@ public class FusionRequest
         return allMappingsForFusionField;
     }
 
-    protected void buildSearchServerQuery(Query query, SolrFusionRequestParams paramName, Configuration configuration,
-        SearchServerConfig searchServerConfig, Multimap<String> searchServerParams, QueryBuilderIfc queryBuilderToUse)
-        throws InvocationTargetException, IllegalAccessException
+    protected void buildSearchServerQuery(ParsedQuery query, SolrFusionRequestParams paramName,
+        Configuration configuration, SearchServerConfig searchServerConfig, Multimap<String> searchServerParams,
+        QueryBuilderIfc queryBuilderToUse) throws InvocationTargetException, IllegalAccessException
     {
-        if (query != null)
+        if (query != null && query.getQuery() != null)
         {
             QueryBuilderIfc queryBuilder = queryBuilderToUse;
             Set<String> defaultSearchServerFields = mapFusionFieldToSearchServerField(
                 configuration.getDefaultSearchField(), configuration, searchServerConfig, null);
-            String queryStr = queryBuilder.buildQueryString(query, configuration, searchServerConfig, locale,
+            String queryStr = queryBuilder.buildQueryString(query.getQuery(), configuration, searchServerConfig, locale,
                 defaultSearchServerFields);
             if (queryStr.length() > 0)
             {
                 searchServerParams.put(paramName, queryStr);
+            }
+            else
+            {
+                log.debug(
+                    "Built search server query {} is empty after mapping. Original value is: {}. {} created empty value.",
+                    paramName.getRequestParamName(), query.getQueryStr(), queryBuilderToUse.getClass().getName());
             }
         }
     }
@@ -517,7 +524,7 @@ public class FusionRequest
     {
         boolean useDismaxQueryBuilder = MetaInfo.DISMAX_PARSER.equals(queryType.getValue());
         QueryBuilderIfc queryBuilder = null;
-        if (useDismaxQueryBuilder)
+        if (!ignoreQT && useDismaxQueryBuilder)
         {
             queryBuilder = configuration.getDismaxQueryBuilder();
         }
@@ -528,13 +535,13 @@ public class FusionRequest
         return queryBuilder;
     }
 
-    protected void buildSearchServerQuery(List<Query> queryList, SolrFusionRequestParams paramName,
+    protected void buildSearchServerQuery(List<ParsedQuery> queryList, SolrFusionRequestParams paramName,
         Configuration configuration, SearchServerConfig searchServerConfig, Multimap<String> searchServerParams,
         QueryBuilderIfc queryBuilderToUse) throws InvocationTargetException, IllegalAccessException
     {
         if (queryList != null)
         {
-            for (Query q : queryList)
+            for (ParsedQuery q : queryList)
             {
                 buildSearchServerQuery(q, paramName, configuration, searchServerConfig, searchServerParams,
                     queryBuilderToUse);

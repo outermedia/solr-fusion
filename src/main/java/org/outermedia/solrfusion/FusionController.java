@@ -92,10 +92,10 @@ public class FusionController implements FusionControllerIfc
         }
     }
 
-    protected List<Query> parseAllQueries(List<SolrFusionRequestParam> queryParams, Map<String, Float> boosts,
+    protected List<ParsedQuery> parseAllQueries(List<SolrFusionRequestParam> queryParams, Map<String, Float> boosts,
         FusionRequest fusionRequest, List<String> unparsableQueryStrings)
     {
-        List<Query> result = null;
+        List<ParsedQuery> result = null;
         if (queryParams != null)
         {
             result = new ArrayList<>();
@@ -110,7 +110,7 @@ public class FusionController implements FusionControllerIfc
                 }
                 else
                 {
-                    result.add(q);
+                    result.add(new ParsedQuery(queryStr, q));
                 }
             }
             if (result.isEmpty())
@@ -203,12 +203,14 @@ public class FusionController implements FusionControllerIfc
         log.debug("Requesting all configured servers with query: {}", fusionRequest.getQuery());
         ScriptEnv env = getNewScriptEnv(fusionRequest);
         Query query = fusionRequest.getParsedQuery();
-        List<Query> filterQuery = fusionRequest.getParsedFilterQuery();
+        List<ParsedQuery> filterQuery = fusionRequest.getParsedFilterQuery();
         Query highlightQuery = fusionRequest.getParsedHighlightQuery();
         for (SearchServerConfig searchServerConfig : configuredSearchServers)
         {
             log.info("Processing query for search server {}", searchServerConfig.getSearchServerName());
-            if (mapQuery(env, searchServerConfig, Arrays.asList(query, highlightQuery), fusionRequest) &&
+            List<ParsedQuery> parsedQueries = Arrays.asList(new ParsedQuery(fusionRequest.getQuery().getValue(), query),
+                new ParsedQuery(fusionRequest.getHighlightQuery().getValue(), highlightQuery));
+            if (mapQuery(env, searchServerConfig, parsedQueries, fusionRequest) &&
                 mapQuery(env, searchServerConfig, filterQuery, fusionRequest))
             {
                 XmlResponse result = sendAndReceive(false, fusionRequest, searchServerConfig);
@@ -363,20 +365,20 @@ public class FusionController implements FusionControllerIfc
         return result;
     }
 
-    protected boolean mapQuery(ScriptEnv env, SearchServerConfig searchServerConfig, List<Query> queryList,
+    protected boolean mapQuery(ScriptEnv env, SearchServerConfig searchServerConfig, List<ParsedQuery> queryList,
         FusionRequest fusionRequest)
     {
         boolean result = true;
         if (queryList != null)
         {
-            for (Query query : queryList)
+            for (ParsedQuery parsedQuery : queryList)
             {
-                if (query != null)
+                if (parsedQuery != null && parsedQuery.getQuery() != null)
                 {
                     try
                     {
-                        configuration.getQueryMapper().mapQuery(configuration, searchServerConfig, query, env,
-                            fusionRequest);
+                        configuration.getQueryMapper().mapQuery(configuration, searchServerConfig,
+                            parsedQuery.getQuery(), env, fusionRequest);
                     }
                     catch (Exception e)
                     {

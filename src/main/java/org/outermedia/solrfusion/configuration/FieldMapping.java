@@ -120,19 +120,31 @@ public class FieldMapping
         newEnv.setBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD, destinationFieldName);
         newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD_DECLARATION, term.getFusionField());
         // don't apply operations on null value (empty list is OK)
-        if (operations != null && fusionFieldValues != null)
+        if (fusionFieldValues != null)
         {
-            for (Operation o : operations)
+            log.trace("Apply mapping [line: {}]: {}", getLocator().getLineNumber(), term);
+            if (operations != null && operations.size() > 0)
             {
-                try
+                for (Operation o : operations)
                 {
-                    o.applyAllQueryOperations(term, newEnv);
+                    try
+                    {
+                        o.applyAllQueryOperations(term, newEnv);
+                        log.trace("Applied op {}:\n{}", o, term);
+                    }
+                    catch (UndeclaredFusionField e)
+                    {
+                        int line = locator.getLineNumber();
+                        throw new UndeclaredFusionField("Fusion schema at line " + line + ": " + e.getMessage());
+                    }
                 }
-                catch (UndeclaredFusionField e)
-                {
-                    int line = locator.getLineNumber();
-                    throw new UndeclaredFusionField("Fusion schema at line " + line + ": " + e.getMessage());
-                }
+            }
+            else
+            {
+                // without any operations means "change"
+                ChangeOperation changeOp = new ChangeOperation();
+                changeOp.applyAllQueryOperations(term, newEnv);
+                log.trace("Applied change op:\n{}", term);
             }
         }
     }
