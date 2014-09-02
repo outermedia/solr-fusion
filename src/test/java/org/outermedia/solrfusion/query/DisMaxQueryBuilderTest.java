@@ -4,20 +4,24 @@ import com.google.common.collect.Sets;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.QueryParserFactory;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.DisMaxQueryBuilder;
+import org.outermedia.solrfusion.mapper.QueryBuilder;
 import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.query.parser.*;
+import org.outermedia.solrfusion.types.ScriptEnv;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * Created by ballmann on 7/2/14.
@@ -270,7 +274,7 @@ public class DisMaxQueryBuilderTest
         PhraseQuery pq = new PhraseQuery(term);
         SubQuery sq = new SubQuery(pq);
         String qs = qb.buildQueryString(sq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
-        Assert.assertEquals("Got different sub query than expected", "", qs);
+        Assert.assertEquals("Got different sub query than expected", "\"abc?\"", qs);
     }
 
     @Test
@@ -291,7 +295,7 @@ public class DisMaxQueryBuilderTest
         qb = DisMaxQueryBuilder.Factory.getInstance();
         mi.setName("dismax");
         qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
-        Assert.assertEquals("Got different phrase query than expected", "{!dismax a=1}\"abc\"", qs);
+        Assert.assertEquals("Got different phrase query than expected", "\"abc\"", qs);
 
         // name not set, but value
         qb = DisMaxQueryBuilder.Factory.getInstance();
@@ -304,12 +308,52 @@ public class DisMaxQueryBuilderTest
         mi.setName("dismax");
         qb = DisMaxQueryBuilder.Factory.getInstance();
         qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
-        Assert.assertEquals("Got different phrase query than expected", "{!dismax=abc a=1}\"abc\"", qs);
+        Assert.assertEquals("Got different phrase query than expected", "\"abc\"", qs);
 
         // several params set
         qb = DisMaxQueryBuilder.Factory.getInstance();
+        mi.setName(null);
+        mi.setValue(null);
+        mi.addSearchServerEntry("a","1");
         mi.addSearchServerEntry("b","2");
         qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
-        Assert.assertEquals("Got different phrase query than expected", "{!dismax=abc a=1 b=2}\"abc\"", qs);
+        Assert.assertEquals("Got different phrase query than expected", "{!a=1 b=2}\"abc\"", qs);
+    }
+
+    @Test
+    public void testEdismaxToDismax()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException, ParseException,
+        InvocationTargetException, IllegalAccessException
+    {
+        String qs = "((_query_:\"{!dismax qf=\\\"author^200 author_id^100 author_ref^150 author_corp^200 " +
+            "author_corp_ref^150 author_orig^200 author2_orig^200 author_corp_orig^200 author_corp2_orig^200 " +
+            "author2 author_additional\\\"}Schiller\") AND (_query_:\"{!dismax qf=\\\"title_full_unstemmed^150 " +
+            "title_full^100 title^900 title_alt^200 title_new^100 title_old title_orig^400 series^100 series2 " +
+            "series_orig^100\\\"}Räuber\"))";
+        cfg = helper.readFusionSchemaWithoutValidation("fusion-schema-uni-leipzig.xml");
+        searchServerConfig = cfg.getSearchServerConfigByName("DBoD2");
+        EdisMaxQueryParser p = EdisMaxQueryParser.Factory.getInstance();
+        p.init(new QueryParserFactory());
+        Map<String, Float> boosts = new HashMap<String, Float>();
+        Query q = p.parse(cfg, boosts, qs, Locale.GERMAN, null);
+        ScriptEnv env = new ScriptEnv();
+        env.setBinding(ScriptEnv.ENV_IN_FUSION_REQUEST, new FusionRequest());
+        FusionRequest fusionRequest = new FusionRequest();
+        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, env, fusionRequest);
+        Set<String> defaultSearchServerSearchFields = fusionRequest.mapFusionFieldToSearchServerField(
+            cfg.getDefaultSearchField(), cfg, searchServerConfig, null);
+
+        // at first build edismax query string
+        String eqs = QueryBuilder.Factory.getInstance().buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN,
+            defaultSearchServerSearchFields);
+        // System.out.println("Edismax Query: " + eqs);
+
+        // then build dismax query string
+        String dqs = DisMaxQueryBuilder.Factory.getInstance().buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN,
+            defaultSearchServerSearchFields);
+        // System.out.println("Dismax Query: " + dqs);
+        String expected = "+(Schiller Schiller Schiller Schiller Schiller Schiller Schiller Schiller Schiller) " +
+            "+(Räuber Räuber Räuber Räuber Räuber Räuber Räuber Räuber Räuber)";
+        Assert.assertEquals("Expected other dismax query string", expected, dqs);
     }
 }

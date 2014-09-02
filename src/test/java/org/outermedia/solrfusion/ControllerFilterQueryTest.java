@@ -28,6 +28,12 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("unchecked")
 public class ControllerFilterQueryTest extends AbstractControllerTest
 {
+
+    private Configuration spyCfg;
+    private FusionRequest fusionRequest;
+    private SearchServerConfig searchServerConfig9000;
+    private SearchServerConfig searchServerConfig9002;
+
     @Test
     public void testProcessWithoutFilterQuery()
         throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
@@ -95,8 +101,8 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
     {
         testMultipleServers("title:abc", "title:def", "target/test-classes/test-xml-response-9000.xml",
             "target/test-classes/test-xml-response-9002.xml");
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def"), 4000, "3.6");
-        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", "titleVT_eng:def"), 4000,
+        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest, buildParams("title:abc", "title:def"), 4000, "3.6");
+        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest, buildParams("titleVT_eng:abc", "titleVT_eng:def"), 4000,
             "3.6");
     }
 
@@ -127,8 +133,8 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title:def"), 4000, "3.6");
-        verify(testAdapter9002, times(1)).sendQuery(buildParams("titleVT_eng:abc", "titleVT_eng:def"), 4000,
+        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest, buildParams("title:abc", "title:def"), 4000, "3.6");
+        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest, buildParams("titleVT_eng:abc", "titleVT_eng:def"), 4000,
             "3.6");
     }
 
@@ -146,28 +152,30 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
         // the mapping is very incomplete, so ignore all unmapped fields
         testResponseMapper.ignoreMissingMappings();
-        Configuration spyCfg = spy(cfg);
+        spyCfg = spy(cfg);
         when(spyCfg.getResponseMapper()).thenReturn(testResponseMapper);
 
         List<SearchServerConfig> searchServerConfigs = spyCfg.getSearchServerConfigs().getSearchServerConfigs();
-        SearchServerConfig searchServerConfig9000 = spy(searchServerConfigs.get(0));
-        SearchServerConfig searchServerConfig9002 = spy(searchServerConfigs.get(1));
+        searchServerConfig9000 = spy(searchServerConfigs.get(0));
+        searchServerConfig9002 = spy(searchServerConfigs.get(1));
         searchServerConfigs.clear();
 
         searchServerConfigs.add(searchServerConfig9000);
         testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
-        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class), Mockito.anyInt(),
+        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Configuration.class), any(SearchServerConfig.class),
+            any(FusionRequest.class), any(Multimap.class), Mockito.anyInt(),
             anyString());
 
         searchServerConfigs.add(searchServerConfig9002);
         testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
-        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class), Mockito.anyInt(),
+        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Configuration.class), any(SearchServerConfig.class),
+            any(FusionRequest.class), any(Multimap.class), Mockito.anyInt(),
             anyString());
 
         FusionControllerIfc fc = cfg.getController();
-        FusionRequest fusionRequest = new FusionRequest();
+        fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam(queryStr));
         fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam(filterQueryStr)));
         fusionRequest.setResponseType(ResponseRendererType.XML);

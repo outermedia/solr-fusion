@@ -137,6 +137,8 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
                 handleMetaInfo(origQuery.getMetaInfo(), queryBuilder);
             }
             added = handleNewQueries(newQueries, insideClauses);
+            // restore original value
+            term.setNewQueries(newQueries);
         }
         else if (term.isWasMapped() && !term.isRemoved() && searchServerFieldValue != null)
         {
@@ -196,7 +198,8 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
 
     protected void handleMetaInfo(MetaInfo metaInfo, StringBuilder builder)
     {
-        if (metaInfo != null)
+        // don't render {!dismax ...}
+        if (metaInfo != null && !MetaInfo.DISMAX_PARSER.equals(metaInfo.getName()))
         {
             metaInfo.buildSearchServerQueryString(builder);
         }
@@ -232,15 +235,26 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
                 }
                 // "+" is redundant for AND, but in the case that all previous clauses were deleted, it
                 // is not possible to decide whether to print out a "+" or not
+                boolean prependedOccurence = false;
                 if (booleanClause.getOccur() == BooleanClause.Occur.OCCUR_MUST)
                 {
                     boolQueryStringBuilder.append("+");
+                    prependedOccurence = true;
                 }
                 if (booleanClause.getOccur() == BooleanClause.Occur.OCCUR_MUST_NOT)
                 {
                     boolQueryStringBuilder.append("-");
+                    prependedOccurence = true;
+                }
+                if(prependedOccurence && clauseQueryStr.contains(" "))
+                {
+                    boolQueryStringBuilder.append("(");
                 }
                 boolQueryStringBuilder.append(clauseQueryStr);
+                if(prependedOccurence && clauseQueryStr.contains(" "))
+                {
+                    boolQueryStringBuilder.append(")");
+                }
             }
         }
 
@@ -287,7 +301,7 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     @Override
     public void visitQuery(SubQuery t, ScriptEnv env)
     {
-        // NOP, not supported by dismax
+        t.getQuery().accept(this, env);
     }
 
     protected QueryBuilderIfc newQueryBuilder()

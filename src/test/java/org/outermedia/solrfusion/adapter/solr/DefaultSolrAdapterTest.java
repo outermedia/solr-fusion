@@ -99,7 +99,7 @@ public class DefaultSolrAdapterTest
                 SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
                 Multimap<String> params = new Multimap<>();
                 params.put(SolrFusionRequestParams.QUERY, "shakespeare");
-                InputStream is = adapter.sendQuery(params, 4000, "4.1");
+                InputStream is = adapter.sendQuery(null, searchServerConfig, null, params, 4000, "4.1");
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 XmlResponse xmlResponse = (new Util()).unmarshal(XmlResponse.class, "", br, null);
@@ -142,7 +142,7 @@ public class DefaultSolrAdapterTest
         params.put(SORT, "score desc");
         try
         {
-            adapter.sendQuery(params, 3000, "4.1");
+            adapter.sendQuery(null, null, null, params, 3000, "4.1");
             Assert.fail("Expected SearchServerResponseException for http status 400");
         }
         catch (SearchServerResponseException se)
@@ -155,7 +155,7 @@ public class DefaultSolrAdapterTest
         when(entity.getContent()).thenReturn(new StringBufferInputStream("Bad Content"));
         try
         {
-            adapter.sendQuery(params, 3000, "4.1");
+            adapter.sendQuery(null, null, null, params, 3000, "4.1");
             Assert.fail("Expected SearchServerResponseException for http status 400");
         }
         catch (SearchServerResponseException se)

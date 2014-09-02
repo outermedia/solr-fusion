@@ -137,6 +137,8 @@ public class QueryBuilder implements QueryBuilderIfc
                 handleMetaInfo(origQuery.getMetaInfo(), queryBuilder);
             }
             added = handleNewQueries(newQueries, insideClauses);
+            // restore original value
+            term.setNewQueries(newQueries);
         }
         else if (term.isWasMapped() && !term.isRemoved() && term.getSearchServerFieldValue() != null)
         {
@@ -347,6 +349,14 @@ public class QueryBuilder implements QueryBuilderIfc
 
         String subQueryStr = newQueryBuilder.buildQueryString(subQuery, configuration, searchServerConfig, locale,
             defaultSearchServerSearchFields);
+        MetaInfo metaInfo = subQuery.getMetaInfo();
+        // dismax builder doesn't output {!dismax ...}, but edismax should
+        if(metaInfo != null && subQuery.isDismaxQuery() && MetaInfo.DISMAX_PARSER.equals(metaInfo.getName()))
+        {
+            StringBuilder sb = new StringBuilder();
+            handleMetaInfo(metaInfo, sb);
+            subQueryStr = sb.toString()+subQueryStr;
+        }
         queryBuilder.append(subQueryStr.replace("\"", "\\\""));
         queryBuilder.append("\"");
     }

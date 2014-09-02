@@ -31,6 +31,11 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 @SuppressWarnings("unchecked")
 public class ControllerFacetTest extends AbstractControllerTest
 {
+
+    private Configuration spyCfg;
+    private SearchServerConfig searchServerConfig9000;
+    private SearchServerConfig searchServerConfig9002;
+
     @Test
     public void testProcess()
         throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
@@ -98,9 +103,10 @@ public class ControllerFacetTest extends AbstractControllerTest
         throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
         IllegalAccessException, URISyntaxException
     {
+        FusionRequest fusionRequest = getFusionRequest("title:abc", ResponseRendererType.XML,
+            null);
         String xml = testMultipleServers("target/test-classes/test-empty-xml-response.xml",
-            "target/test-classes/test-empty-xml-response.xml", "test-fusion-schema-9000-9002.xml",
-            getFusionRequest("title:abc", ResponseRendererType.XML, null), 0, 1);
+            "target/test-classes/test-empty-xml-response.xml", "test-fusion-schema-9000-9002.xml", fusionRequest, 0, 1);
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<response>\n" +
             "<lst name=\"responseHeader\">\n" +
@@ -129,10 +135,9 @@ public class ControllerFacetTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", null, "author9000", "xml"), 4000,
+        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest, buildParams("title:abc", "title", null, "author9000", "xml"), 4000,
             "3.6");
-        verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng", null, "author9002", "xml"), 4000, "3.6");
+        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest, buildParams("titleVT_eng:abc", "titleVT_eng", null, "author9002", "xml"), 4000, "3.6");
     }
 
     @Test
@@ -140,9 +145,10 @@ public class ControllerFacetTest extends AbstractControllerTest
         throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
         IllegalAccessException, URISyntaxException
     {
+        FusionRequest fusionRequest = getFusionRequest("title:abc", ResponseRendererType.JSON,
+            null);
         String xml = testMultipleServers("target/test-classes/test-empty-xml-response.xml",
-            "target/test-classes/test-empty-xml-response.xml", "test-fusion-schema-9000-9002.xml",
-            getFusionRequest("title:abc", ResponseRendererType.JSON, null), 0, 1);
+            "target/test-classes/test-empty-xml-response.xml", "test-fusion-schema-9000-9002.xml", fusionRequest, 0, 1);
         String expected = "{\n" +
             "  \"responseHeader\":{\n" +
             "    \"status\":0,\n" +
@@ -167,10 +173,9 @@ public class ControllerFacetTest extends AbstractControllerTest
             "  ]}\n" +
             "}";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(buildParams("title:abc", "title", null, "author9000", "xml"), 4000,
+        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest, buildParams("title:abc", "title", null, "author9000", "xml"), 4000,
             "3.6");
-        verify(testAdapter9002, times(1)).sendQuery(
-            buildParams("titleVT_eng:abc", "titleVT_eng", null, "author9002", "xml"), 4000, "3.6");
+        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest, buildParams("titleVT_eng:abc", "titleVT_eng", null, "author9002", "xml"), 4000, "3.6");
     }
 
     protected String testMultipleServers(String responseServer1, String responseServer2, String fusionSchemaPath,
@@ -187,24 +192,26 @@ public class ControllerFacetTest extends AbstractControllerTest
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
         // the mapping is very incomplete, so ignore all unmapped fields
         testResponseMapper.ignoreMissingMappings();
-        Configuration spyCfg = spy(cfg);
+        spyCfg = spy(cfg);
         when(spyCfg.getResponseMapper()).thenReturn(testResponseMapper);
 
         List<SearchServerConfig> searchServerConfigs = spyCfg.getSearchServerConfigs().getSearchServerConfigs();
-        SearchServerConfig searchServerConfig9000 = spy(searchServerConfigs.get(firstServer));
-        SearchServerConfig searchServerConfig9002 = spy(searchServerConfigs.get(secondServer));
+        searchServerConfig9000 = spy(searchServerConfigs.get(firstServer));
+        searchServerConfig9002 = spy(searchServerConfigs.get(secondServer));
         searchServerConfigs.clear();
 
         searchServerConfigs.add(searchServerConfig9000);
         testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
-        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Multimap.class), Mockito.anyInt(),
+        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Configuration.class), any(SearchServerConfig.class),
+            any(FusionRequest.class), any(Multimap.class), Mockito.anyInt(),
             anyString());
 
         searchServerConfigs.add(searchServerConfig9002);
         testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
-        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Multimap.class), Mockito.anyInt(),
+        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Configuration.class), any(SearchServerConfig.class),
+            any(FusionRequest.class), any(Multimap.class), Mockito.anyInt(),
             anyString());
 
         FusionControllerIfc fc = cfg.getController();
@@ -250,12 +257,12 @@ public class ControllerFacetTest extends AbstractControllerTest
         final List<SolrFusionRequestParam> filterQueries = Arrays.asList(
             new SolrFusionRequestParam("authorized_mode:\"false\"", null),
             new SolrFusionRequestParam("{!tag=format_filter}(format:\"BluRayDisc\")", null));
+        FusionRequest fusionRequest = getFusionRequest("title:abc", ResponseRendererType.JSON, filterQueries);
         String json = testMultipleServers("target/test-classes/test-schiller-9000.xml",
-            "target/test-classes/test-schiller-9001.xml", "fusion-schema-uni-leipzig.xml",
-            getFusionRequest("title:abc", ResponseRendererType.JSON, filterQueries), 0, 1);
+            "target/test-classes/test-schiller-9001.xml", "fusion-schema-uni-leipzig.xml", fusionRequest, 0, 1);
         Multimap<String> expectedParams = buildParams("title:abc", "title", null, "author", "xml");
         expectedParams.put(FILTER_QUERY, "{!tag=format_filter}format:\"BluRayDisc\"");
-        verify(testAdapter9000, times(1)).sendQuery(expectedParams, 4000, "3.5");
+        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest, expectedParams, 4000, "3.5");
         // System.out.println("XML " + xml);
     }
 
@@ -271,7 +278,7 @@ public class ControllerFacetTest extends AbstractControllerTest
         // System.out.println("XML " + xml);
         Multimap<String> expectedParams = buildParams("title:abc", "titleVT_eng", "titleVT_de", null, "xml");
         expectedParams.set("q", "(titleVT_de:abc OR titleVT_eng:abc)");
-        verify(testAdapter9002, times(1)).sendQuery(expectedParams, 4000, "3.6");
+        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest, expectedParams, 4000, "3.6");
     }
 
     @Test

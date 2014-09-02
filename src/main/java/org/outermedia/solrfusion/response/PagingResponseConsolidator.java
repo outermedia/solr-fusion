@@ -226,8 +226,11 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         // merge all docs (at least id is merged)
         if (fusionMergeField != null)
         {
+            int allDocNrBeforeMerging = allDocs.size();
             docLookup = mergeDocuments(config, allDocs);
-            log.debug("Merging resulted in {} documents.", allDocs.size());
+            log.debug("Merging resulted in {} documents (before merging: {}).", allDocs.size(), allDocNrBeforeMerging);
+            // correct max docs available
+            maxDocNr = maxDocNr-(allDocNrBeforeMerging-allDocs.size());
         }
 
         // sort all docs
@@ -290,7 +293,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
                 List<String> titleShort = document.getFusionValuesOf("title_short");
                 log.debug("{}.\n  {}\n  {}", i, sortValue, titleShort);
             }
-            log.trace("---");
+            log.debug("---");
         }
 
         Map<String, List<WordCount>> sortedFusionFacetFields = mapFacetWordCounts(idGenerator, fusionIdField,

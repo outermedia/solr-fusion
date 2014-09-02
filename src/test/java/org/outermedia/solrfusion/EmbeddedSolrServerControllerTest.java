@@ -52,6 +52,10 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
 
     @Mock
     private SearchServerConfig testSearchConfig;
+    private Configuration spyCfg;
+    private FusionRequest fusionRequest;
+    private SearchServerConfig searchServerConfig9000;
+    private SearchServerConfig searchServerConfig9002;
 
     @Before
     public void fillSolr() throws IOException, SolrServerException
@@ -112,11 +116,9 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expectedXml, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(
-            buildMap(QUERY, "title:xyz", FILTER_QUERY, "title:XYZ", FIELDS_TO_RETURN, "id title score", WRITER_TYPE,
+        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest, buildMap(QUERY, "title:xyz", FILTER_QUERY, "title:XYZ", FIELDS_TO_RETURN, "id title score", WRITER_TYPE,
                 "xml"), 4000, "3.6");
-        verify(testAdapter9002, times(1)).sendQuery(
-            buildMap(QUERY, "titleVT_eng:xyz", FILTER_QUERY, "titleVT_eng:XYZ", FIELDS_TO_RETURN,
+        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest, buildMap(QUERY, "titleVT_eng:xyz", FILTER_QUERY, "titleVT_eng:XYZ", FIELDS_TO_RETURN,
                 "id titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
     }
 
@@ -169,11 +171,9 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "</response>";
 
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(
-            buildMap(QUERY, "title:abc", FILTER_QUERY, "title:abc", FIELDS_TO_RETURN, "id title score", WRITER_TYPE,
+        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest, buildMap(QUERY, "title:abc", FILTER_QUERY, "title:abc", FIELDS_TO_RETURN, "id title score", WRITER_TYPE,
                 "xml"), 4000, "3.6");
-        verify(testAdapter9002, times(1)).sendQuery(
-            buildMap(QUERY, "titleVT_eng:abc", FILTER_QUERY, "titleVT_eng:abc", FIELDS_TO_RETURN,
+        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest, buildMap(QUERY, "titleVT_eng:abc", FILTER_QUERY, "titleVT_eng:abc", FIELDS_TO_RETURN,
                 "id titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
     }
 
@@ -185,12 +185,12 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
         // the mapping is very incomplete, so ignore all unmapped fields
         testResponseMapper.ignoreMissingMappings();
-        Configuration spyCfg = spy(cfg);
+        spyCfg = spy(cfg);
         when(spyCfg.getResponseMapper()).thenReturn(testResponseMapper);
 
         List<SearchServerConfig> searchServerConfigs = spyCfg.getSearchServerConfigs().getSearchServerConfigs();
-        SearchServerConfig searchServerConfig9000 = spy(searchServerConfigs.get(0));
-        SearchServerConfig searchServerConfig9002 = spy(searchServerConfigs.get(1));
+        searchServerConfig9000 = spy(searchServerConfigs.get(0));
+        searchServerConfig9002 = spy(searchServerConfigs.get(1));
         searchServerConfigs.clear();
 
         searchServerConfigs.add(searchServerConfig9000);
@@ -204,7 +204,7 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         testAdapter9002.setTestServer(secondTestServer);
 
         FusionControllerIfc fc = cfg.getController();
-        FusionRequest fusionRequest = new FusionRequest();
+        fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam(queryStr));
         fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam(filterQueryStr)));
         fusionRequest.setResponseType(ResponseRendererType.XML);

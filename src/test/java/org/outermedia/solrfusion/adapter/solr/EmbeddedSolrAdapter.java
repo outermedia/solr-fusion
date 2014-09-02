@@ -7,10 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.Multimap;
 import org.outermedia.solrfusion.SolrTestServer;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 
@@ -45,7 +47,8 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
     }
 
     @Override
-    public InputStream sendQuery(Multimap<String> params, int timeout, String version)
+    public InputStream sendQuery(Configuration configuration, SearchServerConfig searchServerConfig,
+        FusionRequest fusionRequest, Multimap<String> params, int timeout, String version)
         throws URISyntaxException, IOException
     {
         String q = params.getFirst(SolrFusionRequestParams.QUERY);

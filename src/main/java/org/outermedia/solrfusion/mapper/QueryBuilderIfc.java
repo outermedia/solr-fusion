@@ -24,7 +24,7 @@ public interface QueryBuilderIfc extends QueryVisitor, Initiable<QueryBuilderFac
      * @return
      */
     public String buildQueryString(Query query, Configuration configuration, SearchServerConfig searchServerConfig,
-        Locale locale, Set<String> defaultSearchFields);
+        Locale locale, Set<String> defaultSearchServerSearchFields);
 
     /**
      * Builds a query string which contains the string of query but &lt;om:add&gt; mappings are ignored.

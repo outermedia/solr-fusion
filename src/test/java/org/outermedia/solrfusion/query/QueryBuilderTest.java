@@ -1,13 +1,11 @@
 package org.outermedia.solrfusion.query;
 
-import com.google.common.collect.Sets;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
-import org.outermedia.solrfusion.mapper.DisMaxQueryBuilder;
 import org.outermedia.solrfusion.mapper.QueryBuilder;
 import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.mapper.Term;
@@ -363,29 +361,11 @@ public class QueryBuilderTest
         String qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different phrase query than expected", "{!a=1}title:\"abc\"", qs);
 
-        // name set in MetaInfo
-        qb = DisMaxQueryBuilder.Factory.getInstance();
-        mi.setName("dismax");
-        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
-        Assert.assertEquals("Got different phrase query than expected", "{!dismax a=1}\"abc\"", qs);
-
         // name not set, but value
         qb = QueryBuilder.Factory.getInstance();
         mi.setName(null);
         mi.setValue("abc");
         qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, null);
         Assert.assertEquals("Got different phrase query than expected", "{!a=1}title:\"abc\"", qs);
-
-        // name, value and params set
-        mi.setName("dismax");
-        qb = DisMaxQueryBuilder.Factory.getInstance();
-        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
-        Assert.assertEquals("Got different phrase query than expected", "{!dismax=abc a=1}\"abc\"", qs);
-
-        // several params set
-        qb = DisMaxQueryBuilder.Factory.getInstance();
-        mi.addSearchServerEntry("b","2");
-        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
-        Assert.assertEquals("Got different phrase query than expected", "{!dismax=abc a=1 b=2}\"abc\"", qs);
     }
 }

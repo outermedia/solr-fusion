@@ -5,6 +5,8 @@ import org.apache.http.client.utils.URIBuilder;
 import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.Multimap;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.SearchServerConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,11 +31,12 @@ public class Solr1Adapter extends DefaultSolrAdapter
     {
     }
 
-    @Override public InputStream sendQuery(Multimap<String> params, int timeout, String version)
+    @Override public InputStream sendQuery(Configuration configuration, SearchServerConfig searchServerConfig,
+        FusionRequest fusionRequest, Multimap<String> params, int timeout, String version)
         throws URISyntaxException, IOException
     {
         this.solrVersion = parseDouble(version);
-        return super.sendQuery(params, timeout, version);
+        return super.sendQuery(configuration, searchServerConfig, fusionRequest, params, timeout, version);
     }
 
     protected Double parseDouble(String version)

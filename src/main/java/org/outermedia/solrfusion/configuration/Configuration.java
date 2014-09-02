@@ -199,7 +199,7 @@ public class Configuration
     {
         for (FusionField ff : fusionFields.getFusionFields())
         {
-            if (ff.getFieldName().equals(name))
+            if (ff.getFieldName().equalsIgnoreCase(name))
             {
                 return ff;
             }

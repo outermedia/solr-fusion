@@ -280,7 +280,7 @@ public class FusionController implements FusionControllerIfc
                 {
                     adapter = newSolr1Adapter(adapter.getUrl());
                 }
-                InputStream is = adapter.sendQuery(searchServerParams, timeout,
+                InputStream is = adapter.sendQuery(configuration, searchServerConfig, fusionRequest, searchServerParams, timeout,
                     searchServerConfig.getSearchServerVersion());
                 ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
                     configuration.getDefaultResponseParser());
