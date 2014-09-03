@@ -151,7 +151,12 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
                 {
                     queryBuilder.append('"');
                 }
-                queryBuilder.append(searchServerFieldValue.get(0));
+                String s = searchServerFieldValue.get(0);
+                if (!quoted && isSpecialString(s))
+                {
+                    queryBuilder.append("\\");
+                }
+                queryBuilder.append(s);
                 if (quoted)
                 {
                     queryBuilder.append('"');
@@ -169,6 +174,12 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
             }
         }
         return added;
+    }
+
+    protected boolean isSpecialString(String s)
+    {
+        // TODO more string which need escaping?
+        return "-".equals(s);
     }
 
     protected boolean handleNewQueries(List<String> newQueries, List<String> insideClauses)
@@ -246,12 +257,12 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
                     boolQueryStringBuilder.append("-");
                     prependedOccurence = true;
                 }
-                if(prependedOccurence && clauseQueryStr.contains(" "))
+                if (prependedOccurence && clauseQueryStr.contains(" "))
                 {
                     boolQueryStringBuilder.append("(");
                 }
                 boolQueryStringBuilder.append(clauseQueryStr);
-                if(prependedOccurence && clauseQueryStr.contains(" "))
+                if (prependedOccurence && clauseQueryStr.contains(" "))
                 {
                     boolQueryStringBuilder.append(")");
                 }

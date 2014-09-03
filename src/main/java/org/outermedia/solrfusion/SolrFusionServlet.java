@@ -99,7 +99,7 @@ public class SolrFusionServlet extends AbstractServlet
         String responseStr = fusionResponse.getResponseAsString();
         if (responseStr != null && fusionResponse.isOk())
         {
-            log.debug("Returning:\n{}", responseStr);
+            log.trace("Returning:\n{}", responseStr);
             response.setStatus(200);
             pw.println(responseStr);
         }
@@ -264,6 +264,9 @@ public class SolrFusionServlet extends AbstractServlet
         SolrFusionRequestParam queryFields = getOptionalSingleSearchParamValue(requestParams, QUERY_FIELD, null,
             fusionRequest);
         fusionRequest.setQueryFields(queryFields);
+        SolrFusionRequestParam minimumMatch = getOptionalSingleSearchParamValue(requestParams, MINIMUM_MATCH, null,
+            fusionRequest);
+        fusionRequest.setMinimumMatch(minimumMatch);
     }
 
     protected void buildFacetFusionRequest(Map<String, String[]> requestParams, FusionRequest fusionRequest)

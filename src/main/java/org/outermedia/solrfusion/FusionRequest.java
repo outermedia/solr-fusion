@@ -35,6 +35,7 @@ public class FusionRequest
     private SolrFusionRequestParam fieldsToReturn;
     private SolrFusionRequestParam queryType;
     private SolrFusionRequestParam queryFields;
+    private SolrFusionRequestParam minimumMatch;
 
     private SolrFusionRequestParam highlightingFieldsToReturn;
     private SolrFusionRequestParam highlightQuery;
@@ -81,6 +82,7 @@ public class FusionRequest
         facetPrefix = new SolrFusionRequestParam();
         queryType = new SolrFusionRequestParam();
         sortSpec = new SortSpec(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE, null, false);
+        minimumMatch = new SolrFusionRequestParam();
     }
 
     public Map<String, Float> getBoosts()
@@ -248,6 +250,10 @@ public class FusionRequest
             String mappedBoosts = mapFusionBoostFieldListToSearchServerField(queryFields.getValue(), configuration,
                 searchServerConfig);
             searchServerParams.put(QUERY_FIELD, mappedBoosts);
+        }
+        if (minimumMatch.getValue() != null)
+        {
+            searchServerParams.put(MINIMUM_MATCH, minimumMatch.getValue());
         }
     }
 
@@ -732,5 +738,10 @@ public class FusionRequest
     public void setSortAsc(boolean sortAsc)
     {
         sortSpec.setSortAsc(sortAsc);
+    }
+
+    public boolean isDismaxQueryType()
+    {
+        return MetaInfo.DISMAX_PARSER.equals(queryType.getValue());
     }
 }

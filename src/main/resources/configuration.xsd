@@ -94,6 +94,7 @@
       <xs:element name="error" type="tns:message"/>
       <xs:element name="page-size" type="xs:int"/>
       <xs:element name="query-parser" type="tns:queryParser"/>
+      <xs:element name="dismax-query-parser" type="tns:queryParser"/>
       <xs:element name="response-parser" type="tns:responseParser"/>
       <xs:element name="response-renderer" type="tns:responseRenderer" maxOccurs="unbounded"/>
       <xs:element name="query-builder" type="tns:queryBuilder"/>

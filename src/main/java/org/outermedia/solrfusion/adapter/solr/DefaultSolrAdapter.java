@@ -64,6 +64,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     public String FACET_FIELD_PARAMETER = "facet.field";
     public String QUERY_TYPE_PARAMETER = "qt";
     public String BOOST_PARAMETER = "qf";
+    public String MIN_MATCH_PARAMETER = "mm";
 
     @Setter @Getter
     private String url;
@@ -148,6 +149,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         addIfNotNull(ub, ROWS_PARAMETER, params.getFirst(PAGE_SIZE));
         addIfNotNull(ub, SORT_PARAMETER, params.getFirst(SORT));
         addIfNotNull(ub, BOOST_PARAMETER, params.getFirst(QUERY_FIELD));
+        addIfNotNull(ub, MIN_MATCH_PARAMETER, params.getFirst(MINIMUM_MATCH));
 
         ub.setParameter(FIELDS_TO_RETURN_PARAMETER, params.getFirst(FIELDS_TO_RETURN));
         String queryType = params.getFirst(QUERY_TYPE);

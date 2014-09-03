@@ -6,9 +6,9 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryParserFactory;
+import org.outermedia.solrfusion.query.dismaxparser.DismaxQueryParser;
 import org.outermedia.solrfusion.query.parser.ParseException;
 import org.outermedia.solrfusion.query.parser.Query;
-import org.outermedia.solrfusion.query.parser.QueryParser;
 import org.outermedia.solrfusion.query.parser.Operator;
 
 import java.util.Locale;
@@ -24,21 +24,21 @@ import java.util.Map;
 @Slf4j
 @Getter
 @Setter
-public class EdisMaxQueryParser implements QueryParserIfc
+public class DisMaxQueryParser implements QueryParserIfc
 {
 
     /**
      * Factory creates instances only.
      */
-    protected EdisMaxQueryParser()
+    protected DisMaxQueryParser()
     {
     }
 
     public static class Factory
     {
-        public static EdisMaxQueryParser getInstance()
+        public static DisMaxQueryParser getInstance()
         {
-            return new EdisMaxQueryParser();
+            return new DisMaxQueryParser();
         }
     }
 
@@ -67,7 +67,7 @@ public class EdisMaxQueryParser implements QueryParserIfc
                 log.error("Found illegal default operator '{}'. Expected either 'or' or 'and'. Using {}.", defaultOpStr,
                     defaultOp, e);
             }
-            QueryParser parser = new QueryParser(config.getDefaultSearchField(), config, boosts, defaultOp,
+            DismaxQueryParser parser = new DismaxQueryParser(config.getDefaultSearchField(), config, boosts, defaultOp,
                 allTermsAreProcessed);
             parser.setLocale(locale);
             result = parser.parse(queryString);

@@ -27,7 +27,11 @@ import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "",
-    propOrder = {"fusionFields", "scriptTypes", "defaultSearchField", "defaultSortField", "defaultOperator", "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory", "queryMapperFactory", "controllerFactory", "searchServerConfigs"})
+    propOrder = {
+        "fusionFields", "scriptTypes", "defaultSearchField", "defaultSortField", "defaultOperator",
+        "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory", "queryMapperFactory",
+        "controllerFactory", "searchServerConfigs"
+    })
 @XmlRootElement(name = "core", namespace = "http://solrfusion.outermedia.org/configuration/")
 @ToString
 public class Configuration
@@ -306,4 +310,7 @@ public class Configuration
     {
         return searchServerConfigs.getDismaxQueryBuilder();
     }
+
+    public QueryParserIfc getDismaxQueryParser() throws InvocationTargetException, IllegalAccessException
+    { return searchServerConfigs.getDismaxQueryParser(); }
 }

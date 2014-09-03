@@ -37,6 +37,7 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  vielen Systemen beantwortet werden.
  ),
   defaultPageSize=10, queryParserFactory=QueryParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory, typeClassFactory=class org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory)),
+ dismaxQueryParserFactory=QueryParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.query.DisMaxQueryParser$Factory, typeClassFactory=class org.outermedia.solrfusion.query.DisMaxQueryParser$Factory)),
  defaultResponseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultResponseParser$Factory, typeClassFactory=class org.outermedia.solrfusion.response.DefaultResponseParser$Factory)),
  responseRendererFactories=[
  ResponseRendererFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory, typeClassFactory=class org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory),

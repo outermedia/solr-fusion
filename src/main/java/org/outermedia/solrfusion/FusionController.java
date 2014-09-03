@@ -65,11 +65,11 @@ public class FusionController implements FusionControllerIfc
 
         Map<String, Float> boosts = fusionRequest.getBoosts();
         Locale locale = fusionRequest.getLocale();
-        fusionRequest.setParsedQuery(parseQuery(queryStr, boosts, locale, fusionRequest));
+        fusionRequest.setParsedQuery(parseQuery(queryStr, boosts, locale, fusionRequest, true));
         List<String> unparsableFilterQueryStrings = new ArrayList<>();
         fusionRequest.setParsedFilterQuery(
             parseAllQueries(filterQueryList, boosts, fusionRequest, unparsableFilterQueryStrings));
-        fusionRequest.setParsedHighlightQuery(parseQuery(highlightQueryStr, boosts, locale, fusionRequest));
+        fusionRequest.setParsedHighlightQuery(parseQuery(highlightQueryStr, boosts, locale, fusionRequest, false));
 
         if (fusionRequest.getParsedQuery() == null)
         {
@@ -102,7 +102,7 @@ public class FusionController implements FusionControllerIfc
             for (SolrFusionRequestParam sp : queryParams)
             {
                 String queryStr = sp.getValue();
-                Query q = parseQuery(queryStr, boosts, fusionRequest.getLocale(), fusionRequest);
+                Query q = parseQuery(queryStr, boosts, fusionRequest.getLocale(), fusionRequest, false);
                 if (queryStr != null && queryStr.trim().length() > 0 && q == null)
                 {
                     log.error("Ignoring filter query {}, because of parse errors.", queryStr);
@@ -280,8 +280,8 @@ public class FusionController implements FusionControllerIfc
                 {
                     adapter = newSolr1Adapter(adapter.getUrl());
                 }
-                InputStream is = adapter.sendQuery(configuration, searchServerConfig, fusionRequest, searchServerParams, timeout,
-                    searchServerConfig.getSearchServerVersion());
+                InputStream is = adapter.sendQuery(configuration, searchServerConfig, fusionRequest, searchServerParams,
+                    timeout, searchServerConfig.getSearchServerVersion());
                 ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
                     configuration.getDefaultResponseParser());
                 result = responseParser.parse(is);
@@ -392,14 +392,23 @@ public class FusionController implements FusionControllerIfc
         return result;
     }
 
-    protected Query parseQuery(String query, Map<String, Float> boosts, Locale locale, FusionRequest fusionRequest)
+    protected Query parseQuery(String query, Map<String, Float> boosts, Locale locale, FusionRequest fusionRequest,
+        boolean checkQueryTypeParam)
     {
         Query queryObj = null;
         if (query != null)
         {
             try
             {
-                QueryParserIfc queryParser = configuration.getQueryParser();
+                QueryParserIfc queryParser = null;
+                if (checkQueryTypeParam && fusionRequest.isDismaxQueryType())
+                {
+                    queryParser = configuration.getDismaxQueryParser();
+                }
+                else
+                {
+                    queryParser = configuration.getQueryParser();
+                }
                 try
                 {
                     queryObj = queryParser.parse(configuration, boosts, query, locale, null);

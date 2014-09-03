@@ -43,6 +43,9 @@
         <om:query-parser
             class="org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory"/>
 
+        <om:dismax-query-parser
+            class="org.outermedia.solrfusion.query.DisMaxQueryParser$Factory"/>
+
         <om:response-parser
             class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory"/>
 

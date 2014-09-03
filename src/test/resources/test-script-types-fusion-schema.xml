@@ -69,9 +69,11 @@
         <om:disaster-limit>1</om:disaster-limit>
         <om:error key="disaster-limit">Please try later again.</om:error>
 
-
         <om:query-parser
             class="org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory"/>
+
+        <om:dismax-query-parser
+            class="org.outermedia.solrfusion.query.DisMaxQueryParser$Factory"/>
 
         <om:response-parser
             class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory"/>

@@ -29,7 +29,11 @@ import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "globalSearchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/",
-    propOrder = {"timeout", "disasterLimit", "disasterMessage", "defaultPageSize", "queryParserFactory", "defaultResponseParserFactory", "responseRendererFactories", "queryBuilderFactory", "dismaxQueryBuilderFactory", "merge", "searchServerConfigs"})
+    propOrder = {
+        "timeout", "disasterLimit", "disasterMessage", "defaultPageSize", "queryParserFactory",
+        "dismaxQueryParserFactory", "defaultResponseParserFactory", "responseRendererFactories", "queryBuilderFactory",
+        "dismaxQueryBuilderFactory", "merge", "searchServerConfigs"
+    })
 @Getter
 @Setter
 @ToString
@@ -50,6 +54,10 @@ public class GlobalSearchServerConfig
 
     @XmlElement(name = "query-parser", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private QueryParserFactory queryParserFactory;
+
+    @XmlElement(name = "dismax-query-parser", namespace = "http://solrfusion.outermedia.org/configuration/",
+        required = true)
+    private QueryParserFactory dismaxQueryParserFactory;
 
     @XmlElement(name = "response-parser", namespace = "http://solrfusion.outermedia.org/configuration/",
         required = true)
@@ -189,17 +197,22 @@ public class GlobalSearchServerConfig
 
     protected void afterUnmarshal(Unmarshaller u, Object parent) throws UnmarshalException
     {
-        if(searchServerConfigs != null)
+        if (searchServerConfigs != null)
         {
-            for(int i=searchServerConfigs.size()-1; i>=0; i--)
+            for (int i = searchServerConfigs.size() - 1; i >= 0; i--)
             {
                 SearchServerConfig searchServerConfig = searchServerConfigs.get(i);
-                if(!searchServerConfig.getEnabled())
+                if (!searchServerConfig.getEnabled())
                 {
                     log.info("Removed disabled search server config '{}'", searchServerConfig.getSearchServerName());
                     searchServerConfigs.remove(i);
                 }
             }
         }
+    }
+
+    public QueryParserIfc getDismaxQueryParser() throws InvocationTargetException, IllegalAccessException
+    {
+        return dismaxQueryParserFactory.getInstance();
     }
 }
