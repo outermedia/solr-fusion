@@ -7,11 +7,14 @@ Outermedia GmbH
 
 # Overview
 
-    TODO
+SolrFusion is intended to be used in the case that several Solr servers have to be combined into one logical Solr
+server. The first release (version 1.0) is limited to a subset of supported Solr HTTP request parameters and features. The primary focus
+of this version is to work with the customized vufind 1.3 used by the Universität Leipzig.
+
+But the concept and implementation allows a high level of customization, so it is conceivably to use SolrFusion to
+combine e.g. data bases too.
     
-Tested with Solr 1.4, 3.5, 3.6 and 4.3 servers.
- 
-    TODO
+Version 1.0 was tested with Solr 1.4, 3.5, 3.6 and 4.3 servers.
 
 # Software Requirements
 * Java >= 1.7
@@ -23,6 +26,95 @@ For tomcat simply copy the solrfusion-X.Y.war to `<tomcat install dir>/webapps/s
 SolrFusion to you needs. If the servlet path isn't touched, point your browser finally to 
 `http://<host>:8080/solrfusion/biblio/select/?q=*:*&wt=xml`. The request should return a proper Solr XML response when 
 the configured Solr server(s) support edismax queries.
+
+## Error Handling
+The HTTP status is always set to value different to 200 (OK). If SolrFusion was able to create a response, then the
+response is returned in the wanted format (Json or XML) too. An error message is added too. Example:
+
+    <response>
+        <lst name="responseHeader">
+            <int name="status">400</int>
+            <int name="QTime">2</int>
+            <lst name="params">
+                <str name="q">flubb:*</str>
+                <str name="fq">(collection:GVK OR collection:DOAJ OR (collection_details:ZDB-1-PIO))</str>
+            </lst>
+        </lst>
+        <lst name="error">
+            <str name="msg">undefined field flubb</str>
+            <int name="code">400</int>
+        </lst>
+    </response>
+
+The error message's origin is either SolrFusion or an error message received from a Solr server. In the "disaster" case
+ (too few Solr servers responded) the configured error message is used and augmented with the error messages of the
+ Solr servers.
+
+# Supported Solr Features
+SolrFusion supports the following (e)dismax query types:
+
+* Boolean Query - also "+", "-" and "!"
+* Fuzzy Query
+* Match All Docs Query (*:*)
+* Numeric Range Query (long, int, float, double, date) - with open ("*") start or end
+* Phrase Query
+* Prefix Query
+* Wildcard Query
+* SubQuery - in edismax _query_:"..."
+* {!dismax ...} - to pass dismax queries
+* {!... qf="..." ...} - to pass boosts values; all other parameters are not mapped and are handed over to a Solr server unmodified.
+
+The supported Solr HTTP request parameters are:
+
+* q - query; in dismax or edismax format (depends on qt and {!...})
+* wt - response type (only json or xml)
+* fq - (multiple) filter query
+* rows - paging number of documents
+* start - paging offset
+* sort - only `<field> asc|desc`
+* fl - fields to return (list - separated by SPACE or COMMA, default: *)
+* hl - enable/disable highlighting
+* hl.simple.pre - highlighting prefix
+* hl.simple.post - highlighting postfix
+* hl.fl - fields to highlight (list - separated by SPACE or COMMA)
+* hl.q - highlight query
+* facet - enable/disable facets
+* facet.mincount - the minimum expected occurrences of returned facets
+* facet.limit - maximum number of facet values
+* f.([^.]+).facet.sort - facet field based sorting; either "index" or "count"
+* facet.sort - global facet sorting; either "index" or "count"
+* facet.prefix - the facet prefix
+* facet.field - (multiple) facet fields; meta information e.g. {!ex=format_filter} is preserved
+* qt - query type; supported values are "dismax" and "morelikethis"
+* qf - boost values
+* mm - minimum match
+
+If not mentioned all fields occur at most once in a HTTP request.
+
+Facet and highlight values in Solr responses are processed too.
+
+## Highlights
+Because highlights are document related only the highlights of the finally returned documents are processed. In order to 
+be able to apply the mapping rules, SolrFusion creates Solr documents from the highlights. 
+
+## Facets
+Because mapping rules work only on Solr documents, facets are transformed internally into Solr documents where the fields
+are annotated with the word counts. But only the "facet_fields" of a response are processed, but neither "facet_queries"
+nor "facet_dates" nor "facet_ranges".
+
+Sorting of the facet values is done by SolrFusion, because facets of different Solr servers are combined. The order of
+the fields is determined by the textual order of the server declarations. New fields are append at the end of the facet
+list. "index" and "count" sorting is supported (description from Solr Wiki):
+
+* __count__ - Sort the constraints by count (highest count first)
+* __index__ - For terms in the ascii range, this will be alphabetically sorted.
+
+The default is __count__ if __facet.limit__ is greater than 0, __index__ otherwise. 
+
+The limit __facet.limit__ is evaluated and applied to the sorted list. The implementation follows the description in the
+ Solr Wiki: This param indicates the maximum number of constraint counts that should be returned for the facet fields. 
+ A negative value means unlimited. The default value is 100.
+
 
 # Configuration Files
 
@@ -43,6 +135,15 @@ The following configuration files exist:
     As a servlet init parameter the solrfusion schema can be configured here. Please replace fusion-schema-uni-leipzig.xml 
     with your own version which should be located in WEB-INF/classes/. Details are described in chapter
     [SolrFusion Servlet Configuration](#solrfusion-servlet-configuration)
+    
+The configured SolrFusion schema is loaded earliest every five minutes after the last modification. But it is
+possible to add the HTTP request parameter `forceSchemaReload=<any value>` to force an immediate reload of the
+schema.
+
+log4j.properties is reloaded every five minutes after modifications.
+
+The Freemarker templates are reloaded every time before they are applied.
+    
     
 # SolrFusion Servlet Configuration
 The servlets are configured in the file `<tomcat install dir>/webapps/solrfusion/WEB-INF/web.xml`.
@@ -71,7 +172,7 @@ Both servlets are pre-configured to be used by Uni Leipzig's vufind.
 # Logging
 The file `<tomcat install dir>/webapps/solrfusion/WEB-INF/classes/log4j.properties` logs to `<tomcat install dir>/logs/log4j.log`.
 Please note the `${tomcat.home}/logs/log4j.log` in __log4j.properties__ which expects that __tomcat.home__ is set
-as a Java property. This is the reason why it is recommended to use ./start.sh and ./stop.sh instead of the standard
+as a Java property. This is the reason why it is recommended to use __./start.sh__ and __./stop.sh__ instead of the standard
 tomcat commands.
 
 The messages of the __debug level__ print the received request, the solr requests and how many documents were
@@ -108,12 +209,16 @@ specification of the `format` date pattern attribute is only valid for the type 
 is described [here](http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html "JavaDoc: SimpleDateFormat.java").
 
 ## Script Types    
-The mapping rules can use one of the following predefined "script types" to convert data if more than the default copying action
+The [mapping rules](#field-mappings), which are used to convert values and fields from SolrFusion to a Solr server and vice versa, can use 
+one of the following predefined "script types" to convert data if more than the default copying action
 is needed. 
 
 Script Types are used to convert data contained in a SolrFusion query to data needed by a Solr server. Also they are applied
- to Solr document fields to create SolrFusion values. Context information is provided in a ScriptEnv (Java) object, which 
- contains the following entries.
+ to Solr document fields to create SolrFusion values. In general Script Types work on a java.util.List<java.lang.String>
+and return either a java.lang.String or a java.util.List<java.lang.String>. The incoming list is maybe empty or can
+contain null entries.
+
+Additional context information is provided in a ScriptEnv (Java) object, which contains the following entries.
  
 Incoming:  
 
@@ -141,17 +246,17 @@ Incoming:
     has to adjust the __facetWordCount__ when either the order or number of the values beeing mapped is changed.
 * __mapHighlightValue__ - signals whether a highlight value is mapped    
 
-Outgoing:
+Outgoing: To be set by scripting languages only. Java implementations return an object of org.outermedia.solrfusion.types.TypeResult.
 
-* __returnValues__ - a single java.lang.String or a java.util.List<java.lang.String> to return the converted values; 
-    the single String value is automatically converted into a List.
+* __returnValues__ - a single java.lang.Object or a java.util.List<java.lang.String> to return the converted values; 
+    the single Object value is automatically converted into a List of String (the toString() method is called).
 * __returnWordCounts__ -  if __mapFacetValue__ is true and the order or number of values is modified then the facet
     word counts need to be adjusted too; the default value is the original word count list
  
 These entries are directly accessible via simple variable names in the scripting languages supported by Java (e.g. [Javascript](#javascript) and
 [Bean Shell](#bean-shell)). In Java implementations the ScriptEnv methods have to be used to access these context variables.
 
-The following chapters describe them in detail:
+The following chapters describe all predefined Script Types in detail:
 
 * [Javascript](#javascript)
 * [Bean Shell](#bean-shell)
@@ -210,8 +315,12 @@ External file example:
     </om:field>
     
 The file test-js-file.js contains the code of the CDATA above.   
-Note: The file is not classpath based loaded. This means, when relative paths are used, it depends on your applications 
+Note: The file is not classpath based loaded. This means, when relative paths are used, it depends on your application 
 server (and installation) what the current working directory is.
+
+Hint: When the Javascript code simply returns an integer number, this would be rendered as e.g. "2.0" which is not desired (in Javascript numbers are always floats).
+Simply use x.toFixed() to get rid of the fractional digits.
+
 
 ### Bean Shell
 Convert values by the use of Bean Shell code.
@@ -479,22 +588,43 @@ Examples of created SolrFusion document ids:
 * UBL_0000220639-UBL4_0000230639 - a merged document received from the servers "UBL" and "UBL4" (see [Document Merging](#document-merging)).
 
 ## Response Consolidator
-The Solr responses of the Solr servers to use are combined respecting document merging, facets and highlights. Also
+The Solr responses of the configured Solr servers are combined respecting document merging, facets and highlights. Also
 the documents are sorted and the documents to return are selected.
 
 Declaration (mandatory):
 
     <om:response-consolidator class="org.outermedia.solrfusion.response.PagingResponseConsolidator$Factory"/>
     
+### Paging and Sorting
+Because of the supported paging it is not possible to base on the Solr server's sorting. Therefor SolrFusion sorts Solr
+documents on its own and calculates the documents of a page too. To be able to implement this, the request parameters
+"start" and "rows" are manipulated. For a given start=<START>, rows=<ROWS> and maximum number of documents to return
+maxDocs(SolrServer1)=<MAX> SolrFusion sends start=0 and rows=min(MAX,START+ROWS) to the SolrServer1. The total number
+of documents is the sum of min(MAX,totalHits) per requested Solr server. The limitation is necessary, because otherwise
+really many Solr documents need to be transferred and processed for high page numbers. With a configurable limit Java's heap space is
+computable too.
+
+When all received Solr documents were converted to Java objects and mapped to SolrFusion's schema, they are sorted by the wanted field and the documents
+of the requested page are returned. The implementation is optimized for speed: For sorting only the fields id, score and the sort
+field are mapped at first. The remaining fields are only mapped for the documents being really returned.
+    
+In contrast to Solr SolrFusion is able to sort multi value by the first value.    
+    
 ## Mapper
 A "mapper" applies mapping rules (see [Field Mappings](#field-mappings)) to fields contained in a query or a Solr document.
 
 Declaration (mandatory):
 
-        <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory" />
+        <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory" ignore-missing-mappings="true"/>
         <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory" />
     
-The "response-mapper" is suitable to convert Solr documents and the "query-mapper" to convert SolrFusion queries.    
+The "response-mapper" is suitable to convert Solr documents and the "query-mapper" to convert SolrFusion queries.
+    
+The response mapper offers a switch whether to throw an error or to continue with a warning when unmapped fields are
+found. The attribute __ignore-missing-mappings__ controls this behaviour (default: false).
+
+The query mapper always continues, but logs warnings for unmapped fields.
+
     
 ## Controller
 The whole processing - handling a SolrFusion query until sending back a Solr response - is controlled by this class.
@@ -569,21 +699,45 @@ The lines above declare the global query builders, which can be overwritten for 
     
 ## Document Merging  
 In order to avoid duplicate Solr documents - same document from different(!) Solr servers - SolrFusion can merge documents
-based on SolrFusion field ("ISBN" in the example below).  
+based on SolrFusion field ("ISBN" in the example below). Single and multi values are supported. Multi values fields
+are equal if their intersection is not empty.
 Note: Document merging is done after mapping.
 
 Declaration (optional, child of `<om:solr-servers>`):
 
         <om:merge fusion-name="ISBN" class="org.outermedia.solrfusion.DefaultMergeStrategy$Factory">
-            <om:target prio="1" target-name="Bibliothek A"/>
-            <om:target prio="2" target-name="Bibliothek B"/>
+            <om:target prio="1" target-name="LibraryA"/>
+            <om:target prio="2" target-name="LibraryB"/>
         </om:merge>   
   
 The `prio` attribute describes the relevance of the Solr server referenced by `target-name`. Valid values of
-`target-name` are the "name" attribute values of the configured Solr servers.
+`target-name` are the "name" attribute values of the configured Solr servers. Because the `<om:target>` are sorted
+by their prio attribute at first, it is neither required to sort the fields manually or to start with 1 or to increment
+each priority by 1. Higher prio numbers mean lower priority. Please note that the document merging works on already
+converted SolrFusion values (the field is specified in the `fusion-name` attribute).
 
 According to the priority the document of the first server is used as the main document. The document fields of lower
-prioritized servers are used to fill unset fields.
+prioritized servers are used to fill unset fields. If the merge field is not unique one Solr server may return
+several documents to merge. In this case - several documents with same priority - the order is undefined, but all 
+documents are checked if they contain a value for an unset field.
+
+The implementation is optimized for speed: At first only the map field of all received documents is converted to a 
+SolrFusion field. Then all documents are grouped by equal map field values and are finally merged into one document. 
+After sorting the merged documents, the remaining fields of the documents to return are completely mapped to SolrFusion
+fields.
+
+If document merging is enabled, a solr query may return merged documents with a limited set of document fields. A 
+following query may request full details of a merged document so that it is necessary to request the document from
+all servers which built the merged document. Therefor the id of a merged document contains the Solr server name and
+Solr document id of all involved servers/documents (see [SolrFusion Id Generator](#solrfusion-id-generator)). For
+such id queries the received documents are finally merged again.
+
+Because document merging affects the total number of found documents, this counter is adjusted after merging. But it
+is possible that this number varies depending on the page, because equal documents are maybe returned on later pages.
+
+Because facet values are calculated by the configured Solr servers and their value is independent from the returned
+documents, it is not possible to correct the number of word occurrences.
+
 
 ## Solr Server Settings
 This section contains the description of one Solr server to use.
@@ -594,7 +748,7 @@ Declaration (optional, but at least one instance; child of `<om:solr-servers>`):
                             class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
 * __name__ - The value of the required __name__ attribute needs to be unique within all Solr server declarations and must not contain 
-underscore or minus. 
+underscore, SPACE or minus. 
 * __version__ - The value of the required __version__ attribute is evaluated by the Solr1 adapter in order to generate
 valid facet sort values.
 * __query-param-name__ - this optional attribute allows to overwrite the HTTP request parameter which contains the Solr query (default: q). If the
@@ -674,7 +828,7 @@ Declaration (mandatory, child of `<om:solr-servers>`):
 
 ## Field Mappings
 Finally a configuration of a Solr server contains the mapping rules which convert fields of queries and Solr documents.
-The following chapters show use-cases of typical conversions.
+The following chapters show use-cases and examples of typical conversions.
 
 The general format of mapping rules is:
 
@@ -706,9 +860,20 @@ which are applicable to SolrFusion queries and Solr documents. Mapping rule exam
 SolrFusion schema files: The working (real) example __WEB-INF/classes/fusion-schema-uni-leipzig.xml__ and the 
 file __WEB-INF/classes/fusion-schema.xml__ (for documentation purpose).
 
-### Change
+Be aware that the mapping rules are applied to facets and highlights too, because they are transformed into Solr
+documents. In version 1.0 it is not possible to limit the rule application to e.g. facets only.
 
-The most basic mapping is copying:
+If a multi value field is mapped to a single value field the behaviour is as follows:
+
+* An error is logged if the multi value contains more than one value and the field is ignored. Use the ScriptType
+    [MultiValueMerger](#multi-value-merger) to flatten multi values and to avoid this error.
+* Contains the value exactly one value, this value is used without warning or error messages.
+
+Especially for facets: When the mapping rules map two Solr fields to one SolrFusion field, then their mapped values and word counts
+are combined automatically. Because it is necessary to eliminate duplicate words, their counters are added.
+
+### Change
+The most basic change is to create a copy:
 
     <om:field name="town" fusion-name="city" />
 
@@ -774,7 +939,154 @@ original values). Note: Same applies to `<om:drop>` and `<om:add>` which are des
 For the example above 1 would be converted to 1+1+3 = 5. 
 
 ### Drop
+This operation is needed to remove fields from queries when the destination Solr has no equivalent Solr field.
+
+Examples:
+
+    <!-- ignore field in response -->
+    <om:field name="f52">
+        <om:drop>
+            <om:response />
+        </om:drop>
+    </om:field>
+    
+    <!-- ignore field in query -->
+    <om:field fusion-name="g52">
+        <om:drop>
+            <om:query />
+        </om:drop>
+    </om:field>
+    
+    <!-- ignore field in query and response -->
+    <om:field name="f52" fusion-name="g52">
+        <om:drop>
+            <om:response />
+            <om:query />
+        </om:drop>
+    </om:field>
+
+The drop implementation works non-destructive (only a flag is set), so that it is e.g. possible to drop a field and change it in a following
+operation or mapping rule. The query builder and document response renderer respect the drop flag and ignore fields marked dropped.
+
+Only the following combinations of __name__ / __fusion-name__ and `<om:query>`/`<om:response>` are valid for `<om:drop>`:
+
+* __name__ and `<om:response>` - remove the Solr field from the received document
+* __fusion-name__ and `<om:query>` - remove the SolrFusion field from the SolrFusion query
+
+This avoids ambiguities and allows to use drop statements even if also other attributes are specified.
+
+The removal is easily possible, because the query parser transforms AND/OR expressions into a list of single
+terms (AND means prefix with "+") which can be deleted one by one. The query builder rebuilds the AND/OR expressions again.
 
 ### Add
+You can use `<om:add>` in order to add new query parts or document fields. But the behaviour is different. When applied
+to queries `<om:add>` always create new query parts, but applied to a Solr document it depends to the field's name. As
+long as the field is unset it is added, but following rules - using the same field name - will overwrite the field, because
+in a document a field has to be unique.
+
+Another difference is, that it is possible to define where to add a query part. As a global filter at the end (`<om:add level="outside">`) 
+or as a sibling of an existing field (`<om:add level="inside">`).
+
+Please find below examples for queries and documents.
+
+Query examples:
+
+    <!-- Example 1 -->
+    <!-- the provided condition is added once at the end of the original query -->
+    <!-- the leading "+" results in an AND and nothing in an OR -->
+    <om:field name="t11">
+        <om:add level="outside">
+            <om:query type="static-value">
+                <value>+t11:"searched text"~2^75</value>
+            </om:query>
+        </om:add>
+    </om:field>
+
+    <!-- Example 2 -->
+    <!-- the provided condition is added as a sibling to all text14 occurrences -->
+    <!-- leading "+" would result in an AND and nothing in an OR -->
+    <!-- the SolrFusion field text14 is mapped to t14a and remains in the query -->
+    <om:field name="t14a" fusion-name="text14">
+        <om:add level="inside">
+            <om:query type="static-value">
+                <value>t14a:helloA</value>
+            </om:query>
+        </om:add>
+    </om:field>
     
-TODO
+    <!-- Example 3 -->    
+    <!-- fields s17 and s18 are copied as siblings for all text17 occurrences -->
+    <!-- finally the doubly added field text17 is removed -->
+    <om:field name="s17" fusion-name="text17">
+        <om:add level="inside">
+            <om:query/>
+        </om:add>
+    </om:field>
+    <om:field name="s18" fusion-name="text17">
+        <om:add level="inside">
+            <om:query/>
+        </om:add>
+        <om:drop>
+            <om:query/>
+        </om:drop>
+    </om:field>
+
+Response examples:
+
+    <!-- Example 1 -->
+    <!-- add field with multiple values to every document -->
+    <om:field fusion-name="Tags">
+        <om:add>
+            <om:response type="static-value">
+                <value>article</value>
+                <value>news</value>
+                <value>daily</value>
+            </om:response>
+        </om:add>
+    </om:field>
+                
+    <!-- Example 2 -->                
+    <!-- second rule modifies value of first rule, because it is the same field -->
+    <om:field name="t12" fusion-name="text12">
+        <om:add>
+            <om:response type="static-value">
+                <value>42</value>
+            </om:response>
+        </om:add>
+    </om:field>
+    <om:field fusion-name="text12">
+        <om:add>
+            <om:response type="javascript">
+                <script>
+                    println("Mapping for text12: fusionValue="+fusionValue);
+                    // in JS all numbers are float!
+                    returnValues = (fusionValue.get(0)-41).toFixed()
+                </script>
+            </om:response>
+        </om:add>
+    </om:field>
+                    
+    <!-- Example 3 -->                    
+    <!-- copy field in response -->                    
+    <om:field name="s19" fusion-name="text18a">
+        <om:add>
+            <om:response />
+        </om:add>
+    </om:field>                    
+    
+Only the following combinations of __name__ / __fusion-name__ and `<om:query>`/`<om:response>` are valid for `<om:add>`:    
+    
+* __name__ and `<om:query>` - directly adds a new Solr query part; the value is used unmodified and not mapped, so
+    the value is expected to be a valid raw Solr query (perhaps complex)
+* __fusion-name__ and `<om:response>` - directly add a fusion field to a Solr document; the value is used unmodified and not mapped,
+    so the value is expected to be a raw SolrFusion value
+
+This avoids ambiguities and allows to use add statements even if also other attributes are specified.
+    
+It is worth to mention that all add "outside" query rules are applied when all change and delete rules have been
+applied and the query builder has created the query. The new query parts are appended, separated by "AND" (edismax) or
+a SPACE (dismax).
+
+When a field is copied ("Example 3" above) word counts of facets are copied too (when a facet is mapped).
+    
+END
