@@ -5,6 +5,68 @@ Date: 2014-09-03
 
 Outermedia GmbH 
 
+# Table Of Contents
+
+* [Overview](#overview)
+* [Licence](#licence)
+* [Software Requirements](#software-requirements)
+* [Installation](#installation)
+    * [Error Handling](#error-handling)
+* [Supported Solr Features](#supported-solr-features)
+    * [Highlights](#highlights)
+    * [Facets](#facets)
+    * [More Like This](#more-like-this)
+* [Configuration Files](#configuration-files)
+* [SolrFusion Servlet Configuration](#solrfusion-servlet-configuration)
+* [Logging](#logging)
+* [SolrFusion Schema Configuration](#solrfusion-schema-configuration)
+    * [SolrFusion Schema Fields](#solrfusion-schema-fields)
+    * [Script Types](#script-types)
+        * [Javascript](#javascript)
+        * [Bean Shell](#bean-shell)
+        * [Regular Expressions](#regular-expressions)
+        * [Tables](#tables)
+        * [Simple Values](#simple-values)
+        * [Multi Value Merger](#multi-value-merger)
+        * [Id Filter](#id-filter)
+        * [Field Merger](#field-merger)
+        * [String Normalizer](#string-normalizer)
+    * [Default Search Values](#default-search-values)
+    * [SolrFusion Id Generator](#solrfusion-id-generator)
+    * [Response Consolidator](#response-consolidator)
+        * [Paging And Sorting](#paging-and-sorting)
+    * [Mapper](#mapper)
+    * [Controller](#controller)
+    * [Solr Connection Values](#solr-connection-values)
+    * [Query Response Parser](#query-response-parser)
+    * [Response Renderer](#response-renderer)
+    * [Query Builder](#query-builder)
+    * [Document Merging](#document-merging)
+    * [Solr Server Settings](#solr-server-settings)
+        * [Solr Server URL](#solr-server-url)
+        * [Score Corrector](#score-corrector)
+        * [Solr Server Specific Response Parser](#solr-server-specific-response-parser)
+        * [Solr Server Specific Edismax Query Builder](#solr-server-specific-edismax-query-builder)
+        * [Solr Server Document Id Field Name](#solr-server-document-id-field-name)
+        * [Maximum Number Of Documents To Return](#maximum-number-of-documents-to-return)
+    * [Field Mappings](#field-mappings)
+        * [Change](#change)
+        * [Drop](#drop)
+        * [Add](#add)
+        * [Split Merge Use Case](#split-merge-use-case)
+* [Known Issues](#known-issues)      
+    * [Sort A Split Field](#sort-a-split-field)
+    * [Map Values With Wildcards](#map-values-with-wildcards)
+    * [Fuzzy Slop](#fuzzy-slop)
+    * [Removed Fields In Filter Queries](#removed-fields-in-filter-queries)
+    * [Morelikethis](#morelikethis)
+    * [Merge Of Two SolrFusion Fields Into One Solr Field In Queries](#merge-of-two-solrfusion-fields-into-one-solr-field-in-queries)
+    * [Boosting When Two SolrFusion Fields Are Mapped To One Solr Field](#boosting-when-two-solrfusion-fields-are-mapped-to-one-solr-field)
+    * [New Static Query Parts](#new-static-query-parts)
+    * [One SolrFusion Field Is Mapped To Several Solr Fields In Dismax Queries](#one-solrfusion-field-is-mapped-to-several-solr-fields-in-dismax-queries)
+    * [Total Document Count Correction And Document Merging](#total-document-count-correction-and-document-merging)
+  
+
 # Overview
 
 SolrFusion is intended to be used in the case that several Solr servers have to be combined into one logical Solr
@@ -830,7 +892,7 @@ Declaration (mandatory, child of `<om:solr-servers>`):
 
     <om:unique-key>id</om:unique-key>
 
-### Maximum Number Of Document To Return
+### Maximum Number Of Documents To Return
 Because sorting and paging is necessarily implemented in SolrFusion, it is necessary to limit the maximum number of
 documents to receive from one server for one query.
 
@@ -1160,4 +1222,87 @@ For responses it is easily possible to copy the same Solr value to both SolrFusi
         <om:drop><om:response /></om:drop>
     </om:field>
      
+# Known Issues     
+The following chapters describe mostly - in general - unsolvable issues which were found during the implementation and
+testing with vufind. 
+
+## Sort A Split Field
+If a SolrFusion field is split into several Solr fields and the SolrFusion field is used for sorting then it is not
+possible to map the semantics to a Solr field. Because the Solr sort field supports only tiered sort fields only one
+field can be specified. All other sort fields have a lower precedence and it is not possible to decide which of the split fields
+is the most important field.
+
+In version 1.0 SolrFusion uses only the textually first mapping for sorting.
+     
+## Map Values With Wildcards
+In general it is not possible to map values which e.g. contain a "?" or "*", because it is not possible to map all
+parts except the wildcards in a useful way. But it depends on the value range and is perhaps in some cases possible.
+   
+SolrFusion contains neither a recognition nor a special handling of values with wildcards. They are treated as values
+without wildcards. If a special handling is needed a new ScriptType Java class has to be implemented and used in the
+mapping of the affected field.
+     
+## Fuzzy Slop
+Because the value range and semantics of the fuzzy slop changed between Solr versions, SolrFusion can't automatically
+adapt the fuzzy values. In Solr 3.X a value range between 0 and 1 is used and in Solr4 only 0, 1 or 2 are allowed.
+
+SolrFusion's query builder simply print out only the "~" without any value.
+     
+## Removed Fields In Filter Queries
+Depending on the application which uses SolrFusion and the involved Solr schemas it might happen that query expressions 
+of filter queries become "empty", because their contained field is removed. If then the remaining request is still sent
+ to a Solr server the server returns to many documents which is not wanted.
+     
+Currently SolrFusion 1.0 has no solution for this issue. But it makes sense to enhance the implementation not to sent a
+a query at all, because in general too many documents would be returned.
+
+## Morelikethis
+Especially vufind uses a simple id query with qt=morelikethis in order to get similar documents. If the affected document is
+not merged, then the whole document is stored in one Solr server. Because of the special id handling (see [Id Filter](#id-filter))
+actually only one server is requested and it is not possible to return similar documents from the other configured Solr servers.
+    
+If the document of the id query was merged from several Solr servers then several Solr servers are requested and their
+result will be merged again.
+    
+SolrFusion offers no solution for this issue, but at least as much similar documents as without SolrFusion are returned,
+but not more.
+     
+## Merge Of Two SolrFusion Fields Into One Solr Field In Queries
+If the SolrFusion fields f1 and f2 should be mapped to one single Solr field s1, it is not decidable to join the correct
+instances in the case that several f1 and f2 occur in a query. Even if only one f1 and one f2 is present it is 
+uncertain whether both belong together. 
+
+SolrFusion can't implement a solution, so that only a domain specific or application specific solution is possible.
+
+## Boosting When Two SolrFusion Fields Are Mapped To One Solr Field
+Example: `qf=author^500 author2^250` is mapped to `qf=name^500 name^250`. Which boost value is preferrable? Maximum
+ value, minimum value or average?
+     
+SolrFusion offers no general solution and sends the mapped qf with "duplicate" boost values to a Solr server.   
+     
+## New Static Query Parts
+By the use of `<om:add level="outside">` it is possible to add new parts to a query. But the query syntax is currently
+ignored, so that this only works when always either dismax or edismax queries are sent from the application using
+SolrFusion. The same applies to static query parts when added "inside".
+      
+The `<om:add>` is executed for every query, but perhaps is the addition not always desired?
+       
+Several solutions are conceivable, but for all SolrFusions needs to be improved.
+     
+## One SolrFusion Field Is Mapped To Several Solr Fields In Dismax Queries
+If the field title is the default search field and e.g. the query `title:abc` is mapped to `title1:abc OR title2:abc`, 
+then the equivalent dismax query would be `abc abc`, because title1 and title2 are the Solr default search fields.
+
+Perhaps domain/application specific solutions are possible, i.e. the query mapping of "title" simply targets one
+Solr field (instead of several). A SolrFusion improvement, which automatically removes duplicate search word,  
+is conceivable too.
+
+In version 1.0 SolrFusion no special handling exists for this case and the query is directly sent to a Solr server.
+     
+## Total Document Count Correction And Document Merging
+Because SolrFusion (almost) never works on all documents found by a search, it is impossible to return the right
+document count when document merging is enabled. So it is possible that the total document count varies depending
+on the current "page", because SolrFusion is perhaps able to merge documents (depends on sort fields).
+                    
+          
 END
