@@ -256,7 +256,7 @@ mappings are logged too. Finally the whole SolrFusion response is logged.
 # Architecture
 The following sketch contains a roughly description of the internal architecture.
 
-![SolrFusion Architecture](https://github.com/outermedia/solr-fusion/tree/master/src/main/doc/architecture.jpg "SolrFusion Architecture")
+![SolrFusion Architecture](https://raw.githubusercontent.com/outermedia/solr-fusion/master/src/main/doc/architecture.jpg "SolrFusion Architecture")
 
 In the following chapters you will find specific Java classes of the abstract interfaces mentioned in the sketch.
 
