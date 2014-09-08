@@ -8,13 +8,20 @@ Outermedia GmbH
 # Overview
 
 SolrFusion is intended to be used in the case that several Solr servers have to be combined into one logical Solr
-server. The first release (version 1.0) is limited to a subset of supported Solr HTTP request parameters and features. The primary focus
-of this version is to work with the customized vufind 1.3 used by the Universität Leipzig.
+server. In order to be able to create a unified logical Solr schema several basic operations are provided to map and 
+normalize data of the used Solr servers.
+
+The first release (version 1.0) is limited to a subset of supported Solr HTTP request parameters and features. The primary focus
+of this version is to work with the customized vufind 1.3 used by the [Universitätsbibliothek Leipzig](http://www.ub.uni-leipzig.de/ "Universitätsbibliothek Leipzig").
 
 But the concept and implementation allows a high level of customization, so it is conceivably to use SolrFusion to
 combine e.g. data bases too.
     
 Version 1.0 was tested with Solr 1.4, 3.5, 3.6 and 4.3 servers.
+
+# Licence
+
+This software is licensed under the terms of the GPL V3.
 
 # Software Requirements
 * Java >= 1.7
@@ -115,6 +122,11 @@ The limit __facet.limit__ is evaluated and applied to the sorted list. The imple
  Solr Wiki: This param indicates the maximum number of constraint counts that should be returned for the facet fields. 
  A negative value means unlimited. The default value is 100.
 
+## More Like This
+If enabled by qt=morelikethis the data in a Solr response is recognized and handled similar to the search results.
+E.g. document merging is supported too. But only one document is expected in the response XML element "match".
+
+In queries no extra logic was implemented.
 
 # Configuration Files
 
@@ -123,7 +135,7 @@ All SolrFusion specific configuration files are located in the folder `<tomcat i
 The following configuration files exist:
 
 * __WEB-INF/classes/fusion-schema-uni-leipzig.xml__  
-    This file contains a working solrfusion schema description which is used by the [Universität Leipzig](http://TODO "TODO").  
+    This file contains a working solrfusion schema description which is used by the [Universitätsbibliothek Leipzig](http://www.ub.uni-leipzig.de/ "Universitätsbibliothek Leipzig").  
     The syntax is described in the chapter [SolrFusion Schema Configuration](#solrfusion-schema-configuration)
 * __WEB-INF/classes/log4j.properties__  
     The logging is controlled by log4j 1.2.16 and these settings. [Please see](http://logging.apache.org/log4j/1.2/ "http://logging.apache.org/log4j/1.2/").
@@ -153,7 +165,7 @@ The main servlet is named __SolrFusionServlet__ and offers three options:
 * __fusion-schema__ - The file name of the SolrFusion Schema XML File to use. E.g. fusion-schema-uni-leipzig.xml.
 * __fusion-schema-xsd__ - The XML Schema file to validate __fusion-schema__.
 * __applyLatin1Fix__ - With true or false it is possible to enable or disable this fix. SolrFusion was tested with
-vufind 1.3 (slightly modified by Universität Leipzig) where it is necessary to fix the wrong encoding of diacritical
+vufind 1.3 (slightly modified by [Universitätsbibliothek Leipzig](http://www.ub.uni-leipzig.de/ "Universitätsbibliothek Leipzig")) where it is necessary to fix the wrong encoding of diacritical
 chars e.g German Umlauts (ä, ü, ö etc). It is perhaps necessary to set the URI encoding for tomcat in 
 <tomcat install dir>/conf/server.xml:  
 
@@ -1089,4 +1101,63 @@ a SPACE (dismax).
 
 When a field is copied ("Example 3" above) word counts of facets are copied too (when a facet is mapped).
     
+### Split Merge Use Case
+This is a common mapping use case where one SolrFusion field is mapped to several Solr fields or vice versa. 
+
+The following two examples show a possible solution for both cases.
+
+Example 1: Two Solr fields are mapped to one SolrFusion field
+
+    <om:field name="author" fusion-name="author_facet">
+        <om:add level="inside"><om:query /></om:add>
+        <om:drop><om:response /></om:drop>
+    </om:field>
+    <om:field name="author2" fusion-name="author_facet">
+        <om:add level="inside"><om:query /></om:add>
+        <om:drop><om:response /></om:drop>
+    </om:field>
+    <om:field fusion-name="author_facet">
+        <om:add>
+            <om:response type="field-merger">
+                <separator>;</separator>
+                <field>author</field>
+                <field>author2</field>
+            </om:response>
+        </om:add>
+        <om:drop><om:query /></om:drop>
+    </om:field>  
+    
+Explanation: In queries the field __author_facet__ is removed and two copies - __author__ and __author2__ - are added as siblings.    
+In responses the fields __author__ and __author2__ are removed and a new field __author_facet__ is added which merges
+the fields __author__ and __author2__.
+    
+Example 2: Map two SolrFusion fields to one Solr field
+    
+    <om:field name="edition" fusion-name="publishDateSort" >
+    </om:field>
+    <om:field name="edition" fusion-name="publishDate" >
+    </om:field>
+    
+Explanation: The mapping depends on your requirements, because it is in general not possible to implement the query
+mapping part: Therefor the "field-merger" would have to search all occurrences of __publishDateSort__ and
+__publishDate__ and to join them. This might work if they occur only once in simple queries. But how to handle
+several occurrences in complex boolean queries? 
+
+The example above doesn't implement a split-merge, but uses domain specific knowledge to solve this issue.  
+If no __publishDate__ field is present in a query the value of __publishDateSort__
+is used for the Solr field __edition__. Otherwise __publishDate__ sets the value. Because __publishDateSort__ is used
+for sorting only, their value is ignored in responses, if __publishDate__ is present.
+
+For responses it is easily possible to copy the same Solr value to both SolrFusion fields:
+
+    <om:field name="edition" fusion-name="publishDateSort" >
+        <om:add><om:response /></om:add>
+    </om:field>
+    <om:field name="edition" fusion-name="publishDate" >
+        <om:add><om:response /></om:add>
+    </om:field>
+    <om:field name="edition">
+        <om:drop><om:response /></om:drop>
+    </om:field>
+     
 END
