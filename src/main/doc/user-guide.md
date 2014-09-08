@@ -225,17 +225,15 @@ The servlets are configured in the file `<tomcat install dir>/webapps/solrfusion
 The main servlet is named __SolrFusionServlet__ and offers three options:  
 
 * __fusion-schema__ - The file name of the SolrFusion Schema XML File to use. E.g. fusion-schema-uni-leipzig.xml.
-* __fusion-schema-xsd__ - The XML Schema file to validate __fusion-schema__.
+* __fusion-schema.xsd__ - The XML Schema file to validate __fusion-schema__.
 * __applyLatin1Fix__ - With true or false it is possible to enable or disable this fix. SolrFusion was tested with
 vufind 1.3 (slightly modified by [Universitätsbibliothek Leipzig](http://www.ub.uni-leipzig.de/ "Universitätsbibliothek Leipzig")) where it is necessary to fix the wrong encoding of diacritical
 chars e.g German Umlauts (ä, ü, ö etc). It is perhaps necessary to set the URI encoding for tomcat in 
-<tomcat install dir>/conf/server.xml:  
+`<tomcat install dir>/conf/server.xml`:  
 
-
-    <Server ...>  
+`    <Server ...>  
         <Service ...>  
-            <Connector ... URIEncoding="UTF-8"/>  
-            ...
+            <Connector ... URIEncoding="UTF-8"/>`
 
 The second servlet is the ping servlet named __VuFindServlet__ which always returns HTTP Code 200 (OK) and a proper
 Solr XML response. The only supported HTTP request parameter is `echoParams=all`. If provided all HTTP request 
@@ -255,6 +253,12 @@ received from a solr server.
 The __trace level__ allows to understand the whole processing, because the received Solr responses and the applied
 mappings are logged too. Finally the whole SolrFusion response is logged.
 
+# Architecture
+The following sketch contains a roughly description of the internal architecture.
+
+![SolrFusion Architecture](https://github.com/outermedia/solr-fusion/tree/master/src/main/doc/architecture.jpg "SolrFusion Architecture")
+
+In the following chapters you will find specific Java classes of the abstract interfaces mentioned in the sketch.
 
 # SolrFusion Schema Configuration
 Please note that the XML Schema file __solrfusion/WEB-INF/classes/configuration.xsd__ is referenced in the example
@@ -263,6 +267,8 @@ So that XML Schema enabled XML editors can assist you to modify the SolrFusion s
 
 A general principle of the SolrFusion schema configuration is, that the implementing Java classes are not hard coded,
 but are mostly configurable too. 
+
+The following chapters follow the order of the XML elements in the SolrFusion schema file.
              
 ## SolrFusion Schema Fields
 The mandatory XML element `<om:fusion-schema-fields>` is used to describe all available SolrFusion fields. This information
