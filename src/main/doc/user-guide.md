@@ -325,6 +325,10 @@ Incoming:
 * __mapFacetValue__ - whether the values being mapped belong to a facet (java.lang.Boolean); if true a ScriptType
     has to adjust the __facetWordCount__ when either the order or number of the values beeing mapped is changed.
 * __mapHighlightValue__ - signals whether a highlight value is mapped    
+* __queryTarget__ - an enumeration value of: "all", "filter-query", "query" or "highlight-query". If unset the current
+    ScriptType's invocation is not working on a query part.
+* __responseTarget__ - an enumeration value of: "all", "facet", "document" or "highlight". If unset the current
+    ScriptType's invocation is not working on a response part.
 
 Outgoing: To be set by scripting languages only. Java implementations return an object of org.outermedia.solrfusion.types.TypeResult.
 
@@ -542,6 +546,7 @@ Example mapping:
         </om:add>
     </om:field>
 
+In the case that a value is set for a facet, the word count is automatically set to "1".
 
 ### Multi Value Merger
 Flatten multiple values of one field to one value which is necessary when the destination field is a single value.
@@ -940,8 +945,31 @@ which are applicable to SolrFusion queries and Solr documents. Mapping rule exam
 SolrFusion schema files: The working (real) example __WEB-INF/classes/fusion-schema-uni-leipzig.xml__ and the 
 file __WEB-INF/classes/fusion-schema.xml__ (for documentation purpose).
 
-Be aware that the mapping rules are applied to facets and highlights too, because they are transformed into Solr
-documents. In version 1.0 it is not possible to limit the rule application to e.g. facets only.
+Be aware that the mapping rules are per default applied to facets and highlights too, because they are transformed into Solr
+documents. But it is possible to limit the inner `<om:query>` and `<om:response>` XML children to specific parts of a
+query resp. response. Examples:
+
+    <!-- Example 1: Add facet in response -->
+    <om:field fusion-name="solr-server">
+        <om:add>
+            <om:response target="facet" type="static-value">
+                <value>UBL4</value>
+            </om:response>
+        </om:add>
+    </om:field>
+    
+    <!-- Example 2: Add new filter query -->
+    <om:field name="extra">
+        <om:add level="outside">
+            <om:query target="filter-query" type="static-value">
+                <value>title:newFQ</value>
+            </om:query>
+        </om:add>
+    </om:field>
+
+Valid target values in a `<om:response>` are: __all__ (default if absent), __facet__, __document__ and __highlight__.
+
+In a `<om:query>` valid target values are: __all__ (default if absent), __filter-query__, __query__ and __highlight-query__.
 
 If a multi value field is mapped to a single value field the behaviour is as follows:
 
