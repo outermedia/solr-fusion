@@ -56,7 +56,7 @@ public class AddTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 308: Please specify a field for attribute 'name' in order to add something to a query.",
+                "In fusion schema at line 310: Please specify a field for attribute 'name' in order to add something to a query.",
                 e.getMessage());
         }
 
@@ -73,7 +73,7 @@ public class AddTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 353: Please specify the level attribute when <om:add> is used for queries. Possible values are 'inside' and 'outside'.",
+                "In fusion schema at line 355: Please specify the level attribute when <om:add> is used for queries. Possible values are 'inside' and 'outside'.",
                 e.getMessage());
         }
 
@@ -91,7 +91,7 @@ public class AddTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 315: Please specify a field for attribute 'fusion-name' in order to add something to a response.",
+                "In fusion schema at line 317: Please specify a field for attribute 'fusion-name' in order to add something to a response.",
                 e.getMessage());
         }
     }
@@ -105,7 +105,7 @@ public class AddTest extends AbstractTypeTest
         SearchServerConfig searchServerConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
         Document doc = createDocument("id", "123", "score", "1.2");
         ScriptEnv env = getNewEnv(null, cfg);
-        int mappedFieldNr = cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, doc, env, null);
+        int mappedFieldNr = cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, doc, env, null, ResponseTarget.ALL);
         DefaultXmlResponseRenderer renderer = DefaultXmlResponseRenderer.Factory.getInstance();
         renderer.init(null);
         FusionRequest req = new FusionRequest();
@@ -145,9 +145,9 @@ public class AddTest extends AbstractTypeTest
         TermQuery q = new TermQuery(Term.newFusionTerm("title", "abc123"));
         ScriptEnv env = getNewEnv("title", cfg);
         q.getTerm().setFusionField((FusionField) env.getBinding(ScriptEnv.ENV_IN_FUSION_FIELD_DECLARATION));
-        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, env, null);
+        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, env, null, QueryTarget.QUERY);
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String qs = qb.buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN, null);
+        String qs = buildQueryString(qb, q, cfg, searchServerConfig, Locale.GERMAN, null, QueryTarget.QUERY);
         // System.out.println("QS "+qs);
         String expected = "(Titel:abc123) AND +t11:\"searched text\"~2^75 AND t13:hello";
         Assert.assertEquals("Got different query than expected", expected, qs);
@@ -173,9 +173,9 @@ public class AddTest extends AbstractTypeTest
         TermQuery q = new TermQuery(Term.newFusionTerm("title", "abc123"));
         ScriptEnv env = getNewEnv("title", cfg);
         q.getTerm().setFusionField((FusionField) env.getBinding(ScriptEnv.ENV_IN_FUSION_FIELD_DECLARATION));
-        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, env, null);
+        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, env, null, QueryTarget.QUERY);
         QueryBuilderIfc qb = cfg.getDismaxQueryBuilder();
-        String qs = qb.buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN, Sets.newHashSet("Titel"));
+        String qs = buildQueryString(qb, q, cfg, searchServerConfig, Locale.GERMAN, Sets.newHashSet("Titel"), QueryTarget.QUERY);
         // System.out.println("QS "+qs);
         // TODO how can map rules respect dismax and edismax? currently they return the whole query which is wrong
         // for dismax queries
@@ -191,9 +191,9 @@ public class AddTest extends AbstractTypeTest
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
         SearchServerConfig searchServerConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
         TermQuery q = buildTermQuery(cfg, "text14", "abc123");
-        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, getNewEnv(null, cfg), null);
+        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, getNewEnv(null, cfg), null, QueryTarget.QUERY);
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String qs = qb.buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN, null);
+        String qs = buildQueryString(qb, q, cfg, searchServerConfig, Locale.GERMAN, null, QueryTarget.QUERY);
         // System.out.println("QS " + qs);
         String expected = "((t14:hello1 OR t14a:helloA OR t14b:helloB)) AND +t11:\"searched text\"~2^75 AND t13:hello";
         Assert.assertEquals("Got different query than expected", expected, qs);
@@ -210,9 +210,9 @@ public class AddTest extends AbstractTypeTest
         BooleanClause bc = new BooleanClause(tq, BooleanClause.Occur.OCCUR_MUST);
         BooleanQuery q = new BooleanQuery();
         q.add(bc);
-        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, getNewEnv(null, cfg), null);
+        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, getNewEnv(null, cfg), null, QueryTarget.QUERY);
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String qs = qb.buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN, null);
+        String qs = buildQueryString(qb, q, cfg, searchServerConfig, Locale.GERMAN, null, QueryTarget.QUERY);
         System.out.println("QS " + qs);
         String expected = "((+(t14:hello1 OR t14a:helloA OR t14b:helloB))) AND +t11:\"searched text\"~2^75 AND t13:hello";
         Assert.assertEquals("Got different query than expected", expected, qs);
@@ -227,9 +227,9 @@ public class AddTest extends AbstractTypeTest
         SearchServerConfig searchServerConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
         TermQuery q = buildTermQuery(cfg, "text15", "abc123");
         env = getNewEnv(null, cfg);
-        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, env, null);
+        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, env, null, QueryTarget.QUERY);
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String qs = qb.buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN, null);
+        String qs = buildQueryString(qb, q, cfg, searchServerConfig, Locale.GERMAN, null, QueryTarget.QUERY);
         // System.out.println("QS " + qs);
         String expected = "((t15a:helloA OR t15b:helloB)) AND +t11:\"searched text\"~2^75 AND t13:hello";
         Assert.assertEquals("Got different query than expected", expected, qs);
@@ -246,9 +246,9 @@ public class AddTest extends AbstractTypeTest
         BooleanQuery bq = buildAllQuery(cfg, text16);
         ScriptEnv env = getNewEnv(null, cfg);
         env.setBinding(ScriptEnv.ENV_IN_FUSION_REQUEST, new FusionRequest());
-        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, bq, env, null);
+        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.QUERY);
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String qs = qb.buildQueryString(bq, cfg, searchServerConfig, Locale.GERMAN, null);
+        String qs = buildQueryString(qb, bq, cfg, searchServerConfig, Locale.GERMAN, null, QueryTarget.QUERY);
         // System.out.println("QS " + qs);
         String expected = "(((s16:\"abc 123\"^1.5) OR (s16:456DEF) OR (s16:fuzzy~)~ OR (s16:pre*fix) OR (s16:wild*) " +
             "OR (s16:[20140801 TO 20140825]) OR (s16:[1.0 TO 4.0]) OR (s16:[1.0 TO 4.0]) OR (s16:[1 TO 4]) " +
@@ -283,9 +283,9 @@ public class AddTest extends AbstractTypeTest
         BooleanQuery bq = buildAllQuery(cfg, field);
         ScriptEnv env = getNewEnv(null, cfg);
         env.setBinding(ScriptEnv.ENV_IN_FUSION_REQUEST, new FusionRequest());
-        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, bq, env, null);
+        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String qs = qb.buildQueryString(bq, cfg, searchServerConfig, Locale.GERMAN, null);
+        String qs = buildQueryString(qb, bq, cfg, searchServerConfig, Locale.GERMAN, null, QueryTarget.ALL);
         // System.out.println("QS " + qs);
         String expected = "(((s17:\"abc 123\"^1.5 OR s18:\"abc 123\"^1.5) OR (s17:456DEF OR s18:456DEF) " +
             "OR (s17:fuzzy~ OR s18:fuzzy~)~ OR (s17:pre*fix OR s18:pre*fix) OR (s17:wild* OR s18:wild*) " +
@@ -293,6 +293,14 @@ public class AddTest extends AbstractTypeTest
             "OR (s17:[1.0 TO 4.0] OR s18:[1.0 TO 4.0]) OR (s17:[1 TO 4] OR s18:[1 TO 4]) OR (s17:[1 TO 4] " +
             "OR s18:[1 TO 4]) OR *:*))";
         Assert.assertTrue("Didn't find " + expected + " in " + qs, qs.startsWith(expected));
+    }
+
+    protected String buildQueryString(QueryBuilderIfc qb, Query bq, Configuration cfg, SearchServerConfig searchServerConfig,
+        Locale locale, Set<String> defaultSearchServerFields, QueryTarget target)
+    {
+        String qs = qb.buildQueryString(bq, cfg, searchServerConfig, Locale.GERMAN, defaultSearchServerFields, target);
+        qs = qb.getStaticallyAddedQueries(cfg,searchServerConfig,Locale.GERMAN,target, qs);
+        return qs;
     }
 
     protected TermQuery buildTermQuery(Configuration cfg, String fusionField, String fusionValue)
@@ -386,13 +394,13 @@ public class AddTest extends AbstractTypeTest
         // map search document
         Document doc = createDocument("id", "123", "score", "1.2", "s19", "abc");
         ScriptEnv env = getNewEnv(null, cfg);
-        cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, doc, env, null);
+        cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, doc, env, null, ResponseTarget.ALL);
 
         // map facet
         Document facetDoc = new Document();
         facetDoc.addField("s19","a","b","c").getTerm().setSearchServerFacetCount(Arrays.asList(1,2,3));
         facetDoc.setSearchServerDocId(searchServerConfig.getIdFieldName(), "1");
-        cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, facetDoc, getNewEnv(null, cfg), null);
+        cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, facetDoc, getNewEnv(null, cfg), null, ResponseTarget.ALL);
         Map<String, Map<String, Integer>> facets = new HashMap<>();
         facetDoc.accept(new FacetWordCountBuilder(cfg.getFusionIdFieldName(), cfg.getIdGenerator(), doc, facets), null);
         FacetWordCountSorter facetSorter = new FacetWordCountSorter();

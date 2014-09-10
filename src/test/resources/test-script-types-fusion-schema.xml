@@ -32,6 +32,8 @@
         <om:field name="text17"/>
         <om:field name="text18a"/>
         <om:field name="text18b"/>
+        <om:field name="server"/>
+        <om:field name="language"/>
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile"/>
@@ -465,6 +467,18 @@
                 <om:drop>
                     <om:response/>
                 </om:drop>
+            </om:field>
+
+            <!-- non global rules -->
+            <om:field name="language" fusion-name="language" />
+
+            <!-- add to facet only, not document -->
+            <om:field fusion-name="server">
+                <om:add>
+                    <om:response target="facet" type="static-value">
+                        <value>UBL1</value>
+                    </om:response>
+                </om:add>
             </om:field>
 
         </om:solr-server>

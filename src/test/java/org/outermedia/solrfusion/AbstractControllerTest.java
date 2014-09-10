@@ -55,6 +55,7 @@ public class AbstractControllerTest
         }
         result.put(FIELDS_TO_RETURN, "* score id");
         result.put(WRITER_TYPE, "xml");
+        result.put(FILTER_QUERY, "title:newFQ");
         return result;
     }
 

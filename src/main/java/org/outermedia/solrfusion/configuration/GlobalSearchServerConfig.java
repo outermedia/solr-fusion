@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Data holder class keeping the global search server configuration and all search server specific settings.
+ * Data holder class which stores the global search server configuration and all search server specific settings.
  *
  * @author ballmann
  */

@@ -8,9 +8,7 @@ import org.outermedia.solrfusion.MergeStrategyIfc;
 import org.outermedia.solrfusion.MultiKeyAndValueMap;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
-import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
-import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.response.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
@@ -23,6 +21,7 @@ import java.util.*;
 
 /**
  * Supports sorting, merging of documents and paging and a limit of documents to retrieve (per search server).
+ * Facets and highlights are handled too.
  */
 @ToString
 @Slf4j
@@ -90,7 +89,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             try
             {
                 config.getResponseMapper().mapResponse(config, searchServerConfig, facetFields, getNewScriptEnv(),
-                    searchServerFieldsToMap);
+                    searchServerFieldsToMap, ResponseTarget.FACET);
             }
             catch (Exception e)
             {
@@ -124,7 +123,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             {
                 Set<String> searchServerFieldsToMap = getSingleFieldMapping(idField);
                 MappingClosableIterator mapper = getNewMappingClosableIterator(config, searchServerConfig,
-                    highlightingIt, searchServerFieldsToMap);
+                    highlightingIt, searchServerFieldsToMap, ResponseTarget.HIGHLIGHT);
                 while (mapper.hasNext())
                 {
                     allHighlighting.put(mapper.next());
@@ -159,7 +158,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
                 // map sort field and id/score only
                 // map merge document field too if needed
                 MappingClosableIterator mapper = getNewMappingClosableIterator(config, searchServerConfig, docIterator,
-                    searchServerFieldsToMap);
+                    searchServerFieldsToMap, ResponseTarget.DOCUMENT);
                 int docCount = 0;
                 while (mapper.hasNext())
                 {
@@ -180,9 +179,9 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
 
     protected MappingClosableIterator getNewMappingClosableIterator(Configuration config,
         SearchServerConfig searchServerConfig, ClosableIterator<Document, SearchServerResponseInfo> docIterator,
-        Set<String> searchServerFieldsToMap) throws InvocationTargetException, IllegalAccessException
+        Set<String> searchServerFieldsToMap, ResponseTarget target) throws InvocationTargetException, IllegalAccessException
     {
-        return new MappingClosableIterator(docIterator, config, searchServerConfig, searchServerFieldsToMap);
+        return new MappingClosableIterator(docIterator, config, searchServerConfig, searchServerFieldsToMap, target);
     }
 
     protected void mapMergeField(Configuration config, SearchServerConfig searchServerConfig, FusionRequest request,
@@ -193,7 +192,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             try
             {
                 Set<String> candidates = request.mapFusionFieldToSearchServerField(fusionFieldToMap, config,
-                    searchServerConfig, null);
+                    searchServerConfig, null, QueryTarget.QUERY);
                 if (candidates.isEmpty())
                 {
                     log.error("Found not mapping for merge field '{}'", fusionFieldToMap);
@@ -271,11 +270,11 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             }
             else
             {
-                completelyMapDoc(config, d, fusionDocId, null);
+                completelyMapDoc(config, d, fusionDocId, null, ResponseTarget.DOCUMENT);
                 Document hl = allHighlighting.get(fusionDocId);
                 if (hl != null)
                 {
-                    completelyMapDoc(config, hl, fusionDocId, ScriptEnv.ENV_IN_MAP_HIGHLIGHT);
+                    completelyMapDoc(config, hl, fusionDocId, ScriptEnv.ENV_IN_MAP_HIGHLIGHT, ResponseTarget.HIGHLIGHT);
                     highlighting.put(fusionDocId, hl);
                 }
             }
@@ -313,7 +312,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         {
             for (Document doc : facetFields)
             {
-                completelyMapDoc(config, doc, doc.getFusionDocId(fusionIdField), ScriptEnv.ENV_IN_MAP_FACET);
+                completelyMapDoc(config, doc, doc.getFusionDocId(fusionIdField), ScriptEnv.ENV_IN_MAP_FACET, ResponseTarget.FACET);
                 doc.accept(getFacetBuilder(idGenerator, fusionIdField, fusionFacetFields, doc), null);
             }
         }
@@ -331,7 +330,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         return new FacetWordCountBuilder(fusionIdField, idGenerator, doc, fusionFacetFields);
     }
 
-    protected void completelyMapDoc(Configuration config, Document d, String fusionDocId, String mapType)
+    protected void completelyMapDoc(Configuration config, Document d, String fusionDocId, String mapType, ResponseTarget target)
         throws InvocationTargetException, IllegalAccessException
     {
         SearchServerConfig searchServerConfig = config.getSearchServerConfigByFusionDocId(fusionDocId);
@@ -340,7 +339,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         {
             newScriptEnv.setBinding(mapType, Boolean.TRUE);
         }
-        config.getResponseMapper().mapResponse(config, searchServerConfig, d, newScriptEnv, null);
+        config.getResponseMapper().mapResponse(config, searchServerConfig, d, newScriptEnv, null, target);
     }
 
     /**
@@ -363,11 +362,11 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         for (Document toMerge : sameDocuments)
         {
             String fusionDocId = toMerge.getFusionDocId(fusionIdField);
-            completelyMapDoc(config, toMerge, fusionDocId, null);
+            completelyMapDoc(config, toMerge, fusionDocId, null, ResponseTarget.DOCUMENT);
             Document hl = allHighlighting.get(fusionDocId);
             if (hl != null)
             {
-                completelyMapDoc(config, hl, fusionDocId, ScriptEnv.ENV_IN_MAP_HIGHLIGHT);
+                completelyMapDoc(config, hl, fusionDocId, ScriptEnv.ENV_IN_MAP_HIGHLIGHT, ResponseTarget.HIGHLIGHT);
             }
         }
         if (merger != null)

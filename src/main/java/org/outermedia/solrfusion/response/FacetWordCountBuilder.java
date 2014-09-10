@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Re-convert the internally used Solr doc representation of facets into a format suitable to render in a response.
+ *
  * Created by ballmann on 8/11/14.
  */
 @Slf4j
@@ -20,6 +22,15 @@ public class FacetWordCountBuilder implements FieldVisitor
     private Document doc;
     private Map<String, Map<String, Integer>> fusionFacetFields;
 
+    /**
+     * Fill a specified empty map (fusionFacetFields) from the specified Solr document (doc) which contains the facets.
+     *
+     * @param fusionIdField
+     * @param idGenerator
+     * @param doc contains the facets as fields (the word counts are set too)
+     * @param fusionFacetFields this parameter is filled from the processed facets. The key maps a field to a map of
+     *                          words and their word counts.
+     */
     public FacetWordCountBuilder(String fusionIdField, IdGeneratorIfc idGenerator, Document doc,
         Map<String, Map<String, Integer>> fusionFacetFields)
     {

@@ -8,6 +8,7 @@ import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryParserFactory;
+import org.outermedia.solrfusion.configuration.QueryTarget;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.DisMaxQueryBuilder;
 import org.outermedia.solrfusion.mapper.QueryBuilder;
@@ -48,8 +49,16 @@ public class DisMaxQueryBuilderTest
         Term term = Term.newSearchServerTerm("title", "abc");
         term.setWasMapped(true);
         FuzzyQuery fq = new FuzzyQuery(term, null);
-        String qs = qb.buildQueryString(fq, cfg, searchServerConfig, locale, null);
+        String qs = buildQueryString(qb, fq, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
         Assert.assertEquals("Got different fuzzy query than expected", "", qs);
+    }
+
+    protected String buildQueryString(QueryBuilderIfc qb, Query bq, Configuration cfg, SearchServerConfig searchServerConfig,
+        Locale locale, Set<String> defaultSearchServerFields, QueryTarget target)
+    {
+        String qs = qb.buildQueryString(bq, cfg, searchServerConfig, Locale.GERMAN, defaultSearchServerFields, target);
+        qs = qb.getStaticallyAddedQueries(cfg,searchServerConfig,Locale.GERMAN,target, qs);
+        return qs;
     }
 
     @Test
@@ -57,7 +66,7 @@ public class DisMaxQueryBuilderTest
     {
         QueryBuilderIfc qb = DisMaxQueryBuilder.Factory.getInstance();
         MatchAllDocsQuery fq = new MatchAllDocsQuery();
-        String qs = qb.buildQueryString(fq, cfg, searchServerConfig, locale, null);
+        String qs = buildQueryString(qb, fq, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
         Assert.assertEquals("Got different *:* query than expected", "", qs);
     }
 
@@ -68,7 +77,7 @@ public class DisMaxQueryBuilderTest
         Term term = Term.newSearchServerTerm("title", "abc");
         term.setWasMapped(true);
         PhraseQuery pq = new PhraseQuery(term);
-        String qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        String qs = buildQueryString(qb, pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different phrase query than expected", "\"abc\"", qs);
 
         qb = DisMaxQueryBuilder.Factory.getInstance();
@@ -76,7 +85,7 @@ public class DisMaxQueryBuilderTest
         term.setWasMapped(true);
         pq = new PhraseQuery(term);
         pq.setBoost(3.5f);
-        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different phrase query than expected", "\"abc\"^3.5", qs);
     }
 
@@ -87,7 +96,7 @@ public class DisMaxQueryBuilderTest
         Term term = Term.newSearchServerTerm("title", "abc*");
         term.setWasMapped(true);
         PrefixQuery pq = new PrefixQuery(term);
-        String qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, null);
+        String qs = buildQueryString(qb, pq, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
         Assert.assertEquals("Got different prefix query than expected", "", qs);
     }
 
@@ -98,7 +107,7 @@ public class DisMaxQueryBuilderTest
         Term term = Term.newSearchServerTerm("title", "abc?");
         term.setWasMapped(true);
         WildcardQuery pq = new WildcardQuery(term);
-        String qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, null);
+        String qs = buildQueryString(qb, pq, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
         Assert.assertEquals("Got different wildcard query than expected", "", qs);
     }
 
@@ -120,7 +129,7 @@ public class DisMaxQueryBuilderTest
             minMax.setWasMapped(true);
             minMax.setSearchServerFieldName("title");
             minMax.setSearchServerFieldValue(minMax.getFusionFieldValue());
-            String qs = qb.buildQueryString(nq, cfg, searchServerConfig, locale, null);
+            String qs = buildQueryString(qb, nq, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
             Assert.assertEquals("Got different min value than expected", "", qs);
         }
     }
@@ -131,28 +140,28 @@ public class DisMaxQueryBuilderTest
         // empty case
         QueryBuilderIfc qb = DisMaxQueryBuilder.Factory.getInstance();
         BooleanQuery bq = new BooleanQuery();
-        String qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
+        String qs = buildQueryString(qb, bq, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
         Assert.assertEquals("Got different bool query than expected", "", qs);
 
         // one MUST clause
         qb = DisMaxQueryBuilder.Factory.getInstance();
         bq = new BooleanQuery();
         bq.add(createMustBooleanClause("abc", true));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different bool query than expected", "+abc", qs);
 
         // one SHOULD clause
         qb = DisMaxQueryBuilder.Factory.getInstance();
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause("abc", true));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different bool query than expected", "abc", qs);
 
         // one MUST NOT clause
         qb = DisMaxQueryBuilder.Factory.getInstance();
         bq = new BooleanQuery();
         bq.add(createMustNotBooleanClause("abc", true));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different bool query than expected", "-abc", qs);
 
         // several MUST clauses
@@ -161,7 +170,7 @@ public class DisMaxQueryBuilderTest
         bq.add(createMustBooleanClause("abc", true));
         bq.add(createMustBooleanClause("def", true));
         bq.add(createMustNotBooleanClause("ghi", true));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different bool query than expected", "+abc +def -ghi", qs);
 
         // several SHOULD clauses
@@ -169,7 +178,7 @@ public class DisMaxQueryBuilderTest
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause("abc", true));
         bq.add(createShouldBooleanClause("def", true));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different bool query than expected", "abc def", qs);
 
         // several MUST NOT clauses
@@ -179,7 +188,7 @@ public class DisMaxQueryBuilderTest
         bq.add(createMustNotBooleanClause("def", true));
         bq.add(createMustBooleanClause("ghi", true));
         bq.add(createShouldBooleanClause("jkl", true));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different bool query than expected", "-abc -def +ghi jkl", qs);
 
         // nested bool queries
@@ -193,7 +202,7 @@ public class DisMaxQueryBuilderTest
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause(bq1));
         bq.add(createShouldBooleanClause(bq2));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different bool query than expected", "+abc +def +ghi +jkl", qs);
 
         // several deleted clauses
@@ -204,7 +213,7 @@ public class DisMaxQueryBuilderTest
         bq.add(createShouldBooleanClause("ghi", false)); // del
         bq.add(createShouldBooleanClause("jkl", true));
         bq.add(createMustBooleanClause("mno", false)); // del
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different bool query than expected", "+def jkl", qs);
 
         // delete whole bool query
@@ -218,7 +227,7 @@ public class DisMaxQueryBuilderTest
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause(bq1));
         bq.add(createShouldBooleanClause(bq2));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different bool query than expected", "+abc +def", qs);
 
         // delete all bool queries
@@ -232,7 +241,7 @@ public class DisMaxQueryBuilderTest
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause(bq1));
         bq.add(createShouldBooleanClause(bq2));
-        qs = qb.buildQueryString(bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, bq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different bool query than expected", "", qs);
     }
 
@@ -273,7 +282,7 @@ public class DisMaxQueryBuilderTest
         term.setWasMapped(true);
         PhraseQuery pq = new PhraseQuery(term);
         SubQuery sq = new SubQuery(pq);
-        String qs = qb.buildQueryString(sq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        String qs = buildQueryString(qb, sq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different sub query than expected", "\"abc?\"", qs);
     }
 
@@ -288,26 +297,26 @@ public class DisMaxQueryBuilderTest
         mi.setSearchServerParams(new MetaParams());
         mi.addSearchServerEntry("a","1");
         pq.setMetaInfo(mi);
-        String qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        String qs = buildQueryString(qb, pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different phrase query than expected", "{!a=1}\"abc\"", qs);
 
         // name set in MetaInfo
         qb = DisMaxQueryBuilder.Factory.getInstance();
         mi.setName("dismax");
-        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different phrase query than expected", "\"abc\"", qs);
 
         // name not set, but value
         qb = DisMaxQueryBuilder.Factory.getInstance();
         mi.setName(null);
         mi.setValue("abc");
-        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different phrase query than expected", "{!a=1}\"abc\"", qs);
 
         // name, value and params set
         mi.setName("dismax");
         qb = DisMaxQueryBuilder.Factory.getInstance();
-        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different phrase query than expected", "\"abc\"", qs);
 
         // several params set
@@ -316,7 +325,7 @@ public class DisMaxQueryBuilderTest
         mi.setValue(null);
         mi.addSearchServerEntry("a","1");
         mi.addSearchServerEntry("b","2");
-        qs = qb.buildQueryString(pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"));
+        qs = buildQueryString(qb, pq, cfg, searchServerConfig, locale, Sets.newHashSet("title"), QueryTarget.ALL);
         Assert.assertEquals("Got different phrase query than expected", "{!a=1 b=2}\"abc\"", qs);
     }
 
@@ -339,18 +348,18 @@ public class DisMaxQueryBuilderTest
         ScriptEnv env = new ScriptEnv();
         env.setBinding(ScriptEnv.ENV_IN_FUSION_REQUEST, new FusionRequest());
         FusionRequest fusionRequest = new FusionRequest();
-        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, env, fusionRequest);
+        cfg.getQueryMapper().mapQuery(cfg, searchServerConfig, q, env, fusionRequest, QueryTarget.ALL);
         Set<String> defaultSearchServerSearchFields = fusionRequest.mapFusionFieldToSearchServerField(
-            cfg.getDefaultSearchField(), cfg, searchServerConfig, null);
+            cfg.getDefaultSearchField(), cfg, searchServerConfig, null, QueryTarget.ALL);
 
         // at first build edismax query string
-        String eqs = QueryBuilder.Factory.getInstance().buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN,
-            defaultSearchServerSearchFields);
+        String eqs = buildQueryString(QueryBuilder.Factory.getInstance(), q, cfg, searchServerConfig, Locale.GERMAN,
+            defaultSearchServerSearchFields, QueryTarget.ALL);
         // System.out.println("Edismax Query: " + eqs);
 
         // then build dismax query string
-        String dqs = DisMaxQueryBuilder.Factory.getInstance().buildQueryString(q, cfg, searchServerConfig, Locale.GERMAN,
-            defaultSearchServerSearchFields);
+        String dqs = buildQueryString(DisMaxQueryBuilder.Factory.getInstance(), q, cfg, searchServerConfig, Locale.GERMAN,
+            defaultSearchServerSearchFields, QueryTarget.ALL);
         // System.out.println("Dismax Query: " + dqs);
         String expected = "+(Schiller Schiller Schiller Schiller Schiller Schiller Schiller Schiller Schiller) " +
             "+(Räuber Räuber Räuber Räuber Räuber Räuber Räuber Räuber Räuber)";

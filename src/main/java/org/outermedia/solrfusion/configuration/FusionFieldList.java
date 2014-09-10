@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.*;
 import java.util.List;
 
 /**
+ * Wrapper of all SolrFusion fields.
+ *
  * Created by ballmann on 6/17/14.
  */
 @XmlAccessorType(XmlAccessType.FIELD)

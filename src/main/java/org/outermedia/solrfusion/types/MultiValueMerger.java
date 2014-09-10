@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Flatten multiple values of one field to one value which is necessary when the destination field is a single value.
+ *
  * Created by ballmann on 7/16/14.
  */
 @ToString(callSuper = true)

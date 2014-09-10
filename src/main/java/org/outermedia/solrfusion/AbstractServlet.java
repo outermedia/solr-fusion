@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Abstract super class of SolrFusion's servlets.
+ *
  * Created by ballmann on 8/27/14.
  */
 public class AbstractServlet extends HttpServlet

@@ -12,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
- * Map a fusion query to a solr request.
+ * Map a SolrFusion query to a solr query.
  * <p/>
  * Created by ballmann on 03.06.14.
  */
@@ -25,6 +25,7 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc, MetaParamsVisi
     private FusionRequest fusionRequest;
     private SearchServerConfig serverConfig;
     private Configuration configuration;
+    private QueryTarget target;
 
     private String noMappingPolicy = NO_MAPPING_DELETE;
 
@@ -42,9 +43,10 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc, MetaParamsVisi
      * @param query         the query to map to process
      * @param env           the environment needed by the scripts which transform values
      * @param fusionRequest
+     * @param target
      */
     public void mapQuery(Configuration config, SearchServerConfig serverConfig, Query query, ScriptEnv env,
-        FusionRequest fusionRequest)
+        FusionRequest fusionRequest, QueryTarget target)
     {
         this.configuration = config;
         this.serverConfig = serverConfig;
@@ -52,6 +54,7 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc, MetaParamsVisi
         env.setConfiguration(config);
         ScriptEnv newEnv = new ScriptEnv(env);
         newEnv.setSearchServerConfig(serverConfig);
+        this.target = target;
         query.accept(this, newEnv);
     }
 
@@ -106,7 +109,7 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc, MetaParamsVisi
                 log.trace("APPLY field={} -> {} mapping[line={}]={}", m.getFusionName(), ar.getDestinationFieldName(),
                     m.getLocator().getLineNumber(), m);
             }
-            m.applyQueryOperations(t, newEnv, ar);
+            m.applyQueryOperations(t, newEnv, ar, target);
             if (traceEnabled)
             {
                 log.trace("AFTER APPLY {}", t);

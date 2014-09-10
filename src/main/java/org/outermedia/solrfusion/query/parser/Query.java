@@ -5,6 +5,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.outermedia.solrfusion.query.VisitableQuery;
 
+/**
+ * The abstract super class of all Solr query objects.
+ */
 @ToString
 @Getter
 @Setter

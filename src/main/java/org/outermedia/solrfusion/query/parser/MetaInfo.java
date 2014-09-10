@@ -7,6 +7,8 @@ import lombok.ToString;
 import java.util.Map;
 
 /**
+ * This class stores {!key[=val] (key=val)*} of a Solr query.
+ * 
  * Created by ballmann on 8/8/14.
  */
 @Getter

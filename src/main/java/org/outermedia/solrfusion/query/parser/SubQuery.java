@@ -7,6 +7,8 @@ import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 /**
+ * The _query_:"..." Solr query.
+ *
  * Created by ballmann on 8/22/14.
  */
 @Getter

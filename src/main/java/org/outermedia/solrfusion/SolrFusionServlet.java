@@ -22,6 +22,10 @@ import java.util.*;
 
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
+/**
+ * This class (re)loads SolrFusion's schema definition, creates a FusionRequest object for the FusionController and
+ * evaluates the FusionResponse in order to return a Solr response.
+ */
 @Slf4j
 @Getter
 @Setter

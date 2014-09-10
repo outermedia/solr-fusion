@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Especially for SolrFusion's sorting it is necessary to use comparable strings.
+ *
  * Created by ballmann on 8/20/14.
  */
 @Slf4j

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * A helper class used by FusionRequest.
+ *
  * Created by ballmann on 8/19/14.
  */
 @Getter

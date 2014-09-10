@@ -27,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by ballmann on 6/19/14.
@@ -56,7 +57,7 @@ public class DropTest extends AbstractTypeTest
 
         ScriptEnv env = new ScriptEnv();
         SearchServerConfig serverConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
-        rm.mapResponse(cfg, serverConfig, doc, env, null);
+        rm.mapResponse(cfg, serverConfig, doc, env, null, ResponseTarget.ALL);
         // System.out.println("f8: "+sourceField.toString());
         Assert.assertTrue("Expected that field f8 was removed", sourceField.isRemoved());
         Assert.assertTrue("Expected that field f9-abc was removed", sourceRegExpField.isRemoved());
@@ -78,7 +79,7 @@ public class DropTest extends AbstractTypeTest
         Assert.assertEquals("Found different mapping than expected", "f8", fm.getSearchServersName());
         fm.setFusionName("text4");
         fm.getOperations().clear();
-        rm.mapResponse(cfg, serverConfig, doc, env, null);
+        rm.mapResponse(cfg, serverConfig, doc, env, null, ResponseTarget.ALL);
         Assert.assertFalse("Expected that field f8 was not removed", sourceField.isRemoved());
         // System.out.println("W/O DROP "+sourceField.toString());
         docStream = new ClosableListIterator<>(docs, info);
@@ -131,12 +132,12 @@ public class DropTest extends AbstractTypeTest
 
         ScriptEnv env = new ScriptEnv();
         SearchServerConfig serverConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
-        qm.mapQuery(cfg, serverConfig, q, env, null);
+        qm.mapQuery(cfg, serverConfig, q, env, null, QueryTarget.QUERY);
         // System.out.println(term.toString());
         Assert.assertTrue("Expected that field text4 was removed", term.isRemoved());
         Assert.assertTrue("Expected that field text5-abc was removed", term2.isRemoved());
         QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
-        String ds = qb.buildQueryString(query, cfg, searchServerConfig, Locale.GERMAN, null);
+        String ds = buildQueryString(qb, query, cfg, searchServerConfig, Locale.GERMAN, null, QueryTarget.QUERY);
         // the original query was removed, but two queries are added!
         Assert.assertEquals("Expected no query", "+t11:\"searched text\"~2^75 AND t13:hello", ds);
 
@@ -148,12 +149,20 @@ public class DropTest extends AbstractTypeTest
         fm.setSearchServersName("f8");
         fm.getOperations().clear();
 
-        qm.mapQuery(cfg, serverConfig, query, env, null);
+        qm.mapQuery(cfg, serverConfig, query, env, null, QueryTarget.ALL);
         // System.out.println(term.toString());
         Assert.assertFalse("Expected that field text4 was not removed", term.isRemoved());
-        String s = qb.buildQueryString(query, cfg, searchServerConfig, Locale.GERMAN, null);
+        String s = buildQueryString(qb, query, cfg, searchServerConfig, Locale.GERMAN, null, QueryTarget.QUERY);
         Assert.assertEquals("Found different query than expected",
             "(f8:bla1) AND +t11:\"searched text\"~2^75 AND t13:hello", s);
+    }
+
+    protected String buildQueryString(QueryBuilderIfc qb, Query bq, Configuration cfg, SearchServerConfig searchServerConfig,
+        Locale locale, Set<String> defaultSearchServerFields, QueryTarget target)
+    {
+        String qs = qb.buildQueryString(bq, cfg, searchServerConfig, Locale.GERMAN, defaultSearchServerFields, target);
+        qs = qb.getStaticallyAddedQueries(cfg,searchServerConfig,Locale.GERMAN,target, qs);
+        return qs;
     }
 
     @Test
@@ -177,7 +186,7 @@ public class DropTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 296: Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target.",
+                "In fusion schema at line 298: Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target.",
                 e.getMessage());
         }
 
@@ -195,7 +204,7 @@ public class DropTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 301: Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target.",
+                "In fusion schema at line 303: Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target.",
                 e.getMessage());
         }
     }

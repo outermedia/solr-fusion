@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.ResponseTarget;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -58,7 +59,8 @@ public class ResponseMapperTest
         // map one field only
         Set<String> mapFields = new HashSet<>();
         mapFields.add("Titel");
-        int mappedNr = rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, mapFields);
+        int mappedNr = rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, mapFields,
+            ResponseTarget.ALL);
         // System.out.println("MAPPED DOC " + doc.buildFusionDocStr());
         // id is mapped automatically
         Assert.assertEquals("Wrong number of mapped fields", 2, mappedNr);
@@ -67,7 +69,8 @@ public class ResponseMapperTest
         Assert.assertFalse("'Autor' shouldn't be mapped", sfAuthor.getTerm().isWasMapped());
 
         // map remaining field Autor
-        mappedNr = rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null);
+        mappedNr = rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null,
+            ResponseTarget.ALL);
         Assert.assertEquals("Wrong number of mapped fields", 1, mappedNr);
         String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=[Willi Schiller], fusionField=FusionField(fieldName=author, type=text, format=null, multiValue=null), searchServerFieldName=Autor, searchServerFieldValue=[Willi Schiller], removed=false, wasMapped=true, processed=true, newQueries=null)";
         Assert.assertEquals("Mapping of author returned different result.", expectedAuthor,
@@ -97,7 +100,7 @@ public class ResponseMapperTest
         strFields.add(sfId);
         doc.setSolrSingleValuedFields(strFields);
         ScriptEnv env = new ScriptEnv();
-        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null);
+        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL);
 
         Term term = sfTitle.getTerm();
         String fusionFieldName = term.getFusionFieldName();

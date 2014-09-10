@@ -9,6 +9,8 @@ import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import java.util.List;
 
 /**
+ * Data holder to store SolrFusions response.
+ *
  * Created by ballmann on 04.06.14.
  */
 @Getter

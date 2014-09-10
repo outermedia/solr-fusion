@@ -7,6 +7,9 @@ import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+/**
+ * The Solr phrase query.
+ */
 @ToString(callSuper = true)
 @Getter
 @Setter

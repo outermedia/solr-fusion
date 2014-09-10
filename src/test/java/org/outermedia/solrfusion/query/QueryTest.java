@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryParserFactory;
+import org.outermedia.solrfusion.configuration.QueryTarget;
+import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.QueryBuilder;
 import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.query.parser.*;
@@ -515,11 +517,19 @@ public class QueryTest
         mi2.setSearchServerParams(mi2.getFusionParams());
 
         QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
-        String qs = qb.buildQueryString(q, cfg, cfg.getSearchServerConfigByName("UBL"), Locale.GERMAN,
-            Sets.newHashSet("allfields"));
+        String qs = buildQueryString(qb, q, cfg, cfg.getSearchServerConfigByName("UBL"), Locale.GERMAN,
+            Sets.newHashSet("allfields"), QueryTarget.ALL);
         // System.out.println("QUERY: "+qs);
         Assert.assertEquals("",
             "(+_query_:\"{!dismax qf=\\\"" + goetheSubQuery + "\\\"}Goethe\" AND +_query_:\"{!dismax qf=\\\"" +
                 raeuberSubQuery + "\\\"}Räuber\")", qs);
+    }
+
+    protected String buildQueryString(QueryBuilderIfc qb, Query bq, Configuration cfg, SearchServerConfig searchServerConfig,
+        Locale locale, Set<String> defaultSearchServerFields, QueryTarget target)
+    {
+        String qs = qb.buildQueryString(bq, cfg, searchServerConfig, Locale.GERMAN, defaultSearchServerFields, target);
+        qs = qb.getStaticallyAddedQueries(cfg,searchServerConfig,Locale.GERMAN,target, qs);
+        return qs;
     }
 }

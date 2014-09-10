@@ -4,7 +4,7 @@ import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 /**
- * Visitor pattern.
+ * Visitor pattern for queries.
  *
  * Created by ballmann on 03.06.14.
  */

@@ -21,9 +21,14 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <!-- map to path w/o trailing slash -->
     <servlet-mapping>
         <servlet-name>SolrFusionServlet</servlet-name>
         <url-pattern>/biblio/select/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SolrFusionServlet</servlet-name>
+        <url-pattern>/biblio/select</url-pattern>
     </servlet-mapping>
 
     <servlet>

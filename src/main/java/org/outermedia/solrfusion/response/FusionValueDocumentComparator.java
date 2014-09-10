@@ -6,8 +6,10 @@ import org.outermedia.solrfusion.response.parser.Document;
 import java.util.Comparator;
 
 /**
-* Created by ballmann on 7/10/14.
-*/
+ * A special Solr document comparator used when documents are sorted manually.
+ * <p/>
+ * Created by ballmann on 7/10/14.
+ */
 public class FusionValueDocumentComparator implements Comparator<Document>
 {
     private String fusionSortField;

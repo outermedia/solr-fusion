@@ -10,7 +10,7 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 import java.util.List;
 
 /**
- * This class represents a simple term query aka "&lt;field&gt;:&lt;value&gt;".
+ * This class represents a simple Solr term query aka "&lt;field&gt;:&lt;value&gt;".
  *
  * @author ballmann
  */

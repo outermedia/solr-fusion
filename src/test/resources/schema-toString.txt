@@ -36,7 +36,7 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  searchServerConfigs=GlobalSearchServerConfig(timeout=4000, disasterLimit=3, disasterMessage=Message(key=disaster-limit, text=Ihre Anfrage konnte nicht von ausreichend
  vielen Systemen beantwortet werden.
  ),
-  defaultPageSize=10, queryParserFactory=QueryParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory, typeClassFactory=class org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory)),
+ defaultPageSize=10, queryParserFactory=QueryParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory, typeClassFactory=class org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory)),
  dismaxQueryParserFactory=QueryParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.query.DisMaxQueryParser$Factory, typeClassFactory=class org.outermedia.solrfusion.query.DisMaxQueryParser$Factory)),
  defaultResponseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.DefaultResponseParser$Factory, typeClassFactory=class org.outermedia.solrfusion.response.DefaultResponseParser$Factory)),
  responseRendererFactories=[
@@ -81,47 +81,58 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  name=javascript-file),
  name=null, fusionName=null, typeConfig=[
  [
- file: null]])),
+ file: null]]),
+ target=null),
  Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.Java, typeClassFactory=class org.outermedia.solrfusion.types.Java),
  name=java-class),
  name=null, fusionName=null, typeConfig=[
  [
- class: null]])),
+ class: null]]),
+ target=null),
  Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.BshFile, typeClassFactory=class org.outermedia.solrfusion.types.BshFile),
  name=beanshell-file),
  name=null, fusionName=null, typeConfig=[
  [
- file: null]])),
+ file: null]]),
+ target=null),
  Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.Bsh, typeClassFactory=class org.outermedia.solrfusion.types.Bsh),
  name=beanshell),
  name=null, fusionName=null, typeConfig=[
  [
- script: null]])),
+ script: null]]),
+ target=null),
  Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.RegularExpression, typeClassFactory=class org.outermedia.solrfusion.types.RegularExpression),
  name=regexp),
  name=null, fusionName=null, typeConfig=[
  [
  pattern: null], [
- replacement: null]]))]))]),
+ replacement: null]]),
+ target=null)]))]),
  FieldMapping(searchServersName=ende52, fusionName=null, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=EXACT_NAME_ONLY, operations=[
  DropOperation(super=Operation(targets=[
- Response(super=Target(type=null, name=null, fusionName=null, typeConfig=null))]))]),
+ Response(super=Target(type=null, name=null, fusionName=null, typeConfig=null),
+ target=null)]))]),
  FieldMapping(searchServersName=null, fusionName=ende52, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=EXACT_FUSION_NAME_ONLY, operations=[
  DropOperation(super=Operation(targets=[
- Query(super=Target(type=null, name=null, fusionName=null, typeConfig=null))]))]),
+ Query(super=Target(type=null, name=null, fusionName=null, typeConfig=null),
+ target=null)]))]),
  FieldMapping(searchServersName=ende52, fusionName=ende, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=EXACT_NAME_AND_FUSION_NAME, operations=[
  DropOperation(super=Operation(targets=[
- Response(super=Target(type=null, name=null, fusionName=null, typeConfig=null)),
- Query(super=Target(type=null, name=null, fusionName=null, typeConfig=null))]))]),
+ Response(super=Target(type=null, name=null, fusionName=null, typeConfig=null),
+ target=null),
+ Query(super=Target(type=null, name=null, fusionName=null, typeConfig=null),
+ target=null)]))]),
  FieldMapping(searchServersName=ende51, fusionName=ende, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=EXACT_NAME_AND_FUSION_NAME, operations=[
  DropOperation(super=Operation(targets=[
- Query(super=Target(type=null, name=null, fusionName=null, typeConfig=null))])),
+ Query(super=Target(type=null, name=null, fusionName=null, typeConfig=null),
+ target=null)])),
  AddOperation(super=Operation(targets=[
  Response(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.BshFile, typeClassFactory=class org.outermedia.solrfusion.types.BshFile),
  name=beanshell-file),
  name=null, fusionName=null, typeConfig=[
  [
- file: null]]))]),
+ file: null]]),
+ target=null)]),
  level=OUTSIDE)]),
  FieldMapping(searchServersName=null, fusionName=null, searchServersNamePattern=val([
  0-9]+)Start, fusionNameReplacement=valueFrom(\1),

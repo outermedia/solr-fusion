@@ -65,6 +65,7 @@ public abstract class Target
         {
             try
             {
+                initScriptEnv(env);
                 AbstractType typeImpl = type.getInstance();
                 if (typeImpl != null)
                 {
@@ -82,5 +83,10 @@ public abstract class Target
             }
         }
         return result;
+    }
+
+    public void initScriptEnv(ScriptEnv env)
+    {
+        // NOP, for subclasses
     }
 }

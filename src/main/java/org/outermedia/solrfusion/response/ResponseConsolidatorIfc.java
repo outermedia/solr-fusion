@@ -15,27 +15,74 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Implementations of this class have to combine several Solr responses into one document stream. The returned documents
+ * are valid regarding to the SolrFusion schema.
+ * <p/>
  * Created by ballmann on 04.06.14.
  */
 public interface ResponseConsolidatorIfc extends Initiable<ResponseConsolidatorFactory>
 {
+    /**
+     * Initialize the consolidator.
+     *
+     * @param config the SolrFusion schema
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
     public void initConsolidator(Configuration config) throws InvocationTargetException, IllegalAccessException;
 
+    /**
+     * Add another Solr response for processing.
+     *
+     * @param searchServerConfig the current destination Solr server configuration
+     * @param docIterator        the Solr documents
+     * @param request            the current SolrFusion request
+     * @param highlighting       the highlight part of the current Solr response
+     * @param facetFields        the facet part of the current Solr response
+     */
     public void addResultStream(SearchServerConfig searchServerConfig,
         ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request,
         List<Highlighting> highlighting, Document facetFields);
 
+    /**
+     * Get the number of added Solr responses i.e. calls of {@link #addResultStream(org.outermedia.solrfusion.configuration.SearchServerConfig,
+     * ClosableIterator, org.outermedia.solrfusion.FusionRequest, java.util.List, org.outermedia.solrfusion.response.parser.Document)}.
+     *
+     * @return
+     */
     public int numberOfResponseStreams();
 
+    /**
+     * Free internally created data.
+     */
     public void clear();
 
+    /**
+     * Get the processed documents ready for sending back to SolrFusion's caller.
+     *
+     * @param fusionRequest the current SolrFusion request
+     * @return an perhaps empty ClosableIterator
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
     public ClosableIterator<Document, SearchServerResponseInfo> getResponseIterator(FusionRequest fusionRequest)
         throws InvocationTargetException, IllegalAccessException;
 
+    /**
+     * Store the exception of a failed Solr communication.
+     * @param se
+     */
     public void addErrorResponse(Exception se);
 
+    /**
+     * Build a combined string from all calls of {@link #addErrorResponse(Exception)}.
+     * @return an error message containing all collected errors
+     */
     public String getErrorMsg();
 
+    /**
+     * Deprecated method, used only internally by PagingResponseConsolidator. Should be removed from this interface.
+     */
     public List<Document> completelyMapMergedDoc(Collection<Document> sameDocuments, Map<String, Document> highlighting)
         throws InvocationTargetException, IllegalAccessException;
 

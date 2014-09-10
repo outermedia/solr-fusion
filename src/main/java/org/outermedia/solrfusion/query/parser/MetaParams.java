@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * A helper class to store {! ... key=val ...}.
+ *
  * Created by ballmann on 8/22/14.
  */
 @Getter

@@ -3,6 +3,10 @@ package org.outermedia.solrfusion;
 import java.util.*;
 
 /**
+ * This class associates several keys with a set of values. If a new key references an existing entry, the new
+ * values are added to the existing set. The class is used to merge documents on a field which is not unique and has
+ * multiple values.
+ *
  * Created by ballmann on 7/30/14.
  */
 public class MultiKeyAndValueMap<K, V>

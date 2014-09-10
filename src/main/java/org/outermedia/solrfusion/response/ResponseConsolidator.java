@@ -6,6 +6,7 @@ import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseConsolidatorFactory;
+import org.outermedia.solrfusion.configuration.ResponseTarget;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.response.parser.Highlighting;
@@ -17,10 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by ballmann on 04.06.14.
- * <p/>
  * A simple consolidator which neither supports paging or sorting. All hits of all search servers are returned in a
- * round-robin manner. highlights are not supported.
+ * round-robin manner. highlights and facets are not supported.
+ * <p/>
+ * Created by ballmann on 04.06.14.
  */
 @ToString
 @Slf4j
@@ -50,7 +51,7 @@ public class ResponseConsolidator extends AbstractResponseConsolidator
     {
         try
         {
-            responseStreams.add(getNewMappingClosableIterator(searchServerConfig, docIterator));
+            responseStreams.add(getNewMappingClosableIterator(searchServerConfig, docIterator, ResponseTarget.DOCUMENT));
         }
         catch (Exception e)
         {
@@ -60,10 +61,10 @@ public class ResponseConsolidator extends AbstractResponseConsolidator
     }
 
     protected MappingClosableIterator getNewMappingClosableIterator(SearchServerConfig searchServerConfig,
-        ClosableIterator<Document, SearchServerResponseInfo> docIterator)
+        ClosableIterator<Document, SearchServerResponseInfo> docIterator, ResponseTarget target)
         throws InvocationTargetException, IllegalAccessException
     {
-        return new MappingClosableIterator(docIterator, configuration, searchServerConfig, null);
+        return new MappingClosableIterator(docIterator, configuration, searchServerConfig, null, target);
     }
 
     public int numberOfResponseStreams()

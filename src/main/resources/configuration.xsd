@@ -61,6 +61,7 @@
     <xs:attribute name="type" type="xs:IDREF"/>
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="fusion-name" type="xs:string"/>
+    <xs:attribute name="target" type="tns:queryTarget"/>
   </xs:complexType>
 
   <xs:complexType name="scriptType">
@@ -76,6 +77,7 @@
     <xs:attribute name="type" type="xs:IDREF"/>
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="fusion-name" type="xs:string"/>
+    <xs:attribute name="target" type="tns:responseTarget"/>
   </xs:complexType>
 
   <xs:complexType name="queryResponse">
@@ -262,5 +264,23 @@
       <xs:enumeration value="inside"/>
     </xs:restriction>
   </xs:simpleType>
+
+    <xs:simpleType name="queryTarget">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="all"/>
+            <xs:enumeration value="filter-query"/>
+            <xs:enumeration value="query"/>
+            <xs:enumeration value="highlight-query"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="responseTarget">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="all"/>
+            <xs:enumeration value="facet"/>
+            <xs:enumeration value="document"/>
+            <xs:enumeration value="highlight"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>
 

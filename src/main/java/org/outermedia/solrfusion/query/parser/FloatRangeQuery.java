@@ -5,6 +5,7 @@ import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
 /**
+ * A float range query.
  * Created by ballmann on 6/27/14.
  */
 @ToString(callSuper = true)

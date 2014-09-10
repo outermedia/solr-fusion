@@ -20,9 +20,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * Data holder class to store one field mapping configuration. This class is not thread safe especially because of the
- * fields specificFusionName and  specificFusionName which are set by the last call of applicableToSearchServerField and
- * applicableToFusionField.
+ * Data holder class to store one field mapping configuration.
  *
  * @author ballmann
  */
@@ -95,11 +93,11 @@ public class FieldMapping
 
     /**
      * This method applies 'this' mapping to a given query term.
-     *
-     * @param term
+     *  @param term
      * @param env
+     * @param target
      */
-    public void applyQueryOperations(Term term, ScriptEnv env, ApplicableResult applicableResult)
+    public void applyQueryOperations(Term term, ScriptEnv env, ApplicableResult applicableResult, QueryTarget target)
     {
         List<String> fusionFieldValues = term.getFusionFieldValue();
         if (fusionFieldValues != null)
@@ -129,7 +127,7 @@ public class FieldMapping
                 {
                     try
                     {
-                        o.applyAllQueryOperations(term, newEnv);
+                        o.applyAllQueryOperations(term, newEnv, target);
                         log.trace("Applied op {}:\n{}", o, term);
                     }
                     catch (UndeclaredFusionField e)
@@ -143,7 +141,7 @@ public class FieldMapping
             {
                 // without any operations means "change"
                 ChangeOperation changeOp = new ChangeOperation();
-                changeOp.applyAllQueryOperations(term, newEnv);
+                changeOp.applyAllQueryOperations(term, newEnv, target);
                 log.trace("Applied change op:\n{}", term);
             }
         }
@@ -168,23 +166,23 @@ public class FieldMapping
     }
 
     public void applyResponseMappings(List<Term> terms, ScriptEnv env, FusionField fusionField,
-        ApplicableResult applicableResult)
+        ApplicableResult applicableResult, ResponseTarget target)
     {
         for (Term t : terms)
         {
-            applyResponseOperations(t, env, fusionField, applicableResult);
+            applyResponseOperations(t, env, fusionField, applicableResult, target);
         }
     }
 
     /**
      * This method applies 'this' mapping to a given response term.
-     *
-     * @param term
+     *  @param term
      * @param env
      * @param fusionField
+     * @param target
      */
     public void applyResponseOperations(Term term, ScriptEnv env, FusionField fusionField,
-        ApplicableResult applicableResult)
+        ApplicableResult applicableResult, ResponseTarget target)
     {
         term.setFusionField(fusionField);
 
@@ -218,14 +216,14 @@ public class FieldMapping
             {
                 for (Operation o : operations)
                 {
-                    o.applyAllResponseOperations(term, newEnv);
+                    o.applyAllResponseOperations(term, newEnv, target);
                 }
             }
             else
             {
                 // without any operations means "change"
                 ChangeOperation changeOp = new ChangeOperation();
-                changeOp.applyAllResponseOperations(term, newEnv);
+                changeOp.applyAllResponseOperations(term, newEnv, target);
             }
         }
     }
@@ -348,7 +346,7 @@ public class FieldMapping
      * @param level
      * @return a perhaps empty list
      */
-    public List<Target> getAllAddQueryTargets(AddLevel level)
+    public List<Target> getAllAddQueryTargets(AddLevel level, QueryTarget target)
     {
         List<Target> result = new ArrayList<>();
         if (operations != null)
@@ -359,7 +357,7 @@ public class FieldMapping
                 {
                     if (level.equals(((AddOperation) o).getLevel()))
                     {
-                        result.addAll(o.getQueryTargets());
+                        result.addAll(o.getQueryTargets(target));
                     }
                 }
             }
@@ -372,7 +370,7 @@ public class FieldMapping
      *
      * @return a perhaps empty list
      */
-    public List<Target> getAllChangeQueryTargets()
+    public List<Target> getAllChangeQueryTargets(QueryTarget target)
     {
         List<Target> result = new ArrayList<>();
         if (operations != null)
@@ -381,7 +379,7 @@ public class FieldMapping
             {
                 if (o instanceof ChangeOperation)
                 {
-                    result.addAll(o.getQueryTargets());
+                    result.addAll(o.getQueryTargets(target));
                 }
             }
         }
@@ -393,7 +391,7 @@ public class FieldMapping
      *
      * @return a perhaps empty list
      */
-    public List<Target> getAllChangeResponseTargets()
+    public List<Target> getAllChangeResponseTargets(ResponseTarget target)
     {
         List<Target> result = new ArrayList<>();
         if (operations != null)
@@ -402,14 +400,14 @@ public class FieldMapping
             {
                 if (o instanceof ChangeOperation)
                 {
-                    result.addAll(o.getResponseTargets());
+                    result.addAll(o.getResponseTargets(target));
                 }
             }
         }
         return result;
     }
 
-    public TargetsOfMapping getAllAddResponseTargets()
+    public TargetsOfMapping getAllAddResponseTargets(ResponseTarget target)
     {
         TargetsOfMapping result = new TargetsOfMapping();
         result.setMappingsSearchServerFieldName(searchServersName);
@@ -420,14 +418,14 @@ public class FieldMapping
             {
                 if (o instanceof AddOperation)
                 {
-                    result.addAll(o.getResponseTargets());
+                    result.addAll(o.getResponseTargets(target));
                 }
             }
         }
         return result;
     }
 
-    public TargetsOfMapping getAllDropResponseTargets()
+    public TargetsOfMapping getAllDropResponseTargets(ResponseTarget target)
     {
         TargetsOfMapping result = new TargetsOfMapping();
         result.setMappingsSearchServerFieldName(searchServersName);
@@ -438,7 +436,7 @@ public class FieldMapping
             {
                 if (o instanceof DropOperation)
                 {
-                    result.addAll(o.getResponseTargets());
+                    result.addAll(o.getResponseTargets(target));
                 }
             }
         }

@@ -19,17 +19,16 @@ import org.outermedia.solrfusion.Multimap;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseException;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.QueryTarget;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
@@ -91,9 +90,13 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
             try
             {
                 Set<String> defaultSearchFields = fusionRequest.mapFusionFieldToSearchServerField(
-                    configuration.getDefaultSearchField(), configuration, searchServerConfig, null);
-                String qs = configuration.getDismaxQueryBuilder().buildQueryString(fusionRequest.getParsedQuery(),
-                    configuration, searchServerConfig, fusionRequest.getLocale(), defaultSearchFields);
+                    configuration.getDefaultSearchField(), configuration, searchServerConfig, null, QueryTarget.QUERY);
+                QueryBuilderIfc dismaxQueryBuilder = configuration.getDismaxQueryBuilder();
+                Locale locale = fusionRequest.getLocale();
+                String qs = dismaxQueryBuilder.buildQueryString(fusionRequest.getParsedQuery(), configuration,
+                    searchServerConfig, locale, defaultSearchFields, QueryTarget.QUERY);
+                qs = dismaxQueryBuilder.getStaticallyAddedQueries(configuration, searchServerConfig, locale,
+                    QueryTarget.QUERY, qs);
                 uriBuilder.setParameter("q", qs);
                 log.debug("Setting q to dismax query in order to get highlights: {}", qs);
             }

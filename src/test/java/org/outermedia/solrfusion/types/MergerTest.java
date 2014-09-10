@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.ResponseTarget;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.ResponseMapper;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
@@ -64,7 +65,7 @@ public class MergerTest extends AbstractTypeTest
         Document doc = buildResponseDocument();
         Term titleTerm = buildResponseField(doc, "s6", "Ein kurzer Weg", "A short way", "A very long way");
         ScriptEnv env = new ScriptEnv();
-        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null);
+        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL);
         Assert.assertTrue("Expected that term was mapped", titleTerm.isWasMapped());
         // System.out.println(sourceField.toString());
         Assert.assertEquals("Found wrong field name mapping", "text6", titleTerm.getFusionFieldName());
@@ -73,7 +74,7 @@ public class MergerTest extends AbstractTypeTest
 
         doc = buildResponseDocument();
         titleTerm = buildResponseField(doc, "s7", "Ein kurzer Weg", "A short way", "A very long way");
-        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null);
+        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL);
         Assert.assertTrue("Expected that term was mapped", titleTerm.isWasMapped());
         // System.out.println(sourceField.toString());
         Assert.assertEquals("Found wrong field name mapping", "text7", titleTerm.getFusionFieldName());
@@ -82,7 +83,7 @@ public class MergerTest extends AbstractTypeTest
 
         doc = buildResponseDocument();
         titleTerm = buildResponseField(doc, "s8", "Ein kurzer Weg", "A short way", "A very long way");
-        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null);
+        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL);
         Assert.assertTrue("Expected that term was mapped", titleTerm.isWasMapped());
         // System.out.println(sourceField.toString());
         Assert.assertEquals("Found wrong field name mapping", "text8", titleTerm.getFusionFieldName());

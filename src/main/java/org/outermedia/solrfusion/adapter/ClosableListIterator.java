@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * A special iterator which allows to close (stop) the iteration. Also an additional context can be saved in the
+ * iterator. The iterated content is based on a list.
+ *
  * Created by ballmann on 6/11/14.
  */
 public class ClosableListIterator<T, S> implements ClosableIterator<T, S>

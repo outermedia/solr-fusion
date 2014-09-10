@@ -12,6 +12,9 @@ import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.Map;
 
+/**
+ * A special servlet used by vufind in order to check the availability of a Solr server.
+ */
 @Slf4j
 @Getter
 @Setter

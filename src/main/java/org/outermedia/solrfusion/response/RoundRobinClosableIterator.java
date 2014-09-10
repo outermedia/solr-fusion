@@ -3,22 +3,25 @@ package org.outermedia.solrfusion.response;
 import java.util.List;
 
 /**
+ * A generic simple ClosableIterator which uses the round-robin approach to return one single iterator from the
+ * specified multiple iterators.
+ * <p/>
  * Created by ballmann on 04.06.14.
  */
-public class RoundRobinClosableIterator<T,S> implements ClosableIterator<T,S>
+public class RoundRobinClosableIterator<T, S> implements ClosableIterator<T, S>
 {
-    private final List<? extends ClosableIterator<T,S>> iterators;
+    private final List<? extends ClosableIterator<T, S>> iterators;
     private int at;
     private int size;
     private S info;
 
-    public RoundRobinClosableIterator(List<? extends ClosableIterator<T,S>> iterators, S info)
+    public RoundRobinClosableIterator(List<? extends ClosableIterator<T, S>> iterators, S info)
     {
         this.iterators = iterators;
         this.info = info;
         at = 0;
         size = 0;
-        for (ClosableIterator<T,S> it : iterators)
+        for (ClosableIterator<T, S> it : iterators)
         {
             size += it.size();
         }
@@ -27,7 +30,7 @@ public class RoundRobinClosableIterator<T,S> implements ClosableIterator<T,S>
     @Override
     public void close()
     {
-        for (ClosableIterator<T,S> it : iterators)
+        for (ClosableIterator<T, S> it : iterators)
         {
             it.close();
         }
@@ -75,7 +78,7 @@ public class RoundRobinClosableIterator<T,S> implements ClosableIterator<T,S>
         return result;
     }
 
-    public ClosableIterator<T,S> getCurrentIterator()
+    public ClosableIterator<T, S> getCurrentIterator()
     {
         return iterators.get(at);
     }

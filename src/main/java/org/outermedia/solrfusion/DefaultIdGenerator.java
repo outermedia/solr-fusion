@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The unified documents need an id, which are created by this generator.
+ * Unified/merged documents need a (compound) id, which is created by this generator.
  *
  * @author ballmann
  */

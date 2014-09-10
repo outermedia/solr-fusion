@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * A helper class which is used to store Solr HTTP request parameters which might have multiple values.
+ *
  * Created by ballmann on 8/8/14.
  */
 @EqualsAndHashCode
@@ -98,4 +100,8 @@ public class Multimap<V>
         return result;
     }
 
+    public void delete(String key)
+    {
+        map.removeAll(key);
+    }
 }

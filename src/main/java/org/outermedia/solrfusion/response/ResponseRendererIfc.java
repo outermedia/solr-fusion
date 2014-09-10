@@ -9,13 +9,21 @@ import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 import org.outermedia.solrfusion.response.parser.Document;
 
 /**
- * Transforms a search result into a transport format.
+ * Transforms a Solr search result into a transport format.
  *
  * @author ballmann
  */
 
 public interface ResponseRendererIfc extends Initiable<ResponseRendererFactory>
 {
+    /**
+     *
+     * @param configuration     the SolrFusion schema
+     * @param docStream         the document stream to render
+     * @param request           the current SolrFusion request
+     * @param fusionResponse    the current SolrFusion response
+     * @return an perhaps empty string
+     */
     public String getResponseString(Configuration configuration,
         ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
         FusionResponse fusionResponse);

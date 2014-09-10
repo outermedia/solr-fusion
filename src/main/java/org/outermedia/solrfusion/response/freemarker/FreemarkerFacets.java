@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Dataholder used to provide facet information when a Solr response is rendered.
+ *
  * Created by ballmann on 8/11/14.
  */
 public class FreemarkerFacets

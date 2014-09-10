@@ -6,10 +6,19 @@ import org.outermedia.solrfusion.response.parser.WordCount;
 import java.util.*;
 
 /**
+ * Because facets are merged from different Solr servers, SolrFusion has to sort the facets manually.
+ *
  * Created by ballmann on 8/14/14.
  */
 public class FacetWordCountSorter
 {
+    /**
+     *  Sort facets by index or count.
+     *
+     * @param fusionFacetFields the key maps a field to a map of words and their word counts.
+     * @param fusionRequest
+     * @return
+     */
     public Map<String, List<WordCount>> sort(Map<String, Map<String, Integer>> fusionFacetFields,
         FusionRequest fusionRequest)
     {

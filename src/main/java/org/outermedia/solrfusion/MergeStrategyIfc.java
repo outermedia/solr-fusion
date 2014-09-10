@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Identify response documents which represent the same object and merge them.
+ * Merge Solr documents from different Solr servers which were identified to be the same.
  *
  * @author ballmann
  */
@@ -25,18 +25,17 @@ public interface MergeStrategyIfc extends Initiable<Merge>
      * Merge equal documents into one. If the merge field is not unique in one server several merged documents are
      * returned.
      *
-     *
-     * @param mergeFusionField
-     * @param config
-     * @param sameDocuments
-     * @param allHighlighting
-     * @param mergedHighlighting
-     * @return
+     * @param mergeFusionField   the SolrFusion field which is used for merging
+     * @param config             the SolrFusion schema
+     * @param sameDocuments      the documents to merge
+     * @param allHighlighting       the corresponding highlights of the "sameDocuments", perhaps empty
+     * @param mergedHighlighting    perhaps null, but if not null, implementations have to add the merged highlights
+     * @return                      null or a list of document instance (not empty)
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    public List<Document> mergeDocuments(String mergeFusionField, Configuration config, Collection<Document> sameDocuments,
-        HighlightingMap allHighlighting, Map<String, Document> mergedHighlighting)
+    public List<Document> mergeDocuments(String mergeFusionField, Configuration config,
+        Collection<Document> sameDocuments, HighlightingMap allHighlighting, Map<String, Document> mergedHighlighting)
         throws InvocationTargetException, IllegalAccessException;
 
 }

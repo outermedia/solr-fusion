@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Internally used default ScriptType for <pre>{@code<om:add><om:response>}</pre>.
+ *
  * Created by ballmann on 8/1/14.
  */
 @Slf4j

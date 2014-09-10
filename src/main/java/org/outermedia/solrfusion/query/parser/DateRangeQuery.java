@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
+ * A date range query.
+ *
  * Created by ballmann on 6/27/14.
  */
 @ToString(callSuper = true)

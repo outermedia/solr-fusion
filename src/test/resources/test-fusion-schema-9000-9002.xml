@@ -16,6 +16,7 @@
 
     <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js"/>
     <om:script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh"/>
+    <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
 
     <om:default-search-field>title</om:default-search-field>
 
@@ -88,6 +89,15 @@
             <om:field name="language" fusion-name="language"/>
             <om:field name="author9000" fusion-name="author"/>
 
+            <!-- add as new fq only, not q/fq -->
+            <om:field name="extra">
+                <om:add level="outside">
+                    <om:query target="filter-query" type="static-value">
+                        <value>title:newFQ</value>
+                    </om:query>
+                </om:add>
+            </om:field>
+
         </om:solr-server>
 
         <om:solr-server name="Bibliothek9002" version="3.6"
@@ -109,6 +119,14 @@
             <om:field name="language" fusion-name="language_en"/>
             <om:field name="author9002" fusion-name="author"/>
 
+            <!-- add as new fq only, not q/fq -->
+            <om:field name="extra">
+                <om:add level="outside">
+                    <om:query target="filter-query" type="static-value">
+                        <value>title:newFQ</value>
+                    </om:query>
+                </om:add>
+            </om:field>
         </om:solr-server>
 
     </om:solr-servers>

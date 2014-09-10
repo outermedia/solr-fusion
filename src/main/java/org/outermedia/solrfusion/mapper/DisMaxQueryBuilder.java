@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * Map a fusion query to a solr request.
+ * Map a SolrFusion query to a dismax solr query.
  * <p/>
  *
  * @author stephan / sballmann
@@ -24,26 +24,33 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     protected Locale locale;
     protected SearchServerConfig searchServerConfig;
     protected Set<String> defaultSearchServerSearchFields;
+    protected QueryTarget target;
 
     /**
      * Build the query string for a search server.
-     *
      * @param query              the query to map to process
      * @param configuration
      * @param searchServerConfig
      * @param locale
+     * @param target
      */
     @Override
     public String buildQueryString(Query query, Configuration configuration, SearchServerConfig searchServerConfig,
-        Locale locale, Set<String> defaultSearchServerSearchFields)
+        Locale locale, Set<String> defaultSearchServerSearchFields, QueryTarget target)
     {
         String result = buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale,
-            defaultSearchServerSearchFields);
+            defaultSearchServerSearchFields, target);
 
-        // inside add queried have been processed, now add the outside queries
+        return result;
+    }
+
+    // inside add queried have been processed, now add the outside queries
+    public String getStaticallyAddedQueries(Configuration configuration, SearchServerConfig searchServerConfig,
+        Locale locale, QueryTarget target, String result)
+    {
         List<String> newQueriesToAdd = new ArrayList<>();
         AddOperation addOp = new AddOperation();
-        Map<String, List<Target>> allAddQueryTargets = searchServerConfig.findAllAddQueryMappings(AddLevel.OUTSIDE);
+        Map<String, List<Target>> allAddQueryTargets = searchServerConfig.findAllAddQueryMappings(AddLevel.OUTSIDE, target);
         for (Map.Entry<String, List<Target>> entry : allAddQueryTargets.entrySet())
         {
             String searchServerFieldName = entry.getKey();
@@ -67,13 +74,12 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
             }
             result = sb.toString();
         }
-
-
         return result;
     }
 
     @Override public String buildQueryStringWithoutNew(Query query, Configuration configuration,
-        SearchServerConfig searchServerConfig, Locale locale, Set<String> defaultSearchServerSearchFields)
+        SearchServerConfig searchServerConfig, Locale locale, Set<String> defaultSearchServerSearchFields,
+        QueryTarget target)
     {
         newQueries = new ArrayList<>();
         queryBuilder = new StringBuilder();
@@ -81,6 +87,7 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
         this.configuration = configuration;
         this.defaultSearchServerSearchFields = defaultSearchServerSearchFields;
         this.locale = locale;
+        this.target = target;
         query.accept(this, null);
         return queryBuilder.toString();
     }
@@ -128,7 +135,7 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
             if (!term.isRemoved())
             {
                 String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(origQuery, configuration,
-                    searchServerConfig, locale, defaultSearchServerSearchFields);
+                    searchServerConfig, locale, defaultSearchServerSearchFields, target);
                 insideClauses.add(clauseQueryStr);
             }
             else
@@ -237,7 +244,7 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
         {
             QueryBuilderIfc newClauseQueryBuilder = newQueryBuilder();
             String clauseQueryStr = newClauseQueryBuilder.buildQueryStringWithoutNew(booleanClause.getQuery(),
-                configuration, searchServerConfig, locale, defaultSearchServerSearchFields);
+                configuration, searchServerConfig, locale, defaultSearchServerSearchFields, target);
             if (clauseQueryStr.length() > 0)
             {
                 if (boolQueryStringBuilder.length() > 0)

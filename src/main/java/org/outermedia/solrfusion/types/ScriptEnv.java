@@ -15,7 +15,7 @@ import java.util.Map;
  * <p/>
  * Created by ballmann on 03.06.14.
  * <p/>
- * The following env entries are available in a ScriptType: <ul> <li>{@value #ENV_IN_FUSION_FIELD} - a String</li>
+ * The following env entries are available to a ScriptType: <ul> <li>{@value #ENV_IN_FUSION_FIELD} - a String</li>
  * <li>{@value #ENV_IN_FUSION_VALUE} - a List of String</li> <li>{@value #ENV_IN_SEARCH_SERVER_FIELD} - a String</li>
  * <li>{@value #ENV_IN_SEARCH_SERVER_VALUE} - a List of String</li> <li>{@value #ENV_IN_FUSION_FIELD_DECLARATION} - a
  * FusionField instance</li> <li>{@value #ENV_IN_FUSION_SCHEMA} - a Configuration instance</li> <li>{@value
@@ -24,9 +24,12 @@ import java.util.Map;
  * a TermQuery</li> <li>{@value #ENV_IN_SEARCH_SERVER_CONFIG} - a SearchServerConfig</li><li>{@value #ENV_IN_WORD_COUNT}
  * - a list of int</li><li>{@value #ENV_IN_DOC_TERM} - a Term</li><li>{@value #ENV_IN_FUSION_REQUEST} - a
  * FusionRequest</li> <li>{@value #ENV_IN_MAP_FACET} - a Boolean</li> <li>{@value #ENV_IN_MAP_HIGHLIGHT} - a
- * Boolean</li></ul> A ScriptType has to set the following entries: <ul><li>{@value #ENV_OUT_NEW_VALUES} - null or
- * a list of processed values</li> <li>{@value #ENV_OUT_NEW_WORD_COUNTS} - a list of new word counts (default value is
- * copied from {@value #ENV_IN_WORD_COUNT})</li>
+ * Boolean</li><li>{@value #ENV_IN_QUERY_TARGET} - a QueryTarget</li><li>{@value #ENV_IN_RESPONSE_TARGET} - a
+ * ResponseTarget</li></ul>
+ * <p/>
+ * A ScriptType has to set the following entries: <ul><li>{@value #ENV_OUT_NEW_VALUES} - null or a list of processed
+ * values</li> <li>{@value #ENV_OUT_NEW_WORD_COUNTS} - a list of new word counts (default value is copied from {@value
+ * #ENV_IN_WORD_COUNT})</li>
  */
 @ToString
 public class ScriptEnv
@@ -52,6 +55,8 @@ public class ScriptEnv
     public final static String ENV_IN_FUSION_REQUEST = "fusionRequest"; // a FusionRequest
     public final static String ENV_IN_MAP_FACET = "mapFacetValue"; // a Boolean
     public final static String ENV_IN_MAP_HIGHLIGHT = "mapHighlightValue"; // a Boolean
+    public final static String ENV_IN_QUERY_TARGET = "queryTarget"; // a QueryTarget
+    public final static String ENV_IN_RESPONSE_TARGET = "responseTarget"; // a ResponseTarget
 
     // variables set by a script
     public final static String ENV_OUT_NEW_VALUES = "returnValues";

@@ -11,12 +11,22 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 /**
- * Transforms a search server's response into an internal representation.
- * 
+ * Transforms a Solr search server's response into an internal representation.
+ *
  * @author ballmann
- * 
  */
 public interface ResponseParserIfc extends Initiable<ResponseParserFactory>
 {
-    public abstract XmlResponse parse(InputStream input) throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException;
+    /**
+     * Parse a Solr response from the given input.
+     *
+     * @param input contains a complete Solr response
+     * @return perhaps null
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @throws FileNotFoundException
+     * @throws JAXBException
+     */
+    public abstract XmlResponse parse(InputStream input)
+        throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException;
 }

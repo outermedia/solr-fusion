@@ -8,6 +8,8 @@ import lombok.ToString;
 import java.util.List;
 
 /**
+ * The return type of ScriptType subclasses.
+ *
  * Created by ballmann on 8/13/14.
  */
 @Getter

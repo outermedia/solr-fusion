@@ -20,7 +20,8 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Transforms search results into an output format using freemarker templates.
+ * Transforms Solr search results into an output format using freemarker templates. This is the base class of
+ * specific renderers (json and xml).
  *
  * @author stephan
  */

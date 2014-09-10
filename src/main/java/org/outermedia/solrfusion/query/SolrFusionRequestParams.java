@@ -9,6 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * This class enumerates all supported HTTP request parameters.
+ *
  * Created by ballmann on 7/4/14.
  */
 @Getter

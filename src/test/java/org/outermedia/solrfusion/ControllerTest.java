@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.QueryTarget;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
@@ -366,18 +367,19 @@ public class ControllerTest extends AbstractControllerTest
 
         // language_de and language_en are both mapped to language
         String fl = request.mapFusionFieldListToSearchServerField("language_de, language_en", cfg, serverConfig, null,
-            false);
+            false, QueryTarget.HIGHLIGHT_QUERY);
         Assert.assertEquals("Mapping returned other field than expected", "language", fl);
 
         // title is mapped to two fields, preserve order of textual order of mappings
-        fl = request.mapFusionFieldListToSearchServerField("title id", cfg, serverConfig, null, false);
+        fl = request.mapFusionFieldListToSearchServerField("title id", cfg, serverConfig, null, false,
+            QueryTarget.HIGHLIGHT_QUERY);
         Assert.assertEquals("Mapping returned other field than expected", "titleVT_eng id", fl);
     }
 
     protected String mapField(String field, FusionRequest request, Configuration cfg, SearchServerConfig serverConfig)
         throws InvocationTargetException, IllegalAccessException
     {
-        Set<String> strings = request.mapFusionFieldToSearchServerField(field, cfg, serverConfig, null);
+        Set<String> strings = request.mapFusionFieldToSearchServerField(field, cfg, serverConfig, null, QueryTarget.ALL);
         if (strings == null || strings.isEmpty())
         {
             return null;

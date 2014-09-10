@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
 import java.util.List;
 
 /**
- * A given Java class is used to compute a field conversion.
+ * A given Java class is used to compute a field conversion. Not implemented.
  *
  * @author ballmann
  */

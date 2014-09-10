@@ -8,6 +8,7 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 import java.util.Calendar;
 
 /**
+ * The abstract super class of all Solr range queries.
  * Subclasses have to implement the shallowClone() and the accept() method.
  *
  * @param <T>

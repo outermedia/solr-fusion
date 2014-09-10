@@ -8,6 +8,9 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A Solr boolean query.
+ */
 @Getter
 @ToString(callSuper = true)
 public class BooleanQuery extends Query

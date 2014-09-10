@@ -7,10 +7,7 @@ import org.junit.Test;
 import org.outermedia.solrfusion.*;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
-import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.ResponseRendererType;
-import org.outermedia.solrfusion.configuration.SearchServerConfig;
-import org.outermedia.solrfusion.configuration.Util;
+import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.response.parser.*;
 import org.xml.sax.SAXException;
@@ -70,7 +67,7 @@ public class FreemarkerResponseRendererTest
             response9001.getDocuments(), info9001);
 
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator = new MappingClosableIterator(docIterator,
-            spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null);
+            spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null, ResponseTarget.ALL);
 
         FusionRequest req = new FusionRequest();
         req.setQuery(new SolrFusionRequestParam("steak"));
@@ -123,7 +120,7 @@ public class FreemarkerResponseRendererTest
             response9000.getDocuments(), info9000);
 
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator = new MappingClosableIterator(docIterator,
-            spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null);
+            spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null, ResponseTarget.ALL);
 
         FusionRequest req = new FusionRequest();
         req.setQuery(new SolrFusionRequestParam("Shakespeares"));
@@ -280,7 +277,7 @@ public class FreemarkerResponseRendererTest
         ClosableListIterator<Document, SearchServerResponseInfo> documentObjectClosableListIterator = new ClosableListIterator<>(
             searchServerHighlightDocs, null);
         ClosableIterator<Document, SearchServerResponseInfo> closableHlIterator = new MappingClosableIterator(
-            documentObjectClosableListIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null);
+            documentObjectClosableListIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null, ResponseTarget.ALL);
         while (closableHlIterator.hasNext())
         {
             Document doc = closableHlIterator.next();
@@ -292,7 +289,7 @@ public class FreemarkerResponseRendererTest
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             response9000.getDocuments(), info9000);
         ClosableIterator<Document, SearchServerResponseInfo> closableDocIterator = new MappingClosableIterator(
-            docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null);
+            docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null, ResponseTarget.ALL);
         FusionRequest req = new FusionRequest();
         req.setQuery(new SolrFusionRequestParam("goethe"));
         FusionResponse res = new FusionResponse();
@@ -318,8 +315,13 @@ public class FreemarkerResponseRendererTest
         String jsonResponse = createResponseFacets(spyCfg, responseRenderer, "response-with-facets-highlighting.xml");
         // System.out.println(jsonResponse);
 
-        Assert.assertTrue("Expected to find facet fields and field collcode_de15, but got: " + jsonResponse,
-            jsonResponse.contains("\"facet_fields\":{\n" + "      \"branch_de15\": ["));
+        String expectedFacet = "\"facet_fields\":{\n" +
+            "      \"solr-server\": [\n" +
+            "        [\"UBL\", 1]\n" +
+            "      ],\n" +
+            "      \"branch_de15\": [";
+        Assert.assertTrue("Expected to find facet \n"+expectedFacet+"\n, but got: " + jsonResponse,
+            jsonResponse.contains(expectedFacet));
         Assert.assertTrue("Expected to find facet collcode_de15 with [\"Freihand\", 1952], but got: " + jsonResponse,
             jsonResponse.contains("[\"Freihand\", 1952]"));
         Assert.assertTrue("Expected to find facet format_de15 with [\"Software\", 66], but got: " + jsonResponse,
@@ -344,8 +346,13 @@ public class FreemarkerResponseRendererTest
         String xmlResponse = createResponseFacets(spyCfg, responseRenderer, "response-with-facets-highlighting.xml");
         // System.out.println(xmlResponse);
 
-        Assert.assertTrue("Expected to find facet fields and field collcode_de15, but got: " + xmlResponse,
-            xmlResponse.contains("<lst name=\"facet_fields\">\n" + "        <lst name=\"branch_de15\">"));
+        String expectedFacet = "<lst name=\"facet_fields\">\n" +
+            "        <lst name=\"solr-server\">\n" +
+            "            <int name=\"UBL\">1</int>\n" +
+            "        </lst>\n" +
+            "        <lst name=\"branch_de15\">";
+        Assert.assertTrue("Expected to find facet \n"+expectedFacet+"\n, but got: " + xmlResponse,
+            xmlResponse.contains(expectedFacet));
         Assert.assertTrue(
             "Expected to find facet collcode_de15 with <int name=\"Freihand\">1952</int>, but got: : " + xmlResponse,
             xmlResponse.contains("<int name=\"Freihand\">1952</int>"));
@@ -375,7 +382,7 @@ public class FreemarkerResponseRendererTest
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             new ArrayList<Document>(), info9000);
         ClosableIterator<Document, SearchServerResponseInfo> closableDocIterator = new MappingClosableIterator(
-            docIterator, spyCfg, searchServerConfig, null);
+            docIterator, spyCfg, searchServerConfig, null, ResponseTarget.ALL);
         FusionResponse res = new FusionResponse();
         res.setOk(true);
         return responseRenderer.getResponseString(cfg, closableDocIterator, req, res);
@@ -444,7 +451,7 @@ public class FreemarkerResponseRendererTest
         ClosableIterator<Document, SearchServerResponseInfo> matchDocIterator = new ClosableListIterator<>(
             moreLikeThisDocs, matchInfo9000);
         ClosableIterator<Document, SearchServerResponseInfo> closableMatchDocIterator = new MappingClosableIterator(
-            matchDocIterator, spyCfg, searchServerConfig, null);
+            matchDocIterator, spyCfg, searchServerConfig, null, ResponseTarget.ALL);
         while (closableMatchDocIterator.hasNext())
         {
             mappedMoreLikeThisDocs.add(closableMatchDocIterator.next());
@@ -458,7 +465,7 @@ public class FreemarkerResponseRendererTest
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             new ArrayList<Document>(), info9000);
         ClosableIterator<Document, SearchServerResponseInfo> closableDocIterator = new MappingClosableIterator(
-            docIterator, spyCfg, searchServerConfig, null);
+            docIterator, spyCfg, searchServerConfig, null, ResponseTarget.ALL);
         FusionResponse res = new FusionResponse();
         res.setOk(true);
         return responseRenderer.getResponseString(cfg, closableDocIterator, req, res);

@@ -7,6 +7,7 @@ import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.FusionField;
+import org.outermedia.solrfusion.configuration.QueryTarget;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -47,13 +48,13 @@ public class QueryMapperTest
         QueryMapperIfc qm = cfg.getQueryMapper();
         TermQuery q = new TermQuery(Term.newFusionTerm("author", "Schiller"));
         setFusionField(q);
-        qm.mapQuery(cfg, searchServerConfig, q, env, null);
+        qm.mapQuery(cfg, searchServerConfig, q, env, null, QueryTarget.ALL);
 
         String expected = "Term(fusionFieldName=author, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=author, type=text, format=null, multiValue=null), searchServerFieldName=Autor, searchServerFieldValue=[Schiller], removed=false, wasMapped=true, processed=true, newQueries=null)";
         Assert.assertEquals("Got different mapping than expected", expected, q.getTerm().toString());
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String s = qb.buildQueryString(q, cfg, searchServerConfig, locale, null);
+        String s = buildQueryString(qb, q, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
         Assert.assertEquals("Found wrong search server term query mapping", "Autor:Schiller", s);
     }
 
@@ -76,7 +77,7 @@ public class QueryMapperTest
         TermQuery q2 = new TermQuery(Term.newFusionTerm("title", "Ein_langer_Weg"));
         setField(q2.getTerm());
         bq.add(new BooleanClause(q2, BooleanClause.Occur.OCCUR_MUST));
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
 
         String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=author, type=text, format=null, multiValue=null), searchServerFieldName=Autor, searchServerFieldValue=[Schiller], removed=false, wasMapped=true, processed=true, newQueries=null)";
         Assert.assertEquals("Didn't find mapped author.", expectedAuthor, q.getTerm().toString());
@@ -85,9 +86,17 @@ public class QueryMapperTest
         Assert.assertEquals("Didn't find mapped title.", expectedTitle, q2.getTerm().toString());
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String s = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
+        String s = buildQueryString(qb, bq, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
         Assert.assertEquals("Found wrong search server bool query mapping",
             "(+Autor:Schiller AND +Titel:Ein_langer_Weg)", s.trim());
+    }
+
+    protected String buildQueryString(QueryBuilderIfc qb, Query bq, Configuration cfg, SearchServerConfig searchServerConfig,
+        Locale locale, Set<String> defaultSearchServerFields, QueryTarget target)
+    {
+        String qs = qb.buildQueryString(bq, cfg, searchServerConfig, Locale.GERMAN, defaultSearchServerFields, target);
+        qs = qb.getStaticallyAddedQueries(cfg,searchServerConfig,Locale.GERMAN,target, qs);
+        return qs;
     }
 
     @Test
@@ -103,7 +112,7 @@ public class QueryMapperTest
         TermQuery q2 = new TermQuery(Term.newFusionTerm("title", "Ein_langer_Weg"));
         setField(q2.getTerm());
         bq.add(new BooleanClause(q2, BooleanClause.Occur.OCCUR_MUST_NOT));
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
 
         String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=[Schiller], fusionField=FusionField(fieldName=author, type=text, format=null, multiValue=null), searchServerFieldName=Autor, searchServerFieldValue=[Schiller], removed=false, wasMapped=true, processed=true, newQueries=null)";
         Assert.assertEquals("Didn't find mapped author.", expectedAuthor, q.getTerm().toString());
@@ -112,7 +121,7 @@ public class QueryMapperTest
         Assert.assertEquals("Didn't find mapped title.", expectedTitle, q2.getTerm().toString());
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String s = qb.buildQueryString(bq, cfg, searchServerConfig, locale, null);
+        String s = buildQueryString(qb, bq, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
         Assert.assertEquals("Found wrong search server bool query mapping",
             "(-Autor:Schiller AND -Titel:Ein_langer_Weg)", s.trim());
 
@@ -135,7 +144,7 @@ public class QueryMapperTest
         QueryMapperIfc qm = cfg.getQueryMapper();
         TermQuery q = new TermQuery(Term.newFusionTerm("valueFrom7", "Schiller"));
         setField(q.getTerm());
-        qm.mapQuery(cfg, searchServerConfig, q, env, null);
+        qm.mapQuery(cfg, searchServerConfig, q, env, null, QueryTarget.ALL);
         Term term = q.getTerm();
         String searchServerFieldName = term.getSearchServerFieldName();
         Assert.assertEquals("RegExp mapping returned different search server field than expected", "val7Start",
@@ -152,10 +161,10 @@ public class QueryMapperTest
     {
         QueryMapperIfc qm = cfg.getQueryMapper();
         MatchAllDocsQuery wq = new MatchAllDocsQuery();
-        qm.mapQuery(cfg, searchServerConfig, wq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, wq, env, null, QueryTarget.ALL);
 
         QueryBuilderIfc qb = cfg.getDefaultQueryBuilder();
-        String s = qb.buildQueryString(wq, cfg, searchServerConfig, locale, null);
+        String s = buildQueryString(qb, wq, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
         Assert.assertEquals("Expected match all docs query", "*:*", s);
     }
 
@@ -168,7 +177,7 @@ public class QueryMapperTest
         Term term = Term.newFusionTerm("title", "abc");
         setField(term);
         FuzzyQuery fq = new FuzzyQuery(term, null);
-        qm.mapQuery(cfg, searchServerConfig, fq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, fq, env, null, QueryTarget.ALL);
         Assert.assertTrue("Term not mapped", term.isWasMapped());
     }
 
@@ -179,7 +188,7 @@ public class QueryMapperTest
         Term term = Term.newFusionTerm("title", "abc");
         setField(term);
         PhraseQuery pq = new PhraseQuery(term);
-        qm.mapQuery(cfg, searchServerConfig, pq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, pq, env, null, QueryTarget.ALL);
         Assert.assertTrue("Term not mapped", term.isWasMapped());
     }
 
@@ -190,7 +199,7 @@ public class QueryMapperTest
         Term term = Term.newFusionTerm("title", "abc*");
         setField(term);
         PrefixQuery pq = new PrefixQuery(term);
-        qm.mapQuery(cfg, searchServerConfig, pq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, pq, env, null, QueryTarget.ALL);
         Assert.assertTrue("Term not mapped", term.isWasMapped());
     }
 
@@ -201,7 +210,7 @@ public class QueryMapperTest
         Term term = Term.newFusionTerm("title", "abc?");
         setField(term);
         WildcardQuery pq = new WildcardQuery(term);
-        qm.mapQuery(cfg, searchServerConfig, pq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, pq, env, null, QueryTarget.ALL);
         Assert.assertTrue("Term not mapped", term.isWasMapped());
     }
 
@@ -221,7 +230,7 @@ public class QueryMapperTest
             setField(minMax);
             minMax.newFusionTerm("title");
             minMax.setFusionFieldValue(minMax.getFusionFieldValue());
-            qm.mapQuery(cfg, searchServerConfig, nq, env, null);
+            qm.mapQuery(cfg, searchServerConfig, nq, env, null, QueryTarget.ALL);
             Assert.assertTrue("Term not mapped", minMax.isWasMapped());
         }
     }
@@ -234,14 +243,14 @@ public class QueryMapperTest
         // empty case
         QueryMapperIfc qm = cfg.getQueryMapper();
         BooleanQuery bq = new BooleanQuery();
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
 
         // one MUST clause
         qm = cfg.getQueryMapper();
         bq = new BooleanQuery();
         termList.clear();
         bq.add(createMustBooleanClause("abc", termList));
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
         checkMapped(termList);
 
         // one SHOULD clause
@@ -249,7 +258,7 @@ public class QueryMapperTest
         bq = new BooleanQuery();
         termList.clear();
         bq.add(createShouldBooleanClause("abc", termList));
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
         checkMapped(termList);
 
         // one MUST NOT clause
@@ -257,7 +266,7 @@ public class QueryMapperTest
         bq = new BooleanQuery();
         termList.clear();
         bq.add(createMustNotBooleanClause("abc", termList));
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
         checkMapped(termList);
 
         // several MUST clauses
@@ -267,7 +276,7 @@ public class QueryMapperTest
         bq.add(createMustBooleanClause("abc", termList));
         bq.add(createMustBooleanClause("def", termList));
         bq.add(createMustNotBooleanClause("ghi", termList));
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
         checkMapped(termList);
 
         // several SHOULD clauses
@@ -276,7 +285,7 @@ public class QueryMapperTest
         termList.clear();
         bq.add(createShouldBooleanClause("abc", termList));
         bq.add(createShouldBooleanClause("def", termList));
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
         checkMapped(termList);
 
         // several MUST NOT clauses
@@ -287,7 +296,7 @@ public class QueryMapperTest
         bq.add(createMustNotBooleanClause("def", termList));
         bq.add(createMustBooleanClause("ghi", termList));
         bq.add(createShouldBooleanClause("jkl", termList));
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
         checkMapped(termList);
 
         // nested bool queries
@@ -302,7 +311,7 @@ public class QueryMapperTest
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause(bq1));
         bq.add(createShouldBooleanClause(bq2));
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
         checkMapped(termList);
 
         // several deleted clauses
@@ -314,7 +323,7 @@ public class QueryMapperTest
         bq.add(createShouldBooleanClause("ghi", termList)); // del
         bq.add(createShouldBooleanClause("jkl", termList));
         bq.add(createMustBooleanClause("mno", termList)); // del
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
         checkMapped(termList);
 
         // delete whole bool query
@@ -329,7 +338,7 @@ public class QueryMapperTest
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause(bq1));
         bq.add(createShouldBooleanClause(bq2));
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
         checkMapped(termList);
 
         // delete all bool queries
@@ -344,7 +353,7 @@ public class QueryMapperTest
         bq = new BooleanQuery();
         bq.add(createShouldBooleanClause(bq1));
         bq.add(createShouldBooleanClause(bq2));
-        qm.mapQuery(cfg, searchServerConfig, bq, env, null);
+        qm.mapQuery(cfg, searchServerConfig, bq, env, null, QueryTarget.ALL);
         checkMapped(termList);
     }
 
@@ -404,7 +413,7 @@ public class QueryMapperTest
         pq.setMetaInfo(mi);
         mi.addFusionEntry("qf", "title^1.1 author^2.1");
         SubQuery sq = new SubQuery(pq);
-        qm.mapQuery(cfg, searchServerConfig, sq, env, new FusionRequest());
+        qm.mapQuery(cfg, searchServerConfig, sq, env, new FusionRequest(), QueryTarget.ALL);
         Assert.assertTrue("Term not mapped", term.isWasMapped());
         Map<String, String> mappedParams = mi.getSearchServerParameterMap();
         Assert.assertEquals("Expected other mapping", "Titel^1.1 Autor^2.1", mappedParams.get("qf"));
@@ -425,7 +434,7 @@ public class QueryMapperTest
         pq.setMetaInfo(mi);
         mi.addFusionEntry("qf", "fulltext^2.3");
         SubQuery sq = new SubQuery(pq);
-        qm.mapQuery(cfg, searchServerConfig, sq, env, new FusionRequest());
+        qm.mapQuery(cfg, searchServerConfig, sq, env, new FusionRequest(), QueryTarget.ALL);
         Assert.assertTrue("Term not mapped", term.isWasMapped());
         Map<String, String> mappedParams = mi.getSearchServerParameterMap();
         Assert.assertEquals("Expected other mapping", "content^2.3 description^2.3", mappedParams.get("qf"));
@@ -444,7 +453,7 @@ public class QueryMapperTest
         TermQuery tq = new TermQuery(term);
 
         QueryMapperIfc qm = cfg.getQueryMapper();
-        qm.mapQuery(cfg, searchServerConfig, tq, env, new FusionRequest());
+        qm.mapQuery(cfg, searchServerConfig, tq, env, new FusionRequest(), QueryTarget.ALL);
         System.out.println("MQ " + tq);
     }
 }

@@ -1,12 +1,15 @@
 package org.outermedia.solrfusion.configuration;
 
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
 import javax.xml.bind.ValidationEventLocator;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-
+/**
+ * XML validation handler to log validation errors.
+ */
 @Getter
 @Slf4j
 public class XmlValidationHandler implements ValidationEventHandler

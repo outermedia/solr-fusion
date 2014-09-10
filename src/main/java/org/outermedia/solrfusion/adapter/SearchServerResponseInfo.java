@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Context added to a ClosableIterator in order to store highlights, facets, 'match' doc (morelikethis) and the total
+ * number of found documents. The iterator stores the found Solr documents.
+ *
  * Created by ballmann on 6/12/14.
  */
 @ToString

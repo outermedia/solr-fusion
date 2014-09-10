@@ -7,6 +7,7 @@ import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.adapter.ClosableListIterator;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.ResponseTarget;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.xml.sax.SAXException;
@@ -38,7 +39,7 @@ public class MappingClosableIteratorTest
     {
         ClosableIterator<Document, SearchServerResponseInfo> docs = createDocuments("a", "b", "c");
         SearchServerConfig serverConfig = cfg.getSearchServerConfigByName("Bibliothek 9000");
-        MappingClosableIterator mapper = new MappingClosableIterator(docs, cfg, serverConfig, null);
+        MappingClosableIterator mapper = new MappingClosableIterator(docs, cfg, serverConfig, null, ResponseTarget.ALL);
         // neither id nor score is set, and "auto" isn't mapped, so no document should be returned
         Assert.assertFalse("Expected no result", mapper.hasNext());
     }

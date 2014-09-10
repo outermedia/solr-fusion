@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * Data holder class keeping the factory's class and field id configuration.
+ * Data holder class which stores the factory's class and field id configuration.
  *
  * @author ballmann
  */

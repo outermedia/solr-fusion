@@ -60,12 +60,6 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
     @XmlElement(name = "field", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private List<FieldMapping> fieldMappings;
 
-    @XmlTransient
-    private Map<String, List<Target>> allAddQueryMappingsCache;
-
-    @XmlTransient
-    private Map<String, TargetsOfMapping> allAddResponseMappingsCache;
-
 
     /**
      * Get all mappings for a given fusion field name.
@@ -140,16 +134,16 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
      * @return a perhaps empty table of all query parts to add.
      * @param level
      */
-    public Map<String, List<Target>> findAllAddQueryMappings(AddLevel level)
+    public Map<String, List<Target>> findAllAddQueryMappings(AddLevel level, QueryTarget target)
     {
-        Map<String, List<Target>> result = allAddQueryMappingsCache;
+        Map<String, List<Target>> result = null;
         if (result == null)
         {
             // preserve order
             result = new LinkedHashMap<>();
             for (FieldMapping m : fieldMappings)
             {
-                List<Target> queryTargets = m.getAllAddQueryTargets(level);
+                List<Target> queryTargets = m.getAllAddQueryTargets(level, target);
                 if (queryTargets.size() > 0)
                 {
                     List<Target> existingQueryTargets = result.get(m.getSearchServersName());
@@ -163,7 +157,6 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
                     }
                 }
             }
-            allAddQueryMappingsCache = result;
         }
         return result;
     }
@@ -173,16 +166,16 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
      *
      * @return a perhaps empty table of all response parts to add.
      */
-    public Map<String, TargetsOfMapping> findAllAddResponseMappings()
+    public Map<String, TargetsOfMapping> findAllAddResponseMappings(ResponseTarget target)
     {
-        Map<String, TargetsOfMapping> result = allAddResponseMappingsCache;
+        Map<String, TargetsOfMapping> result = null;
         if (result == null)
         {
             // preserve order
             result = new LinkedHashMap<>();
             for (FieldMapping m : fieldMappings)
             {
-                TargetsOfMapping responseTargets = m.getAllAddResponseTargets();
+                TargetsOfMapping responseTargets = m.getAllAddResponseTargets(target);
                 if (responseTargets.size() > 0)
                 {
                     List<Target> existingTargets = result.get(m.getFusionName());
@@ -196,7 +189,6 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
                     }
                 }
             }
-            allAddResponseMappingsCache = result;
         }
         return result;
     }

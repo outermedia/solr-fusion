@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Internal representation of highlights.
+ *
  * Created by ballmann on 8/6/14.
  */
 public class HighlightingMap

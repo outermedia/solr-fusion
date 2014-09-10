@@ -7,6 +7,8 @@ import org.outermedia.solrfusion.response.parser.ResponseSection;
 import java.io.InputStream;
 
 /**
+ * In the case that a Solr server returns a non 200 HTTP status this exception is thrown.
+ *
  * Created by ballmann on 7/7/14.
  */
 @Getter

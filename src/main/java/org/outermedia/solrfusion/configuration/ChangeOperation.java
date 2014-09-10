@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
 public class ChangeOperation extends Operation
 {
     @Override
-    public void applyAllResponseOperations(Term term, ScriptEnv env)
+    public void applyAllResponseOperations(Term term, ScriptEnv env, ResponseTarget target)
     {
         if (term.getFusionField() == null)
         {
@@ -41,7 +41,7 @@ public class ChangeOperation extends Operation
         String specificFusionName = env.getStringBinding(ScriptEnv.ENV_IN_FUSION_FIELD);
         term.setFusionFieldName(specificFusionName);
         term.setWasMapped(true);
-        super.applyAllResponseOperations(term, env);
+        super.applyAllResponseOperations(term, env, target);
     }
 
     @Override
@@ -68,13 +68,13 @@ public class ChangeOperation extends Operation
     }
 
     @Override
-    public void applyAllQueryOperations(Term term, ScriptEnv env)
+    public void applyAllQueryOperations(Term term, ScriptEnv env, QueryTarget target)
     {
         if (term.getFusionField() == null)
         {
             throw new UndeclaredFusionField("Didn't find field '" + term.getFusionFieldName()
                     + "' in fusion schema. Please define it there.");
         }
-        super.applyAllQueryOperations(term, env);
+        super.applyAllQueryOperations(term, env, target);
     }
 }

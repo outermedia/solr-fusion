@@ -6,6 +6,9 @@ import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
+/**
+ * A fuzzy query.
+ */
 @ToString(callSuper = true)
 @Getter
 public class FuzzyQuery extends TermQuery

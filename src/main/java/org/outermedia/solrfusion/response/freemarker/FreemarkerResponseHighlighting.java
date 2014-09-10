@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Dataholder used to provide highlight information when a Solr response is rendered.
+ *
  * Created by ballmann on 8/5/14.
  */
 @Slf4j

@@ -113,7 +113,7 @@ public class AddOperation extends Operation
         String msg = null;
 
         // check <om:add><om:response> and <om:add><om:query-response>
-        List<Target> responses = getResponseTargets();
+        List<Target> responses = getResponseTargets(ResponseTarget.ALL);
         if (responses.size() > 0)
         {
             if (fieldMapping.getFusionName() == null)
@@ -142,7 +142,7 @@ public class AddOperation extends Operation
         }
 
         // check <om:add><om:query> and <om:add><om:query-response>
-        List<Target> queries = getQueryTargets();
+        List<Target> queries = getQueryTargets(QueryTarget.ALL);
         if (queries.size() > 0)
         {
             if (level == null)

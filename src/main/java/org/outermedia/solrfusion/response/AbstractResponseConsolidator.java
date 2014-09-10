@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Abstract super class of ResponseConsolidatorIfc implementations.
+ *
  * Created by ballmann on 7/9/14.
  */
 public abstract class AbstractResponseConsolidator implements ResponseConsolidatorIfc

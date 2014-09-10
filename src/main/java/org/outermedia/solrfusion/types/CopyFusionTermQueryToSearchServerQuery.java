@@ -3,6 +3,7 @@ package org.outermedia.solrfusion.types;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.QueryTarget;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Internally used default ScriptType for <pre>{@code<om:add><om:query>}</pre>.
+ * <p/>
  * Created by ballmann on 8/1/14.
  */
 @Slf4j
@@ -31,6 +34,7 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
         TermQuery tq = (TermQuery) env.getBinding(ScriptEnv.ENV_IN_TERM_QUERY_PART);
         String searchServerFieldName = env.getStringBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD);
         TermQuery searchServerTermQuery = tq.shallowClone();
+        QueryTarget target = (QueryTarget) env.getBinding(ScriptEnv.ENV_IN_QUERY_TARGET);
         // the original MetaInfo is used! don't repeat output of MetaInfo for <om:add> inside queries
         searchServerTermQuery.setMetaInfo(null);
         searchServerTermQuery.setSearchServerFieldName(searchServerFieldName);
@@ -51,9 +55,9 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
                 qb = fusionRequest.getQueryBuilder(configuration, searchServerConfig, false);
             }
             Set<String> defaultSearchServerSearchFields = fusionRequest.mapFusionFieldToSearchServerField(
-                configuration.getDefaultSearchField(), configuration, searchServerConfig, null);
+                configuration.getDefaultSearchField(), configuration, searchServerConfig, null, QueryTarget.QUERY);
             String qs = qb.buildQueryStringWithoutNew(searchServerTermQuery, configuration, searchServerConfig,
-                env.getLocale(), defaultSearchServerSearchFields);
+                env.getLocale(), defaultSearchServerSearchFields, target);
             newValues = new ArrayList<>();
             newValues.add(qs);
             result = new TypeResult(newValues, facetWordCounts);

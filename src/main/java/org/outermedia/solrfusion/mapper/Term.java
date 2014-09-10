@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Data holder which stores a fusion field name and its value.
+ * Data holder which stores the values of one Solr field and the corresponding SolrFusion field.
  *
  * @author sballmann
  */

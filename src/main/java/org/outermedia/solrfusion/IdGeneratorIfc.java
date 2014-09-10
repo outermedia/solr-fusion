@@ -5,11 +5,14 @@ import org.outermedia.solrfusion.configuration.Initiable;
 
 import java.util.List;
 
+/**
+ * Unified/merged documents need a (compound) id, which is created by implementations of this interface.
+ */
 public interface IdGeneratorIfc extends Initiable<IdGeneratorFactory>
 {
     /**
-     * The computation of the returned id has to ensure that the document is directly retrievable from the search
-     * server.
+     * The computation of the returned SolrFusion document id has to ensure that the document is directly retrievable
+     * from the search server.
      *
      * @param serverName        is the server which returns a document (hit)
      * @param searchServerDocId is the id of document returned by the server named serverName
@@ -24,8 +27,20 @@ public interface IdGeneratorIfc extends Initiable<IdGeneratorFactory>
      */
     public String getFusionIdField();
 
+    /**
+     * Retrieve the Solr search server name (used in SolrFusion's schema) from a SolrFusion document id.
+     *
+     * @param fusionDocId
+     * @return
+     */
     public String getSearchServerIdFromFusionId(String fusionDocId);
 
+    /**
+     * Retrieve the Solr document id from a SolrFusion document id.
+     *
+     * @param fusionDocId
+     * @return
+     */
     public String getSearchServerDocIdFromFusionId(String fusionDocId);
 
     /**
@@ -45,5 +60,12 @@ public interface IdGeneratorIfc extends Initiable<IdGeneratorFactory>
      */
     public List<String> splitMergedId(String mergedIds);
 
+    /**
+     * Checks whether the specified SolrFusion document id belongs to a document which was merged from several Solr
+     * servers.
+     *
+     * @param fusionDocId
+     * @return true if the document was merged, otherwise false
+     */
     public boolean isMergedDocument(String fusionDocId);
 }

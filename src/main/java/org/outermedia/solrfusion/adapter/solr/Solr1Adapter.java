@@ -17,6 +17,9 @@ import java.util.Map;
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 /**
+ * This special Solr adapter respects that Solr version less than 1.4 expect true/false instead of index/count
+ * for facet sorting.
+ *
  * Created by ballmann on 8/1/14.
  */
 @Slf4j

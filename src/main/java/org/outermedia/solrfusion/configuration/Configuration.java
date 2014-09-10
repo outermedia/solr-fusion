@@ -20,7 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
- * Data holder class keeping the fusion configuration.
+ * Data holder class which stores the SolrFusion schema.
  *
  * @author ballmann
  */

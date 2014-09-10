@@ -23,13 +23,13 @@ public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
      * Send the provided query to a search server and returns the retrieved documents as InputStream. In the case of an
      * error a {@link org.outermedia.solrfusion.adapter.SearchServerResponseException} is thrown.
      *
-     *
-     * @param configuration
-     * @param searchServerConfig
-     *@param fusionRequest
+     * @param configuration         the SolrFusion schema
+     * @param searchServerConfig    the current destination Solr server configuration
+     * @param fusionRequest         the current SolrFusion request
      * @param searchServerQueryStr a query suitable for this search server.
      * @param timeout              a timeout in milliseconds
-     * @param version              the version of the search server     @return null for error or a document stream
+     * @param version              the version of the search server
+     * @return null for error or a document stream
      */
     public InputStream sendQuery(Configuration configuration, SearchServerConfig searchServerConfig,
         FusionRequest fusionRequest, Multimap<String> searchServerQueryStr, int timeout, String version)
@@ -38,5 +38,6 @@ public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
     public void init(SearchServerConfig config);
 
     public void setUrl(String url);
+
     public String getUrl();
 }

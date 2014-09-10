@@ -15,7 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * A common solr query parser.
+ * A common solr edismax query parser.
  *
  * @author ballmann
  */

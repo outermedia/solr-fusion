@@ -7,7 +7,9 @@ import org.outermedia.solrfusion.query.QueryVisitor;
 import org.outermedia.solrfusion.query.VisitableQuery;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
-
+/**
+ * A boolean clause is one query part of a boolean query.
+ */
 @Getter
 @Setter
 @ToString

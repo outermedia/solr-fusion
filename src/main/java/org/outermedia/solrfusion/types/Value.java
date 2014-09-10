@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.configuration.ResponseTarget;
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A Bean Shell interpreter which evaluates expressions contained in the xml to process a field conversion.
+ * Set (overwrite) a field's value with one or more static values.
  *
  * @author ballmann
  */
@@ -66,11 +67,27 @@ public class Value extends AbstractType
     }
 
     @Override
-    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
-        ConversionDirection dir)
+    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env, ConversionDirection dir)
     {
-//        log.debug("VALUE {} sees fusion-value={} search-server-value={}", this.values,
-//            env.getBinding(ScriptEnv.ENV_IN_FUSION_VALUE), env.getBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_VALUE));
+        List<String> result = null;
+        if (this.values != null)
+        {
+            result = new ArrayList<>();
+            result.addAll(this.values);
+        }
+        ResponseTarget responseTarget = null;
+        if (env != null)
+        {
+            responseTarget = (ResponseTarget) env.getBinding(ScriptEnv.ENV_IN_RESPONSE_TARGET);
+        }
+        if (responseTarget == ResponseTarget.FACET && result != null)
+        {
+            facetWordCounts = new ArrayList<>();
+            for (int i = 0; i < result.size(); i++)
+            {
+                facetWordCounts.add(1);
+            }
+        }
         return new TypeResult(this.values, facetWordCounts);
     }
 

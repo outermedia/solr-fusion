@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.QueryTarget;
+import org.outermedia.solrfusion.configuration.ResponseTarget;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.*;
 import org.outermedia.solrfusion.query.parser.Query;
@@ -72,7 +74,7 @@ public class BshTest extends AbstractTypeTest
         env.setBinding(ScriptEnv.ENV_IN_FUSION_REQUEST, new FusionRequest());
         env.setBinding(ScriptEnv.ENV_IN_MAP_FACET, true);
         env.setBinding(ScriptEnv.ENV_IN_MAP_HIGHLIGHT, true);
-        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null);
+        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL);
         Assert.assertTrue("Expected that term was mapped", sourceField.isWasMapped());
         // System.out.println(sourceField.toString());
         Assert.assertEquals("Found wrong field name mapping", "today", sourceField.getFusionFieldName());
@@ -97,7 +99,7 @@ public class BshTest extends AbstractTypeTest
         env.setBinding(ScriptEnv.ENV_IN_FUSION_REQUEST, new FusionRequest());
         env.setBinding(ScriptEnv.ENV_IN_MAP_FACET, true);
         env.setBinding(ScriptEnv.ENV_IN_MAP_HIGHLIGHT, true);
-        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), query, env, null);
+        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), query, env, null, QueryTarget.ALL);
         Assert.assertTrue("Expected that term was mapped", term.isWasMapped());
         // System.out.println(term.toString());
         Assert.assertEquals("Found wrong field name mapping", "f1", term.getSearchServerFieldName());

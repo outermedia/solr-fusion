@@ -7,7 +7,7 @@ import org.outermedia.solrfusion.response.parser.SolrField;
 import java.util.List;
 
 /**
- * Data holder class to represent a multivalued or singlevalued field in the freemarker template.
+ * Data holder class to represent a multi valued or single valued field in the freemarker template.
  *
  * @author stephan
  */

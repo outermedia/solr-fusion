@@ -1,6 +1,8 @@
 package org.outermedia.solrfusion.configuration;
 
 /**
+ * This class enumerates all valid combinations of field names used in a mapping.
+ *
  * Created by ballmann on 6/26/14.
  */
 public enum MappingType

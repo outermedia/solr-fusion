@@ -4,6 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * This class implements the different types of field name matching which is used in mapping rules.
+ *
  * Created by ballmann on 6/17/14.
  */
 public enum MatchType

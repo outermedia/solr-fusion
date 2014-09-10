@@ -9,7 +9,7 @@ import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 import org.outermedia.solrfusion.response.parser.Document;
 
 /**
- * Transforms a search result into xml.
+ * Transforms a Solr search result into xml.
  *
  * @author stephan
  */

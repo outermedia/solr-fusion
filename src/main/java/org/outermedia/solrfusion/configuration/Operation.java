@@ -27,29 +27,39 @@ import java.util.List;
 @ToString
 public abstract class Operation
 {
-    @XmlElements(value = {@XmlElement(name = "query", type = Query.class,
-        namespace = "http://solrfusion.outermedia.org/configuration/"), @XmlElement(name = "response",
+    @XmlElements(value = {
+        @XmlElement(name = "query", type = Query.class,
+            namespace = "http://solrfusion.outermedia.org/configuration/"), @XmlElement(name = "response",
         type = Response.class,
         namespace = "http://solrfusion.outermedia.org/configuration/"), @XmlElement(name = "query-response",
         type = QueryResponse.class,
-        namespace = "http://solrfusion.outermedia.org/configuration/")})
+        namespace = "http://solrfusion.outermedia.org/configuration/")
+    })
     private List<Target> targets;
 
     /**
      * Get all targets which are applicable to a query. Filters out Response targets.
      *
+     * @param target
      * @return a list of target object, perhaps empty. The objects are either of class Query or QueryResponse.
      */
-    protected List<Target> getQueryTargets()
+    protected List<Target> getQueryTargets(QueryTarget target)
     {
         List<Target> result = new ArrayList<>();
         if (targets != null)
         {
             for (Target t : targets)
             {
-                if (t instanceof Query || t instanceof QueryResponse)
+                if (t instanceof QueryResponse)
                 {
                     result.add(t);
+                }
+                if (t instanceof Query)
+                {
+                    if (target.matches(((Query) t).getTarget()))
+                    {
+                        result.add(t);
+                    }
                 }
             }
         }
@@ -61,7 +71,7 @@ public abstract class Operation
      *
      * @return a list of target object, perhaps empty. The objects are of class Query.
      */
-    protected List<Query> getQueryOnlyTargets()
+    protected List<Query> getQueryOnlyTargets(QueryTarget target)
     {
         List<Query> result = new ArrayList<>();
         if (targets != null)
@@ -70,7 +80,10 @@ public abstract class Operation
             {
                 if (t instanceof Query)
                 {
-                    result.add((Query) t);
+                    if (target.matches(((Query) t).getTarget()))
+                    {
+                        result.add((Query) t);
+                    }
                 }
             }
         }
@@ -82,16 +95,24 @@ public abstract class Operation
      *
      * @return a list of target object, perhaps empty. The objects are either of class Response or QueryResponse.
      */
-    protected List<Target> getResponseTargets()
+    protected List<Target> getResponseTargets(ResponseTarget target)
     {
         List<Target> result = new ArrayList<>();
         if (targets != null)
         {
             for (Target t : targets)
             {
-                if (t instanceof Response || t instanceof QueryResponse)
+                if (t instanceof QueryResponse)
                 {
                     result.add(t);
+                }
+                if (t instanceof Response)
+                {
+                    ResponseTarget ruleTarget = ((Response) t).getTarget();
+                    if (target.matches(ruleTarget))
+                    {
+                        result.add(t);
+                    }
                 }
             }
         }
@@ -103,7 +124,7 @@ public abstract class Operation
      *
      * @return a list of target object, perhaps empty. The objects are of class Response.
      */
-    protected List<Response> getResponseOnlyTargets()
+    protected List<Response> getResponseOnlyTargets(ResponseTarget target)
     {
         List<Response> result = new ArrayList<>();
         if (targets != null)
@@ -112,7 +133,10 @@ public abstract class Operation
             {
                 if (t instanceof Response)
                 {
-                    result.add((Response) t);
+                    if (target.matches(((Response) t).getTarget()))
+                    {
+                        result.add((Response) t);
+                    }
                 }
             }
         }
@@ -140,10 +164,10 @@ public abstract class Operation
         return result;
     }
 
-    public void applyAllQueryOperations(Term term, ScriptEnv env)
+    public void applyAllQueryOperations(Term term, ScriptEnv env, QueryTarget target)
     {
         ScriptEnv newEnv = getQueryScriptEnv(term, env);
-        List<Target> queryTargets = getQueryTargets();
+        List<Target> queryTargets = getQueryTargets(target);
         for (Target t : queryTargets)
         {
             applyOneQueryOperation(term, newEnv, t);
@@ -164,27 +188,26 @@ public abstract class Operation
         // the searchServerFieldValue is initialized with the fusionFieldValue
         // because it is possible to apply several mappings in sequence the searchServerFieldValue
         // has to be used
-        TypeResult opResult = t.apply(term.getSearchServerFieldValue(), term.getSearchServerFacetCount(),
-            newEnv, ConversionDirection.FUSION_TO_SEARCH);
-        if(opResult != null)
+        TypeResult opResult = t.apply(term.getSearchServerFieldValue(), term.getSearchServerFacetCount(), newEnv,
+            ConversionDirection.FUSION_TO_SEARCH);
+        if (opResult != null)
         {
             term.setSearchServerFieldValue(opResult.getValues());
             term.setSearchServerFacetCount(opResult.getWordCounts());
         }
     }
 
-    public void applyAllResponseOperations(Term term, ScriptEnv env)
+    public void applyAllResponseOperations(Term term, ScriptEnv env, ResponseTarget target)
     {
         ScriptEnv newEnv = getResponseScriptEnv(null, null, term, env);
-        List<Target> queryTargets = getResponseTargets();
+        List<Target> queryTargets = getResponseTargets(target);
         for (Target t : queryTargets)
         {
             applyOneResponseOperation(term, newEnv, t);
         }
     }
 
-    public ScriptEnv getResponseScriptEnv(String fusionFieldName, FusionField fusionField, Term term,
-        ScriptEnv env)
+    public ScriptEnv getResponseScriptEnv(String fusionFieldName, FusionField fusionField, Term term, ScriptEnv env)
     {
         ScriptEnv newEnv = new ScriptEnv(env);
         newEnv.setBinding(ScriptEnv.ENV_IN_FUSION_FIELD, fusionFieldName);
@@ -203,7 +226,7 @@ public abstract class Operation
         // has to be used
         TypeResult opResult = t.apply(term.getFusionFieldValue(), term.getFusionFacetCount(), newEnv,
             ConversionDirection.SEARCH_TO_FUSION);
-        if(opResult != null)
+        if (opResult != null)
         {
             term.setFusionFieldValue(opResult.getValues());
             term.setFusionFacetCount(opResult.getWordCounts());

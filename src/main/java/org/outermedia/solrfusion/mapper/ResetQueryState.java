@@ -8,7 +8,7 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 import java.util.List;
 
 /**
- * Map a fusion query to a solr request.
+ * Reset a query object, so that another mapping can be applied.
  * <p/>
  * Created by ballmann on 03.06.14.
  */

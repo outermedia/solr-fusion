@@ -6,6 +6,8 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * Solr uses HTTP request parameters with a variable part, so that it is necessary to store two values per parameter.
+ *
  * Created by ballmann on 8/8/14.
  */
 @Getter

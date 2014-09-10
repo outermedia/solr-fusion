@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.QueryTarget;
+import org.outermedia.solrfusion.configuration.ResponseTarget;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.mapper.*;
 import org.outermedia.solrfusion.query.parser.Query;
@@ -73,7 +75,7 @@ public class RegularExpressionTest extends AbstractTypeTest
         Term sourceField = buildResponseField(doc, "f5", "Müller, Thomas", "Lahm, Philipp");
 
         ScriptEnv env = new ScriptEnv();
-        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null);
+        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL);
         Assert.assertTrue("Expected that term was mapped", sourceField.isWasMapped());
         // System.out.println(sourceField.toString());
         Assert.assertEquals("Found wrong field name mapping", "text1", sourceField.getFusionFieldName());
@@ -93,7 +95,7 @@ public class RegularExpressionTest extends AbstractTypeTest
         Query query = new TermQuery(term);
 
         ScriptEnv env = new ScriptEnv();
-        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), query, env, null);
+        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), query, env, null, QueryTarget.ALL);
         Assert.assertTrue("Expected that term was mapped", term.isWasMapped());
         // System.out.println(term.toString());
         Assert.assertEquals("Found wrong field name mapping", "f5", term.getSearchServerFieldName());

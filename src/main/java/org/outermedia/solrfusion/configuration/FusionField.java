@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * Data holder class keeping the fusion schema field configurations.
+ * Data holder class which stores the SolrFusion schema field configurations.
  *
  * @author ballmann
  */

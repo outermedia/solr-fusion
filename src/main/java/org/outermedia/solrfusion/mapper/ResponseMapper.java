@@ -13,6 +13,8 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 import java.util.*;
 
 /**
+ * Apply the configured mappings to a Solr response.
+ *
  * Created by ballmann on 04.06.14.
  */
 @Slf4j
@@ -29,6 +31,7 @@ public class ResponseMapper implements ResponseMapperIfc
     protected Collection<String> searchServerFieldNamesToMap;
     protected int numberOfMappedFields;
     protected Set<String> unmappedFields;
+    protected ResponseTarget target;
 
     /**
      * Factory creates instances only.
@@ -55,15 +58,17 @@ public class ResponseMapper implements ResponseMapperIfc
      * @param doc                         one response document to process
      * @param env                         the environment needed by the scripts which transform values
      * @param searchServerFieldNamesToMap either null (for all) or a set of searchServerFieldName fields to map
+     * @param target
      * @return number of mapped fields
      */
     public int mapResponse(Configuration config, SearchServerConfig serverConfig, Document doc, ScriptEnv env,
-        Collection<String> searchServerFieldNamesToMap)
+        Collection<String> searchServerFieldNamesToMap, ResponseTarget target)
     {
         this.serverConfig = serverConfig;
         this.doc = doc;
         this.config = config;
         this.searchServerFieldNamesToMap = searchServerFieldNamesToMap;
+        this.target = target;
         env.setConfiguration(config);
         env.setDocument(doc);
         unmappedFields = new HashSet<>();
@@ -89,7 +94,7 @@ public class ResponseMapper implements ResponseMapperIfc
     {
         int addedFieldCounter = 0;
         AddOperation addOp = new AddOperation();
-        Map<String, TargetsOfMapping> allAddResponseTargets = serverConfig.findAllAddResponseMappings();
+        Map<String, TargetsOfMapping> allAddResponseTargets = serverConfig.findAllAddResponseMappings(target);
         for (Map.Entry<String, TargetsOfMapping> entry : allAddResponseTargets.entrySet())
         {
             String fusionFieldName = entry.getKey();
@@ -175,7 +180,7 @@ public class ResponseMapper implements ResponseMapperIfc
     protected List<ApplicableResult> getFieldMappings(String searchServerFieldName)
     {
         List<ApplicableResult> mappings = filterForResponse(
-            serverConfig.findAllMappingsForSearchServerField(searchServerFieldName));
+            serverConfig.findAllMappingsForSearchServerField(searchServerFieldName), target);
         if (mappings.isEmpty())
         {
             if (missingMappingPolicy == MISSING_MAPPING_POLICY_THROW_EXCEPTION)
@@ -274,7 +279,7 @@ public class ResponseMapper implements ResponseMapperIfc
                     {
                         log.trace("APPLY field={} mapping[line={}]={}", fieldName, m.getLocator().getLineNumber(), m);
                     }
-                    m.applyResponseOperations(t, env, getFusionField(env, ar), ar);
+                    m.applyResponseOperations(t, env, getFusionField(env, ar), ar, target);
                     if (traceEnabled)
                     {
                         log.trace("AFTER APPLY {}", doc.buildFusionDocStr());
@@ -286,7 +291,7 @@ public class ResponseMapper implements ResponseMapperIfc
         }
     }
 
-    protected List<ApplicableResult> filterForResponse(List<ApplicableResult> allMappingsForSearchServerField)
+    protected List<ApplicableResult> filterForResponse(List<ApplicableResult> allMappingsForSearchServerField, ResponseTarget target)
     {
         for (int i = allMappingsForSearchServerField.size() - 1; i >= 0; i--)
         {
@@ -304,18 +309,18 @@ public class ResponseMapper implements ResponseMapperIfc
                 }
                 else
                 {
-                    if (m.getAllChangeResponseTargets().size() > 0)
+                    if (m.getAllChangeResponseTargets(target).size() > 0)
                     {
                         forQueryOk = true;
                     }
                 }
             }
             // find <om:change><om:query /> or <om:add level="inside"><om:query />
-            if (m.getAllAddResponseTargets().size() > 0)
+            if (m.getAllAddResponseTargets(target).size() > 0)
             {
                 forQueryOk = true;
             }
-            if (m.getAllDropResponseTargets().size() > 0)
+            if (m.getAllDropResponseTargets(target).size() > 0)
             {
                 forQueryOk = true;
             }

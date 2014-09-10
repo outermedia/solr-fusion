@@ -16,6 +16,8 @@ import java.util.*;
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 /**
+ * Store Solr request params and build search server specific parameters.
+ *
  * Created by ballmann on 04.06.14.
  */
 @Setter
@@ -156,7 +158,7 @@ public class FusionRequest
                     p = p.substring(curlyBracketPos + 1);
                 }
                 Set<String> searchServerFields = mapFusionFieldToSearchServerField(p, configuration, searchServerConfig,
-                    null);
+                    null, QueryTarget.QUERY);
                 for (String searchServerField : searchServerFields)
                 {
                     searchServerParams.put(FACET_FIELD, prefix + searchServerField);
@@ -170,7 +172,7 @@ public class FusionRequest
                 String value = sp.getValue();
                 String fusionFieldName = sp.getParamNameVariablePart();
                 Set<String> searchServerFields = mapFusionFieldToSearchServerField(fusionFieldName, configuration,
-                    searchServerConfig, null);
+                    searchServerConfig, null, QueryTarget.QUERY);
                 for (String searchServerField : searchServerFields)
                 {
                     String facetSortField = FACET_SORT_FIELD.buildFusionFacetSortFieldParam(searchServerField, locale);
@@ -186,11 +188,12 @@ public class FusionRequest
         QueryBuilderIfc queryBuilder = getQueryBuilder(configuration, searchServerConfig, false);
         QueryBuilderIfc otherQueryBuilder = getQueryBuilder(configuration, searchServerConfig, true);
         buildSearchServerQuery(new ParsedQuery(query.getValue(), parsedQuery), QUERY, configuration, searchServerConfig,
-            searchServerParams, queryBuilder);
+            searchServerParams, queryBuilder, QueryTarget.QUERY, true);
         buildSearchServerQuery(parsedFilterQuery, FILTER_QUERY, configuration, searchServerConfig, searchServerParams,
-            otherQueryBuilder);
+            otherQueryBuilder, QueryTarget.FILTER_QUERY);
         buildSearchServerQuery(new ParsedQuery(highlightQuery.getValue(), parsedHighlightQuery), HIGHLIGHT_QUERY,
-            configuration, searchServerConfig, searchServerParams, otherQueryBuilder);
+            configuration, searchServerConfig, searchServerParams, otherQueryBuilder, QueryTarget.HIGHLIGHT_QUERY,
+            true);
         // get all documents from 0..min(MAXDOCS,start+page size)
         if (start.isContainedInRequest())
         {
@@ -209,7 +212,7 @@ public class FusionRequest
         {
             sortSpec = setSolrFusionSortingFromString(sort);
             Set<String> searchServerFieldSet = mapFusionFieldToSearchServerField(sortSpec.getFusionSortField(),
-                configuration, searchServerConfig, ResponseMapperIfc.DOC_FIELD_NAME_SCORE);
+                configuration, searchServerConfig, ResponseMapperIfc.DOC_FIELD_NAME_SCORE, QueryTarget.QUERY);
 
             if (searchServerFieldSet.isEmpty())
             {
@@ -239,7 +242,7 @@ public class FusionRequest
             fusionFieldsToReturn += " " + highlightingFieldsToReturn.getValue();
         }
         String fieldsToReturn = mapFusionFieldListToSearchServerField(fusionFieldsToReturn, configuration,
-            searchServerConfig, null, true);
+            searchServerConfig, null, true, QueryTarget.QUERY);
         searchServerParams.put(FIELDS_TO_RETURN, fieldsToReturn);
         searchServerParams.put(QUERY_TYPE, queryType);
         // solrfusion wants always xml
@@ -275,7 +278,7 @@ public class FusionRequest
         SearchServerConfig searchServerConfig, Multimap<String> searchServerParams)
     {
         String hlFieldsToReturn = mapFusionFieldListToSearchServerField(highlightingFieldsToReturn.getValue(),
-            configuration, searchServerConfig, null, false);
+            configuration, searchServerConfig, null, false, QueryTarget.HIGHLIGHT_QUERY);
         if (hlFieldsToReturn.length() > 0)
         {
             searchServerParams.put(HIGHLIGHT_FIELDS_TO_RETURN, hlFieldsToReturn);
@@ -293,10 +296,11 @@ public class FusionRequest
      * @param configuration
      * @param searchServerConfig
      * @param addIdField
+     * @param target
      * @return a string of field names separated by SPACE
      */
     protected String mapFusionFieldListToSearchServerField(String fieldList, Configuration configuration,
-        SearchServerConfig searchServerConfig, String defaultSearchServerField, boolean addIdField)
+        SearchServerConfig searchServerConfig, String defaultSearchServerField, boolean addIdField, QueryTarget target)
     {
         // preserve insertion order
         Set<String> fieldSet = new LinkedHashSet<>();
@@ -314,7 +318,7 @@ public class FusionRequest
                     {
                         fieldSet.addAll(
                             mapFusionFieldToSearchServerField(fusionField, configuration, searchServerConfig,
-                                defaultSearchServerField));
+                                defaultSearchServerField, target));
                     }
                 }
                 catch (Exception e)
@@ -371,7 +375,7 @@ public class FusionRequest
                     if (!fusionField.isEmpty())
                     {
                         Set<String> searchServerFields = mapFusionFieldToSearchServerField(fusionField, configuration,
-                            searchServerConfig, null);
+                            searchServerConfig, null, QueryTarget.QUERY);
                         for (String sf : searchServerFields)
                         {
                             fieldSet.add(sf + boost);
@@ -400,7 +404,7 @@ public class FusionRequest
      * @throws IllegalAccessException
      */
     public Set<String> mapFusionFieldToSearchServerField(String fusionField, Configuration configuration,
-        SearchServerConfig searchServerConfig, String defaultSearchServerField)
+        SearchServerConfig searchServerConfig, String defaultSearchServerField, QueryTarget target)
         throws InvocationTargetException, IllegalAccessException
     {
         // preserve insertion order
@@ -412,7 +416,7 @@ public class FusionRequest
         else
         {
             List<ApplicableResult> mappings = filterForQuery(
-                searchServerConfig.findAllMappingsForFusionField(fusionField));
+                searchServerConfig.findAllMappingsForFusionField(fusionField), target);
             boolean foundMapping = false;
             if (mappings.size() > 0)
             {
@@ -457,7 +461,8 @@ public class FusionRequest
         return result;
     }
 
-    protected List<ApplicableResult> filterForQuery(List<ApplicableResult> allMappingsForFusionField)
+    protected List<ApplicableResult> filterForQuery(List<ApplicableResult> allMappingsForFusionField,
+        QueryTarget target)
     {
         // last <om:change> counts, because it overwrites the previous mapping
         boolean foundOkChangeMapping = false;
@@ -482,11 +487,11 @@ public class FusionRequest
                 else
                 {
                     // find <om:change><om:query /> or <om:add level="inside"><om:query />
-                    if (m.getAllAddQueryTargets(AddLevel.INSIDE).size() > 0)
+                    if (m.getAllAddQueryTargets(AddLevel.INSIDE, target).size() > 0)
                     {
                         forQueryOk = true;
                     }
-                    if (!foundOkChangeMapping && m.getAllChangeQueryTargets().size() > 0)
+                    if (!foundOkChangeMapping && m.getAllChangeQueryTargets(target).size() > 0)
                     {
                         forQueryOk = true;
                         foundOkChangeMapping = true;
@@ -503,25 +508,38 @@ public class FusionRequest
 
     protected void buildSearchServerQuery(ParsedQuery query, SolrFusionRequestParams paramName,
         Configuration configuration, SearchServerConfig searchServerConfig, Multimap<String> searchServerParams,
-        QueryBuilderIfc queryBuilderToUse) throws InvocationTargetException, IllegalAccessException
+        QueryBuilderIfc queryBuilderToUse, QueryTarget target, boolean addNewStaticQueries)
+        throws InvocationTargetException, IllegalAccessException
     {
+        QueryBuilderIfc queryBuilder = queryBuilderToUse;
+        Set<String> defaultSearchServerFields = mapFusionFieldToSearchServerField(configuration.getDefaultSearchField(),
+            configuration, searchServerConfig, null, target);
+        String queryStr = "";
         if (query != null && query.getQuery() != null)
         {
-            QueryBuilderIfc queryBuilder = queryBuilderToUse;
-            Set<String> defaultSearchServerFields = mapFusionFieldToSearchServerField(
-                configuration.getDefaultSearchField(), configuration, searchServerConfig, null);
-            String queryStr = queryBuilder.buildQueryString(query.getQuery(), configuration, searchServerConfig, locale,
-                defaultSearchServerFields);
-            if (queryStr.length() > 0)
+            queryStr = queryBuilder.buildQueryString(query.getQuery(), configuration, searchServerConfig, locale,
+                defaultSearchServerFields, target);
+        }
+        // fq is a multi value param for which the static part should only added once!
+        if (addNewStaticQueries)
+        {
+            queryStr = queryBuilder.getStaticallyAddedQueries(configuration, searchServerConfig, locale, target,
+                queryStr);
+        }
+        if (queryStr.length() > 0)
+        {
+            searchServerParams.put(paramName, queryStr);
+        }
+        else
+        {
+            String origQueryStr = "<UNKNOWN>";
+            if (query != null)
             {
-                searchServerParams.put(paramName, queryStr);
+                origQueryStr = query.getQueryStr();
             }
-            else
-            {
-                log.debug(
-                    "Built search server query {} is empty after mapping. Original value is: {}. {} created empty value.",
-                    paramName.getRequestParamName(), query.getQueryStr(), queryBuilderToUse.getClass().getName());
-            }
+            log.debug(
+                "Built search server query {} is empty after mapping. Original value is: {}. {} created empty value.",
+                paramName.getRequestParamName(), origQueryStr, queryBuilderToUse.getClass().getName());
         }
     }
 
@@ -543,15 +561,21 @@ public class FusionRequest
 
     protected void buildSearchServerQuery(List<ParsedQuery> queryList, SolrFusionRequestParams paramName,
         Configuration configuration, SearchServerConfig searchServerConfig, Multimap<String> searchServerParams,
-        QueryBuilderIfc queryBuilderToUse) throws InvocationTargetException, IllegalAccessException
+        QueryBuilderIfc queryBuilderToUse, QueryTarget target) throws InvocationTargetException, IllegalAccessException
     {
         if (queryList != null)
         {
             for (ParsedQuery q : queryList)
             {
                 buildSearchServerQuery(q, paramName, configuration, searchServerConfig, searchServerParams,
-                    queryBuilderToUse);
+                    queryBuilderToUse, target, false);
             }
+        }
+        String queryStr = queryBuilderToUse.getStaticallyAddedQueries(configuration, searchServerConfig, locale, target,
+            "");
+        if (queryStr.length() > 0)
+        {
+            searchServerParams.put(paramName, queryStr);
         }
     }
 

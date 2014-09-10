@@ -11,6 +11,9 @@ import javax.xml.xpath.XPathExpressionException;
 import java.util.*;
 
 /**
+ * Merge several Solr fields and their values into one fusion field. Depending on the fusion field (single vs. multi
+ * value) either one or several values are created. So this ScriptType is only applicable to Solr responses.
+ * <p/>
  * Created by ballmann on 8/19/14.
  */
 @Slf4j

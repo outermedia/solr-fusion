@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Remove the id query term from a query if the id references no document of the currently used Solr server.
+ *
  * Created by ballmann on 8/18/14.
  */
 @Slf4j

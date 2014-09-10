@@ -6,10 +6,7 @@ import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseException;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.adapter.solr.Solr1Adapter;
-import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.ControllerFactory;
-import org.outermedia.solrfusion.configuration.SearchServerConfig;
-import org.outermedia.solrfusion.configuration.Util;
+import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
 import org.outermedia.solrfusion.query.QueryParserIfc;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
@@ -28,6 +25,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
+ * The whole processing - handling a SolrFusion query until sending back a Solr response - is controlled by this class.
+ *
  * Created by ballmann on 04.06.14.
  */
 @Slf4j
@@ -208,10 +207,12 @@ public class FusionController implements FusionControllerIfc
         for (SearchServerConfig searchServerConfig : configuredSearchServers)
         {
             log.info("Processing query for search server {}", searchServerConfig.getSearchServerName());
-            List<ParsedQuery> parsedQueries = Arrays.asList(new ParsedQuery(fusionRequest.getQuery().getValue(), query),
+            List<ParsedQuery> queryList = Arrays.asList(new ParsedQuery(fusionRequest.getQuery().getValue(), query));
+            List<ParsedQuery> hlQueryList = Arrays.asList(
                 new ParsedQuery(fusionRequest.getHighlightQuery().getValue(), highlightQuery));
-            if (mapQuery(env, searchServerConfig, parsedQueries, fusionRequest) &&
-                mapQuery(env, searchServerConfig, filterQuery, fusionRequest))
+            if (mapQuery(env, searchServerConfig, queryList, fusionRequest, QueryTarget.QUERY) &&
+                mapQuery(env, searchServerConfig, hlQueryList, fusionRequest, QueryTarget.HIGHLIGHT_QUERY) &&
+                mapQuery(env, searchServerConfig, filterQuery, fusionRequest, QueryTarget.FILTER_QUERY))
             {
                 XmlResponse result = sendAndReceive(false, fusionRequest, searchServerConfig);
                 Exception se = result.getErrorReason();
@@ -366,7 +367,7 @@ public class FusionController implements FusionControllerIfc
     }
 
     protected boolean mapQuery(ScriptEnv env, SearchServerConfig searchServerConfig, List<ParsedQuery> queryList,
-        FusionRequest fusionRequest)
+        FusionRequest fusionRequest, QueryTarget target)
     {
         boolean result = true;
         if (queryList != null)
@@ -378,7 +379,7 @@ public class FusionController implements FusionControllerIfc
                     try
                     {
                         configuration.getQueryMapper().mapQuery(configuration, searchServerConfig,
-                            parsedQuery.getQuery(), env, fusionRequest);
+                            parsedQuery.getQuery(), env, fusionRequest, target);
                     }
                     catch (Exception e)
                     {

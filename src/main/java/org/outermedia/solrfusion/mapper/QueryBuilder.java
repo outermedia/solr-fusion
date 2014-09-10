@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * Map a fusion query to a solr request which is parsable by an edismax parser.
+ * Map a SolrFusion query to a solr request which is parsable by an edismax parser.
  * <p/>
  * Created by ballmann on 03.06.14.
  */
@@ -22,26 +22,32 @@ public class QueryBuilder implements QueryBuilderIfc
     protected SearchServerConfig searchServerConfig;
     protected Locale locale;
     protected Set<String> defaultSearchServerSearchFields;
+    protected QueryTarget target;
 
     /**
      * Build the query string for a search server.
-     *
      * @param query              the query to process
      * @param configuration
      * @param searchServerConfig
      * @param locale
+     * @param target
      */
     @Override
     public String buildQueryString(Query query, Configuration configuration, SearchServerConfig searchServerConfig,
-        Locale locale, Set<String> defaultSearchServerSearchFields)
+        Locale locale, Set<String> defaultSearchServerSearchFields, QueryTarget target)
     {
         String result = buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale,
-            defaultSearchServerSearchFields);
+            defaultSearchServerSearchFields, target);
 
-        // inside add queried have been processed, now add the outside queries
-        List<String> newQueriesToAdd = new ArrayList<>();
-        AddOperation addOp = new AddOperation();
-        Map<String, List<Target>> allAddQueryTargets = searchServerConfig.findAllAddQueryMappings(AddLevel.OUTSIDE);
+        return result;
+    }
+
+    // inside add queried have been processed, now add the outside queries
+    public String getStaticallyAddedQueries(Configuration configuration, SearchServerConfig searchServerConfig,
+        Locale locale, QueryTarget target, String result)
+    {
+        List<String> newQueriesToAdd = new ArrayList<>(); AddOperation addOp = new AddOperation();
+        Map<String, List<Target>> allAddQueryTargets = searchServerConfig.findAllAddQueryMappings(AddLevel.OUTSIDE, target);
         for (Map.Entry<String, List<Target>> entry : allAddQueryTargets.entrySet())
         {
             String searchServerFieldName = entry.getKey();
@@ -70,19 +76,20 @@ public class QueryBuilder implements QueryBuilderIfc
             }
             result = sb.toString();
         }
-
         return result;
     }
 
     @Override
     public String buildQueryStringWithoutNew(Query query, Configuration configuration,
-        SearchServerConfig searchServerConfig, Locale locale, Set<String> defaultSearchServerSearchFields)
+        SearchServerConfig searchServerConfig, Locale locale, Set<String> defaultSearchServerSearchFields,
+        QueryTarget target)
     {
         queryBuilder = new StringBuilder();
         this.configuration = configuration;
         this.searchServerConfig = searchServerConfig;
         this.locale = locale;
         this.defaultSearchServerSearchFields = defaultSearchServerSearchFields;
+        this.target = target;
         query.accept(this, null);
         return queryBuilder.toString();
     }
@@ -128,7 +135,7 @@ public class QueryBuilder implements QueryBuilderIfc
             if (!term.isRemoved())
             {
                 String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(origQuery, configuration,
-                    searchServerConfig, locale, defaultSearchServerSearchFields);
+                    searchServerConfig, locale, defaultSearchServerSearchFields, target);
                 insideClauses.add(clauseQueryStr);
             }
             else
@@ -228,7 +235,7 @@ public class QueryBuilder implements QueryBuilderIfc
         {
             QueryBuilderIfc newClauseQueryBuilder = newQueryBuilder();
             String clauseQueryStr = newClauseQueryBuilder.buildQueryStringWithoutNew(booleanClause.getQuery(),
-                configuration, searchServerConfig, locale, defaultSearchServerSearchFields);
+                configuration, searchServerConfig, locale, defaultSearchServerSearchFields, target);
             if (clauseQueryStr.length() > 0)
             {
                 if (boolQueryStringBuilder.length() > 0)
@@ -348,7 +355,8 @@ public class QueryBuilder implements QueryBuilderIfc
         }
 
         String subQueryStr = newQueryBuilder.buildQueryString(subQuery, configuration, searchServerConfig, locale,
-            defaultSearchServerSearchFields);
+            defaultSearchServerSearchFields, target);
+        subQueryStr = newQueryBuilder.getStaticallyAddedQueries(configuration,searchServerConfig,locale,target,subQueryStr);
         MetaInfo metaInfo = subQuery.getMetaInfo();
         // dismax builder doesn't output {!dismax ...}, but edismax should
         if(metaInfo != null && subQuery.isDismaxQuery() && MetaInfo.DISMAX_PARSER.equals(metaInfo.getName()))
@@ -373,7 +381,7 @@ public class QueryBuilder implements QueryBuilderIfc
             if (!term.isRemoved())
             {
                 String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(rq, configuration,
-                    searchServerConfig, locale, defaultSearchServerSearchFields);
+                    searchServerConfig, locale, defaultSearchServerSearchFields, target);
                 insideClauses.add(clauseQueryStr);
             }
             handleNewQueries(newQueries, insideClauses);

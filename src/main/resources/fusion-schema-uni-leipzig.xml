@@ -143,6 +143,7 @@
         <om:field name="rvk_path" multi-value="true"/>
         <om:field name="attached_de15" type="date" multi-value="false"/>
 
+        <om:field name="solr-server" />
         <om:field name="score" type="float"/>
     </om:fusion-schema-fields>
 
@@ -249,6 +250,15 @@
                 </om:change>
                 <om:change><om:query /></om:change>
             </om:field>
+
+            <om:field fusion-name="solr-server">
+                <om:add>
+                    <om:response target="facet" type="static-value">
+                        <value>UBL</value>
+                    </om:response>
+                </om:add>
+            </om:field>
+
         </om:solr-server>
 
         <om:solr-server name="GBV" version="3.6"
@@ -262,6 +272,14 @@
             <om:unique-key>id</om:unique-key>
 
             <om:max-docs>100</om:max-docs>
+
+            <om:field fusion-name="solr-server">
+                <om:add>
+                    <om:response target="facet" type="static-value">
+                        <value>GBV</value>
+                    </om:response>
+                </om:add>
+            </om:field>
 
             <om:field name="format_facet" fusion-name="access_facet">
             </om:field>
@@ -683,6 +701,14 @@
 
             <om:max-docs>100</om:max-docs>
 
+            <om:field fusion-name="solr-server">
+                <om:add>
+                    <om:response target="facet" type="static-value">
+                        <value>DBoD1</value>
+                    </om:response>
+                </om:add>
+            </om:field>
+
             <om:field name="id" fusion-name="id">
                 <om:change>
                     <om:query type="filter-id" />
@@ -900,6 +926,14 @@
             <om:unique-key>id</om:unique-key>
 
             <om:max-docs>100</om:max-docs>
+
+            <om:field fusion-name="solr-server">
+                <om:add>
+                    <om:response target="facet" type="static-value">
+                        <value>DBoD2</value>
+                    </om:response>
+                </om:add>
+            </om:field>
 
             <om:field name="id" fusion-name="id">
                 <om:change>
@@ -1142,6 +1176,15 @@
                 </om:change>
                 <om:change><om:query /></om:change>
             </om:field>
+
+            <om:field fusion-name="solr-server">
+                <om:add>
+                    <om:response target="facet" type="static-value">
+                        <value>UBL4</value>
+                    </om:response>
+                </om:add>
+            </om:field>
+
         </om:solr-server>
 
     </om:solr-servers>

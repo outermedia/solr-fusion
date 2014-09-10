@@ -19,7 +19,10 @@ import javax.xml.bind.UnmarshalException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ballmann on 7/11/14.
@@ -155,6 +158,10 @@ public class PagingResponseConsolidatorTest
         {
             titleField = "titleVT_de";
         }
+        if (serverName.equals("BibliothekA"))
+        {
+            titleField = "Titel";
+        }
         fusionRequest.setSearchServerSortField(titleField);
         List<Document> docs = new ArrayList<>();
         int id = 1;
@@ -202,6 +209,32 @@ public class PagingResponseConsolidatorTest
         Assert.assertEquals("Expected other facets", expectedMap, fusionFacetFields.get("language_en"));
         expectedMap = buildWordCountMap("a", 1, "b", 2);
         Assert.assertEquals("Expected other facets", expectedMap, fusionFacetFields.get("language"));
+    }
+
+    @Test
+    public void testFacetAddHandling()
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
+        InvocationTargetException, IllegalAccessException
+    {
+        cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
+        PagingResponseConsolidator consolidator = (PagingResponseConsolidator) PagingResponseConsolidator.Factory.getInstance();
+        consolidator.initConsolidator(cfg);
+
+        addAnswerFromServer("BibliothekA", consolidator, new String[]{"a"},
+            buildFacetDoc(Arrays.asList(buildFaceHit("Titel", "a", "b"), buildFaceHit("language", "a", "b"))));
+
+        FusionRequest req = new FusionRequest();
+        ClosableIterator<Document, SearchServerResponseInfo> docIt = consolidator.getResponseIterator(req);
+        SearchServerResponseInfo info = docIt.getExtraInfo();
+        Map<String, List<WordCount>> facets = info.getFacetFields();
+        Assert.assertTrue("Expected to find entry with key 'server', but got: " + facets, facets.containsKey("server"));
+        List<WordCount> serverFacet = facets.get("server");
+        Assert.assertEquals("Expected only one 'server' facet entry", 1, serverFacet.size());
+        WordCount wc = serverFacet.get(0);
+        Assert.assertEquals("Expected other 'server' facet value.", "UBL1", wc.getWord());
+        Document doc = docIt.next();
+        String docStr = doc.buildFusionDocStr();
+        Assert.assertFalse("Didn't expect to find 'server' in doc: " + docStr, docStr.contains("server"));
     }
 
     protected Document buildFacetDoc(List<FacetHit> facets)

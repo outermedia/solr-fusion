@@ -13,5 +13,11 @@ import org.outermedia.solrfusion.configuration.ScoreFactory;
 
 public interface ScoreCorrectorIfc extends Initiable<ScoreFactory>
 {
+    /**
+     * Correct the specified score.
+     *
+     * @param score
+     * @return a new score value
+     */
     public double applyCorrection(double score);
 }
