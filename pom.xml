@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.outermedia.solr</groupId>
     <artifactId>solrfusion</artifactId>
@@ -381,6 +382,34 @@
                                 <include>org/outermedia/solrfusion/configuration/*.java</include>
                             </includes>
                             <outputDirectory>${project.build.directory}/generated-resources/schemas</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>first</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <verbose>false</verbose>
+                            <addSvnKeyWords>false</addSvnKeyWords>
+                            <licenseName>gpl_v3</licenseName>
+                            <inceptionYear>2014</inceptionYear>
+                            <organizationName>outermedia GmbH</organizationName>
+                            <projectName>SolrFusion</projectName>
+                            <includes>
+                                <include>*.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>package-info.java</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
