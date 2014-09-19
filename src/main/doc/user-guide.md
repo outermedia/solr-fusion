@@ -79,7 +79,10 @@ of this version is to work with the customized vufind 1.3 used by the [Universit
 But the concept and implementation allows a high level of customization, so it is conceivably to use SolrFusion to
 combine e.g. data bases too.
     
-Version 1.0 was tested with Solr 1.4, 3.5, 3.6 and 4.3 servers.
+Version 1.0 was tested with vufind 1.3 and  Solr 1.4, 3.5, 3.6, 4.3 servers.
+
+A basic test with vufind 2.3 succeeded too.
+
 
 # Licence
 
@@ -227,8 +230,11 @@ The main servlet is named __SolrFusionServlet__ and offers three options:
 * __fusion-schema__ - The file name of the SolrFusion Schema XML File to use. E.g. fusion-schema-uni-leipzig.xml.
 * __fusion-schema.xsd__ - The XML Schema file to validate __fusion-schema__.
 * __applyLatin1Fix__ - With true or false it is possible to enable or disable this fix. SolrFusion was tested with
-vufind 1.3 (slightly modified by [Universitätsbibliothek Leipzig](http://www.ub.uni-leipzig.de/ "Universitätsbibliothek Leipzig")) where it is necessary to fix the wrong encoding of diacritical
-chars e.g German Umlauts (ä, ü, ö etc). It is perhaps necessary to set the URI encoding for tomcat in 
+vufind 1.3 (slightly modified by [Universitätsbibliothek Leipzig](http://www.ub.uni-leipzig.de/ "Universitätsbibliothek Leipzig")) 
+where it is necessary to fix the wrong encoding of diacritical chars e.g German Umlauts (ä, ü, ö etc). Note: We had to
+disable the fix during a test with vufind2.3.
+
+It is perhaps necessary to set the URI encoding for tomcat in 
 `<tomcat install dir>/conf/server.xml`:  
 
 `    <Server ...>  
