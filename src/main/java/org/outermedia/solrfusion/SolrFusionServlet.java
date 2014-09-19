@@ -127,7 +127,10 @@ public class SolrFusionServlet extends AbstractServlet
         {
             log.trace("Returning:\n{}", responseStr);
             response.setStatus(200);
+            startTime = System.currentTimeMillis();
             pw.println(responseStr);
+            long endTime = System.currentTimeMillis();
+            log.info("Wrote response in {}ms", endTime-startTime);
         }
         else
         {
