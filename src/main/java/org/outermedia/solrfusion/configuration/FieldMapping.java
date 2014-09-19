@@ -352,7 +352,7 @@ public class FieldMapping
         return mappingType.isSearchServerFieldOnly();
     }
 
-    public int geStartLineNumberInSchema()
+    public int getStartLineNumberInSchema()
     {
         int atLine = -1;
         if (locator != null)
@@ -459,6 +459,22 @@ public class FieldMapping
                 if (o instanceof DropOperation)
                 {
                     result.addAll(o.getResponseTargets(target));
+                }
+            }
+        }
+        return result;
+    }
+
+    public List<Target> getAllDropQueryTargets(QueryTarget target)
+    {
+        List<Target> result = new ArrayList<>();
+        if (operations != null)
+        {
+            for (Operation o : operations)
+            {
+                if (o instanceof DropOperation)
+                {
+                    result.addAll(o.getQueryTargets(target));
                 }
             }
         }

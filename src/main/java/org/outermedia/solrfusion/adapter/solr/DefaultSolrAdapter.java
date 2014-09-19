@@ -40,10 +40,12 @@ import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.Multimap;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseException;
+import org.outermedia.solrfusion.adapter.SolrFusionUriBuilderIfc;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryTarget;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
+import org.outermedia.solrfusion.response.parser.Document;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,7 +64,7 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 @ToString
 @Slf4j
-public class DefaultSolrAdapter implements SearchServerAdapterIfc
+public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriBuilder>
 {
     public String QUERY_PARAMETER = "q";
     public String FILTER_QUERY_PARAMETER = "fq";
@@ -98,35 +100,9 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
     }
 
     @Override
-    public InputStream sendQuery(Configuration configuration, SearchServerConfig searchServerConfig,
-        FusionRequest fusionRequest, Multimap<String> params, int timeout, String version)
-        throws URISyntaxException, IOException
+    public InputStream sendQuery(SolrFusionUriBuilder uriBuilder, int timeout) throws URISyntaxException, IOException
     {
         HttpClient client = newHttpClient();
-
-        URIBuilder uriBuilder = buildHttpClientParams(params);
-
-        if (!"q".equals(QUERY_PARAMETER))
-        {
-            // create dismax query to get highlightings too
-            try
-            {
-                Set<String> defaultSearchFields = fusionRequest.mapFusionFieldToSearchServerField(
-                    configuration.getDefaultSearchField(), configuration, searchServerConfig, null, QueryTarget.QUERY);
-                QueryBuilderIfc dismaxQueryBuilder = configuration.getDismaxQueryBuilder();
-                Locale locale = fusionRequest.getLocale();
-                String qs = dismaxQueryBuilder.buildQueryString(fusionRequest.getParsedQuery(), configuration,
-                    searchServerConfig, locale, defaultSearchFields, QueryTarget.QUERY);
-                qs = dismaxQueryBuilder.getStaticallyAddedQueries(configuration, searchServerConfig, locale,
-                    QueryTarget.QUERY, qs);
-                uriBuilder.setParameter("q", qs);
-                log.debug("Setting q to dismax query in order to get highlights: {}", qs);
-            }
-            catch (Exception e)
-            {
-                log.error("Caught exception while creating dismax query", e);
-            }
-        }
 
         if (log.isDebugEnabled())
         {
@@ -138,13 +114,15 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
 
         request.setConfig(requestConfig);
 
+        long startTime = System.currentTimeMillis();
         HttpResponse response = client.execute(request);
+        long endTime = System.currentTimeMillis();
 
         StatusLine statusLine = response.getStatusLine();
         int httpStatusCode = statusLine.getStatusCode();
         String reason = statusLine.getReasonPhrase();
 
-        log.debug("Received response from host {}: {}", url, statusLine.toString());
+        log.debug("Received response in {}ms from host {}: {}", endTime-startTime, url, statusLine.toString());
 
         InputStream contentStream = response.getEntity().getContent();
 
@@ -156,9 +134,12 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         return contentStream;
     }
 
-    protected URIBuilder buildHttpClientParams(Multimap<String> params) throws URISyntaxException
+    @Override
+    public SolrFusionUriBuilder buildHttpClientParams(Configuration configuration,
+        SearchServerConfig searchServerConfig, FusionRequest fusionRequest, Multimap<String> params, String version)
+        throws URISyntaxException
     {
-        URIBuilder ub = new URIBuilder(url);
+        SolrFusionUriBuilder ub = new SolrFusionUriBuilder(url);
         ub.setParameter(QUERY_PARAMETER, params.getFirst(QUERY));
         Collection<String> fqs = params.get(FILTER_QUERY);
         if (fqs != null)
@@ -186,6 +167,28 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         buildHighlightHttpClientParams(params, ub);
 
         buildFacetHttpClientParams(params, ub);
+
+        if (!"q".equals(QUERY_PARAMETER))
+        {
+            // create dismax query to get highlightings too
+            try
+            {
+                Set<String> defaultSearchFields = fusionRequest.mapFusionFieldToSearchServerField(
+                    configuration.getDefaultSearchField(), configuration, searchServerConfig, null, QueryTarget.QUERY);
+                QueryBuilderIfc dismaxQueryBuilder = configuration.getDismaxQueryBuilder();
+                Locale locale = fusionRequest.getLocale();
+                String qs = dismaxQueryBuilder.buildQueryString(fusionRequest.getParsedQuery(), configuration,
+                    searchServerConfig, locale, defaultSearchFields, QueryTarget.QUERY);
+                qs = dismaxQueryBuilder.getStaticallyAddedQueries(configuration, searchServerConfig, locale,
+                    QueryTarget.QUERY, qs);
+                ub.setParameter("q", qs);
+                log.debug("Setting q to dismax query in order to get highlights: {}", qs);
+            }
+            catch (Exception e)
+            {
+                log.error("Caught exception while creating dismax query", e);
+            }
+        }
 
         return ub;
     }
@@ -248,7 +251,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
             timeout).build();
     }
 
-    protected HttpPost newHttpPost(String url, URIBuilder ub) throws URISyntaxException, UnsupportedEncodingException
+    protected HttpPost newHttpPost(String url, SolrFusionUriBuilderIfc ub) throws URISyntaxException, UnsupportedEncodingException
     {
         HttpPost result = new HttpPost(url);
         List<NameValuePair> params = ub.getQueryParams();
@@ -273,6 +276,26 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc
         {
             QUERY_PARAMETER = config.getQueryParamName();
         }
+    }
+
+    @Override public void finish() throws Exception
+    {
+        // NOP
+    }
+
+    @Override public void commitLastDocs()
+    {
+        throw new RuntimeException("Not implemented.");
+    }
+
+    @Override public void add(Document doc) throws Exception
+    {
+        throw new RuntimeException("Not implemented.");
+    }
+
+    @Override public void deleteByQuery(String query) throws Exception
+    {
+        throw new RuntimeException("Not implemented.");
     }
 
 }

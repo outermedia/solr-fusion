@@ -42,8 +42,8 @@ import java.util.*;
  */
 
 /**
- * Supports sorting, merging of documents and paging and a limit of documents to retrieve (per search server).
- * Facets and highlights are handled too.
+ * Supports sorting, merging of documents and paging and a limit of documents to retrieve (per search server). Facets
+ * and highlights are handled too.
  */
 @ToString
 @Slf4j
@@ -84,7 +84,8 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         allHighlighting.init(config.getIdGenerator());
     }
 
-    @Override public void addResultStream(SearchServerConfig searchServerConfig,
+    @Override
+    public synchronized void addResultStream(SearchServerConfig searchServerConfig,
         ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request,
         List<Highlighting> highlighting, Document facetFields)
     {
@@ -201,7 +202,8 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
 
     protected MappingClosableIterator getNewMappingClosableIterator(Configuration config,
         SearchServerConfig searchServerConfig, ClosableIterator<Document, SearchServerResponseInfo> docIterator,
-        Set<String> searchServerFieldsToMap, ResponseTarget target) throws InvocationTargetException, IllegalAccessException
+        Set<String> searchServerFieldsToMap, ResponseTarget target)
+        throws InvocationTargetException, IllegalAccessException
     {
         return new MappingClosableIterator(docIterator, config, searchServerConfig, searchServerFieldsToMap, target);
     }
@@ -251,7 +253,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             docLookup = mergeDocuments(config, allDocs);
             log.debug("Merging resulted in {} documents (before merging: {}).", allDocs.size(), allDocNrBeforeMerging);
             // correct max docs available
-            maxDocNr = maxDocNr-(allDocNrBeforeMerging-allDocs.size());
+            maxDocNr = maxDocNr - (allDocNrBeforeMerging - allDocs.size());
         }
 
         // sort all docs
@@ -334,7 +336,8 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         {
             for (Document doc : facetFields)
             {
-                completelyMapDoc(config, doc, doc.getFusionDocId(fusionIdField), ScriptEnv.ENV_IN_MAP_FACET, ResponseTarget.FACET);
+                completelyMapDoc(config, doc, doc.getFusionDocId(fusionIdField), ScriptEnv.ENV_IN_MAP_FACET,
+                    ResponseTarget.FACET);
                 doc.accept(getFacetBuilder(idGenerator, fusionIdField, fusionFacetFields, doc), null);
             }
         }
@@ -352,8 +355,8 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         return new FacetWordCountBuilder(fusionIdField, idGenerator, doc, fusionFacetFields);
     }
 
-    protected void completelyMapDoc(Configuration config, Document d, String fusionDocId, String mapType, ResponseTarget target)
-        throws InvocationTargetException, IllegalAccessException
+    protected void completelyMapDoc(Configuration config, Document d, String fusionDocId, String mapType,
+        ResponseTarget target) throws InvocationTargetException, IllegalAccessException
     {
         SearchServerConfig searchServerConfig = config.getSearchServerConfigByFusionDocId(fusionDocId);
         ScriptEnv newScriptEnv = getNewScriptEnv();

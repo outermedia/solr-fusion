@@ -67,7 +67,7 @@ public class ResponseConsolidator extends AbstractResponseConsolidator
     }
 
     @Override
-    public void addResultStream(SearchServerConfig searchServerConfig,
+    public synchronized void addResultStream(SearchServerConfig searchServerConfig,
         ClosableIterator<Document, SearchServerResponseInfo> docIterator, FusionRequest request,
         List<Highlighting> highlighting,Document facetFields)
     {

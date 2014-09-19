@@ -69,6 +69,9 @@
 
         <om:solr-server name="Bibliothek9000" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.EmbeddedSolrAdapter$Factory">
+            <om:config>
+                <solr-home>src/test/resources/solr/solr-home-1</solr-home>
+            </om:config>
 
             <om:url>src/test/resources/solr/solr-home-1</om:url>
 
@@ -86,6 +89,9 @@
 
         <om:solr-server name="Bibliothek9002" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.EmbeddedSolrAdapter$Factory">
+            <om:config>
+                <solr-home>src/test/resources/solr/solr-home-2</solr-home>
+            </om:config>
 
             <om:url>src/test/resources/solr/solr-home-2</om:url>
 

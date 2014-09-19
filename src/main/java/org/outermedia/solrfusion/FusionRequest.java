@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.*;
+import org.outermedia.solrfusion.mapper.MapOperation;
 import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
@@ -39,7 +40,7 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 /**
  * Store Solr request params and build search server specific parameters.
- *
+ * <p/>
  * Created by ballmann on 04.06.14.
  */
 @Setter
@@ -437,18 +438,55 @@ public class FusionRequest
         }
         else
         {
-            List<ApplicableResult> mappings = filterForQuery(
-                searchServerConfig.findAllMappingsForFusionField(fusionField), target);
+            List<ApplicableResult> allMappingsForFusionField = searchServerConfig.findAllMappingsForFusionField(
+                fusionField);
+            List<ApplicableResult> mappings = filterForQuery(allMappingsForFusionField, target);
             boolean foundMapping = false;
             if (mappings.size() > 0)
             {
+                boolean foundDrop = false;
+                List<String> fields = new ArrayList<>();
+                List<MapOperation> ops = new ArrayList<>();
                 for (ApplicableResult ar : mappings)
                 {
                     foundMapping = true;
-                    result.add(ar.getDestinationFieldName());
+                    if (ar.isAdded())
+                    {
+                        fields.add(ar.getDestinationFieldName());
+                        ops.add(MapOperation.ADD);
+                        log.trace("Added {} for {}, because of mapping at line {}", ar.getDestinationFieldName(),
+                            fusionField, ar.getMapping().getStartLineNumberInSchema());
+                    }
+                    if (ar.isChanged())
+                    {
+                        fields.add(ar.getDestinationFieldName());
+                        ops.add(MapOperation.CHANGE);
+                        log.trace("Changed {} for {}, because of mapping at line {}", ar.getDestinationFieldName(),
+                            fusionField, ar.getMapping().getStartLineNumberInSchema());
+                    }
+                    if (ar.isDropped())
+                    {
+                        foundDrop = true;
+                        log.trace("DROP {} in {}, because of mapping at line {}", fusionField, target,
+                            ar.getMapping().getStartLineNumberInSchema());
+                    }
                 }
+                // if field is dropped, remove all changed entries
+                if(foundDrop)
+                {
+                    for(int i=fields.size()-1; i>=0; i--)
+                    {
+                        if(ops.get(i) == MapOperation.CHANGE)
+                        {
+                            fields.remove(i);
+                            ops.remove(i);
+                        }
+                    }
+                }
+                // finally keep all different field names
+                result.addAll(fields);
             }
-            else
+            if (result.isEmpty())
             {
                 // special handling for score and id, because both are not mapped as the other fields
                 if (ResponseMapperIfc.FUSION_FIELD_NAME_SCORE.equals(fusionField))
@@ -480,6 +518,7 @@ public class FusionRequest
                 }
             }
         }
+        log.trace("Mapped {} to {}", fusionField, result);
         return result;
     }
 
@@ -488,44 +527,71 @@ public class FusionRequest
     {
         // last <om:change> counts, because it overwrites the previous mapping
         boolean foundOkChangeMapping = false;
+        List<ApplicableResult> result = new ArrayList<>();
         for (int i = allMappingsForFusionField.size() - 1; i >= 0; i--)
         {
             boolean forQueryOk = false;
             ApplicableResult ar = allMappingsForFusionField.get(i);
-            // a search server name must be present!
-            if (ar.getDestinationFieldName() != null)
+            FieldMapping m = ar.getMapping();
+            FieldMapping filteredMapping = new FieldMapping();
+            List<Operation> filteredOps = new ArrayList<>();
+            filteredMapping.setOperations(filteredOps);
+            filteredMapping.setLocator(m.getLocator());
+            List<Operation> ops = m.getOperations();
+            // no operations = <om:change>
+            if (ops == null || ops.size() == 0)
             {
-                FieldMapping m = ar.getMapping();
-                List<Operation> ops = m.getOperations();
-                // no operations = <om:change>
-                if (ops == null || ops.size() == 0)
+                if (!foundOkChangeMapping)
                 {
-                    if (!foundOkChangeMapping)
-                    {
-                        forQueryOk = true;
-                        foundOkChangeMapping = true;
-                    }
-                }
-                else
-                {
-                    // find <om:change><om:query /> or <om:add level="inside"><om:query />
-                    if (m.getAllAddQueryTargets(AddLevel.INSIDE, target).size() > 0)
-                    {
-                        forQueryOk = true;
-                    }
-                    if (!foundOkChangeMapping && m.getAllChangeQueryTargets(target).size() > 0)
-                    {
-                        forQueryOk = true;
-                        foundOkChangeMapping = true;
-                    }
+                    forQueryOk = true;
+                    foundOkChangeMapping = true;
+                    filteredOps.add(new ChangeOperation());
+                    ar.setChanged(true);
                 }
             }
-            if (!forQueryOk)
+            else
             {
-                allMappingsForFusionField.remove(i);
+                // find <om:change><om:query /> or <om:add level="inside"><om:query />
+                List<Target> allAddQueryTargets = m.getAllAddQueryTargets(AddLevel.INSIDE, target);
+                if (allAddQueryTargets.size() > 0)
+                {
+                    forQueryOk = true;
+                    AddOperation addOp = new AddOperation();
+                    addOp.setTargets(allAddQueryTargets);
+                    filteredOps.add(addOp);
+                    ar.setAdded(true);
+                }
+                if (!foundOkChangeMapping)
+                {
+                    List<Target> allChangeQueryTargets = m.getAllChangeQueryTargets(target);
+                    if (allChangeQueryTargets.size() > 0)
+                    {
+                        forQueryOk = true;
+                        foundOkChangeMapping = true;
+                        ChangeOperation changeOp = new ChangeOperation();
+                        changeOp.setTargets(allChangeQueryTargets);
+                        filteredOps.add(changeOp);
+                        ar.setChanged(true);
+                    }
+                }
+                List<Target> allDropQueryTargets = m.getAllDropQueryTargets(target);
+                if (allDropQueryTargets.size() > 0)
+                {
+                    DropOperation dropOp = new DropOperation();
+                    dropOp.setTargets(allDropQueryTargets);
+                    filteredOps.add(dropOp);
+                    forQueryOk = true;
+                    ar.setDropped(true);
+                }
+            }
+            if (forQueryOk)
+            {
+                result.add(
+                    new ApplicableResult(ar.getDestinationFieldName(), filteredMapping, ar.isDropped(), ar.isChanged(),
+                        ar.isAdded()));
             }
         }
-        return allMappingsForFusionField;
+        return result;
     }
 
     protected void buildSearchServerQuery(ParsedQuery query, SolrFusionRequestParams paramName,

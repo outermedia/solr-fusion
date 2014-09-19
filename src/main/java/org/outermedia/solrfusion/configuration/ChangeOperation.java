@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.mapper.MapOperation;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.mapper.UndeclaredFusionField;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -52,6 +53,12 @@ import javax.xml.bind.annotation.XmlType;
 @Slf4j
 public class ChangeOperation extends Operation
 {
+
+    public ChangeOperation()
+    {
+        setOp(MapOperation.CHANGE);
+    }
+
     @Override
     public void applyAllResponseOperations(Term term, ScriptEnv env, ResponseTarget target)
     {
@@ -83,7 +90,7 @@ public class ChangeOperation extends Operation
 
         if (msg != null)
         {
-            msg = "In fusion schema at line " + fieldMapping.geStartLineNumberInSchema() + ": " + msg;
+            msg = "In fusion schema at line " + fieldMapping.getStartLineNumberInSchema() + ": " + msg;
             log.error(msg);
             throw new UnmarshalException(msg);
         }

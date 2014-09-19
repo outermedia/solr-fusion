@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.mapper.MapOperation;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.response.parser.Document;
 import org.outermedia.solrfusion.types.*;
@@ -55,6 +56,11 @@ public class AddOperation extends Operation
     // responses don't need a level
     @XmlAttribute(required = false)
     private AddLevel level;
+
+    public AddOperation()
+    {
+        setOp(MapOperation.ADD);
+    }
 
     @Override
     protected void applyOneQueryOperation(Term term, ScriptEnv env, Target t)
@@ -205,7 +211,7 @@ public class AddOperation extends Operation
 
         if (msg != null)
         {
-            msg = "In fusion schema at line " + fieldMapping.geStartLineNumberInSchema() + ": " + msg;
+            msg = "In fusion schema at line " + fieldMapping.getStartLineNumberInSchema() + ": " + msg;
             log.error(msg);
             throw new UnmarshalException(msg);
         }

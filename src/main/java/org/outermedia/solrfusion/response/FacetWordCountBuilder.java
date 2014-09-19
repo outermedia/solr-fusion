@@ -106,7 +106,7 @@ public class FacetWordCountBuilder implements FieldVisitor
                         wc += wordCount.get(i);
                         if (log.isDebugEnabled() && wc != wordCount.get(i))
                         {
-                            log.debug("MERGED FACET WORD COUNTS OF {}: {} to {}+{}={}", sf.getFusionFieldName(), word,
+                            log.trace("MERGED FACET WORD COUNTS OF {}: {} to {}+{}={}", sf.getFusionFieldName(), word,
                                 wcObj, wordCount.get(i), wc);
                         }
                         fusionWordCount.put(word, wc);

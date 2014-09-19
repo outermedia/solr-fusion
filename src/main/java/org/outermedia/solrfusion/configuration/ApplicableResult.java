@@ -22,9 +22,9 @@ package org.outermedia.solrfusion.configuration;
  * #L%
  */
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Because patterns are supported in mappings, the specific field name is needed for further processing (instead of
@@ -34,10 +34,28 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@AllArgsConstructor
+@ToString
 public class ApplicableResult
 {
     private String destinationFieldName;
 
     private FieldMapping mapping;
+
+    private boolean dropped;
+    private boolean changed;
+    private boolean added;
+
+    public ApplicableResult(String destinationFieldName)
+    {
+        this(destinationFieldName, null, false, false, false);
+    }
+
+    public ApplicableResult(String destinationFieldName, FieldMapping mapping, boolean dropped, boolean changed, boolean added)
+    {
+        this.destinationFieldName = destinationFieldName;
+        this.mapping = mapping;
+        this.dropped = dropped;
+        this.changed = changed;
+        this.added = added;
+    }
 }

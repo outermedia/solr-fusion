@@ -26,6 +26,7 @@ import com.google.common.io.Files;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.outermedia.solrfusion.adapter.solr.SolrFusionUriBuilder;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
@@ -123,8 +124,8 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
     {
         testMultipleServers("title:abc", "title:def", "target/test-classes/test-xml-response-9000.xml",
             "target/test-classes/test-xml-response-9002.xml");
-        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest, buildParams("title:abc", "title:def"), 4000, "3.6");
-        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest, buildParams("titleVT_eng:abc", "titleVT_eng:def"), 4000,
+        verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest, buildParams("title:abc", "title:def"), "3.6");
+        verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest, buildParams("titleVT_eng:abc", "titleVT_eng:def"),
             "3.6");
     }
 
@@ -155,8 +156,8 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest, buildParams("title:abc", "title:def"), 4000, "3.6");
-        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest, buildParams("titleVT_eng:abc", "titleVT_eng:def"), 4000,
+        verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest, buildParams("title:abc", "title:def"), "3.6");
+        verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest, buildParams("titleVT_eng:abc", "titleVT_eng:def"),
             "3.6");
     }
 
@@ -185,16 +186,12 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
         searchServerConfigs.add(searchServerConfig9000);
         testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
-        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Configuration.class), any(SearchServerConfig.class),
-            any(FusionRequest.class), any(Multimap.class), Mockito.anyInt(),
-            anyString());
+        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(SolrFusionUriBuilder.class), Mockito.anyInt());
 
         searchServerConfigs.add(searchServerConfig9002);
         testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
-        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Configuration.class), any(SearchServerConfig.class),
-            any(FusionRequest.class), any(Multimap.class), Mockito.anyInt(),
-            anyString());
+        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(SolrFusionUriBuilder.class), Mockito.anyInt());
 
         FusionControllerIfc fc = cfg.getController();
         fusionRequest = new FusionRequest();

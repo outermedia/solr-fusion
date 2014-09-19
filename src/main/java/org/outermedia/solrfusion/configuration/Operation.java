@@ -25,6 +25,7 @@ package org.outermedia.solrfusion.configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.outermedia.solrfusion.mapper.MapOperation;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.types.ConversionDirection;
 import org.outermedia.solrfusion.types.ScriptEnv;
@@ -46,7 +47,7 @@ import java.util.List;
 @XmlTransient
 @Getter
 @Setter
-@ToString
+@ToString(exclude = { "op" })
 public abstract class Operation
 {
     @XmlElements(value = {
@@ -58,6 +59,9 @@ public abstract class Operation
         namespace = "http://solrfusion.outermedia.org/configuration/")
     })
     private List<Target> targets;
+
+    @XmlTransient
+    private MapOperation op;
 
     /**
      * Get all targets which are applicable to a query. Filters out Response targets.

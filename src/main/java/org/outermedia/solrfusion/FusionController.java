@@ -23,10 +23,7 @@ package org.outermedia.solrfusion;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.outermedia.solrfusion.adapter.ClosableListIterator;
-import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
-import org.outermedia.solrfusion.adapter.SearchServerResponseException;
-import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
+import org.outermedia.solrfusion.adapter.*;
 import org.outermedia.solrfusion.adapter.solr.Solr1Adapter;
 import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
@@ -36,19 +33,18 @@ import org.outermedia.solrfusion.query.parser.MetaInfo;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.ResponseConsolidatorIfc;
-import org.outermedia.solrfusion.response.ResponseParserIfc;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.XmlResponse;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * The whole processing - handling a SolrFusion query until sending back a Solr response - is controlled by this class.
- *
+ * <p/>
  * Created by ballmann on 04.06.14.
  */
 @Slf4j
@@ -218,40 +214,37 @@ public class FusionController implements FusionControllerIfc
         }
     }
 
-    protected void requestAllSearchServers(FusionRequest fusionRequest,
-        List<SearchServerConfig> configuredSearchServers, ResponseConsolidatorIfc consolidator)
+    protected void requestAllSearchServers(final FusionRequest fusionRequest,
+        List<SearchServerConfig> configuredSearchServers, final ResponseConsolidatorIfc consolidator)
     {
         log.debug("Requesting all configured servers with query: {}", fusionRequest.getQuery());
         ScriptEnv env = getNewScriptEnv(fusionRequest);
         Query query = fusionRequest.getParsedQuery();
         List<ParsedQuery> filterQuery = fusionRequest.getParsedFilterQuery();
         Query highlightQuery = fusionRequest.getParsedHighlightQuery();
+        List<SolrFusionUriBuilderIfc> serverRequests = new ArrayList<>();
+
+        // at first create all solr requests
+        // because the query objects store the mapped values, it is not possible to map the queries in parallel
         for (SearchServerConfig searchServerConfig : configuredSearchServers)
         {
             log.info("Processing query for search server {}", searchServerConfig.getSearchServerName());
             List<ParsedQuery> queryList = Arrays.asList(new ParsedQuery(fusionRequest.getQuery().getValue(), query));
             List<ParsedQuery> hlQueryList = Arrays.asList(
                 new ParsedQuery(fusionRequest.getHighlightQuery().getValue(), highlightQuery));
+            SolrFusionUriBuilderIfc ub = null;
             if (mapQuery(env, searchServerConfig, queryList, fusionRequest, QueryTarget.QUERY) &&
                 mapQuery(env, searchServerConfig, hlQueryList, fusionRequest, QueryTarget.HIGHLIGHT_QUERY) &&
                 mapQuery(env, searchServerConfig, filterQuery, fusionRequest, QueryTarget.FILTER_QUERY))
             {
-                XmlResponse result = sendAndReceive(false, fusionRequest, searchServerConfig);
-                Exception se = result.getErrorReason();
-                if (se == null)
-                {
-                    SearchServerResponseInfo info = new SearchServerResponseInfo(result.getNumFound(), null, null,
-                        null);
-                    ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
-                        result.getDocuments(), info);
-                    consolidator.addResultStream(searchServerConfig, docIterator, fusionRequest,
-                        result.getHighlighting(), result.getFacetFields(searchServerConfig.getIdFieldName(), 1));
-                }
-                else
-                {
-                    consolidator.addErrorResponse(se);
-                }
+                ub = createSolrRequest(fusionRequest, searchServerConfig);
             }
+            else
+            {
+                log.info("Not sending request to {}, because mapping returned no value.",
+                    searchServerConfig.getSearchServerName());
+            }
+            serverRequests.add(ub);
             getNewResetQueryState().reset(query);
             if (filterQuery != null)
             {
@@ -262,6 +255,29 @@ public class FusionController implements FusionControllerIfc
                 getNewResetQueryState().reset(highlightQuery);
             }
         }
+
+        // now request all solr servers in parallel!
+        Collection<SolrRequestCallable> futures = new ArrayList<>();
+        int serverNumber = serverRequests.size();
+        for (int i = 0; i < serverNumber; i++)
+        {
+            SolrFusionUriBuilderIfc ub = serverRequests.get(i);
+            if (ub != null)
+            {
+                futures.add(new SolrRequestCallable(ub, configuration, configuredSearchServers.get(i), consolidator,
+                    fusionRequest));
+            }
+        }
+        ExecutorService threadService = Executors.newFixedThreadPool(serverNumber);
+        try
+        {
+            threadService.invokeAll(futures);
+        }
+        catch (InterruptedException e)
+        {
+            // NOP
+        }
+        threadService.shutdownNow();
     }
 
     protected ScriptEnv getNewScriptEnv(FusionRequest fusionRequest)
@@ -277,12 +293,12 @@ public class FusionController implements FusionControllerIfc
         return new ResetQueryState();
     }
 
-    protected XmlResponse sendAndReceive(boolean isIdQuery, FusionRequest fusionRequest,
+    protected SolrFusionUriBuilderIfc createSolrRequest(FusionRequest fusionRequest,
         SearchServerConfig searchServerConfig)
     {
+        SolrFusionUriBuilderIfc result = null;
         try
         {
-            XmlResponse result;
             Multimap<String> searchServerParams = fusionRequest.buildSearchServerQueryParams(configuration,
                 searchServerConfig);
             String searchServerQuery = searchServerParams.getFirst(SolrFusionRequestParams.QUERY);
@@ -290,101 +306,32 @@ public class FusionController implements FusionControllerIfc
                 (searchServerQuery == null || searchServerQuery.trim().length() == 0))
             {
                 // the mapped query is empty which would return any documents, so don't ask this server
-                result = new XmlResponse();
-                log.info("Ignoring server {}, because the mapped query is empty.",
-                    searchServerConfig.getSearchServerName());
+                log.debug("Don't request server {}, because query is empty.", searchServerConfig.getSearchServerName());
             }
             else
             {
-                int timeout = configuration.getSearchServerConfigs().getTimeout();
                 String queryType = searchServerParams.getFirst(SolrFusionRequestParams.QUERY_TYPE);
-                SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
+                SearchServerAdapterIfc<?> adapter = searchServerConfig.getInstance();
+                boolean forDismax = false;
                 if (MetaInfo.DISMAX_PARSER.equals(queryType))
                 {
-                    adapter = newSolr1Adapter(adapter.getUrl());
+                    String url = adapter.getUrl();
+                    adapter = Solr1Adapter.Factory.getInstance();
+                    adapter.setUrl(url);
+                    forDismax = true;
                 }
-                InputStream is = adapter.sendQuery(configuration, searchServerConfig, fusionRequest, searchServerParams,
-                    timeout, searchServerConfig.getSearchServerVersion());
-                ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
-                    configuration.getDefaultResponseParser());
-                result = responseParser.parse(is);
-                if (result == null)
+                result = adapter.buildHttpClientParams(configuration, searchServerConfig, fusionRequest,
+                    searchServerParams, searchServerConfig.getSearchServerVersion());
+                if (result != null)
                 {
-                    result = new XmlResponse();
-                    result.setErrorReason(new RuntimeException("Solr response parsing failed."));
+                    result.setBuiltForDismax(forDismax);
                 }
-                if (log.isDebugEnabled())
-                {
-                    int docNr = -1;
-                    int maxDocNr = -1;
-                    if (result != null)
-                    {
-                        if (result.getDocuments() != null)
-                        {
-                            docNr = result.getDocuments().size();
-                        }
-                        maxDocNr = result.getNumFound();
-                    }
-                    log.debug("Received from {}: {} of max {}", searchServerConfig.getSearchServerName(), docNr,
-                        maxDocNr);
-                }
-                if (log.isTraceEnabled())
-                {
-                    log.trace("Received from {}: {}", searchServerConfig.getSearchServerName(), result.toString());
-                }
-            }
-            return result;
-        }
-        catch (SearchServerResponseException se)
-        {
-            return handleSearchServerResponseException(searchServerConfig, se);
-        }
-        catch (Exception e)
-        {
-            return handleGeneralResponseException(searchServerConfig, e);
-        }
-    }
-
-    private XmlResponse handleGeneralResponseException(SearchServerConfig searchServerConfig, Exception e)
-    {
-        log.error("Caught exception while communicating with server " + searchServerConfig.getSearchServerName(), e);
-        XmlResponse responseError = new XmlResponse();
-        responseError.setErrorReason(e);
-        return responseError;
-    }
-
-    private XmlResponse handleSearchServerResponseException(SearchServerConfig searchServerConfig,
-        SearchServerResponseException se)
-    {
-        log.error("Caught exception while communicating with server " + searchServerConfig.getSearchServerName(), se);
-
-        // try to parse error response if present
-        try
-        {
-            ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
-                configuration.getDefaultResponseParser());
-            XmlResponse responseError = responseParser.parse(se.getHttpContent());
-            if (responseError != null)
-            {
-                se.setResponseError(responseError.getResponseErrors());
-                responseError.setErrorReason(se);
-                return responseError;
             }
         }
         catch (Exception e)
         {
-            // depending on solr's version, a well formed error message is provided or not
-            log.warn("Couldn't parse error response", e);
+            log.error("Creation of http request failed for server " + searchServerConfig.getSearchServerName(), e);
         }
-        XmlResponse responseError = new XmlResponse();
-        responseError.setErrorReason(se);
-        return responseError;
-    }
-
-    protected SearchServerAdapterIfc newSolr1Adapter(String url)
-    {
-        SearchServerAdapterIfc result = Solr1Adapter.Factory.getInstance();
-        result.setUrl(url);
         return result;
     }
 
@@ -458,4 +405,5 @@ public class FusionController implements FusionControllerIfc
     {
         // NOP
     }
+
 }

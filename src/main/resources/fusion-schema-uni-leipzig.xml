@@ -259,6 +259,11 @@
                 </om:add>
             </om:field>
 
+            <!-- TODO handle this case -->
+            <om:field fusion-name="solr-server">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+
         </om:solr-server>
 
         <om:solr-server name="GBV" version="3.6"
@@ -682,6 +687,11 @@
                 <om:drop><om:query/></om:drop>
             </om:field>
 
+            <!-- TODO handle this case -->
+            <om:field fusion-name="solr-server">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+
         </om:solr-server>
 
 
@@ -912,6 +922,11 @@
                 </om:add>
             </om:field>
 
+            <!-- TODO handle this case -->
+            <om:field fusion-name="solr-server">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+
         </om:solr-server>
 
         <!-- same mapping of DBoD1 except static source_id -->
@@ -1136,6 +1151,11 @@
                 </om:add>
             </om:field>
 
+            <!-- TODO handle this case -->
+            <om:field fusion-name="solr-server">
+                <om:drop><om:query /></om:drop>
+            </om:field>
+
         </om:solr-server>
 
         <om:solr-server name="UBL4" version="4.3"
@@ -1183,6 +1203,11 @@
                         <value>UBL4</value>
                     </om:response>
                 </om:add>
+            </om:field>
+
+            <!-- TODO handle this case -->
+            <om:field fusion-name="solr-server">
+                <om:drop><om:query /></om:drop>
             </om:field>
 
         </om:solr-server>

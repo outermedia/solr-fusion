@@ -29,18 +29,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrInputDocument;
 import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.Multimap;
 import org.outermedia.solrfusion.SolrTestServer;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.configuration.AdapterConfig;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
+import org.outermedia.solrfusion.response.parser.Document;
+import org.outermedia.solrfusion.response.parser.FieldVisitor;
+import org.outermedia.solrfusion.response.parser.SolrMultiValuedField;
+import org.outermedia.solrfusion.response.parser.SolrSingleValuedField;
+import org.outermedia.solrfusion.types.ScriptEnv;
+import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
@@ -52,12 +62,12 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
  */
 @ToString
 @Slf4j
-public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
+public class EmbeddedSolrAdapter implements SearchServerAdapterIfc<SolrFusionSolrQuery>
 {
 
     protected String WRITER_TYPE_PARAMETER = "wt";
 
-    @Setter @Getter private SolrTestServer testServer;
+    private SolrTestServer testServer;
 
     @Getter @Setter String url;
 
@@ -69,13 +79,12 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
     }
 
     @Override
-    public InputStream sendQuery(Configuration configuration, SearchServerConfig searchServerConfig,
-        FusionRequest fusionRequest, Multimap<String> params, int timeout, String version)
-        throws URISyntaxException, IOException
+    public SolrFusionSolrQuery buildHttpClientParams(Configuration configuration, SearchServerConfig searchServerConfig,
+        FusionRequest fusionRequest, Multimap<String> params, String version) throws URISyntaxException
     {
         String q = params.getFirst(SolrFusionRequestParams.QUERY);
         String fq = params.getFirst(SolrFusionRequestParams.FILTER_QUERY);
-        SolrQuery query = new SolrQuery(q);
+        SolrFusionSolrQuery query = new SolrFusionSolrQuery(q);
         if (fq != null)
         {
             query.setFilterQueries(fq);
@@ -113,13 +122,19 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
             query.setRequestHandler(queryType);
         }
 
-        log.debug("Sending query: q={} fq={} start={} rows={} sort={} fl={}", q, fq, start, rows, sortStr,
-            fieldsToReturn);
+        log.debug("Prepared query for server {}: q={} fq={} start={} rows={} sort={} fl={}",
+            searchServerConfig.getSearchServerName(), q, fq, start, rows, sortStr, fieldsToReturn);
 
+        return query;
+    }
+
+    @Override
+    public InputStream sendQuery(SolrFusionSolrQuery query, int timeout) throws URISyntaxException, IOException
+    {
         QueryResponse response = null;
         try
         {
-            response = testServer.getServer().query(query);
+            response = testServer.query(query);
         }
         catch (SolrServerException e)
         {
@@ -135,8 +150,8 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
      *
      * @param field
      * @param fieldList are separated by SPACE (see {@link org.outermedia.solrfusion.FusionRequest#mapFusionFieldListToSearchServerField(String,
-     *                  org.outermedia.solrfusion.configuration.Configuration, org.outermedia.solrfusion.configuration.SearchServerConfig)}
-     *                  )
+     *                  org.outermedia.solrfusion.configuration.Configuration, org.outermedia.solrfusion.configuration.SearchServerConfig,
+     *                  String, boolean, org.outermedia.solrfusion.configuration.QueryTarget)} )
      * @return a modified field list
      */
     protected String mergeField(String field, String fieldList)
@@ -160,6 +175,60 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc
     public void init(SearchServerConfig config)
     {
         url = config.getUrl();
+        AdapterConfig adapterConfigObj = config.getAdapterConfig();
+        List<Element> adapterConfigXml = adapterConfigObj.getTypeConfig();
+        try
+        {
+            /* unfortunately the ":" is necessary for the empty xml namespace!
+             * please see Util.getValueOfXpath() */
+            String solrHome = new Util().getValueOfXpath("//:solr-home", adapterConfigXml, true);
+            initTestServer(solrHome);
+        }
+        catch (Exception e)
+        {
+            log.error("Caught exception while creating embedded solr server", e);
+        }
+    }
+
+    public void initTestServer(String solrHome) throws Exception
+    {
+        testServer = new SolrTestServer(solrHome);
+    }
+
+    @Override public void finish() throws Exception
+    {
+        testServer.finish();
+    }
+
+    public void commitLastDocs()
+    {
+        testServer.commitLastDocs();
+    }
+
+    @Override public void add(Document doc) throws Exception
+    {
+        final SolrInputDocument document = new SolrInputDocument();
+        doc.accept(new FieldVisitor()
+        {
+            @Override public boolean visitField(SolrSingleValuedField sf, ScriptEnv env)
+            {
+                document.addField(sf.getFieldName(), sf.getValue());
+                return true;
+            }
+
+            @Override public boolean visitField(SolrMultiValuedField msf, ScriptEnv env)
+            {
+                List<String> values = msf.getValues();
+                for(String v : values) document.addField(msf.getFieldName(), v);
+                return true;
+            }
+        }, new ScriptEnv());
+        testServer.add(document);
+    }
+
+    @Override public void deleteByQuery(String query) throws Exception
+    {
+        testServer.deleteByQuery(query);
     }
 
 }

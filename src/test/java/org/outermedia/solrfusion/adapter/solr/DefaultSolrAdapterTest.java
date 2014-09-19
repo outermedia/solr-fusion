@@ -37,10 +37,12 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.Multimap;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SearchServerResponseException;
+import org.outermedia.solrfusion.adapter.SolrFusionUriBuilderIfc;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.configuration.Util;
@@ -121,7 +123,8 @@ public class DefaultSolrAdapterTest
                 SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
                 Multimap<String> params = new Multimap<>();
                 params.put(SolrFusionRequestParams.QUERY, "shakespeare");
-                InputStream is = adapter.sendQuery(null, searchServerConfig, null, params, 4000, "4.1");
+                SolrFusionUriBuilderIfc ub = adapter.buildHttpClientParams(null, searchServerConfig, null, params, "4.1");
+                InputStream is = adapter.sendQuery(ub, 4000);
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 XmlResponse xmlResponse = (new Util()).unmarshal(XmlResponse.class, "", br, null);
@@ -150,7 +153,7 @@ public class DefaultSolrAdapterTest
         StatusLine sl = mock(StatusLine.class);
         HttpEntity entity = mock(HttpEntity.class);
         when(adapter.newHttpClient()).thenReturn(client);
-        doReturn(request).when(adapter).newHttpPost(anyString(), any(URIBuilder.class));
+        doReturn(request).when(adapter).newHttpPost(anyString(), any(SolrFusionUriBuilder.class));
         when(client.execute(request)).thenReturn(response);
         when(response.getStatusLine()).thenReturn(sl);
         when(sl.getStatusCode()).thenReturn(400);
@@ -164,7 +167,8 @@ public class DefaultSolrAdapterTest
         params.put(SORT, "score desc");
         try
         {
-            adapter.sendQuery(null, null, null, params, 3000, "4.1");
+            SolrFusionUriBuilder ub = adapter.buildHttpClientParams(null, null, null, params, "4.1");
+            adapter.sendQuery(ub, 2000);
             Assert.fail("Expected SearchServerResponseException for http status 400");
         }
         catch (SearchServerResponseException se)
@@ -177,7 +181,8 @@ public class DefaultSolrAdapterTest
         when(entity.getContent()).thenReturn(new StringBufferInputStream("Bad Content"));
         try
         {
-            adapter.sendQuery(null, null, null, params, 3000, "4.1");
+            SolrFusionUriBuilder ub = adapter.buildHttpClientParams(null, null, null, params, "4.1");
+            adapter.sendQuery(ub, 2000);
             Assert.fail("Expected SearchServerResponseException for http status 400");
         }
         catch (SearchServerResponseException se)
@@ -221,7 +226,10 @@ public class DefaultSolrAdapterTest
         params.put("f.finc_class_facet.facet.sort", "index1");
         params.put("f.format.facet.sort", "index2");
 
-        String ub = adapter.buildHttpClientParams(params).build().toString();
+        Configuration cfg = helper.readFusionSchemaWithoutValidation("test-solr-adapter-fusion-schema.xml");
+        SearchServerConfig searchServerConfig = cfg.getSearchServerConfigByName("BibliothekA");
+        FusionRequest fusionRequest = new FusionRequest();
+        String ub = adapter.buildHttpClientParams(cfg, searchServerConfig, fusionRequest, params, null).build().toString();
         // System.out.println(ub);
         Assert.assertEquals("Expected other solr query url",
             "http://unit.test.com/?q=*%3A*&fq=title%3Aa&wt=json&start=5&rows=12&sort=title+asc&fl=*%2Cscore%2C+title" +

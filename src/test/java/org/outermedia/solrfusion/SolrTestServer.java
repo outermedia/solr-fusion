@@ -29,6 +29,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.ConfigSolr;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.SolrResourceLoader;
@@ -68,11 +69,6 @@ public class SolrTestServer
         cc = new CoreContainer(loader, config);
         cc.load();
         server = new EmbeddedSolrServer(cc, coreName);
-    }
-
-    public SolrServer getServer()
-    {
-        return server;
     }
 
     public void finish() throws Exception
@@ -140,4 +136,13 @@ public class SolrTestServer
         return result.getResults();
     }
 
+    public void add(SolrInputDocument doc) throws Exception
+    {
+        server.add(doc);
+    }
+
+    public void deleteByQuery(String query) throws Exception
+    {
+        server.deleteByQuery(query);
+    }
 }

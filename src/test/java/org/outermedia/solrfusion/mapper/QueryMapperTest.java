@@ -459,7 +459,7 @@ public class QueryMapperTest
         qm.mapQuery(cfg, searchServerConfig, sq, env, new FusionRequest(), QueryTarget.ALL);
         Assert.assertTrue("Term not mapped", term.isWasMapped());
         Map<String, String> mappedParams = mi.getSearchServerParameterMap();
-        Assert.assertEquals("Expected other mapping", "content^2.3 description^2.3", mappedParams.get("qf"));
+        Assert.assertEquals("Expected other mapping", "description^2.3 content^2.3", mappedParams.get("qf"));
     }
 
     @Test

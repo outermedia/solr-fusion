@@ -27,6 +27,7 @@ import org.outermedia.solrfusion.Multimap;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
+import org.outermedia.solrfusion.response.parser.Document;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,28 +39,46 @@ import java.net.URISyntaxException;
  * @author ballmann
  */
 
-public interface SearchServerAdapterIfc extends Initiable<SearchServerConfig>
+public interface SearchServerAdapterIfc<Url extends SolrFusionUriBuilderIfc> extends Initiable<SearchServerConfig>
 {
 
     /**
      * Send the provided query to a search server and returns the retrieved documents as InputStream. In the case of an
      * error a {@link org.outermedia.solrfusion.adapter.SearchServerResponseException} is thrown.
      *
-     * @param configuration         the SolrFusion schema
-     * @param searchServerConfig    the current destination Solr server configuration
-     * @param fusionRequest         the current SolrFusion request
-     * @param searchServerQueryStr a query suitable for this search server.
-     * @param timeout              a timeout in milliseconds
-     * @param version              the version of the search server
+     * @param uriBuilder an object created by a previous call of {@link #buildHttpClientParams(org.outermedia.solrfusion.configuration.Configuration,
+     *                   org.outermedia.solrfusion.configuration.SearchServerConfig, org.outermedia.solrfusion.FusionRequest,
+     *                   org.outermedia.solrfusion.Multimap, String)}
+     * @param timeout    a timeout in milliseconds
      * @return null for error or a document stream
      */
-    public InputStream sendQuery(Configuration configuration, SearchServerConfig searchServerConfig,
-        FusionRequest fusionRequest, Multimap<String> searchServerQueryStr, int timeout, String version)
-        throws URISyntaxException, IOException;
+    public InputStream sendQuery(Url uriBuilder, int timeout) throws URISyntaxException, IOException;
+
+    /**
+     * Create an url suitable for a Solr server.
+     *
+     * @param params             the prepared Solr request parameters
+     * @param fusionRequest      the current SolrFusion request
+     * @param searchServerConfig the current destination Solr server configuration
+     * @param configuration      the SolrFusion schema
+     * @param version            the version of the search server
+     * @return a new object
+     * @throws URISyntaxException
+     */
+    public Url buildHttpClientParams(Configuration configuration, SearchServerConfig searchServerConfig,
+        FusionRequest fusionRequest, Multimap<String> params, String version) throws URISyntaxException;
 
     public void init(SearchServerConfig config);
 
     public void setUrl(String url);
 
     public String getUrl();
+
+    public void finish() throws Exception;
+
+    public void commitLastDocs();
+
+    public void add(Document doc) throws Exception;
+
+    public void deleteByQuery(String query) throws Exception;
 }

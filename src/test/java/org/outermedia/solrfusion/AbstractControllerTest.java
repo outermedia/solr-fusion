@@ -28,6 +28,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
+import org.outermedia.solrfusion.adapter.SolrFusionUriBuilderIfc;
+import org.outermedia.solrfusion.adapter.solr.SolrFusionUriBuilder;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Merge;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
@@ -66,6 +68,9 @@ public class AbstractControllerTest
 
     @Mock
     private SearchServerConfig testSearchConfig;
+
+    @Mock
+    private SolrFusionUriBuilderIfc testParams;
 
     protected Multimap<String> buildParams(String q, String fq)
     {
@@ -119,8 +124,9 @@ public class AbstractControllerTest
             searchServerConfigs.clear();
             searchServerConfigs.add(searchServerConfig);
             when(searchServerConfig.getInstance()).thenReturn(testAdapter);
-            when(testAdapter.sendQuery(any(Configuration.class), any(SearchServerConfig.class), any(FusionRequest.class), Mockito.any(Multimap.class), Mockito.anyInt(),
-                anyString())).thenReturn(testResponse);
+            when(testAdapter.buildHttpClientParams(any(Configuration.class), any(SearchServerConfig.class),
+                any(FusionRequest.class), any(Multimap.class), anyString())).thenReturn(testParams);
+            when(testAdapter.sendQuery(any(SolrFusionUriBuilder.class), Mockito.anyInt())).thenReturn(testResponse);
         }
         return cfg.getController();
     }

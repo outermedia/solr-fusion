@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.mapper.MapOperation;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
@@ -49,6 +50,11 @@ import java.util.List;
 @Slf4j
 public class DropOperation extends Operation
 {
+    public DropOperation()
+    {
+        setOp(MapOperation.DROP);
+    }
+
     @Override
     public void applyAllQueryOperations(Term term, ScriptEnv env, QueryTarget target)
     {
@@ -112,7 +118,7 @@ public class DropOperation extends Operation
         }
         if (msg != null)
         {
-            msg = "In fusion schema at line " + fieldMapping.geStartLineNumberInSchema() + ": " + msg;
+            msg = "In fusion schema at line " + fieldMapping.getStartLineNumberInSchema() + ": " + msg;
             log.error(msg);
             throw new UnmarshalException(msg);
         }

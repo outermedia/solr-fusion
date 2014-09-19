@@ -53,7 +53,7 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  MergeTarget(prio=2, targetName=Bibliothek B)]),
  searchServerConfigs=[
  SearchServerConfig(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory, typeClassFactory=class org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory),
- searchServerName=Bibliothek A, queryParamName=null, searchServerVersion=3.6, enabled=true, url=http://host:port/solr/xyz, scoreFactory=ScoreFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultScore$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultScore$Factory),
+ searchServerName=Bibliothek A, queryParamName=null, searchServerVersion=3.6, enabled=true, adapterConfig=null, url=http://host:port/solr/xyz, scoreFactory=ScoreFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultScore$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultScore$Factory),
  factor=1.2),
  responseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.SpecialResponseParser$Factory, typeClassFactory=class org.outermedia.solrfusion.SpecialResponseParser$Factory)),
  queryBuilderFactory=null, idFieldName=id, maxDocs=100, fieldMappings=[

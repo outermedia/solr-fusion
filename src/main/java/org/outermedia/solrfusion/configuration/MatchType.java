@@ -52,7 +52,7 @@ public enum MatchType
                 {
                     destinationField = fieldMapping.getSearchServersName();
                     // even is destination field is empty e.g. for a <drop>, but the field was mapped
-                    result = new ApplicableResult(destinationField, (FieldMapping) null);
+                    result = new ApplicableResult(destinationField);
                 }
                 break;
             case REG_EXP:
@@ -107,7 +107,7 @@ public enum MatchType
                 destinationField = matcher.replaceAll(replacement);
             }
             // even is destination field is empty e.g. for a <drop>, but the field was mapped
-            result = new ApplicableResult(destinationField, (FieldMapping) null);
+            result = new ApplicableResult(destinationField);
         }
         return result;
     }
@@ -130,7 +130,7 @@ public enum MatchType
                 {
                     destinationField = fieldMapping.getFusionName();
                     // even is destination field is empty e.g. for a <drop>, but the field was mapped
-                    result = new ApplicableResult(destinationField, (FieldMapping) null);
+                    result = new ApplicableResult(destinationField);
                 }
                 break;
             case REG_EXP:

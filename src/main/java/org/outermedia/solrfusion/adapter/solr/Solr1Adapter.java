@@ -39,9 +39,9 @@ import java.util.Map;
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 
 /**
- * This special Solr adapter respects that Solr version less than 1.4 expect true/false instead of index/count
- * for facet sorting.
- *
+ * This special Solr adapter respects that Solr version less than 1.4 expect true/false instead of index/count for facet
+ * sorting.
+ * <p/>
  * Created by ballmann on 8/1/14.
  */
 @Slf4j
@@ -56,12 +56,10 @@ public class Solr1Adapter extends DefaultSolrAdapter
     {
     }
 
-    @Override public InputStream sendQuery(Configuration configuration, SearchServerConfig searchServerConfig,
-        FusionRequest fusionRequest, Multimap<String> params, int timeout, String version)
-        throws URISyntaxException, IOException
+    @Override public InputStream sendQuery(SolrFusionUriBuilder uriBuilder, int timeout) throws URISyntaxException, IOException
     {
-        this.solrVersion = parseDouble(version);
-        return super.sendQuery(configuration, searchServerConfig, fusionRequest, params, timeout, version);
+
+        return super.sendQuery(uriBuilder, timeout);
     }
 
     protected Double parseDouble(String version)
@@ -77,6 +75,15 @@ public class Solr1Adapter extends DefaultSolrAdapter
         }
 
         return result;
+    }
+
+    @Override
+    public SolrFusionUriBuilder buildHttpClientParams(Configuration configuration,
+        SearchServerConfig searchServerConfig, FusionRequest fusionRequest, Multimap<String> params, String version)
+        throws URISyntaxException
+    {
+        this.solrVersion = parseDouble(version);
+        return super.buildHttpClientParams(configuration, searchServerConfig, fusionRequest, params, version);
     }
 
     @Override protected void buildFacetHttpClientParams(Multimap<String> params, URIBuilder ub)

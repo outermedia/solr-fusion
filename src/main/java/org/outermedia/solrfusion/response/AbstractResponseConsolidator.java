@@ -39,7 +39,8 @@ public abstract class AbstractResponseConsolidator implements ResponseConsolidat
         errorResponses = new ArrayList<>();
     }
 
-    @Override public void addErrorResponse(Exception se)
+    @Override
+    public synchronized void addErrorResponse(Exception se)
     {
         errorResponses.add(se);
     }

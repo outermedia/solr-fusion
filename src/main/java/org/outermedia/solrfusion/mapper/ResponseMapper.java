@@ -36,7 +36,7 @@ import java.util.*;
 
 /**
  * Apply the configured mappings to a Solr response.
- *
+ * <p/>
  * Created by ballmann on 04.06.14.
  */
 @Slf4j
@@ -313,46 +313,82 @@ public class ResponseMapper implements ResponseMapperIfc
         }
     }
 
-    protected List<ApplicableResult> filterForResponse(List<ApplicableResult> allMappingsForSearchServerField, ResponseTarget target)
+    /**
+     * Compare with {@link org.outermedia.solrfusion.FusionRequest#filterForQuery(java.util.List,
+     * org.outermedia.solrfusion.configuration.QueryTarget)}
+     *
+     * @param allMappingsForSearchServerField
+     * @param target
+     * @return
+     */
+    protected List<ApplicableResult> filterForResponse(List<ApplicableResult> allMappingsForSearchServerField,
+        ResponseTarget target)
     {
+        boolean foundOkChangeMapping = false;
+        List<ApplicableResult> result = new ArrayList<>();
         for (int i = allMappingsForSearchServerField.size() - 1; i >= 0; i--)
         {
-            boolean forQueryOk = false;
+            boolean forResponseOk = false;
             ApplicableResult ar = allMappingsForSearchServerField.get(i);
             FieldMapping m = ar.getMapping();
-            // a search server name must be present!
-            if (ar.getDestinationFieldName() != null)
+            FieldMapping filteredMapping = new FieldMapping();
+            List<Operation> filteredOps = new ArrayList<>();
+            filteredMapping.setOperations(filteredOps);
+            filteredMapping.setLocator(m.getLocator());
+            List<Operation> ops = m.getOperations();
+            // no operations = <om:change>
+            if (ops == null || ops.size() == 0)
             {
-                List<Operation> ops = m.getOperations();
-                // no operations = <om:change>
-                if (ops == null || ops.size() == 0)
+                if (!foundOkChangeMapping)
                 {
-                    forQueryOk = true;
+                    forResponseOk = true;
+                    foundOkChangeMapping = true;
+                    filteredOps.add(new ChangeOperation());
+                    ar.setChanged(true);
                 }
-                else
+            }
+            else
+            {
+                List<Target> allAddResponseTargets = m.getAllAddResponseTargets(target);
+                if (allAddResponseTargets.size() > 0)
                 {
-                    if (m.getAllChangeResponseTargets(target).size() > 0)
+                    forResponseOk = true;
+                    AddOperation addOp = new AddOperation();
+                    addOp.setTargets(allAddResponseTargets);
+                    filteredOps.add(addOp);
+                    ar.setAdded(true);
+                }
+                if (!foundOkChangeMapping)
+                {
+                    List<Target> allChangeResponseTargets = m.getAllChangeResponseTargets(target);
+                    if (allChangeResponseTargets.size() > 0)
                     {
-                        forQueryOk = true;
+                        forResponseOk = true;
+                        foundOkChangeMapping = true;
+                        ChangeOperation changeOp = new ChangeOperation();
+                        changeOp.setTargets(allChangeResponseTargets);
+                        filteredOps.add(changeOp);
+                        ar.setChanged(true);
                     }
                 }
+                List<Target> allDropResponseTargets = m.getAllDropResponseTargets(target);
+                if (allDropResponseTargets.size() > 0)
+                {
+                    DropOperation dropOp = new DropOperation();
+                    dropOp.setTargets(allDropResponseTargets);
+                    filteredOps.add(dropOp);
+                    forResponseOk = true;
+                    ar.setDropped(true);
+                }
             }
-            // find <om:change><om:query /> or <om:add level="inside"><om:query />
-            if (m.getAllAddResponseTargets(target).size() > 0)
+            if (forResponseOk)
             {
-                forQueryOk = true;
-            }
-            if (m.getAllDropResponseTargets(target).size() > 0)
-            {
-                forQueryOk = true;
-            }
-
-            if (!forQueryOk)
-            {
-                allMappingsForSearchServerField.remove(i);
+                result.add(
+                    new ApplicableResult(ar.getDestinationFieldName(), filteredMapping, ar.isDropped(), ar.isChanged(),
+                        ar.isAdded()));
             }
         }
-        return allMappingsForSearchServerField;
+        return result;
     }
 
     // ---- Visitor methods --------------------------------------------------------------------------------------------

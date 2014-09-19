@@ -26,6 +26,7 @@ import com.google.common.io.Files;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.outermedia.solrfusion.adapter.solr.SolrFusionUriBuilder;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
@@ -156,10 +157,10 @@ public class ControllerFacetTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest,
-            buildParams("title:abc", "title", null, "author9000", "xml"), 4000, "3.6");
-        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest,
-            buildParams("titleVT_eng:abc", "titleVT_eng", null, "author9002", "xml"), 4000, "3.6");
+        verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest,
+            buildParams("title:abc", "title", null, "author9000", "xml"), "3.6");
+        verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest,
+            buildParams("titleVT_eng:abc", "titleVT_eng", null, "author9002", "xml"), "3.6");
     }
 
     @Test
@@ -194,10 +195,10 @@ public class ControllerFacetTest extends AbstractControllerTest
             "  ]}\n" +
             "}";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest,
-            buildParams("title:abc", "title", null, "author9000", "xml"), 4000, "3.6");
-        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest,
-            buildParams("titleVT_eng:abc", "titleVT_eng", null, "author9002", "xml"), 4000, "3.6");
+        verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest,
+            buildParams("title:abc", "title", null, "author9000", "xml"), "3.6");
+        verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest,
+            buildParams("titleVT_eng:abc", "titleVT_eng", null, "author9002", "xml"), "3.6");
     }
 
     protected String testMultipleServers(String responseServer1, String responseServer2, String fusionSchemaPath,
@@ -225,16 +226,12 @@ public class ControllerFacetTest extends AbstractControllerTest
         searchServerConfigs.add(searchServerConfig9000);
         testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
-        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(Configuration.class),
-            any(SearchServerConfig.class), any(FusionRequest.class), any(Multimap.class), Mockito.anyInt(),
-            anyString());
+        doReturn(documents9000Stream).when(testAdapter9000).sendQuery(any(SolrFusionUriBuilder.class), Mockito.anyInt());
 
         searchServerConfigs.add(searchServerConfig9002);
         testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
-        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(Configuration.class),
-            any(SearchServerConfig.class), any(FusionRequest.class), any(Multimap.class), Mockito.anyInt(),
-            anyString());
+        doReturn(documents9002Stream).when(testAdapter9002).sendQuery(any(SolrFusionUriBuilder.class), Mockito.anyInt());
 
         FusionControllerIfc fc = cfg.getController();
         FusionResponse fusionResponse = spy(new FusionResponse());
@@ -284,7 +281,7 @@ public class ControllerFacetTest extends AbstractControllerTest
             "target/test-classes/test-schiller-9001.xml", "fusion-schema-uni-leipzig.xml", fusionRequest, 0, 1);
         Multimap<String> expectedParams = buildParams("title:abc", "title", null, "author", "xml");
         expectedParams.set(FILTER_QUERY, "{!tag=format_filter}format:\"BluRayDisc\"");
-        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest, expectedParams, 4000,
+        verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest, expectedParams,
             "3.5");
         // System.out.println("XML " + xml);
     }
@@ -302,7 +299,7 @@ public class ControllerFacetTest extends AbstractControllerTest
         Multimap<String> expectedParams = buildParams("title:abc", "titleVT_eng", "titleVT_de", null, "xml");
         expectedParams.set("q", "(titleVT_de:abc OR titleVT_eng:abc)");
         expectedParams.delete("fq");
-        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest, expectedParams, 4000,
+        verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest, expectedParams,
             "3.6");
     }
 
@@ -340,5 +337,24 @@ public class ControllerFacetTest extends AbstractControllerTest
             "            <int name=\"Berliner Philharmoniker\">58</int>\n" +
             "        </lst>";
         Assert.assertTrue("Found other facets than expected", xml.contains(expectedFacets));
+    }
+
+    @Test
+    public void testDropInFacetFieldParams()
+        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
+        IllegalAccessException, URISyntaxException
+    {
+        FusionRequest fusionRequest = getFusionRequest("title:abc", ResponseRendererType.XML, null);
+        fusionRequest.getFacetFields().remove(1);
+        fusionRequest.getFacetFields().add(new SolrFusionRequestParam("solr-server"));
+        String xml = testMultipleServers("target/test-classes/test-schiller-9000.xml",
+            "target/test-classes/test-schiller-9001.xml", "fusion-schema-uni-leipzig.xml", fusionRequest, 0, 2);
+        // System.out.println(xml);
+        Multimap<String> expectedParams = buildParams("title:abc", "titleVT_eng", "titleVT_de", null, "xml");
+        expectedParams.set("q", "(titleVT_de:abc OR titleVT_eng:abc)");
+        expectedParams.delete("fq");
+        verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest, expectedParams,
+            "3.6");
+        System.out.println(expectedParams);
     }
 }

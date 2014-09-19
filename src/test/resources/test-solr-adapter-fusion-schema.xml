@@ -58,7 +58,7 @@
 
         <om:dismax-query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory"/>
 
-        <om:solr-server name="Bibliothek A" version="3.6"
+        <om:solr-server name="BibliothekA" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
             <om:url>http://141.39.229.20:9000/solr/biblio/select</om:url>
@@ -75,7 +75,7 @@
             <om:field name="Autor" fusion-name="author" />
 
         </om:solr-server>
-        <om:solr-server name="Bibliothek A" version="3.6"
+        <om:solr-server name="BibliothekB" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
             <om:url>http://141.39.229.20:9002/te/select</om:url>
@@ -92,7 +92,7 @@
             <om:field name="Autor" fusion-name="author" />
 
         </om:solr-server>
-        <om:solr-server name="Bibliothek A" version="3.6"
+        <om:solr-server name="BibliothekC" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
             <om:url>http://141.39.229.20:9003/solr/select</om:url>

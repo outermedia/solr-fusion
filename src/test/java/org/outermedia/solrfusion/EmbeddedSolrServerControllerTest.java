@@ -22,8 +22,6 @@ package org.outermedia.solrfusion;
  * #L%
  */
 
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.SolrInputDocument;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,21 +29,20 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
-import org.outermedia.solrfusion.adapter.solr.EmbeddedSolrAdapter;
+import org.outermedia.solrfusion.adapter.SolrFusionUriBuilderIfc;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
+import org.outermedia.solrfusion.response.parser.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -66,9 +63,9 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
 
     @Mock SearchServerAdapterIfc testAdapter;
 
-    EmbeddedSolrAdapter testAdapter9000;
+    SearchServerAdapterIfc<SolrFusionUriBuilderIfc> testAdapter9000;
 
-    EmbeddedSolrAdapter testAdapter9002;
+    SearchServerAdapterIfc<SolrFusionUriBuilderIfc> testAdapter9002;
 
     Configuration cfg;
 
@@ -79,28 +76,31 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
     private SearchServerConfig searchServerConfig9000;
     private SearchServerConfig searchServerConfig9002;
 
-    @Before
-    public void fillSolr() throws IOException, SolrServerException
+    public void fillSolr() throws Exception
     {
-        SolrInputDocument document = new SolrInputDocument();
+        Document document = new Document();
         document.addField("id", String.valueOf(1));
         document.addField("title", String.valueOf("abc"));
         document.addField("author", String.valueOf("Shakespeare"));
-        firstServer.add(document);
-        firstTestServer.commitLastDocs();
+        testAdapter9000.add(document);
+        testAdapter9000.commitLastDocs();
 
-        document = new SolrInputDocument();
+        document = new Document();
         document.addField("id", String.valueOf(1));
         document.addField("titleVT_eng", String.valueOf("abc"));
         document.addField("author", String.valueOf("Shakespeare"));
-        secondTestServer.getServer().add(document);
-        secondTestServer.commitLastDocs();
+
+        testAdapter9002.add(document);
+        testAdapter9002.commitLastDocs();
     }
 
     @After
-    public void cleanSolr() throws IOException, SolrServerException
+    public void cleanSolr() throws Exception
     {
-        firstServer.deleteByQuery("*:*");
+        testAdapter9000.deleteByQuery("*:*");
+        testAdapter9002.deleteByQuery("*:*");
+        testAdapter9000.finish();
+        testAdapter9002.finish();
     }
 
     @Before
@@ -112,9 +112,7 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
     }
 
     @Test
-    public void testQueryWithMultipleServersButNoResponseDocuments()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
-        IllegalAccessException, URISyntaxException
+    public void testQueryWithMultipleServersButNoResponseDocuments() throws Exception
     {
         String xml = testMultipleServers("title:xyz", "title:XYZ");
         String expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -138,10 +136,12 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expectedXml, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest, buildMap(QUERY, "title:xyz", FILTER_QUERY, "title:XYZ", FIELDS_TO_RETURN, "id title score", WRITER_TYPE,
-                "xml"), 4000, "3.6");
-        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest, buildMap(QUERY, "titleVT_eng:xyz", FILTER_QUERY, "titleVT_eng:XYZ", FIELDS_TO_RETURN,
-                "id titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
+        verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest,
+            buildMap(QUERY, "title:xyz", FILTER_QUERY, "title:XYZ", FIELDS_TO_RETURN, "id title score", WRITER_TYPE,
+                "xml"), "3.6");
+        verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest,
+            buildMap(QUERY, "titleVT_eng:xyz", FILTER_QUERY, "titleVT_eng:XYZ", FIELDS_TO_RETURN,
+                "id titleVT_eng score", WRITER_TYPE, "xml"), "3.6");
     }
 
     protected Multimap<String> buildMap(Object... v)
@@ -155,9 +155,7 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
     }
 
     @Test
-    public void testQueryWithMultipleServersAndResponseDocuments()
-        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
-        IllegalAccessException, URISyntaxException
+    public void testQueryWithMultipleServersAndResponseDocuments() throws Exception
     {
         String xml = testMultipleServers("title:abc", "title:abc");
         String sep = DefaultIdGenerator.SEPARATOR;
@@ -193,15 +191,15 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "</response>";
 
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).sendQuery(spyCfg, searchServerConfig9000, fusionRequest, buildMap(QUERY, "title:abc", FILTER_QUERY, "title:abc", FIELDS_TO_RETURN, "id title score", WRITER_TYPE,
-                "xml"), 4000, "3.6");
-        verify(testAdapter9002, times(1)).sendQuery(spyCfg, searchServerConfig9002, fusionRequest, buildMap(QUERY, "titleVT_eng:abc", FILTER_QUERY, "titleVT_eng:abc", FIELDS_TO_RETURN,
-                "id titleVT_eng score", WRITER_TYPE, "xml"), 4000, "3.6");
+        verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest,
+            buildMap(QUERY, "title:abc", FILTER_QUERY, "title:abc", FIELDS_TO_RETURN, "id title score", WRITER_TYPE,
+                "xml"), "3.6");
+        verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest,
+            buildMap(QUERY, "titleVT_eng:abc", FILTER_QUERY, "titleVT_eng:abc", FIELDS_TO_RETURN,
+                "id titleVT_eng score", WRITER_TYPE, "xml"), "3.6");
     }
 
-    protected String testMultipleServers(String queryStr, String filterQueryStr)
-        throws IOException, ParserConfigurationException, SAXException, JAXBException, InvocationTargetException,
-        IllegalAccessException, URISyntaxException
+    protected String testMultipleServers(String queryStr, String filterQueryStr) throws Exception
     {
         cfg = helper.readFusionSchemaWithoutValidation("test-fusion-schema-embedder-solr-adapter.xml");
         ResponseMapperIfc testResponseMapper = cfg.getResponseMapper();
@@ -216,14 +214,14 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         searchServerConfigs.clear();
 
         searchServerConfigs.add(searchServerConfig9000);
-        testAdapter9000 = (EmbeddedSolrAdapter) spy(searchServerConfig9000.getInstance());
+        testAdapter9000 = spy(searchServerConfig9000.getInstance());
         when(searchServerConfig9000.getInstance()).thenReturn(testAdapter9000);
-        testAdapter9000.setTestServer(firstTestServer);
 
         searchServerConfigs.add(searchServerConfig9002);
-        testAdapter9002 = (EmbeddedSolrAdapter) spy(searchServerConfig9002.getInstance());
+        testAdapter9002 = spy(searchServerConfig9002.getInstance());
         when(searchServerConfig9002.getInstance()).thenReturn(testAdapter9002);
-        testAdapter9002.setTestServer(secondTestServer);
+
+        fillSolr();
 
         FusionControllerIfc fc = cfg.getController();
         fusionRequest = new FusionRequest();
