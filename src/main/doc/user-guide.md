@@ -830,7 +830,10 @@ This section contains the description of one Solr server to use.
 Declaration (optional, but at least one instance; child of `<om:solr-servers>`):
 
     <om:solr-server name="DBoD" version="3.5" query-param-name="q.alt" enabled="true"
-                            class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+        class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
+        <om:config>
+            <!-- adapter specific XML elements -->
+        </om:config>                            
 
 * __name__ - The value of the required __name__ attribute needs to be unique within all Solr server declarations and must not contain 
 underscore, SPACE or minus. 
@@ -842,6 +845,8 @@ Especially for a Solr 1.X server we used for testing, it was necessary to pass e
 parameter and the "same" query in dismax format in order to receive highlights.
 * __enabled__ - To simplify testing with a subset of configured Solr servers the optional __enabled__ attribute can be set to false 
     (default: true). Note: Nesting of XML comments is not possible.
+* __`<om:config>`__ - additional adapter specific configuration can be optionally specified here. Implementations access the
+    parsed XML with SearchServerConfig.getAdapterConfig()``.
 
 It is also possible to use an "XML include" statement to keep the complete Solr server settings in a separate file. Example:
 
