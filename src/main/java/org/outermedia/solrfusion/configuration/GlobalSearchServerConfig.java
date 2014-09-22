@@ -237,4 +237,5 @@ public class GlobalSearchServerConfig
     {
         return dismaxQueryParserFactory.getInstance();
     }
+
 }

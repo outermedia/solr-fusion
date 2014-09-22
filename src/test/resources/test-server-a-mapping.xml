@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<om:solr-server name="Bibliothek A" version="3.6"
+<om:solr-server name="BibliothekA" version="3.6"
                 class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:om="http://solrfusion.outermedia.org/configuration/"
@@ -138,6 +138,13 @@
             name-pattern="val([0-9]+)Start" fusion-name-replacement="valueFrom(\1)"
             name-replacement="val(\1)Start" fusion-name-pattern="valueFrom([0-9]+)"
             />
+
+    <om:post-processor>
+        <om:query type="send-if-fq-eq">
+            <fusion-name>solr-server</fusion-name>
+            <fusion-value>UBL4</fusion-value>
+        </om:query>
+    </om:post-processor>
 
 </om:solr-server>        
         

@@ -335,4 +335,5 @@ public class Configuration
 
     public QueryParserIfc getDismaxQueryParser() throws InvocationTargetException, IllegalAccessException
     { return searchServerConfigs.getDismaxQueryParser(); }
+
 }

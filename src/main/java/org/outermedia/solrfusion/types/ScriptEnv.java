@@ -49,6 +49,11 @@ import java.util.Map;
  * Boolean</li><li>{@value #ENV_IN_QUERY_TARGET} - a QueryTarget</li><li>{@value #ENV_IN_RESPONSE_TARGET} - a
  * ResponseTarget</li></ul>
  * <p/>
+ * Post processors can access the following additional env entries:<ul> <li>{@value #ENV_IN_SOLR_URL} - a
+ * SolrFusionUriBuilderIfc</li> <li>{@value #ENV_IN_MAPPED_QUERY} - a ParsedQuery</li> <li>{@value
+ * #ENV_IN_MAPPED_HIGHLIGHT_QUERY} - a ParsedQuery</li> <li>{@value #ENV_IN_MAPPED_FILTER_QUERIES} - a list of
+ * ParsedQuery</li> </ul>
+ * <p/>
  * A ScriptType has to set the following entries: <ul><li>{@value #ENV_OUT_NEW_VALUES} - null or a list of processed
  * values</li> <li>{@value #ENV_OUT_NEW_DOC_COUNTS} - a list of new doc counts (default value is copied from {@value
  * #ENV_IN_DOC_COUNT})</li>
@@ -79,6 +84,13 @@ public class ScriptEnv
     public final static String ENV_IN_MAP_HIGHLIGHT = "mapHighlightValue"; // a Boolean
     public final static String ENV_IN_QUERY_TARGET = "queryTarget"; // a QueryTarget
     public final static String ENV_IN_RESPONSE_TARGET = "responseTarget"; // a ResponseTarget
+
+    // variables also passed to query PostProcessors
+    public static final String ENV_IN_SOLR_URL = "solrUriBuilder"; // a SolrFusionUriBuilderIfc
+    public static final String ENV_IN_MAPPED_QUERY = "mappedQuery"; // a ParsedQuery
+    public static final String ENV_IN_MAPPED_HIGHLIGHT_QUERY = "mappedHighlightQUery"; // a ParsedQuery
+    public static final String ENV_IN_MAPPED_FILTER_QUERIES = "mappedFilterQueries"; // a List<ParsedQuery>
+
 
     // variables set by a script
     public final static String ENV_OUT_NEW_VALUES = "returnValues";

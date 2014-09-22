@@ -238,6 +238,13 @@ public class FusionController implements FusionControllerIfc
                 mapQuery(env, searchServerConfig, filterQuery, fusionRequest, QueryTarget.FILTER_QUERY))
             {
                 ub = createSolrRequest(fusionRequest, searchServerConfig);
+                PostProcessorStatus status = searchServerConfig.applyQueryPostProcessors(
+                    getNewPostProcessorScriptEnv(fusionRequest, searchServerConfig, ub, queryList.get(0),
+                        hlQueryList.get(0), filterQuery));
+                if (status == PostProcessorStatus.DO_NOT_SEND_QUERY)
+                {
+                    ub = null;
+                }
             }
             else
             {
@@ -285,6 +292,21 @@ public class FusionController implements FusionControllerIfc
         ScriptEnv env = new ScriptEnv();
         env.setConfiguration(configuration);
         env.setBinding(ScriptEnv.ENV_IN_FUSION_REQUEST, fusionRequest);
+        return env;
+    }
+
+    protected ScriptEnv getNewPostProcessorScriptEnv(FusionRequest fusionRequest, SearchServerConfig searchServerConfig,
+        SolrFusionUriBuilderIfc ub, ParsedQuery query, ParsedQuery hlQuery, List<ParsedQuery> filterQuery)
+    {
+        ScriptEnv env = new ScriptEnv();
+        env.setConfiguration(configuration);
+        env.setBinding(ScriptEnv.ENV_IN_FUSION_REQUEST, fusionRequest);
+        env.setSearchServerConfig(searchServerConfig);
+        env.setBinding(ScriptEnv.ENV_IN_SOLR_URL, ub);
+        env.setBinding(ScriptEnv.ENV_IN_LOCALE, fusionRequest.getLocale());
+        env.setBinding(ScriptEnv.ENV_IN_MAPPED_QUERY, query);
+        env.setBinding(ScriptEnv.ENV_IN_MAPPED_HIGHLIGHT_QUERY, hlQuery);
+        env.setBinding(ScriptEnv.ENV_IN_MAPPED_FILTER_QUERIES, filterQuery);
         return env;
     }
 

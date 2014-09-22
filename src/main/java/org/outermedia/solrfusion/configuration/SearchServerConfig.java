@@ -30,6 +30,7 @@ import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SolrFusionUriBuilderIfc;
 import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
 import org.outermedia.solrfusion.response.ResponseParserIfc;
+import org.outermedia.solrfusion.types.ScriptEnv;
 
 import javax.xml.bind.annotation.*;
 import java.lang.reflect.InvocationTargetException;
@@ -48,7 +49,7 @@ import java.util.Map;
 @XmlType(name = "searchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/",
     propOrder = {
         "adapterConfig", "url", "scoreFactory", "responseParserFactory", "queryBuilderFactory", "idFieldName",
-        "maxDocs", "fieldMappings"
+        "maxDocs", "fieldMappings", "postProcessors"
     })
 @Getter
 @Setter
@@ -92,6 +93,9 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
     @XmlElement(name = "field", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private List<FieldMapping> fieldMappings;
 
+    @XmlElement(name = "post-processor", namespace = "http://solrfusion.outermedia.org/configuration/",
+        required = false)
+    private List<PostProcessor> postProcessors;
 
     /**
      * Get all mappings for a given fusion field name.
@@ -219,6 +223,48 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
                     {
                         existingTargets.addAll(responseTargets);
                     }
+                }
+            }
+        }
+        return result;
+    }
+
+    public PostProcessorStatus applyQueryPostProcessors(ScriptEnv env)
+    {
+        PostProcessorStatus result = PostProcessorStatus.CONTINUE;
+        if (postProcessors != null)
+        {
+            for (PostProcessor pp : postProcessors)
+            {
+                PostProcessorStatus status = pp.applyQueryTargets(env);
+                if (status == PostProcessorStatus.STOP || status == PostProcessorStatus.DO_NOT_SEND_QUERY)
+                {
+                    result = status;
+                }
+                if (!status.doContinue())
+                {
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    public PostProcessorStatus applyResponsePostProcessors(ScriptEnv env)
+    {
+        PostProcessorStatus result = PostProcessorStatus.CONTINUE;
+        if (postProcessors != null)
+        {
+            for (PostProcessor pp : postProcessors)
+            {
+                PostProcessorStatus status = pp.applyResponseTargets(env);
+                if (status == PostProcessorStatus.STOP || status == PostProcessorStatus.DO_NOT_SEND_QUERY)
+                {
+                    result = status;
+                }
+                if (!status.doContinue())
+                {
+                    break;
                 }
             }
         }

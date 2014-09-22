@@ -26,7 +26,9 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.TableFile, typeClassFactory=class org.outermedia.solrfusion.types.TableFile),
  name=static-table-file),
  ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.Table, typeClassFactory=class org.outermedia.solrfusion.types.Table),
- name=static-table)], defaultSearchField=title, defaultSortField=score desc, defaultOperator=AND, idGeneratorFactory=IdGeneratorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultIdGenerator$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultIdGenerator$Factory),
+ name=static-table),
+ ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.FilterSpecificFq, typeClassFactory=class org.outermedia.solrfusion.types.FilterSpecificFq),
+ name=send-if-fq-eq)], defaultSearchField=title, defaultSortField=score desc, defaultOperator=AND, idGeneratorFactory=IdGeneratorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultIdGenerator$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultIdGenerator$Factory),
  fusionFieldName=id),
  responseConsolidatorFactory=ResponseConsolidatorFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.response.PagingResponseConsolidator$Factory, typeClassFactory=class org.outermedia.solrfusion.response.PagingResponseConsolidator$Factory)),
  responseMapperFactory=ResponseMapperFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.ResponseMapper$Factory, typeClassFactory=class org.outermedia.solrfusion.mapper.ResponseMapper$Factory),
@@ -49,11 +51,11 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  dismaxQueryBuilderFactory=QueryBuilderFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory, typeClassFactory=class org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory)),
  merge=Merge(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultMergeStrategy$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultMergeStrategy$Factory),
  fusionName=ISBN, targets=[
- MergeTarget(prio=1, targetName=Bibliothek A),
- MergeTarget(prio=2, targetName=Bibliothek B)]),
+ MergeTarget(prio=1, targetName=BibliothekA),
+ MergeTarget(prio=2, targetName=BibliothekB)]),
  searchServerConfigs=[
  SearchServerConfig(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory, typeClassFactory=class org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory),
- searchServerName=Bibliothek A, queryParamName=null, searchServerVersion=3.6, enabled=true, adapterConfig=null, url=http://host:port/solr/xyz, scoreFactory=ScoreFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultScore$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultScore$Factory),
+ searchServerName=BibliothekA, queryParamName=null, searchServerVersion=3.6, enabled=true, adapterConfig=null, url=http://host:port/solr/xyz, scoreFactory=ScoreFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultScore$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultScore$Factory),
  factor=1.2),
  responseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.SpecialResponseParser$Factory, typeClassFactory=class org.outermedia.solrfusion.SpecialResponseParser$Factory)),
  queryBuilderFactory=null, idFieldName=id, maxDocs=100, fieldMappings=[
@@ -138,4 +140,12 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  0-9]+)Start, fusionNameReplacement=valueFrom(\1),
  searchServersNameReplacement=val(\1)Start, fusionNamePattern=valueFrom([
  0-9]+),
- mappingType=REG_EXP_ALL, operations=null)])]))
+ mappingType=REG_EXP_ALL, operations=null)], postProcessors=[
+ PostProcessor(targets=[
+ Query(super=Target(type=ScriptType(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.types.FilterSpecificFq, typeClassFactory=class org.outermedia.solrfusion.types.FilterSpecificFq),
+ name=send-if-fq-eq),
+ name=null, fusionName=null, typeConfig=[
+ [
+ fusion-name: null], [
+ fusion-value: null]]),
+ target=null)])])]))

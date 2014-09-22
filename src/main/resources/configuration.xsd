@@ -155,12 +155,23 @@
       <xs:element name="unique-key" type="xs:string"/>
       <xs:element name="max-docs" type="xs:int"/>
       <xs:element name="field" type="tns:fieldMapping" maxOccurs="unbounded"/>
+      <xs:element name="post-processor" type="tns:postProcessor" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="class" type="xs:string" use="required"/>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="query-param-name" type="xs:string"/>
     <xs:attribute name="version" type="xs:string" use="required"/>
     <xs:attribute name="enabled" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="postProcessor">
+    <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="query" type="tns:query"/>
+            <xs:element name="response" type="tns:response"/>
+            <xs:element name="query-response" type="tns:queryResponse"/>
+        </xs:choice>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="adapterConfig">

@@ -33,6 +33,7 @@
     <om:script-type name="static-table-file"
                     class="org.outermedia.solrfusion.types.TableFile"/>
     <om:script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/>
+    <om:script-type name="send-if-fq-eq" class="org.outermedia.solrfusion.types.FilterSpecificFq"/>
 
     <om:default-search-field>title</om:default-search-field>
 
@@ -89,13 +90,13 @@
         <!-- "prio" controls which non empty value to use at first -->
         <om:merge fusion-name="ISBN"
                   class="org.outermedia.solrfusion.DefaultMergeStrategy$Factory">
-            <om:target prio="1" target-name="Bibliothek A"/>
-            <om:target prio="2" target-name="Bibliothek B"/>
+            <om:target prio="1" target-name="BibliothekA"/>
+            <om:target prio="2" target-name="BibliothekB"/>
         </om:merge>
 
         <!-- first server, use XML include if you want to put -->
         <!-- this block in a separate file -->
-        <om:solr-server name="Bibliothek A" version="3.6"
+        <om:solr-server name="BibliothekA" version="3.6"
                         class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
             <om:url>http://host:port/solr/xyz</om:url>
@@ -232,6 +233,13 @@
                     name-pattern="val([0-9]+)Start" fusion-name-replacement="valueFrom(\1)"
                     name-replacement="val(\1)Start" fusion-name-pattern="valueFrom([0-9]+)"
                     />
+
+            <om:post-processor>
+                <om:query type="send-if-fq-eq">
+                    <fusion-name>solr-server</fusion-name>
+                    <fusion-value>UBL4</fusion-value>
+                </om:query>
+            </om:post-processor>
 
         </om:solr-server>
 

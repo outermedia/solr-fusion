@@ -154,6 +154,8 @@
     <om:script-type name="filter-id" class="org.outermedia.solrfusion.types.IdFilter"/>
     <om:script-type name="field-merger" class="org.outermedia.solrfusion.types.FieldMerger"/>
     <om:script-type name="normalizer" class="org.outermedia.solrfusion.types.Normalizer"/>
+    <om:script-type name="send-if-fq-eq" class="org.outermedia.solrfusion.types.FilterSpecificFq"/>
+    <om:script-type name="filter-empty-fq" class="org.outermedia.solrfusion.types.FilterEmptyFq"/>
 
     <om:default-search-field>allfields</om:default-search-field>
 
@@ -259,10 +261,20 @@
                 </om:add>
             </om:field>
 
-            <!-- TODO handle this case -->
             <om:field fusion-name="solr-server">
                 <om:drop><om:query /></om:drop>
             </om:field>
+
+            <om:post-processor>
+                <om:query type="send-if-fq-eq">
+                    <fusion-name>solr-server</fusion-name>
+                    <fusion-value>UBL</fusion-value>
+                </om:query>
+                <om:query type="filter-empty-fq">
+                    <ignore-fusion-name>solr-server</ignore-fusion-name>
+                    <ignore-fusion-name>authorized_mode</ignore-fusion-name>
+                </om:query>
+            </om:post-processor>
 
         </om:solr-server>
 
@@ -687,10 +699,20 @@
                 <om:drop><om:query/></om:drop>
             </om:field>
 
-            <!-- TODO handle this case -->
             <om:field fusion-name="solr-server">
                 <om:drop><om:query /></om:drop>
             </om:field>
+
+            <om:post-processor>
+                <om:query type="send-if-fq-eq">
+                    <fusion-name>solr-server</fusion-name>
+                    <fusion-value>GBV</fusion-value>
+                </om:query>
+                <om:query type="filter-empty-fq">
+                    <ignore-fusion-name>solr-server</ignore-fusion-name>
+                    <ignore-fusion-name>authorized_mode</ignore-fusion-name>
+                </om:query>
+            </om:post-processor>
 
         </om:solr-server>
 
@@ -922,10 +944,20 @@
                 </om:add>
             </om:field>
 
-            <!-- TODO handle this case -->
             <om:field fusion-name="solr-server">
                 <om:drop><om:query /></om:drop>
             </om:field>
+
+            <om:post-processor>
+                <om:query type="send-if-fq-eq">
+                    <fusion-name>solr-server</fusion-name>
+                    <fusion-value>DBoD1</fusion-value>
+                </om:query>
+                <om:query type="filter-empty-fq">
+                    <ignore-fusion-name>solr-server</ignore-fusion-name>
+                    <ignore-fusion-name>authorized_mode</ignore-fusion-name>
+                </om:query>
+            </om:post-processor>
 
         </om:solr-server>
 
@@ -1151,10 +1183,20 @@
                 </om:add>
             </om:field>
 
-            <!-- TODO handle this case -->
             <om:field fusion-name="solr-server">
                 <om:drop><om:query /></om:drop>
             </om:field>
+
+            <om:post-processor>
+                <om:query type="send-if-fq-eq">
+                    <fusion-name>solr-server</fusion-name>
+                    <fusion-value>DBoD2</fusion-value>
+                </om:query>
+                <om:query type="filter-empty-fq">
+                    <ignore-fusion-name>solr-server</ignore-fusion-name>
+                    <ignore-fusion-name>authorized_mode</ignore-fusion-name>
+                </om:query>
+            </om:post-processor>
 
         </om:solr-server>
 
@@ -1205,10 +1247,20 @@
                 </om:add>
             </om:field>
 
-            <!-- TODO handle this case -->
             <om:field fusion-name="solr-server">
                 <om:drop><om:query /></om:drop>
             </om:field>
+
+            <om:post-processor>
+                <om:query type="send-if-fq-eq">
+                    <fusion-name>solr-server</fusion-name>
+                    <fusion-value>UBL4</fusion-value>
+                </om:query>
+                <om:query type="filter-empty-fq">
+                    <ignore-fusion-name>solr-server</ignore-fusion-name>
+                    <ignore-fusion-name>authorized_mode</ignore-fusion-name>
+                </om:query>
+            </om:post-processor>
 
         </om:solr-server>
 

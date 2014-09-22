@@ -69,6 +69,17 @@ public class TermQuery extends Query
         return term.getFusionFieldValue();
     }
 
+    public String getFirstFusionFieldValue()
+    {
+        String result = null;
+        List<String> values = term.getFusionFieldValue();
+        if (values != null && values.size() > 0)
+        {
+            result = values.get(0);
+        }
+        return result;
+    }
+
     public String getSearchServerFieldName()
     {
         return term.getSearchServerFieldName();
@@ -104,5 +115,11 @@ public class TermQuery extends Query
     {
         super.resetQuery();
         term.resetQuery();
+    }
+
+    public boolean isSearchServerFieldEmpty()
+    {
+        List<String> searchServerValues = getSearchServerFieldValue();
+        return searchServerValues == null || searchServerValues.isEmpty() || term.isRemoved();
     }
 }

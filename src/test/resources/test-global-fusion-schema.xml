@@ -32,6 +32,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <om:script-type name="regexp" class="org.outermedia.solrfusion.types.RegularExpression" />
     <om:script-type name="static-table-file" class="org.outermedia.solrfusion.types.TableFile"/>
     <om:script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/>
+    <om:script-type name="send-if-fq-eq" class="org.outermedia.solrfusion.types.FilterSpecificFq"/>
 
     <om:default-search-field>title</om:default-search-field>
 
@@ -85,8 +86,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         <!-- merge solr documents of different solrs into one -->
         <!-- "prio" controls which non empty value to use at first -->
         <om:merge fusion-name="ISBN" class="org.outermedia.solrfusion.DefaultMergeStrategy$Factory">
-            <om:target prio="1" target-name="Bibliothek A"/>
-            <om:target prio="2" target-name="Bibliothek B"/>
+            <om:target prio="1" target-name="BibliothekA"/>
+            <om:target prio="2" target-name="BibliothekB"/>
         </om:merge>         
 
         <xi:include href="target/test-classes/test-server-a-mapping.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
