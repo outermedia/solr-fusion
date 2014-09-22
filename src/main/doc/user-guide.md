@@ -724,6 +724,8 @@ Declaration (mandatory):
 
     <om:controller class="org.outermedia.solrfusion.FusionController$Factory"/>
 
+The requests are sent in parallel.
+
 ## Solr Connection Values
 Global connection values are the  
 

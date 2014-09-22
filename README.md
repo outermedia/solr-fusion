@@ -12,3 +12,5 @@ This document explains the
 * license
 * installation
 * configuration
+
+Version 1.0 was implemented by [outermedia GmbH](http://www.outermedia.de/ "outermedia GmbH").
