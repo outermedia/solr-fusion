@@ -54,7 +54,7 @@ public class MultiValueMerger extends AbstractType
         logBadConfiguration(range != null && separator != null, typeConfig);
     }
 
-    @Override public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+    @Override public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
         ConversionDirection dir)
     {
         TypeResult result = null;
@@ -90,13 +90,13 @@ public class MultiValueMerger extends AbstractType
         }
         if (!newValues.isEmpty())
         {
-            if (newValues.size() != values.size() && facetWordCounts != null && facetWordCounts.size() > 0)
+            if (newValues.size() != values.size() && facetDocCounts != null && facetDocCounts.size() > 0)
             {
                 log.error("Script type MultiValueMerger merged values of search server field {} although facet word " +
-                        "counts are present. Using original facet word count values.",
+                        "counts are present. Using original facet doc count values.",
                     env.getBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD));
             }
-            result = new TypeResult(newValues, facetWordCounts);
+            result = new TypeResult(newValues, facetDocCounts);
         }
         return result;
     }

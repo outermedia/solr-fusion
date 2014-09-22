@@ -42,7 +42,7 @@ public class CopySearchServerFieldToFusionField extends AbstractType
         // NOP
     }
 
-    @Override public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+    @Override public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
         ConversionDirection dir)
     {
         TypeResult result = null;
@@ -51,7 +51,7 @@ public class CopySearchServerFieldToFusionField extends AbstractType
         {
             newValues = new ArrayList<>();
             newValues.addAll(values);
-            result = new TypeResult(newValues, facetWordCounts);
+            result = new TypeResult(newValues, facetDocCounts);
         }
         return result;
     }

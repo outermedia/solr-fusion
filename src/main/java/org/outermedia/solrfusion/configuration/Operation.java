@@ -219,7 +219,7 @@ public abstract class Operation
         if (opResult != null)
         {
             term.setSearchServerFieldValue(opResult.getValues());
-            term.setSearchServerFacetCount(opResult.getWordCounts());
+            term.setSearchServerFacetCount(opResult.getDocCounts());
         }
     }
 
@@ -255,7 +255,7 @@ public abstract class Operation
         if (opResult != null)
         {
             term.setFusionFieldValue(opResult.getValues());
-            term.setFusionFacetCount(opResult.getWordCounts());
+            term.setFusionFacetCount(opResult.getDocCounts());
         }
     }
 

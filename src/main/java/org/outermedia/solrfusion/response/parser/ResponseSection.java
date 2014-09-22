@@ -161,21 +161,21 @@ public class ResponseSection
 
     protected void addFacetValueAsDocField(Document facetDocument, FacetHit hit)
     {
-        List<WordCount> fieldCounts = hit.getFieldCounts();
+        List<DocCount> fieldCounts = hit.getFieldCounts();
         if(fieldCounts != null)
         {
             SolrMultiValuedField multiValuedField = new SolrMultiValuedField();
             List<String> values = new ArrayList<>();
-            List<Integer> wordCounts = new ArrayList<>();
-            for(WordCount wc : fieldCounts)
+            List<Integer> docCounts = new ArrayList<>();
+            for(DocCount wc : fieldCounts)
             {
                 values.add(wc.getWord());
-                wordCounts.add(wc.getCount());
+                docCounts.add(wc.getCount());
             }
             multiValuedField.setFieldName(hit.getSearchServerFieldName());
             multiValuedField.setValues(values);
             multiValuedField.afterUnmarshal(null, null);
-            multiValuedField.getTerm().setSearchServerFacetCount(wordCounts);
+            multiValuedField.getTerm().setSearchServerFacetCount(docCounts);
             facetDocument.addMultiField(multiValuedField);
         }
     }

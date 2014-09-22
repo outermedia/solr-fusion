@@ -49,7 +49,7 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
         // NOP
     }
 
-    @Override public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+    @Override public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
         ConversionDirection dir)
     {
         // values come from tq, but here we need the whole term query
@@ -82,7 +82,7 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
                 env.getLocale(), defaultSearchServerSearchFields, target);
             newValues = new ArrayList<>();
             newValues.add(qs);
-            result = new TypeResult(newValues, facetWordCounts);
+            result = new TypeResult(newValues, facetDocCounts);
         }
         catch (Exception e)
         {

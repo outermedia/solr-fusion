@@ -89,7 +89,7 @@ public class Value extends AbstractType
     }
 
     @Override
-    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env, ConversionDirection dir)
+    public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env, ConversionDirection dir)
     {
         List<String> result = null;
         if (this.values != null)
@@ -104,13 +104,13 @@ public class Value extends AbstractType
         }
         if (responseTarget == ResponseTarget.FACET && result != null)
         {
-            facetWordCounts = new ArrayList<>();
+            facetDocCounts = new ArrayList<>();
             for (int i = 0; i < result.size(); i++)
             {
-                facetWordCounts.add(1);
+                facetDocCounts.add(1);
             }
         }
-        return new TypeResult(this.values, facetWordCounts);
+        return new TypeResult(this.values, facetDocCounts);
     }
 
     public static Value getInstance()

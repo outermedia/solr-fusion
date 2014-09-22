@@ -45,6 +45,6 @@ public class FacetHit
     private String searchServerFieldName;
 
     @XmlElement(name = "int", required = true)
-    private List<WordCount> fieldCounts;
+    private List<DocCount> fieldCounts;
 
 }

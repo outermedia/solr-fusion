@@ -319,7 +319,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             log.debug("---");
         }
 
-        Map<String, List<WordCount>> sortedFusionFacetFields = mapFacetWordCounts(idGenerator, fusionIdField,
+        Map<String, List<DocCount>> sortedFusionFacetFields = mapFacetDocCounts(idGenerator, fusionIdField,
             fusionRequest);
         log.debug("Total number of merged/sorted/filtered facets: {}", sortedFusionFacetFields.size());
 
@@ -328,7 +328,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         return new ClosableListIterator<>(docsOfPage, info);
     }
 
-    protected Map<String, List<WordCount>> mapFacetWordCounts(IdGeneratorIfc idGenerator, String fusionIdField,
+    protected Map<String, List<DocCount>> mapFacetDocCounts(IdGeneratorIfc idGenerator, String fusionIdField,
         FusionRequest fusionRequest) throws InvocationTargetException, IllegalAccessException
     {
         Map<String, Map<String, Integer>> fusionFacetFields = new LinkedHashMap<>();
@@ -341,18 +341,18 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
                 doc.accept(getFacetBuilder(idGenerator, fusionIdField, fusionFacetFields, doc), null);
             }
         }
-        return getNewFacetWordCountSorter().sort(fusionFacetFields, fusionRequest);
+        return getNewFacetDocCountSorter().sort(fusionFacetFields, fusionRequest);
     }
 
-    protected FacetWordCountSorter getNewFacetWordCountSorter()
+    protected FacetDocCountSorter getNewFacetDocCountSorter()
     {
-        return new FacetWordCountSorter();
+        return new FacetDocCountSorter();
     }
 
-    protected FacetWordCountBuilder getFacetBuilder(IdGeneratorIfc idGenerator, String fusionIdField,
+    protected FacetDocCountBuilder getFacetBuilder(IdGeneratorIfc idGenerator, String fusionIdField,
         Map<String, Map<String, Integer>> fusionFacetFields, Document doc)
     {
-        return new FacetWordCountBuilder(fusionIdField, idGenerator, doc, fusionFacetFields);
+        return new FacetDocCountBuilder(fusionIdField, idGenerator, doc, fusionFacetFields);
     }
 
     protected void completelyMapDoc(Configuration config, Document d, String fusionDocId, String mapType,

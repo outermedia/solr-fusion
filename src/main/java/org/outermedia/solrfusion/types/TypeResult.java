@@ -42,5 +42,5 @@ public class TypeResult
 {
     private List<String> values;
 
-    private List<Integer> wordCounts;
+    private List<Integer> docCounts;
 }

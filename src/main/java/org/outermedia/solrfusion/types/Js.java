@@ -77,9 +77,9 @@ public class Js extends AbstractType
     }
 
     @Override
-    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env, ConversionDirection dir)
+    public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env, ConversionDirection dir)
     {
-        return applyScriptEngineCode(engine, code, values,facetWordCounts, env);
+        return applyScriptEngineCode(engine, code, values,facetDocCounts, env);
     }
 
     public static Js getInstance()

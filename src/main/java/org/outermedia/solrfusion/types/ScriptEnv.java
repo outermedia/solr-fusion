@@ -43,15 +43,15 @@ import java.util.Map;
  * FusionField instance</li> <li>{@value #ENV_IN_FUSION_SCHEMA} - a Configuration instance</li> <li>{@value
  * #ENV_IN_VALUES} - a List of String</li> <li>{@value #ENV_IN_CONVERSION} - a ConversionDirection</li><li>{@value
  * #ENV_IN_LOCALE} - a Locale</li> <li>{@value #ENV_IN_DOCUMENT} - a Document</li><li>{@value #ENV_IN_TERM_QUERY_PART} -
- * a TermQuery</li> <li>{@value #ENV_IN_SEARCH_SERVER_CONFIG} - a SearchServerConfig</li><li>{@value #ENV_IN_WORD_COUNT}
+ * a TermQuery</li> <li>{@value #ENV_IN_SEARCH_SERVER_CONFIG} - a SearchServerConfig</li><li>{@value #ENV_IN_DOC_COUNT}
  * - a list of int</li><li>{@value #ENV_IN_DOC_TERM} - a Term</li><li>{@value #ENV_IN_FUSION_REQUEST} - a
  * FusionRequest</li> <li>{@value #ENV_IN_MAP_FACET} - a Boolean</li> <li>{@value #ENV_IN_MAP_HIGHLIGHT} - a
  * Boolean</li><li>{@value #ENV_IN_QUERY_TARGET} - a QueryTarget</li><li>{@value #ENV_IN_RESPONSE_TARGET} - a
  * ResponseTarget</li></ul>
  * <p/>
  * A ScriptType has to set the following entries: <ul><li>{@value #ENV_OUT_NEW_VALUES} - null or a list of processed
- * values</li> <li>{@value #ENV_OUT_NEW_WORD_COUNTS} - a list of new word counts (default value is copied from {@value
- * #ENV_IN_WORD_COUNT})</li>
+ * values</li> <li>{@value #ENV_OUT_NEW_DOC_COUNTS} - a list of new doc counts (default value is copied from {@value
+ * #ENV_IN_DOC_COUNT})</li>
  */
 @ToString
 public class ScriptEnv
@@ -72,7 +72,7 @@ public class ScriptEnv
     public final static String ENV_IN_DOCUMENT = "responseDocument"; // a Document
     public final static String ENV_IN_TERM_QUERY_PART = "termQueryPart"; // a TermQuery
     public final static String ENV_IN_SEARCH_SERVER_CONFIG = "searchServerConfig"; // a SearchServerConfig
-    public final static String ENV_IN_WORD_COUNT = "facetWordCount"; // a List<Integer> for facets only
+    public final static String ENV_IN_DOC_COUNT = "facetDocCount"; // a List<Integer> for facets only
     public final static String ENV_IN_DOC_TERM = "docFieldTerm"; // a Term
     public final static String ENV_IN_FUSION_REQUEST = "fusionRequest"; // a FusionRequest
     public final static String ENV_IN_MAP_FACET = "mapFacetValue"; // a Boolean
@@ -82,7 +82,7 @@ public class ScriptEnv
 
     // variables set by a script
     public final static String ENV_OUT_NEW_VALUES = "returnValues";
-    public final static String ENV_OUT_NEW_WORD_COUNTS = "returnWordCounts";
+    public final static String ENV_OUT_NEW_DOC_COUNTS = "returnDocCounts";
 
     public ScriptEnv()
     {

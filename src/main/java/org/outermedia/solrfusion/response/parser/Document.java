@@ -221,11 +221,11 @@ public class Document implements VisitableDocument
     }
 
     public SolrField addFusionField(String fusionName, FusionField fusionField, List<String> value,
-        List<Integer> wordCount)
+        List<Integer> docCount)
     {
         Term term = Term.newFusionTerm(fusionName, value);
         term.setFusionField(fusionField);
-        term.setFusionFacetCount(wordCount);
+        term.setFusionFacetCount(docCount);
         return wrapFusionTermWithSolrField(term, fusionField);
     }
 
@@ -429,7 +429,7 @@ public class Document implements VisitableDocument
         return result;
     }
 
-    public List<Integer> getFusionFacetWordCountsOf(String field)
+    public List<Integer> getFusionFacetDocCountsOf(String field)
     {
         List<Integer> result = null;
 

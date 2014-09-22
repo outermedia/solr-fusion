@@ -67,7 +67,7 @@ public class FieldMerger extends AbstractType
         }
     }
 
-    @Override public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+    @Override public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
         ConversionDirection dir)
     {
         TypeResult result = null;
@@ -87,7 +87,7 @@ public class FieldMerger extends AbstractType
     }
 
     /**
-     * The multi values are joined with {@link #valueSeparator}. If facet word counts are set, their average is
+     * The multi values are joined with {@link #valueSeparator}. If facet doc counts are set, their average is
      * calculated.
      *
      * @param result a valid TypeResult object to flatten
@@ -98,9 +98,9 @@ public class FieldMerger extends AbstractType
         if (fieldValues != null)
         {
             StringBuilder sb = new StringBuilder();
-            List<Integer> wordCounts = result.getWordCounts();
-            int wordCountSum = 0;
-            int wordCountNr = 0;
+            List<Integer> docCounts = result.getDocCounts();
+            int docCountSum = 0;
+            int docCountNr = 0;
             for (int i = 0; i < fieldValues.size(); i++)
             {
                 if (i > 0)
@@ -108,22 +108,22 @@ public class FieldMerger extends AbstractType
                     sb.append(valueSeparator);
                 }
                 sb.append(fieldValues.get(i));
-                if (wordCounts != null)
+                if (docCounts != null)
                 {
-                    for (Integer count : wordCounts)
+                    for (Integer count : docCounts)
                     {
-                        wordCountSum += count;
+                        docCountSum += count;
                     }
-                    wordCountNr += wordCounts.size();
+                    docCountNr += docCounts.size();
                 }
             }
             result.setValues(Arrays.asList(sb.toString()));
-            List<Integer> newWordCounts = null;
-            if (wordCountNr > 0)
+            List<Integer> newDocCounts = null;
+            if (docCountNr > 0)
             {
-                newWordCounts = Arrays.asList(wordCountSum / wordCountNr);
+                newDocCounts = Arrays.asList(docCountSum / docCountNr);
             }
-            result.setWordCounts(newWordCounts);
+            result.setDocCounts(newDocCounts);
         }
     }
 
@@ -131,13 +131,13 @@ public class FieldMerger extends AbstractType
     {
         TypeResult result;
         List<String> allValues = new ArrayList<>();
-        List<Integer> allWordCounts = new ArrayList<>();
+        List<Integer> allDocCounts = new ArrayList<>();
 
-        // step 1: collect fields and their word counts
+        // step 1: collect fields and their doc counts
         List<List<String>> fields = new ArrayList<>();
         List<List<Integer>> counts = new ArrayList<>();
-        boolean atLeastOneWordCountListExists = false;
-        boolean atLeastOneFieldWithoutWordCountList = false;
+        boolean atLeastOneDocCountListExists = false;
+        boolean atLeastOneFieldWithoutDocCountList = false;
         for (String searchServerField : searchServerFieldsToMerge)
         {
             SolrField field = currentDoc.findFieldByName(searchServerField);
@@ -147,43 +147,43 @@ public class FieldMerger extends AbstractType
                 if (fieldValues != null)
                 {
                     fields.add(fieldValues);
-                    List<Integer> searchServerfacetWordCounts = field.getSearchServerFacetWordCounts();
-                    counts.add(searchServerfacetWordCounts);
-                    if (searchServerfacetWordCounts != null)
+                    List<Integer> searchServerfacetDocCounts = field.getSearchServerFacetDocCounts();
+                    counts.add(searchServerfacetDocCounts);
+                    if (searchServerfacetDocCounts != null)
                     {
-                        atLeastOneWordCountListExists = true;
+                        atLeastOneDocCountListExists = true;
                     }
                     else
                     {
-                        atLeastOneFieldWithoutWordCountList = true;
+                        atLeastOneFieldWithoutDocCountList = true;
                     }
                 }
             }
         }
 
-        // step 2: are word counts missing?
-        // at least one field has no word counts, but at least one other fields has word counts
-        // then generate all missing word counts
-        if (atLeastOneWordCountListExists && atLeastOneFieldWithoutWordCountList)
+        // step 2: are doc counts missing?
+        // at least one field has no doc counts, but at least one other fields has doc counts
+        // then generate all missing doc counts
+        if (atLeastOneDocCountListExists && atLeastOneFieldWithoutDocCountList)
         {
             for (int i = 0; i < fields.size(); i++)
             {
                 if (counts.get(i) == null)
                 {
-                    List<Integer> newWordCounts = Collections.nCopies(fields.get(i).size(), 1);
-                    counts.set(i, newWordCounts);
+                    List<Integer> newDocCounts = Collections.nCopies(fields.get(i).size(), 1);
+                    counts.set(i, newDocCounts);
                 }
             }
         }
 
-        // step 3: join all fields and their word counts
+        // step 3: join all fields and their doc counts
         for (int i = 0; i < fields.size(); i++)
         {
             allValues.addAll(fields.get(i));
             List<Integer> cs = counts.get(i);
             if (cs != null)
             {
-                allWordCounts.addAll(cs);
+                allDocCounts.addAll(cs);
             }
         }
 
@@ -191,14 +191,14 @@ public class FieldMerger extends AbstractType
         if (allValues.isEmpty())
         {
             allValues = null;
-            allWordCounts = null;
+            allDocCounts = null;
         }
-        if (allWordCounts != null && allWordCounts.isEmpty())
+        if (allDocCounts != null && allDocCounts.isEmpty())
         {
-            allWordCounts = null;
+            allDocCounts = null;
         }
 
-        return new TypeResult(allValues, allWordCounts);
+        return new TypeResult(allValues, allDocCounts);
     }
 
     public static FieldMerger getInstance()

@@ -35,13 +35,13 @@ import javax.xml.bind.annotation.*;
  * Created by ballmann on 8/11/14.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "responseFacetWordCount")
+@XmlType(name = "responseFacetDocCount")
 @ToString
 @Slf4j
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = {"sortByCount"})
-public class WordCount implements Comparable<WordCount>
+public class DocCount implements Comparable<DocCount>
 {
     @XmlAttribute(name = "name", required = true)
     private String word;
@@ -52,15 +52,15 @@ public class WordCount implements Comparable<WordCount>
     @XmlTransient
     private boolean sortByCount; // else by word
 
-    @Override public int compareTo(WordCount otherWordCount)
+    @Override public int compareTo(DocCount otherDocCount)
     {
         if (sortByCount)
         {
-            return ComparisonChain.start().compare(count, otherWordCount.count).result();
+            return ComparisonChain.start().compare(count, otherDocCount.count).result();
         }
         else
         {
-            return ComparisonChain.start().compare(word, otherWordCount.word).result();
+            return ComparisonChain.start().compare(word, otherDocCount.word).result();
         }
     }
 }

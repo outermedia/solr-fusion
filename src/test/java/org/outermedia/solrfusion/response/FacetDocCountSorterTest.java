@@ -26,14 +26,14 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.SolrFusionRequestParam;
-import org.outermedia.solrfusion.response.parser.WordCount;
+import org.outermedia.solrfusion.response.parser.DocCount;
 
 import java.util.*;
 
 /**
  * Created by ballmann on 8/14/14.
  */
-public class FacetWordCountSorterTest
+public class FacetDocCountSorterTest
 {
     @Test
     public void testDefaultSorting()
@@ -41,9 +41,9 @@ public class FacetWordCountSorterTest
         Map<String, Map<String, Integer>> facets = buildFacets("b", 2, "a", 1, "c", 3);
         FusionRequest req = new FusionRequest();
         // no limit or other facet sort params given, sort by index
-        Map<String, List<WordCount>> sortedFacets = new FacetWordCountSorter().sort(facets, req);
+        Map<String, List<DocCount>> sortedFacets = new FacetDocCountSorter().sort(facets, req);
         // System.out.println("SF " + sortedFacets);
-        Map<String, List<WordCount>> expected = buildSortedFacets("a", 1, "b", 2, "c", 3);
+        Map<String, List<DocCount>> expected = buildSortedFacets("a", 1, "b", 2, "c", 3);
         Assert.assertEquals("Expected other order", expected, sortedFacets);
     }
 
@@ -54,9 +54,9 @@ public class FacetWordCountSorterTest
         FusionRequest req = new FusionRequest();
         // limit > 0 enables sorting by count
         req.setFacetLimit(new SolrFusionRequestParam("20", null));
-        Map<String, List<WordCount>> sortedFacets = new FacetWordCountSorter().sort(facets, req);
+        Map<String, List<DocCount>> sortedFacets = new FacetDocCountSorter().sort(facets, req);
         // System.out.println("SF " + sortedFacets);
-        Map<String, List<WordCount>> expected = buildSortedFacets("a", 3, "b", 2, "c", 1);
+        Map<String, List<DocCount>> expected = buildSortedFacets("a", 3, "b", 2, "c", 1);
         Assert.assertEquals("Expected other order", expected, sortedFacets);
     }
 
@@ -68,9 +68,9 @@ public class FacetWordCountSorterTest
         req.setFacetLimit(new SolrFusionRequestParam("20", null));
         // global sorting overwrites defaul sorting
         req.setFacetSort(new SolrFusionRequestParam("count", null));
-        Map<String, List<WordCount>> sortedFacets = new FacetWordCountSorter().sort(facets, req);
+        Map<String, List<DocCount>> sortedFacets = new FacetDocCountSorter().sort(facets, req);
         // System.out.println("SF " + sortedFacets);
-        Map<String, List<WordCount>> expected = buildSortedFacets("a", 3, "b", 2, "c", 1);
+        Map<String, List<DocCount>> expected = buildSortedFacets("a", 3, "b", 2, "c", 1);
         Assert.assertEquals("Expected other order", expected, sortedFacets);
     }
 
@@ -82,9 +82,9 @@ public class FacetWordCountSorterTest
         req.setFacetLimit(new SolrFusionRequestParam("20", null));
         // global sorting overwrites defaul sorting
         req.setFacetSort(new SolrFusionRequestParam("index", null));
-        Map<String, List<WordCount>> sortedFacets = new FacetWordCountSorter().sort(facets, req);
+        Map<String, List<DocCount>> sortedFacets = new FacetDocCountSorter().sort(facets, req);
         // System.out.println("SF " + sortedFacets);
-        Map<String, List<WordCount>> expected = buildSortedFacets("a", 1, "b", 2, "c", 3);
+        Map<String, List<DocCount>> expected = buildSortedFacets("a", 1, "b", 2, "c", 3);
         Assert.assertEquals("Expected other order", expected, sortedFacets);
     }
 
@@ -97,9 +97,9 @@ public class FacetWordCountSorterTest
         req.setFacetSort(new SolrFusionRequestParam("index", null));
         // field sorting overwrites global index sorting
         req.setFacetSortFields(Arrays.asList(new SolrFusionRequestParam("count", "any", null)));
-        Map<String, List<WordCount>> sortedFacets = new FacetWordCountSorter().sort(facets, req);
+        Map<String, List<DocCount>> sortedFacets = new FacetDocCountSorter().sort(facets, req);
         // System.out.println("SF " + sortedFacets);
-        Map<String, List<WordCount>> expected = buildSortedFacets("a", 3, "b", 2, "c", 1);
+        Map<String, List<DocCount>> expected = buildSortedFacets("a", 3, "b", 2, "c", 1);
         Assert.assertEquals("Expected other order", expected, sortedFacets);
     }
 
@@ -115,13 +115,13 @@ public class FacetWordCountSorterTest
         return result;
     }
 
-    protected Map<String, List<WordCount>> buildSortedFacets(Object... args)
+    protected Map<String, List<DocCount>> buildSortedFacets(Object... args)
     {
-        Map<String, List<WordCount>> result = new HashMap<>();
-        List<WordCount> facetsOfField = new ArrayList<>();
+        Map<String, List<DocCount>> result = new HashMap<>();
+        List<DocCount> facetsOfField = new ArrayList<>();
         for (int i = 0; i < args.length; i += 2)
         {
-            WordCount wc = new WordCount();
+            DocCount wc = new DocCount();
             wc.setWord((String) args[i]);
             wc.setCount((Integer) args[i + 1]);
             facetsOfField.add(wc);

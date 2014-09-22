@@ -49,7 +49,7 @@ public class IdFilter extends AbstractType
         return new IdFilter();
     }
 
-    @Override public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+    @Override public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
         ConversionDirection dir)
     {
         TypeResult result = null;

@@ -24,7 +24,7 @@ package org.outermedia.solrfusion.response.freemarker;
 
 import lombok.Getter;
 import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.response.parser.WordCount;
+import org.outermedia.solrfusion.response.parser.DocCount;
 
 import java.util.List;
 import java.util.Map;
@@ -37,12 +37,12 @@ import java.util.Map;
 public class FreemarkerFacets
 {
     @Getter
-    private final Map<String, List<WordCount>> facets;
+    private final Map<String, List<DocCount>> facets;
 
     @Getter
     private boolean hasFacets;
 
-    public FreemarkerFacets(Configuration configuration, Map<String, List<WordCount>> facets)
+    public FreemarkerFacets(Configuration configuration, Map<String, List<DocCount>> facets)
     {
         this.facets = facets;
         hasFacets = facets != null && !facets.isEmpty();

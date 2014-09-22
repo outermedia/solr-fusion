@@ -31,8 +31,8 @@ import org.outermedia.solrfusion.FusionResponse;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
 import org.outermedia.solrfusion.response.freemarker.*;
+import org.outermedia.solrfusion.response.parser.DocCount;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.WordCount;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -107,7 +107,7 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
         FreemarkerResponseHeader freemarkerResponseHeader = new FreemarkerResponseHeader(docStream, request, fusionResponse);
         FreemarkerErrorHeader freemarkerErrorHeader = new FreemarkerErrorHeader(fusionResponse);
         Map<String, Document> highlighting = null;
-        Map<String, List<WordCount>> facets = null;
+        Map<String, List<DocCount>> facets = null;
         if (docStream != null)
         {
             highlighting = docStream.getExtraInfo().getHighlighting();

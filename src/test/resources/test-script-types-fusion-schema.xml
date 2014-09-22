@@ -132,16 +132,16 @@
                             print("Fusion Value       : "+fusionValue);
                             print("Fusion Field       : "+fusionFieldDeclaration);
                             print("Fusion Schema      : "+fusionSchema);
-                            print("Word Count         : "+facetWordCount);
+                            print("Doc Count          : "+facetDocCount);
                             print("Request            : "+fusionRequest);
                             print("Map facet doc?     : "+mapFacetValue);
                             print("Map highlight doc? : "+mapHighlightValue);
                             returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
-                            returnWordCounts = new ArrayList();
-                            returnWordCounts.add("4");
-                            returnWordCounts.add("1");
-                            returnWordCounts.add("3");
-                            returnWordCounts.add("2");
+                            returnDocCounts = new ArrayList();
+                            returnDocCounts.add("4");
+                            returnDocCounts.add("1");
+                            returnDocCounts.add("3");
+                            returnDocCounts.add("2");
                         ]]></script>
                     </om:response>
                     <om:query type="beanshell">
@@ -158,7 +158,7 @@
                             print("Fusion Value       : "+fusionValue);
                             print("Fusion Field       : "+fusionFieldDeclaration);
                             print("Fusion Schema      : "+fusionSchema);
-                            print("Word Count         : "+facetWordCount);
+                            print("Doc Count          : "+facetDocCount);
                             print("Request            : "+fusionRequest);
                             print("Map facet doc?     : "+mapFacetValue);
                             print("Map highlight doc? : "+mapHighlightValue);
@@ -196,9 +196,9 @@
                             print("Fusion Value       : "+fusionValue+"\n");
                             print("Fusion Field       : "+fusionFieldDeclaration+"\n");
                             print("Fusion Schema      : "+fusionSchema+"\n");
-                            print("Word Count         : "+facetWordCount+"\n");
+                            print("Doc Count          : "+facetDocCount+"\n");
                             returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
-                            returnWordCounts = ["4", "1", "3", "2"];
+                            returnDocCounts = ["4", "1", "3", "2"];
                         ]]></script>
                     </om:response>
                     <om:query type="javascript">
@@ -216,7 +216,7 @@
                             print("Fusion Value       : "+fusionValue+"\n");
                             print("Fusion Field       : "+fusionFieldDeclaration+"\n");
                             print("Fusion Schema      : "+fusionSchema+"\n");
-                            print("Word Count         : "+facetWordCount+"\n");
+                            print("Doc Count          : "+facetDocCount+"\n");
                             returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
                         ]]></script>
                     </om:query>

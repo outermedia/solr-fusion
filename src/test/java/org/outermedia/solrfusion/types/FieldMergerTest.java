@@ -173,7 +173,7 @@ public class FieldMergerTest extends AbstractTypeTest
     }
 
     @Test
-    public void testFacetWordCountMerging()
+    public void testFacetDocCountMerging()
         throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException,
         InvocationTargetException, IllegalAccessException
     {
@@ -185,22 +185,22 @@ public class FieldMergerTest extends AbstractTypeTest
         Configuration spyCfg = spy(cfg);
         when(spyCfg.getResponseMapper()).thenReturn(testResponseMapper);
 
-        testFacetWordCount(testResponseMapper, spyCfg, Arrays.asList(1, 2), Arrays.asList(3), Arrays.asList(1, 2, 3));
-        testFacetWordCount(testResponseMapper, spyCfg, null, Arrays.asList(3), Arrays.asList(1, 1, 3));
-        testFacetWordCount(testResponseMapper, spyCfg, Arrays.asList(1, 2), null, Arrays.asList(1, 2, 1));
-        testFacetWordCount(testResponseMapper, spyCfg, null, null, null);
+        testFacetDocCount(testResponseMapper, spyCfg, Arrays.asList(1, 2), Arrays.asList(3), Arrays.asList(1, 2, 3));
+        testFacetDocCount(testResponseMapper, spyCfg, null, Arrays.asList(3), Arrays.asList(1, 1, 3));
+        testFacetDocCount(testResponseMapper, spyCfg, Arrays.asList(1, 2), null, Arrays.asList(1, 2, 1));
+        testFacetDocCount(testResponseMapper, spyCfg, null, null, null);
     }
 
-    protected void testFacetWordCount(ResponseMapperIfc testResponseMapper, Configuration spyCfg,
-        List<Integer> wordCounts1, List<Integer> wordCounts2, List<Integer> expectedWordCounts)
+    protected void testFacetDocCount(ResponseMapperIfc testResponseMapper, Configuration spyCfg,
+        List<Integer> docCounts1, List<Integer> docCounts2, List<Integer> expectedDocCounts)
     {
-        Document doc = buildDocumentWithFacetWordCounts("author", Arrays.asList("a1a", "a1b"), wordCounts1, "author2",
-            "a2", wordCounts2);
+        Document doc = buildDocumentWithFacetDocCounts("author", Arrays.asList("a1a", "a1b"), docCounts1, "author2",
+            "a2", docCounts2);
         testResponseMapper.mapResponse(spyCfg, cfg.getSearchServerConfigByName("GBV"), doc, new ScriptEnv(), null,
             ResponseTarget.ALL);
-        List<Integer> wordCounts = doc.getFusionFacetWordCountsOf("author_facet");
-        // System.out.println("FWC " + wordCounts);
-        Assert.assertEquals("Expected other merged facet word counts", expectedWordCounts, wordCounts);
+        List<Integer> docCounts = doc.getFusionFacetDocCountsOf("author_facet");
+        // System.out.println("FWC " + docCounts);
+        Assert.assertEquals("Expected other merged facet doc counts", expectedDocCounts, docCounts);
     }
 
     protected Document buildDocument(Object... fields)
@@ -222,14 +222,14 @@ public class FieldMergerTest extends AbstractTypeTest
         return doc;
     }
 
-    protected Document buildDocumentWithFacetWordCounts(Object... fields)
+    protected Document buildDocumentWithFacetDocCounts(Object... fields)
     {
         Document doc = new Document();
         for (int i = 0; i < fields.length; i += 3)
         {
             String name = (String) fields[i];
             Object value = fields[i + 1];
-            List<Integer> wordCounts = (List<Integer>) fields[i + 2];
+            List<Integer> docCounts = (List<Integer>) fields[i + 2];
             SolrField sf;
             if (value instanceof List)
             {
@@ -239,7 +239,7 @@ public class FieldMergerTest extends AbstractTypeTest
             {
                 sf = doc.addField(name, (String) value);
             }
-            sf.getTerm().setSearchServerFacetCount(wordCounts);
+            sf.getTerm().setSearchServerFacetCount(docCounts);
         }
         return doc;
     }

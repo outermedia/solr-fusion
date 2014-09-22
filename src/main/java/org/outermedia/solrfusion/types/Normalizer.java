@@ -47,7 +47,7 @@ public class Normalizer extends AbstractType
         // log.debug("Normalizer: trim={} toLowerCase={} startCharsToDel={}", trim, toLowerCase, startCharsToDel);
     }
 
-    @Override public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+    @Override public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
         ConversionDirection dir)
     {
         List<String> result = new ArrayList<>();
@@ -82,7 +82,7 @@ public class Normalizer extends AbstractType
                 result.add(v);
             }
         }
-        return new TypeResult(result, facetWordCounts);
+        return new TypeResult(result, facetDocCounts);
     }
 
     public static Normalizer getInstance()

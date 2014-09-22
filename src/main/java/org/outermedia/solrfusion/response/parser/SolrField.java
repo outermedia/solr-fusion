@@ -113,7 +113,7 @@ public abstract class SolrField
 
     public boolean isRemoved() { return term.isRemoved(); }
 
-    public List<Integer> getSearchServerFacetWordCounts()
+    public List<Integer> getSearchServerFacetDocCounts()
     {
         return term.getSearchServerFacetCount();
     }

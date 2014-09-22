@@ -85,11 +85,11 @@ public class RegularExpression extends AbstractType
     }
 
     @Override
-    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+    public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
         ConversionDirection dir)
     {
         List<String> newValues = new ArrayList<>();
-        TypeResult result = new TypeResult(newValues, facetWordCounts);
+        TypeResult result = new TypeResult(newValues, facetDocCounts);
         for (String v : values)
         {
             if (v != null)

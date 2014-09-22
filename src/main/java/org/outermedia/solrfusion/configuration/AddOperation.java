@@ -96,19 +96,19 @@ public class AddOperation extends Operation
         {
             // use search server's values as default
             List<String> searchServerValues = null;
-            List<Integer> searchServerWordCounts = null;
+            List<Integer> searchServerDocCounts = null;
             if (searchServerFieldName != null)
             {
                 Term searchServerTerm = doc.getFieldTermByName(searchServerFieldName);
                 if (searchServerTerm != null)
                 {
                     searchServerValues = searchServerTerm.getSearchServerFieldValue();
-                    searchServerWordCounts = searchServerTerm.getSearchServerFacetCount();
+                    searchServerDocCounts = searchServerTerm.getSearchServerFacetCount();
                 }
             }
             term = Term.newFusionTerm(fusionFieldName, searchServerValues);
             term.setFusionField(fusionField);
-            term.setFusionFacetCount(searchServerWordCounts);
+            term.setFusionFacetCount(searchServerDocCounts);
             isNew = true;
         }
         ScriptEnv newEnv = new ScriptEnv();

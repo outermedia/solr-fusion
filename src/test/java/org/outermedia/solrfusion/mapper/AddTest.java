@@ -35,10 +35,10 @@ import org.outermedia.solrfusion.query.parser.*;
 import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.DefaultXmlResponseRenderer;
-import org.outermedia.solrfusion.response.FacetWordCountBuilder;
-import org.outermedia.solrfusion.response.FacetWordCountSorter;
+import org.outermedia.solrfusion.response.FacetDocCountBuilder;
+import org.outermedia.solrfusion.response.FacetDocCountSorter;
+import org.outermedia.solrfusion.response.parser.DocCount;
 import org.outermedia.solrfusion.response.parser.Document;
-import org.outermedia.solrfusion.response.parser.WordCount;
 import org.outermedia.solrfusion.types.AbstractTypeTest;
 import org.outermedia.solrfusion.types.ScriptEnv;
 import org.xml.sax.SAXException;
@@ -424,9 +424,9 @@ public class AddTest extends AbstractTypeTest
         facetDoc.setSearchServerDocId(searchServerConfig.getIdFieldName(), "1");
         cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, facetDoc, getNewEnv(null, cfg), null, ResponseTarget.ALL);
         Map<String, Map<String, Integer>> facets = new HashMap<>();
-        facetDoc.accept(new FacetWordCountBuilder(cfg.getFusionIdFieldName(), cfg.getIdGenerator(), doc, facets), null);
-        FacetWordCountSorter facetSorter = new FacetWordCountSorter();
-        Map<String, List<WordCount>> sortedFacets = facetSorter.sort(facets, req);
+        facetDoc.accept(new FacetDocCountBuilder(cfg.getFusionIdFieldName(), cfg.getIdGenerator(), doc, facets), null);
+        FacetDocCountSorter facetSorter = new FacetDocCountSorter();
+        Map<String, List<DocCount>> sortedFacets = facetSorter.sort(facets, req);
 
         // render result
         DefaultXmlResponseRenderer renderer = DefaultXmlResponseRenderer.Factory.getInstance();
@@ -454,9 +454,9 @@ public class AddTest extends AbstractTypeTest
         Assert.assertTrue("Didn't find text18b in: " + xmlDocStr, xmlDocStr.contains(expected));
     }
 
-    protected WordCount newWordCount(String word, int count)
+    protected DocCount newDocCount(String word, int count)
     {
-        WordCount wc = new WordCount();
+        DocCount wc = new DocCount();
         wc.setWord(word);
         wc.setCount(count);
         return wc;

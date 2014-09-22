@@ -171,7 +171,7 @@ be able to apply the mapping rules, SolrFusion creates Solr documents from the h
 
 ## Facets
 Because mapping rules work only on Solr documents, facets are transformed internally into Solr documents where the fields
-are annotated with the word counts. But only the "facet_fields" of a response are processed, but neither "facet_queries"
+are annotated with the document counts. But only the "facet_fields" of a response are processed, but neither "facet_queries"
 nor "facet_dates" nor "facet_ranges".
 
 Sorting of the facet values is done by SolrFusion, because facets of different Solr servers are combined. The order of
@@ -323,13 +323,13 @@ Incoming:
     value to be converted
 * __searchServerConfig__ - the Solr server specific configuration of the SolrFusion schema (org.outermedia.solrfusion.configuration.SearchServerConfig)
     for which a query is mapped or a response is mapped
-* __facetWordCount__ - is a java.util.List<java.lang.Integer> which represent the number of word occurrences in facets;
+* __facetDocCount__ - is a java.util.List<java.lang.Integer> which represent the number of word occurrences in facets;
     Note: Facets of a Solr response are internally combined into one SolrFusion Document in order to be able to apply
     the mapping rules.
 * __docFieldTerm__ - a org.outermedia.solrfusion.mapper.Term which contains the values being mapped    
 * __fusionRequest__ - the data of the current SolrFusion request (org.outermedia.solrfusion.FusionRequest) 
 * __mapFacetValue__ - whether the values being mapped belong to a facet (java.lang.Boolean); if true a ScriptType
-    has to adjust the __facetWordCount__ when either the order or number of the values beeing mapped is changed.
+    has to adjust the __facetDocCount__ when either the order or number of the values beeing mapped is changed.
 * __mapHighlightValue__ - signals whether a highlight value is mapped    
 * __queryTarget__ - an enumeration value of: "all", "filter-query", "query" or "highlight-query". If unset the current
     ScriptType's invocation is not working on a query part.
@@ -340,8 +340,8 @@ Outgoing: To be set by scripting languages only. Java implementations return an 
 
 * __returnValues__ - a single java.lang.Object or a java.util.List<java.lang.String> to return the converted values; 
     the single Object value is automatically converted into a List of String (the toString() method is called).
-* __returnWordCounts__ -  if __mapFacetValue__ is true and the order or number of values is modified then the facet
-    word counts need to be adjusted too; the default value is the original word count list
+* __returnDocCounts__ -  if __mapFacetValue__ is true and the order or number of values is modified then the facet
+    document counts need to be adjusted too; the default value is the original document count list
  
 These entries are directly accessible via simple variable names in the scripting languages supported by Java (e.g. [Javascript](#javascript) and
 [Bean Shell](#bean-shell)). In Java implementations the ScriptEnv methods have to be used to access these context variables.
@@ -386,9 +386,9 @@ It is possible to embed the Javascript code into the XML (*.Js) or an external f
                     print("Fusion Value       : "+fusionValue+"\n");
                     print("Fusion Field       : "+fusionFieldDeclaration+"\n");
                     print("Fusion Schema      : "+fusionSchema+"\n");
-                    print("Word Count         : "+facetWordCount+"\n");
+                    print("Doc Count          : "+facetDocCount+"\n");
                     returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
-                    returnWordCounts = ["4", "1", "3", "2"];
+                    returnDocCounts = ["4", "1", "3", "2"];
                 ]]></script>
             </om:response>
          </om:change>
@@ -438,14 +438,14 @@ It is possible to embed the Beanshell code into the XML (*.Bsh) or an external f
                     print("Fusion Value       : "+fusionValue);
                     print("Fusion Field       : "+fusionFieldDeclaration);
                     print("Fusion Schema      : "+fusionSchema);
-                    print("Word Count         : "+facetWordCount);
+                    print("Doc Count          : "+facetDocCount);
                     print("Request            : "+fusionRequest);
                     print("Map facet doc?     : "+mapFacetValue);
                     print("Map highlight doc? : "+mapHighlightValue);
                     returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
-                    returnWordCounts = new ArrayList();
-                    returnWordCounts.add("4");
-                    returnWordCounts.add("1");
+                    returnDocCounts = new ArrayList();
+                    returnDocCounts.add("4");
+                    returnDocCounts.add("1");
                 ]]></script>
             </om:response>
          </om:change>
@@ -552,7 +552,7 @@ Example mapping:
         </om:add>
     </om:field>
 
-In the case that a value is set for a facet, the word count is automatically set to "1".
+In the case that a value is set for a facet, the document count is automatically set to "1".
 
 ### Multi Value Merger
 Flatten multiple values of one field to one value which is necessary when the destination field is a single value.
@@ -990,7 +990,7 @@ If a multi value field is mapped to a single value field the behaviour is as fol
     [MultiValueMerger](#multi-value-merger) to flatten multi values and to avoid this error.
 * Contains the value exactly one value, this value is used without warning or error messages.
 
-Especially for facets: When the mapping rules map two Solr fields to one SolrFusion field, then their mapped values and word counts
+Especially for facets: When the mapping rules map two Solr fields to one SolrFusion field, then their mapped values and documents counts
 are combined automatically. Because it is necessary to eliminate duplicate words, their counters are added.
 
 ### Change
@@ -1208,7 +1208,7 @@ It is worth to mention that all add "outside" query rules are applied when all c
 applied and the query builder has created the query. The new query parts are appended, separated by "AND" (edismax) or
 a SPACE (dismax).
 
-When a field is copied ("Example 3" above) word counts of facets are copied too (when a facet is mapped).
+When a field is copied ("Example 3" above) document counts of facets are copied too (when a facet is mapped).
     
 ### Split Merge Use Case
 This is a common mapping use case where one SolrFusion field is mapped to several Solr fields or vice versa. 

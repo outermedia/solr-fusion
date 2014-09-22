@@ -23,7 +23,7 @@ package org.outermedia.solrfusion.response;
  */
 
 import org.outermedia.solrfusion.FusionRequest;
-import org.outermedia.solrfusion.response.parser.WordCount;
+import org.outermedia.solrfusion.response.parser.DocCount;
 
 import java.util.*;
 
@@ -32,19 +32,19 @@ import java.util.*;
  *
  * Created by ballmann on 8/14/14.
  */
-public class FacetWordCountSorter
+public class FacetDocCountSorter
 {
     /**
      *  Sort facets by index or count.
      *
-     * @param fusionFacetFields the key maps a field to a map of words and their word counts.
+     * @param fusionFacetFields the key maps a field to a map of words and their doc counts.
      * @param fusionRequest
      * @return
      */
-    public Map<String, List<WordCount>> sort(Map<String, Map<String, Integer>> fusionFacetFields,
+    public Map<String, List<DocCount>> sort(Map<String, Map<String, Integer>> fusionFacetFields,
         FusionRequest fusionRequest)
     {
-        Map<String, List<WordCount>> result = null;
+        Map<String, List<DocCount>> result = null;
         if (fusionFacetFields != null)
         {
             result = new LinkedHashMap<>();
@@ -52,54 +52,54 @@ public class FacetWordCountSorter
             {
                 String fusionField = entry.getKey();
                 String sortingOfFacetField = fusionRequest.getSortingOfFacetField(fusionField);
-                Map<String, Integer> wordCounts = entry.getValue();
-                List<WordCount> sortedWordCounts = new ArrayList<>();
-                for (Map.Entry<String, Integer> wordEntry : wordCounts.entrySet())
+                Map<String, Integer> docCounts = entry.getValue();
+                List<DocCount> sortedDocCounts = new ArrayList<>();
+                for (Map.Entry<String, Integer> wordEntry : docCounts.entrySet())
                 {
-                    WordCount wc = new WordCount();
+                    DocCount wc = new DocCount();
                     wc.setWord(wordEntry.getKey());
                     wc.setCount(wordEntry.getValue());
                     wc.setSortByCount(FusionRequest.SORT_COUNT.equals(sortingOfFacetField));
-                    sortedWordCounts.add(wc);
+                    sortedDocCounts.add(wc);
                 }
-                sortWordCounts(sortedWordCounts, sortingOfFacetField);
-                filterWordCounts(sortedWordCounts, fusionRequest.getLimitOfFacetField(fusionField));
-                result.put(fusionField, sortedWordCounts);
+                sortDocCounts(sortedDocCounts, sortingOfFacetField);
+                filterDocCounts(sortedDocCounts, fusionRequest.getLimitOfFacetField(fusionField));
+                result.put(fusionField, sortedDocCounts);
             }
         }
         return result;
     }
 
     /**
-     * Remove too many word count entries. {@code limitOfFacetField} controls the length.
+     * Remove too many doc count entries. {@code limitOfFacetField} controls the length.
      *
-     * @param sortedWordCounts
+     * @param sortedDocCounts
      * @param limitOfFacetField see {@link org.outermedia.solrfusion.FusionRequest#getLimitOfFacetField(String)}
      */
-    protected void filterWordCounts(List<WordCount> sortedWordCounts, int limitOfFacetField)
+    protected void filterDocCounts(List<DocCount> sortedDocCounts, int limitOfFacetField)
     {
         if (limitOfFacetField >= 0)
         {
-            int at = sortedWordCounts.size() - 1;
+            int at = sortedDocCounts.size() - 1;
             while (at >= 0 && (at + 1) > limitOfFacetField)
             {
-                sortedWordCounts.remove(at);
+                sortedDocCounts.remove(at);
                 at--;
             }
         }
     }
 
     /**
-     * @param sortableWordCounts  is either {@link org.outermedia.solrfusion.FusionRequest#SORT_INDEX} or {@link
+     * @param sortableDocCounts  is either {@link org.outermedia.solrfusion.FusionRequest#SORT_INDEX} or {@link
      *                            org.outermedia.solrfusion.FusionRequest#SORT_COUNT}
      * @param sortingOfFacetField
      */
-    protected void sortWordCounts(List<WordCount> sortableWordCounts, String sortingOfFacetField)
+    protected void sortDocCounts(List<DocCount> sortableDocCounts, String sortingOfFacetField)
     {
-        Collections.sort(sortableWordCounts);
+        Collections.sort(sortableDocCounts);
         if (sortingOfFacetField.equals(FusionRequest.SORT_COUNT))
         {
-            Collections.reverse(sortableWordCounts);
+            Collections.reverse(sortableDocCounts);
         }
     }
 }

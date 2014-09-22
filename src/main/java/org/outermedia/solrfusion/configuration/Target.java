@@ -80,7 +80,7 @@ public abstract class Target
         util = new Util();
     }
 
-    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env, ConversionDirection dir)
+    public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env, ConversionDirection dir)
     {
         TypeResult result = null;
         if (type != null)
@@ -92,7 +92,7 @@ public abstract class Target
                 if (typeImpl != null)
                 {
                     typeImpl.passArguments(typeConfig, util);
-                    result = typeImpl.apply(values, facetWordCounts, env, dir);
+                    result = typeImpl.apply(values, facetDocCounts, env, dir);
                 }
                 else
                 {

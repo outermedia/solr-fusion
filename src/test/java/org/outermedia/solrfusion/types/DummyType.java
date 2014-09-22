@@ -39,7 +39,7 @@ public class DummyType extends AbstractType
     }
 
     @Override
-    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+    public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
         ConversionDirection dir)
     {
         return null;

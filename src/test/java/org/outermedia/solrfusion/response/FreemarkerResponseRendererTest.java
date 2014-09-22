@@ -396,7 +396,7 @@ public class FreemarkerResponseRendererTest
         FusionRequest req = new FusionRequest();
         req.setQuery(new SolrFusionRequestParam("goethe"));
         req.setFacetLimit(new SolrFusionRequestParam("20"));
-        Map<String, List<WordCount>> sortedFacets = consolidator.mapFacetWordCounts(cfg.getIdGenerator(),
+        Map<String, List<DocCount>> sortedFacets = consolidator.mapFacetDocCounts(cfg.getIdGenerator(),
             cfg.getFusionIdFieldName(), req);
         // System.out.println("FACETS "+sortedFacets);
         SearchServerResponseInfo info9000 = new SearchServerResponseInfo(response9000.getNumFound(), null, sortedFacets,

@@ -121,7 +121,7 @@ public class Table extends AbstractType
     }
 
     @Override
-    public TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+    public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
         ConversionDirection dir)
     {
         TypeResult result = null;
@@ -139,7 +139,7 @@ public class Table extends AbstractType
         {
             throw new RuntimeException("Unsupported conversion direction: " + dir);
         }
-        result = new TypeResult(newValues, facetWordCounts);
+        result = new TypeResult(newValues, facetDocCounts);
         for (String v : values)
         {
             if (v == null)

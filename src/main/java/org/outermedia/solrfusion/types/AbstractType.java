@@ -70,7 +70,7 @@ public abstract class AbstractType implements Initiable<ScriptType>
      * @param dir    is the conversion direction. Either from fusion schema to search server schema or vice versa.
      * @return perhaps null
      */
-    public abstract TypeResult apply(List<String> values, List<Integer> facetWordCounts, ScriptEnv env,
+    public abstract TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
         ConversionDirection dir);
 
     /**
@@ -110,22 +110,22 @@ public abstract class AbstractType implements Initiable<ScriptType>
      */
     @SuppressWarnings("unchecked")
     public TypeResult applyScriptEngineCode(ScriptEngine engine, String code, List<String> values,
-        List<Integer> facetWordCounts, ScriptEnv env)
+        List<Integer> facetDocCounts, ScriptEnv env)
     {
         Bindings bindings = engine.createBindings();
         bindings.putAll(engine.getBindings(ScriptContext.GLOBAL_SCOPE));
         ScriptEnv newEnv = new ScriptEnv(env);
         newEnv.setBinding(ScriptEnv.ENV_IN_VALUES, values);
-        newEnv.setBinding(ScriptEnv.ENV_IN_WORD_COUNT, facetWordCounts);
-        newEnv.setBinding(ScriptEnv.ENV_OUT_NEW_WORD_COUNTS, facetWordCounts);
+        newEnv.setBinding(ScriptEnv.ENV_IN_DOC_COUNT, facetDocCounts);
+        newEnv.setBinding(ScriptEnv.ENV_OUT_NEW_DOC_COUNTS, facetDocCounts);
         newEnv.flatten(bindings);
         Object evaluated = null;
-        List<Integer> returnWordCounts = null;
+        List<Integer> returnDocCounts = null;
         try
         {
             engine.eval(code, bindings);
             evaluated = bindings.get(ScriptEnv.ENV_OUT_NEW_VALUES);
-            returnWordCounts = (List<Integer>) bindings.get(ScriptEnv.ENV_OUT_NEW_WORD_COUNTS);
+            returnDocCounts = (List<Integer>) bindings.get(ScriptEnv.ENV_OUT_NEW_DOC_COUNTS);
         }
         catch (ScriptException e)
         {
@@ -144,7 +144,7 @@ public abstract class AbstractType implements Initiable<ScriptType>
             {
                 returnValues.add(evaluated.toString());
             }
-            result = new TypeResult(returnValues, returnWordCounts);
+            result = new TypeResult(returnValues, returnDocCounts);
         }
         return result;
     }

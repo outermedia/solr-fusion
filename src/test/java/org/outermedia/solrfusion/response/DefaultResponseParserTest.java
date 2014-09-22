@@ -179,21 +179,21 @@ public class DefaultResponseParserTest
             facetFields.buildFusionDocStr().contains(expectedDocStr));
     }
 
-    protected void checkFacetField(SolrField hit, String searchServerField, int wordCount, String firstWord,
-        int firstWordCount, String lastWord, int lastWordCount)
+    protected void checkFacetField(SolrField hit, String searchServerField, int docCount, String firstWord,
+        int firstDocCount, String lastWord, int lastDocCount)
     {
         Assert.assertEquals("First search server field is different", searchServerField,
             hit.getTerm().getSearchServerFieldName());
-        List<Integer> hit1WordCounts = hit.getSearchServerFacetWordCounts();
-        Assert.assertNotNull("Expected parsed facet field word counts", hit1WordCounts);
-        Assert.assertEquals("Found different number of facet field word counts", wordCount, hit1WordCounts.size());
-        Assert.assertEquals("Word of first facet hit is different", firstWord, hit.getFirstSearchServerFieldValue());
-        Assert.assertEquals("Word count of first facet hit is different", (Integer)firstWordCount,
-            hit.getSearchServerFacetWordCounts().get(0));
+        List<Integer> hit1DocCounts = hit.getSearchServerFacetDocCounts();
+        Assert.assertNotNull("Expected parsed facet field doc counts", hit1DocCounts);
+        Assert.assertEquals("Found different number of facet field doc counts", docCount, hit1DocCounts.size());
+        Assert.assertEquals("Doc of first facet hit is different", firstWord, hit.getFirstSearchServerFieldValue());
+        Assert.assertEquals("Doc count of first facet hit is different", (Integer)firstDocCount,
+            hit.getSearchServerFacetDocCounts().get(0));
         Assert.assertEquals("Word of last facet hit is different", lastWord,
-            hit.getAllSearchServerFieldValue().get(wordCount - 1));
-        Assert.assertEquals("Word count of last facet hit is different", (Integer)lastWordCount,
-            hit.getSearchServerFacetWordCounts().get(wordCount - 1));
+            hit.getAllSearchServerFieldValue().get(docCount - 1));
+        Assert.assertEquals("Doc count of last facet hit is different", (Integer)lastDocCount,
+            hit.getSearchServerFacetDocCounts().get(docCount - 1));
     }
 
     @Test

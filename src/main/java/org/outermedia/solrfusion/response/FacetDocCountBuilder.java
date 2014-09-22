@@ -37,7 +37,7 @@ import java.util.Map;
  * Created by ballmann on 8/11/14.
  */
 @Slf4j
-public class FacetWordCountBuilder implements FieldVisitor
+public class FacetDocCountBuilder implements FieldVisitor
 {
     private String fusionIdField;
     private IdGeneratorIfc idGenerator;
@@ -49,11 +49,11 @@ public class FacetWordCountBuilder implements FieldVisitor
      *
      * @param fusionIdField
      * @param idGenerator
-     * @param doc contains the facets as fields (the word counts are set too)
+     * @param doc contains the facets as fields (the doc counts are set too)
      * @param fusionFacetFields this parameter is filled from the processed facets. The key maps a field to a map of
-     *                          words and their word counts.
+     *                          words and their doc counts.
      */
-    public FacetWordCountBuilder(String fusionIdField, IdGeneratorIfc idGenerator, Document doc,
+    public FacetDocCountBuilder(String fusionIdField, IdGeneratorIfc idGenerator, Document doc,
         Map<String, Map<String, Integer>> fusionFacetFields)
     {
         this.fusionIdField = fusionIdField;
@@ -72,44 +72,44 @@ public class FacetWordCountBuilder implements FieldVisitor
     {
         if (!sf.isFusionField(fusionIdField) && !sf.isFusionField("score"))
         {
-            List<Integer> wordCount = sf.getFusionFacetCount();
+            List<Integer> docCount = sf.getFusionFacetCount();
             // because all mappings are applied, perhaps some fields were added which are not facet fields
-            // these fields have no word count set and are ignored
-            if (wordCount != null && sf.isProcessed() && !sf.isRemoved())
+            // these fields have no doc count set and are ignored
+            if (docCount != null && sf.isProcessed() && !sf.isRemoved())
             {
                 List<String> values = sf.getAllFusionFieldValue();
-                if (wordCount.size() != values.size())
+                if (docCount.size() != values.size())
                 {
                     log.error(
-                        "Mapping didn't fix facet word count for field: '{}' of server {}. Facet's word count is ignored.",
+                        "Mapping didn't fix facet doc count for field: '{}' of server {}. Facet's doc count is ignored.",
                         sf.getTerm().getSearchServerFieldName(),
                         idGenerator.getSearchServerIdFromFusionId(doc.getFusionDocId(fusionIdField)));
                 }
                 else
                 {
                     String fusionFieldName = sf.getFusionFieldName();
-                    Map<String, Integer> fusionWordCount = fusionFacetFields.get(fusionFieldName);
-                    if (fusionWordCount == null)
+                    Map<String, Integer> fusionDocCount = fusionFacetFields.get(fusionFieldName);
+                    if (fusionDocCount == null)
                     {
-                        fusionWordCount = new HashMap<>();
-                        fusionFacetFields.put(fusionFieldName, fusionWordCount);
+                        fusionDocCount = new HashMap<>();
+                        fusionFacetFields.put(fusionFieldName, fusionDocCount);
                     }
-                    for (int i = 0; i < wordCount.size(); i++)
+                    for (int i = 0; i < docCount.size(); i++)
                     {
                         String word = values.get(i);
-                        Integer wcObj = fusionWordCount.get(word);
+                        Integer wcObj = fusionDocCount.get(word);
                         int wc = 0;
                         if (wcObj != null)
                         {
                             wc = wcObj;
                         }
-                        wc += wordCount.get(i);
-                        if (log.isDebugEnabled() && wc != wordCount.get(i))
+                        wc += docCount.get(i);
+                        if (log.isDebugEnabled() && wc != docCount.get(i))
                         {
-                            log.trace("MERGED FACET WORD COUNTS OF {}: {} to {}+{}={}", sf.getFusionFieldName(), word,
-                                wcObj, wordCount.get(i), wc);
+                            log.trace("MERGED FACET DOC COUNTS OF {}: {} to {}+{}={}", sf.getFusionFieldName(), word,
+                                wcObj, docCount.get(i), wc);
                         }
-                        fusionWordCount.put(word, wc);
+                        fusionDocCount.put(word, wc);
                     }
                 }
             }
