@@ -59,17 +59,18 @@ public class SolrFusionRequestParam
 
     public SolrFusionRequestParam(String value, String paramNameVariablePart, String defaultValue)
     {
+        this.containedInRequest = false;
         if (value != null)
         {
             value = value.trim();
-            this.containedInRequest = true;
+            // sometimes tomcat returns "" even if a request parameter is not present
+            this.containedInRequest = value.length() > 0;
         }
         else
         {
             if (defaultValue != null)
             {
                 value = defaultValue;
-                this.containedInRequest = false;
             }
         }
         this.value = value;
@@ -79,7 +80,7 @@ public class SolrFusionRequestParam
     public int getValueAsInt(int defaultValue)
     {
         int result = defaultValue;
-        if (value != null)
+        if (value != null && containedInRequest)
         {
             try
             {
