@@ -31,6 +31,7 @@ Outermedia GmbH
         * [Id Filter](#id-filter)
         * [Field Merger](#field-merger)
         * [String Normalizer](#string-normalizer)
+        * [Set Facet Doc Count](#set-facet-doc-count)        
     * [Default Search Values](#default-search-values)
     * [SolrFusion Id Generator](#solrfusion-id-generator)
     * [Response Consolidator](#response-consolidator)
@@ -177,8 +178,9 @@ Because mapping rules work only on Solr documents, facets are transformed intern
 are annotated with the document counts. But only the "facet_fields" of a response are processed, but neither "facet_queries"
 nor "facet_dates" nor "facet_ranges".
 
-Sorting of the facet values is done by SolrFusion, because facets of different Solr servers are combined. The order of
-the fields is determined by the textual order of the server declarations. New fields are append at the end of the facet
+Sorting of the facet values is done by SolrFusion, because facets of different Solr servers are combined. If a document
+count becomes 0 (after mapping), the facet is ignored.
+The order of the fields is determined by the textual order of the server declarations. New fields are append at the end of the facet
 list. "index" and "count" sorting is supported (description from Solr Wiki):
 
 * __count__ - Sort the constraints by count (highest count first)
@@ -338,6 +340,7 @@ Incoming:
     ScriptType's invocation is not working on a query part.
 * __responseTarget__ - an enumeration value of: "all", "facet", "document" or "highlight". If unset the current
     ScriptType's invocation is not working on a response part.
+* __totalDocNr__ - the total number of documents which one Solr server found.    
 
 Outgoing: To be set by scripting languages only. Java implementations return an object of org.outermedia.solrfusion.types.TypeResult.
 
@@ -360,6 +363,7 @@ The following chapters describe all predefined Script Types in detail:
 * [Id Filter](#id-filter)
 * [Field Merger](#field-merger)
 * [String Normalizer](#string-normalizer)
+* [Set Facet Doc Count](#set-facet-doc-count)
 
 Only ScriptTypes used in mappings have to be declared.
 
@@ -644,7 +648,7 @@ Example mapping:
             <om:response type="normalizer">
                 <trim>true</trim>
                 <to-lower-case>true</to-lower-case>
-                <start-chars-to-del>&#32;&#160;."-</start-chars-to-del>
+                <start-chars-to-del>&#32;&#160;."-[(</start-chars-to-del>
             </om:response>
         </om:change>
         <om:change><om:query /></om:change>
@@ -655,6 +659,34 @@ The "normalizer" supports three actions:
 * `<trim>` - remove leading and trailing white spaces
 * `<to-lower-case>` - true or false in order to enable or disable conversion to lower case
 * `<start-chars-to-del>` - remove leading characters which are contained in the string of this attribute.
+
+### Set Facet Doc Count
+The "Simple Values" ScriptType uses 1 as document count when a facet is added. If this is not suitable, the "Set Facet Doc Count"
+ScriptType offers more flexibility. Example declaration:
+
+    <om:script-type name="set-doc-count" class="org.outermedia.solrfusion.types.SetFacetDocCount"/>
+
+Example mapping:
+
+    <om:field fusion-name="solr-server">
+        <om:add>
+            <om:response target="facet" type="static-value">
+                <value>UBL</value>
+            </om:response>
+            <om:response target="facet" type="set-doc-count">
+                <total-found-nr />
+            </om:response>
+        </om:add>
+        <om:drop><om:query /></om:drop>
+    </om:field>
+
+Currently only two methods are implemented:
+
+* __`<value>`__ - allows to specify a static numeric value.
+* __`<total-found-nr />`__ - uses the number of found documents which was returned by a Solr server.
+
+In the example above one(!) "add" operation is performed, where statically the facet "solr-server" is added with the
+value "UBL". The document count is taken from the Solr response.
 
 ## Default Search Values      
 Basic search settings are the default search field, the default sort field and the default (edismax) operator. Because 
@@ -698,11 +730,13 @@ of documents is the sum of min(MAX,totalHits) per requested Solr server. The lim
 really many Solr documents need to be transferred and processed for high page numbers. With a configurable limit Java's heap space is
 computable too.
 
-When all received Solr documents were converted to Java objects and mapped to SolrFusion's schema, they are sorted by the wanted field and the documents
-of the requested page are returned. The implementation is optimized for speed: For sorting only the fields id, score and the sort
+When all received Solr documents were converted to Java objects and mapped to SolrFusion's schema, they are sorted by the wanted 
+sort field and the documents of the requested page are returned. Except of "score" all other fields are sorted by 
+Java's String comparison (lexicographically). For "score" a numeric sorting is used instead ("double").
+The implementation is optimized for speed: For sorting only the fields id, score and the sort
 field are mapped at first. The remaining fields are only mapped for the documents being really returned.
     
-In contrast to Solr SolrFusion is able to sort multi value by the first value.    
+In contrast to Solr, SolrFusion is able to sort multi value by the first value.    
     
 ## Mapper
 A "mapper" applies mapping rules (see [Field Mappings](#field-mappings)) to fields contained in a query or a Solr document.
@@ -1196,7 +1230,20 @@ Response examples:
         <om:add>
             <om:response />
         </om:add>
-    </om:field>                    
+    </om:field> 
+                       
+    <!-- Example 4 -->
+    <!-- Several operation before(!) "add" is performed -->
+    <om:field fusion-name="solr-server">
+        <om:add>
+            <om:response target="facet" type="static-value">
+                <value>UBL</value>
+            </om:response>
+            <om:response target="facet" type="set-doc-count">
+                <total-found-nr />
+            </om:response>
+        </om:add>
+    </om:field>
     
 Only the following combinations of __name__ / __fusion-name__ and `<om:query>`/`<om:response>` are valid for `<om:add>`:    
     
@@ -1274,11 +1321,23 @@ For responses it is easily possible to copy the same Solr value to both SolrFusi
      
 ## Post Processors
 Currently only implemented for queries, post processor are able to control whether a Solr server shall be requested or
-not. Post processors are [Script Types](#script-types) and are declared in the same way. Currently only two default
-post processors are implemented:
+not. Post processors are [Script Types](#script-types) and are declared in the same way. 
+
+For post processor some additional "incoming" ScriptEnv entries are available:
+    
+* __solrUriBuilder__ - all Solr request parameters for a specific Solr server.
+* __mappedQuery__ - the mapped query ("q").
+* __mappedHighlightQuery__ - the mapped highlight query ("hl.q").
+* __mappedFilterQueries__ - the list of mapped filter queries ("fq").
+
+The return values has to be either: "CONTINUE", "STOP" or "DO_NOT_SEND_QUERY".
+
+Currently only two default post processors are implemented:
 
     <om:script-type name="filter-empty-fq" class="org.outermedia.solrfusion.types.FilterEmptyFq"/>
     <om:script-type name="send-if-fq-eq" class="org.outermedia.solrfusion.types.FilterSpecificFq"/>
+    
+Both are explained in the following chapters.    
     
 ###  Filter Empty Filter Queries
 A hard coded rule is to not request a Solr server when the query ("q") becomes empty after the application of all 
@@ -1343,8 +1402,7 @@ Depending on the application which uses SolrFusion and the involved Solr schemas
 of filter queries become "empty", because their contained field is removed. If then the remaining request is still sent
  to a Solr server the server returns to many documents which is not wanted.
      
-Currently SolrFusion 1.0 has no solution for this issue. But it makes sense to enhance the implementation not to sent a
-a query at all, because in general too many documents would be returned.
+In order not to send a request the post processor [Filter Empty Filter Queries](#filter-empty-filter-queries) can be used.
 
 ## Morelikethis
 Especially vufind uses a simple id query with qt=morelikethis in order to get similar documents. If the affected document is
