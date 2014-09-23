@@ -54,6 +54,9 @@ Outermedia GmbH
         * [Drop](#drop)
         * [Add](#add)
         * [Split Merge Use Case](#split-merge-use-case)
+    * [Post Processors](#post-processors)
+        * [Filter Empty Filter Queries](#filter-empty-filter-queries)
+        * [Send Request Only If Specific Filter Query](#send-request-only-if-specific-filter-query)
 * [Known Issues](#known-issues)      
     * [Sort A Split Field](#sort-a-split-field)
     * [Map Values With Wildcards](#map-values-with-wildcards)
@@ -1268,6 +1271,46 @@ For responses it is easily possible to copy the same Solr value to both SolrFusi
     <om:field name="edition">
         <om:drop><om:response /></om:drop>
     </om:field>
+     
+## Post Processors
+Currently only implemented for queries, post processor are able to control whether a Solr server shall be requested or
+not. Post processors are [Script Types](#script-types) and are declared in the same way. Currently only two default
+post processors are implemented:
+
+    <om:script-type name="filter-empty-fq" class="org.outermedia.solrfusion.types.FilterEmptyFq"/>
+    <om:script-type name="send-if-fq-eq" class="org.outermedia.solrfusion.types.FilterSpecificFq"/>
+    
+###  Filter Empty Filter Queries
+A hard coded rule is to not request a Solr server when the query ("q") becomes empty after the application of all 
+mapping rules, because this makes always sense.
+The same applies to filter queries, but this behaviour is not hard coded. Example:
+
+    <om:post-processor>
+        <om:query type="filter-empty-fq">
+            <ignore-fusion-name>solr-server</ignore-fusion-name>
+            <ignore-fusion-name>authorized_mode</ignore-fusion-name>
+        </om:query>
+    </om:post-processor>     
+
+In the example the post processor __filter-empty-fq__ implements this behaviour. In order to ignore specific solr fields 
+one ore several __`<ignore-fusion-name>`__ can be used. E.g. in our testing environment vufind sets a filter query 
+for the login status. Because the field authorized_mode is always removed by the mapping it makes sense to ignore this 
+filter query and to send the request nevertheless.     
+     
+### Send Request Only If Specific Filter Query
+Especially useful in combination with statically added facets in a response is the __send-if-fq-eq__ post processor. Example:
+
+    <om:post-processor>
+        <om:query type="send-if-fq-eq">
+            <fusion-name>solr-server</fusion-name>
+            <fusion-value>UBL</fusion-value>
+        </om:query>
+    </om:post-processor>     
+
+The processor prevents requests when a filter query is found where the field is equal to the specified __fusion-name__,
+but the __fusion-value__ is different. One possible application is to send a request to a specific Solr server only,
+if all configured Solr servers are added as facets. Note: In this case another mapping rule is necessary to remove
+the synthetic facet, because otherwise the Solr server would return an "unknown field" error.
      
 # Known Issues     
 The following chapters describe mostly - in general - unsolvable issues which were found during the implementation and
