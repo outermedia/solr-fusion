@@ -87,7 +87,7 @@ public class AddOperation extends Operation
     }
 
     public boolean addToResponse(Document doc, String fusionFieldName, FusionField fusionField,
-        String searchServerFieldName, Target t)
+        String searchServerFieldName, Target t, ScriptEnv newEnv)
     {
         boolean added = false;
         Term term = doc.getFieldTermByFusionName(fusionFieldName);
@@ -111,7 +111,6 @@ public class AddOperation extends Operation
             term.setFusionFacetCount(searchServerDocCounts);
             isNew = true;
         }
-        ScriptEnv newEnv = new ScriptEnv();
         newEnv.setBinding(ScriptEnv.ENV_IN_DOCUMENT, doc);
         ScriptEnv env = getResponseScriptEnv(fusionFieldName, fusionField, term, newEnv);
         super.applyOneResponseOperation(term, env, t);

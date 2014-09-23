@@ -47,7 +47,7 @@ import java.util.Map;
  * - a list of int</li><li>{@value #ENV_IN_DOC_TERM} - a Term</li><li>{@value #ENV_IN_FUSION_REQUEST} - a
  * FusionRequest</li> <li>{@value #ENV_IN_MAP_FACET} - a Boolean</li> <li>{@value #ENV_IN_MAP_HIGHLIGHT} - a
  * Boolean</li><li>{@value #ENV_IN_QUERY_TARGET} - a QueryTarget</li><li>{@value #ENV_IN_RESPONSE_TARGET} - a
- * ResponseTarget</li></ul>
+ * ResponseTarget</li><li>{@value #ENV_IN_TOTAL_DOC_NR} - an Integer</li></ul>
  * <p/>
  * Post processors can access the following additional env entries:<ul> <li>{@value #ENV_IN_SOLR_URL} - a
  * SolrFusionUriBuilderIfc</li> <li>{@value #ENV_IN_MAPPED_QUERY} - a ParsedQuery</li> <li>{@value
@@ -84,6 +84,7 @@ public class ScriptEnv
     public final static String ENV_IN_MAP_HIGHLIGHT = "mapHighlightValue"; // a Boolean
     public final static String ENV_IN_QUERY_TARGET = "queryTarget"; // a QueryTarget
     public final static String ENV_IN_RESPONSE_TARGET = "responseTarget"; // a ResponseTarget
+    public static final String ENV_IN_TOTAL_DOC_NR = "totalDocNr"; // an Integer
 
     // variables also passed to query PostProcessors
     public static final String ENV_IN_SOLR_URL = "solrUriBuilder"; // a SolrFusionUriBuilderIfc

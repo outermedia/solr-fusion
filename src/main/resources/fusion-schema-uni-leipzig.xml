@@ -154,6 +154,8 @@
     <om:script-type name="filter-id" class="org.outermedia.solrfusion.types.IdFilter"/>
     <om:script-type name="field-merger" class="org.outermedia.solrfusion.types.FieldMerger"/>
     <om:script-type name="normalizer" class="org.outermedia.solrfusion.types.Normalizer"/>
+    <om:script-type name="set-doc-count" class="org.outermedia.solrfusion.types.SetFacetDocCount"/>
+    <!-- Post Processors -->
     <om:script-type name="send-if-fq-eq" class="org.outermedia.solrfusion.types.FilterSpecificFq"/>
     <om:script-type name="filter-empty-fq" class="org.outermedia.solrfusion.types.FilterEmptyFq"/>
 
@@ -224,7 +226,7 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>100</om:max-docs>
+            <om:max-docs>1000000</om:max-docs>
 
             <!-- keep all fields in general -->
             <om:field name="*" fusion-name="*" />
@@ -247,7 +249,7 @@
                     <om:response type="normalizer">
                         <trim>true</trim>
                         <to-lower-case>true</to-lower-case>
-                        <start-chars-to-del>&#32;&#160;."-</start-chars-to-del>
+                        <start-chars-to-del>&#32;&#160;."-[(</start-chars-to-del>
                     </om:response>
                 </om:change>
                 <om:change><om:query /></om:change>
@@ -258,10 +260,10 @@
                     <om:response target="facet" type="static-value">
                         <value>UBL</value>
                     </om:response>
+                    <om:response target="facet" type="set-doc-count">
+                        <total-found-nr />
+                    </om:response>
                 </om:add>
-            </om:field>
-
-            <om:field fusion-name="solr-server">
                 <om:drop><om:query /></om:drop>
             </om:field>
 
@@ -288,14 +290,18 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>100</om:max-docs>
+            <om:max-docs>1000000</om:max-docs>
 
             <om:field fusion-name="solr-server">
                 <om:add>
                     <om:response target="facet" type="static-value">
                         <value>GBV</value>
                     </om:response>
+                    <om:response target="facet" type="set-doc-count">
+                        <total-found-nr />
+                    </om:response>
                 </om:add>
+                <om:drop><om:query /></om:drop>
             </om:field>
 
             <om:field name="format_facet" fusion-name="access_facet">
@@ -650,7 +656,7 @@
                     <om:response type="normalizer">
                         <trim>true</trim>
                         <to-lower-case>true</to-lower-case>
-                        <start-chars-to-del>&#32;&#160;."-</start-chars-to-del>
+                        <start-chars-to-del>&#32;&#160;."-[(</start-chars-to-del>
                     </om:response>
                 </om:change>
                 <om:change><om:query /></om:change>
@@ -699,10 +705,6 @@
                 <om:drop><om:query/></om:drop>
             </om:field>
 
-            <om:field fusion-name="solr-server">
-                <om:drop><om:query /></om:drop>
-            </om:field>
-
             <om:post-processor>
                 <om:query type="send-if-fq-eq">
                     <fusion-name>solr-server</fusion-name>
@@ -731,14 +733,18 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>100</om:max-docs>
+            <om:max-docs>1000000</om:max-docs>
 
             <om:field fusion-name="solr-server">
                 <om:add>
                     <om:response target="facet" type="static-value">
                         <value>DBoD1</value>
                     </om:response>
+                    <om:response target="facet" type="set-doc-count">
+                        <total-found-nr />
+                    </om:response>
                 </om:add>
+                <om:drop><om:query /></om:drop>
             </om:field>
 
             <om:field name="id" fusion-name="id">
@@ -897,7 +903,7 @@
                     <om:response type="normalizer">
                         <trim>true</trim>
                         <to-lower-case>true</to-lower-case>
-                        <start-chars-to-del>&#32;&#160;."-</start-chars-to-del>
+                        <start-chars-to-del>&#32;&#160;."-[(</start-chars-to-del>
                     </om:response>
                 </om:add>
                 <om:drop><om:query /></om:drop>
@@ -944,10 +950,6 @@
                 </om:add>
             </om:field>
 
-            <om:field fusion-name="solr-server">
-                <om:drop><om:query /></om:drop>
-            </om:field>
-
             <om:post-processor>
                 <om:query type="send-if-fq-eq">
                     <fusion-name>solr-server</fusion-name>
@@ -972,14 +974,18 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>100</om:max-docs>
+            <om:max-docs>1000000</om:max-docs>
 
             <om:field fusion-name="solr-server">
                 <om:add>
                     <om:response target="facet" type="static-value">
                         <value>DBoD2</value>
                     </om:response>
+                    <om:response target="facet" type="set-doc-count">
+                        <total-found-nr />
+                    </om:response>
                 </om:add>
+                <om:drop><om:query /></om:drop>
             </om:field>
 
             <om:field name="id" fusion-name="id">
@@ -1139,7 +1145,7 @@
                     <om:response type="normalizer">
                         <trim>true</trim>
                         <to-lower-case>true</to-lower-case>
-                        <start-chars-to-del>&#32;&#160;."-</start-chars-to-del>
+                        <start-chars-to-del>&#32;&#160;."-[(</start-chars-to-del>
                     </om:response>
                 </om:add>
                 <om:drop><om:query /></om:drop>
@@ -1183,10 +1189,6 @@
                 </om:add>
             </om:field>
 
-            <om:field fusion-name="solr-server">
-                <om:drop><om:query /></om:drop>
-            </om:field>
-
             <om:post-processor>
                 <om:query type="send-if-fq-eq">
                     <fusion-name>solr-server</fusion-name>
@@ -1210,7 +1212,7 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>100</om:max-docs>
+            <om:max-docs>1000000</om:max-docs>
 
             <!-- keep all fields in general -->
             <om:field name="*" fusion-name="*" />
@@ -1233,7 +1235,7 @@
                     <om:response type="normalizer">
                         <trim>true</trim>
                         <to-lower-case>true</to-lower-case>
-                        <start-chars-to-del>&#32;&#160;."-</start-chars-to-del>
+                        <start-chars-to-del>&#32;&#160;."-[(</start-chars-to-del>
                     </om:response>
                 </om:change>
                 <om:change><om:query /></om:change>
@@ -1244,10 +1246,10 @@
                     <om:response target="facet" type="static-value">
                         <value>UBL4</value>
                     </om:response>
+                    <om:response target="facet" type="set-doc-count">
+                        <total-found-nr />
+                    </om:response>
                 </om:add>
-            </om:field>
-
-            <om:field fusion-name="solr-server">
                 <om:drop><om:query /></om:drop>
             </om:field>
 

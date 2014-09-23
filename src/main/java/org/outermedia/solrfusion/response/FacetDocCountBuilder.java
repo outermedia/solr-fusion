@@ -33,7 +33,7 @@ import java.util.Map;
 
 /**
  * Re-convert the internally used Solr doc representation of facets into a format suitable to render in a response.
- *
+ * <p/>
  * Created by ballmann on 8/11/14.
  */
 @Slf4j
@@ -49,7 +49,7 @@ public class FacetDocCountBuilder implements FieldVisitor
      *
      * @param fusionIdField
      * @param idGenerator
-     * @param doc contains the facets as fields (the doc counts are set too)
+     * @param doc               contains the facets as fields (the doc counts are set too)
      * @param fusionFacetFields this parameter is filled from the processed facets. The key maps a field to a map of
      *                          words and their doc counts.
      */
@@ -97,19 +97,22 @@ public class FacetDocCountBuilder implements FieldVisitor
                     for (int i = 0; i < docCount.size(); i++)
                     {
                         String word = values.get(i);
-                        Integer wcObj = fusionDocCount.get(word);
-                        int wc = 0;
-                        if (wcObj != null)
+                        Integer dcObj = fusionDocCount.get(word);
+                        int dc = 0;
+                        if (dcObj != null)
                         {
-                            wc = wcObj;
+                            dc = dcObj;
                         }
-                        wc += docCount.get(i);
-                        if (log.isDebugEnabled() && wc != docCount.get(i))
+                        dc += docCount.get(i);
+                        if (log.isDebugEnabled() && dc != docCount.get(i))
                         {
                             log.trace("MERGED FACET DOC COUNTS OF {}: {} to {}+{}={}", sf.getFusionFieldName(), word,
-                                wcObj, docCount.get(i), wc);
+                                dcObj, docCount.get(i), dc);
                         }
-                        fusionDocCount.put(word, wc);
+                        if (dc > 0)
+                        {
+                            fusionDocCount.put(word, dc);
+                        }
                     }
                 }
             }

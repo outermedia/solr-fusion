@@ -339,7 +339,7 @@ public class FreemarkerResponseRendererTest
 
         String expectedFacet = "\"facet_fields\":{\n" +
             "      \"solr-server\": [\n" +
-            "        [\"UBL\", 1]\n" +
+            "        [\"UBL\", 20]\n" +
             "      ],\n" +
             "      \"branch_de15\": [";
         Assert.assertTrue("Expected to find facet \n"+expectedFacet+"\n, but got: " + jsonResponse,
@@ -370,7 +370,7 @@ public class FreemarkerResponseRendererTest
 
         String expectedFacet = "<lst name=\"facet_fields\">\n" +
             "        <lst name=\"solr-server\">\n" +
-            "            <int name=\"UBL\">1</int>\n" +
+            "            <int name=\"UBL\">20</int>\n" +
             "        </lst>\n" +
             "        <lst name=\"branch_de15\">";
         Assert.assertTrue("Expected to find facet \n"+expectedFacet+"\n, but got: " + xmlResponse,
@@ -392,6 +392,7 @@ public class FreemarkerResponseRendererTest
         SearchServerConfig searchServerConfig = spyCfg.getConfigurationOfSearchServers().get(0);
         PagingResponseConsolidator consolidator = (PagingResponseConsolidator) spyCfg.getResponseConsolidatorFactory().getInstance();
         consolidator.initConsolidator(cfg);
+        consolidator.rememberTotalDocsFound(searchServerConfig.getSearchServerName(), 20);
         consolidator.processFacetFields(cfg, searchServerConfig, facets);
         FusionRequest req = new FusionRequest();
         req.setQuery(new SolrFusionRequestParam("goethe"));

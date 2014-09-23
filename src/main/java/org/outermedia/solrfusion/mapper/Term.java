@@ -168,6 +168,13 @@ public class Term
                 // for multi values only the first field is used!
                 String otherValue = otherFusionValues.get(0);
                 String thisValue = thisFusionValues.get(0);
+
+                // do a number compare and not a string compare for "score"
+                if (ResponseMapperIfc.FUSION_FIELD_NAME_SCORE.equals(fusionFieldName))
+                {
+                    return Double.valueOf(thisValue).compareTo(Double.valueOf(otherValue));
+                }
+
                 return thisValue.compareTo(otherValue);
             }
         }
@@ -240,4 +247,5 @@ public class Term
         newTerm.newQueries = null;
         return newTerm;
     }
+
 }

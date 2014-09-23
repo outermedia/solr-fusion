@@ -107,12 +107,12 @@ public class ResponseMapper implements ResponseMapperIfc
                 serverConfig.getSearchServerName(), unmappedFields);
         }
 
-        int addedFieldCounter = addResponseFields(serverConfig, doc);
+        int addedFieldCounter = addResponseFields(serverConfig, doc, env);
 
         return numberOfMappedFields + addedFieldCounter;
     }
 
-    protected int addResponseFields(SearchServerConfig serverConfig, Document doc)
+    protected int addResponseFields(SearchServerConfig serverConfig, Document doc, ScriptEnv env)
     {
         int addedFieldCounter = 0;
         AddOperation addOp = new AddOperation();
@@ -128,7 +128,7 @@ public class ResponseMapper implements ResponseMapperIfc
                 boolean added = false;
                 for (Target t : targets)
                 {
-                    if (addOp.addToResponse(doc, fusionFieldName, fusionField, searchServerFieldName, t))
+                    if (addOp.addToResponse(doc, fusionFieldName, fusionField, searchServerFieldName, t, env))
                     {
                         added = true;
                     }

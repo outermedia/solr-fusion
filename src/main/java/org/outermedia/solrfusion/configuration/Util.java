@@ -229,24 +229,7 @@ public class Util
         List<Node> result = new ArrayList<>();
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
-        xpath.setNamespaceContext(new NamespaceContext()
-        {
-            public String getNamespaceURI(String prefix)
-            {
-                // only the default name space is possible
-                return "http://solrfusion.outermedia.org/configuration/type/";
-            }
-
-            public String getPrefix(String uri)
-            {
-                throw new UnsupportedOperationException();
-            }
-
-            public Iterator<?> getPrefixes(String uri)
-            {
-                throw new UnsupportedOperationException();
-            }
-        });
+        setNameSpaceForXpath(xpath);
         XPathExpression expr = xpath.compile(xpathStr);
         Map<Node, Boolean> alreadyFound = new HashMap<>();
         for (Element e : typeConfig)
@@ -268,6 +251,48 @@ public class Util
             }
         }
         return result;
+    }
+
+    public boolean xpathPresent(String xpathStr, List<Element> typeConfig) throws XPathExpressionException
+    {
+        boolean result = false;
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath xpath = xPathfactory.newXPath();
+        setNameSpaceForXpath(xpath);
+        XPathExpression expr = xpath.compile(xpathStr);
+        for (Element e : typeConfig)
+        {
+            Object r = expr.evaluate(e, XPathConstants.NODESET);
+            NodeList nl = (NodeList) r;
+            if (nl != null && nl.getLength() > 0)
+            {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    protected void setNameSpaceForXpath(XPath xpath)
+    {
+        xpath.setNamespaceContext(new NamespaceContext()
+        {
+            public String getNamespaceURI(String prefix)
+            {
+                // only the default name space is possible
+                return "http://solrfusion.outermedia.org/configuration/type/";
+            }
+
+            public String getPrefix(String uri)
+            {
+                throw new UnsupportedOperationException();
+            }
+
+            public Iterator<?> getPrefixes(String uri)
+            {
+                throw new UnsupportedOperationException();
+            }
+        });
     }
 
     public List<Element> xpathElements(String xpathStr, List<Element> typeConfig) throws XPathExpressionException

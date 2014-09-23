@@ -57,6 +57,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
     protected String fusionIdField;
     protected String fusionMergeField;
     protected List<Document> facetFields;
+    protected Map<String, Integer> totalDocsFoundMap;
 
     /**
      * Factory creates instances only.
@@ -68,6 +69,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         streamCounter = 0;
         maxDocNr = 0;
         allHighlighting = new HighlightingMap();
+        totalDocsFoundMap = new HashMap<>();
     }
 
     @Override
@@ -103,27 +105,30 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
 
     protected void processFacetFields(Configuration config, SearchServerConfig searchServerConfig, Document facetFields)
     {
-        if (facetFields != null)
+        // if empty a Document is needed nevertheless, because the mapping may add a facet
+        if (facetFields == null)
         {
-            log.debug("Received {} facet fields from search server {}", facetFields.size(),
-                searchServerConfig.getSearchServerName());
-            String idField = searchServerConfig.getIdFieldName();
-            Set<String> searchServerFieldsToMap = getSingleFieldMapping(idField);
-            try
-            {
-                config.getResponseMapper().mapResponse(config, searchServerConfig, facetFields, getNewScriptEnv(),
-                    searchServerFieldsToMap, ResponseTarget.FACET);
-            }
-            catch (Exception e)
-            {
-                log.error("Couldn't create/get response mapper instance", e);
-            }
-            if (this.facetFields == null)
-            {
-                this.facetFields = new ArrayList<>();
-            }
-            this.facetFields.add(facetFields);
+            facetFields = new Document();
+            facetFields.setSearchServerDocId(searchServerConfig.getIdFieldName(), "1");
         }
+        log.debug("Received {} facet fields from search server {}", facetFields.size(),
+            searchServerConfig.getSearchServerName());
+        String idField = searchServerConfig.getIdFieldName();
+        Set<String> searchServerFieldsToMap = getSingleFieldMapping(idField);
+        try
+        {
+            config.getResponseMapper().mapResponse(config, searchServerConfig, facetFields,
+                getNewScriptEnv(searchServerConfig), searchServerFieldsToMap, ResponseTarget.FACET);
+        }
+        catch (Exception e)
+        {
+            log.error("Couldn't create/get response mapper instance", e);
+        }
+        if (this.facetFields == null)
+        {
+            this.facetFields = new ArrayList<>();
+        }
+        this.facetFields.add(facetFields);
     }
 
     protected void processHighlighting(Configuration config, SearchServerConfig searchServerConfig,
@@ -174,7 +179,9 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
     {
         if (docIterator != null)
         {
-            totalDocNr += Math.min(searchServerConfig.getMaxDocs(), docIterator.getExtraInfo().getTotalNumberOfHits());
+            int totalNumberOfHits = docIterator.getExtraInfo().getTotalNumberOfHits();
+            rememberTotalDocsFound(searchServerConfig.getSearchServerName(), totalNumberOfHits);
+            totalDocNr += Math.min(searchServerConfig.getMaxDocs(), totalNumberOfHits);
 
             try
             {
@@ -198,6 +205,11 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             docIterator.close();
         }
         return totalDocNr;
+    }
+
+    protected void rememberTotalDocsFound(String solrServerName, int totalNumberOfHits)
+    {
+        totalDocsFoundMap.put(solrServerName, totalNumberOfHits);
     }
 
     protected MappingClosableIterator getNewMappingClosableIterator(Configuration config,
@@ -359,7 +371,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         ResponseTarget target) throws InvocationTargetException, IllegalAccessException
     {
         SearchServerConfig searchServerConfig = config.getSearchServerConfigByFusionDocId(fusionDocId);
-        ScriptEnv newScriptEnv = getNewScriptEnv();
+        ScriptEnv newScriptEnv = getNewScriptEnv(searchServerConfig);
         if (mapType != null)
         {
             newScriptEnv.setBinding(mapType, Boolean.TRUE);
@@ -407,9 +419,15 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         return result;
     }
 
-    protected ScriptEnv getNewScriptEnv()
+    protected ScriptEnv getNewScriptEnv(SearchServerConfig searchServerConfig)
     {
-        return new ScriptEnv();
+        ScriptEnv env = new ScriptEnv();
+        Integer total = totalDocsFoundMap.get(searchServerConfig.getSearchServerName());
+        if (total != null)
+        {
+            env.setBinding(ScriptEnv.ENV_IN_TOTAL_DOC_NR, total);
+        }
+        return env;
     }
 
     protected MultiKeyAndValueMap<String, Document> mergeDocuments(Configuration config, List<Document> docs)
