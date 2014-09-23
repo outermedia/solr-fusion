@@ -48,6 +48,7 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 @Slf4j
 public class FusionRequest
 {
+    public static final String FIELD_LIST_SEPARATOR = " ,";
     private SolrFusionRequestParam query;
     private List<SolrFusionRequestParam> filterQuery;
     private SolrFusionRequestParam start;
@@ -264,6 +265,26 @@ public class FusionRequest
         {
             fusionFieldsToReturn += " " + highlightingFieldsToReturn.getValue();
         }
+        MergeStrategyIfc merger = configuration.getMerger();
+        // if doc merging is enabled, we have to ensure, that fl contains the merge field!
+        if (merger != null && !fusionFieldsToReturn.contains("*"))
+        {
+            String mergeField = merger.getFusionField();
+            boolean foundMergeField = false;
+            StringTokenizer st = new StringTokenizer(fusionFieldsToReturn, FIELD_LIST_SEPARATOR);
+            while (st.hasMoreTokens())
+            {
+                if (mergeField.equals(st.nextToken()))
+                {
+                    foundMergeField = true;
+                    break;
+                }
+            }
+            if (!foundMergeField)
+            {
+                fusionFieldsToReturn += " " + mergeField;
+            }
+        }
         String fieldsToReturn = mapFusionFieldListToSearchServerField(fusionFieldsToReturn, configuration,
             searchServerConfig, null, true, QueryTarget.QUERY);
         searchServerParams.put(FIELDS_TO_RETURN, fieldsToReturn);
@@ -330,7 +351,7 @@ public class FusionRequest
         if (fieldList != null)
         {
             // support " " and "," and combinations of them as separator
-            StringTokenizer st = new StringTokenizer(fieldList, " ,");
+            StringTokenizer st = new StringTokenizer(fieldList, FIELD_LIST_SEPARATOR);
             while (st.hasMoreTokens())
             {
                 String fusionField = null;
@@ -472,11 +493,11 @@ public class FusionRequest
                     }
                 }
                 // if field is dropped, remove all changed entries
-                if(foundDrop)
+                if (foundDrop)
                 {
-                    for(int i=fields.size()-1; i>=0; i--)
+                    for (int i = fields.size() - 1; i >= 0; i--)
                     {
-                        if(ops.get(i) == MapOperation.CHANGE)
+                        if (ops.get(i) == MapOperation.CHANGE)
                         {
                             fields.remove(i);
                             ops.remove(i);
