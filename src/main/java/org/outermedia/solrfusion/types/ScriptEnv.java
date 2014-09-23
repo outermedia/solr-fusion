@@ -89,7 +89,7 @@ public class ScriptEnv
     // variables also passed to query PostProcessors
     public static final String ENV_IN_SOLR_URL = "solrUriBuilder"; // a SolrFusionUriBuilderIfc
     public static final String ENV_IN_MAPPED_QUERY = "mappedQuery"; // a ParsedQuery
-    public static final String ENV_IN_MAPPED_HIGHLIGHT_QUERY = "mappedHighlightQUery"; // a ParsedQuery
+    public static final String ENV_IN_MAPPED_HIGHLIGHT_QUERY = "mappedHighlightQuery"; // a ParsedQuery
     public static final String ENV_IN_MAPPED_FILTER_QUERIES = "mappedFilterQueries"; // a List<ParsedQuery>
 
 
