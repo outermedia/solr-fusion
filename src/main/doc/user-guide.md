@@ -131,12 +131,12 @@ SolrFusion supports the following (e)dismax query types:
 
 * Boolean Query - also "+", "-" and "!"
 * Fuzzy Query
-* Match All Docs Query (*:*)
+* Match All Docs Query (`*:*`)
 * Numeric Range Query (long, int, float, double, date) - with open ("*") start or end
 * Phrase Query
 * Prefix Query
 * Wildcard Query
-* SubQuery - in edismax _query_:"..."
+* SubQuery - in edismax `_query_:"..."`
 * {!dismax ...} - to pass dismax queries
 * {!... qf="..." ...} - to pass boosts values; all other parameters are not mapped and are handed over to a Solr server unmodified.
 
@@ -283,7 +283,7 @@ The following chapters follow the order of the XML elements in the SolrFusion sc
              
 ## SolrFusion Schema Fields
 The mandatory XML element `<om:fusion-schema-fields>` is used to describe all available SolrFusion fields. This information
-is e.g. used by the SolrFusion query parser and the validation of mapping rules. SolrFusion's response renderer uses 
+is e.g. used by the SolrFusion query parser and the validation of mapping rules. SolrFusion's response renderers use 
 especially the multi-value declarations to create proper document field values.
 
 Declaration (mandatory, fields are optional):  
@@ -562,7 +562,7 @@ Example mapping:
 In the case that a value is set for a facet, the document count is automatically set to "1".
 
 ### Multi Value Merger
-Flatten multiple values of one field to one value which is necessary when the destination field is a single value.
+Flattening multiple values of one field to one value is necessary when the destination field is a single value.
 Example declaration:
 
     <om:script-type name="merge-multi-value" class="org.outermedia.solrfusion.types.MultiValueMerger"/>
@@ -724,8 +724,8 @@ Declaration (mandatory):
 ### Paging and Sorting
 Because of the supported paging it is not possible to base on the Solr server's sorting. Therefor SolrFusion sorts Solr
 documents on its own and calculates the documents of a page too. To be able to implement this, the request parameters
-"start" and "rows" are manipulated. For a given start=<START>, rows=<ROWS> and maximum number of documents to return
-maxDocs(SolrServer1)=<MAX> SolrFusion sends start=0 and rows=min(MAX,START+ROWS) to the SolrServer1. The total number
+"start" and "rows" are manipulated. For a given `start=<START>`, `rows=<ROWS>` and maximum number of documents to return
+`maxDocs(SolrServer1)=<MAX>` SolrFusion sends start=0 and rows=min(MAX,START+ROWS) to the SolrServer1. The total number
 of documents is the sum of min(MAX,totalHits) per requested Solr server. The limitation is necessary, because otherwise
 really many Solr documents need to be transferred and processed for high page numbers. With a configurable limit Java's heap space is
 computable too.
@@ -736,7 +736,7 @@ Java's String comparison (lexicographically). For "score" a numeric sorting is u
 The implementation is optimized for speed: For sorting only the fields id, score and the sort
 field are mapped at first. The remaining fields are only mapped for the documents being really returned.
     
-In contrast to Solr, SolrFusion is able to sort multi value by the first value.    
+In contrast to Solr, SolrFusion is able to sort multi value fields by their first value.    
     
 ## Mapper
 A "mapper" applies mapping rules (see [Field Mappings](#field-mappings)) to fields contained in a query or a Solr document.
@@ -800,8 +800,6 @@ SolrFusions evaluates the "qt" HTTP request parameter and uses the dismax query 
 SolrFusion always requests XML responses from the configured Solr servers, but is capable to render the requested 
 response format of the combined Solr documents.
 
-The line above declares the global response renderer, which can be overwritten for certain Solr servers.
-
 ## Response Renderer
 SolrFusion supports rendering of Solr documents in xml and json format. The response is always indented.
 
@@ -815,6 +813,8 @@ Declaration (mandatory, child of `<om:solr-servers>`):
 The json response renderer always renders facets in json.nl=arrarr format. But the format of json and xml is described
 by a freemarker template which can be easily adjusted (see json.ftl and xml.ftl in chapter [Configuration Files](#configuration-files)).
 
+The line above declares the global response renderer, which can be overwritten for specific Solr servers.
+
 Note: The php renderer is not implemented in version 1.0.    
     
 ## Query Builder    
@@ -825,7 +825,7 @@ Declaration (mandatory, child of `<om:solr-servers>`):
     <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
     <om:dismax-query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory"/>
     
-The lines above declare the global query builders, which can be overwritten for certain Solr servers.    
+The lines above declare the global query builders, which can be overwritten for specific Solr servers.    
     
 ## Document Merging  
 In order to avoid duplicate Solr documents - same document from different(!) Solr servers - SolrFusion can merge documents
@@ -848,17 +848,17 @@ converted SolrFusion values (the field is specified in the `fusion-name` attribu
 
 According to the priority the document of the first server is used as the main document. The document fields of lower
 prioritized servers are used to fill unset fields. If the merge field is not unique one Solr server may return
-several documents to merge. In this case - several documents with same priority - the order is undefined, but all 
+several documents to merge. In this case - several documents with same priority - is their order undefined, but all 
 documents are checked if they contain a value for an unset field.
 
-The implementation is optimized for speed: At first only the map field of all received documents is converted to a 
-SolrFusion field. Then all documents are grouped by equal map field values and are finally merged into one document. 
+The implementation is optimized for speed: At first only the merge field of all received documents is converted to a 
+SolrFusion field. Then all documents are grouped by equal merge field values and are finally merged into one document. 
 After sorting the merged documents, the remaining fields of the documents to return are completely mapped to SolrFusion
 fields.
 
-If document merging is enabled, a solr query may return merged documents with a limited set of document fields. A 
-following query may request full details of a merged document so that it is necessary to request the document from
-all servers which built the merged document. Therefor the id of a merged document contains the Solr server name and
+In the case that for a solr query merged documents with a limited set of document fields are returned and a 
+following query requests full details of a merged document, it is necessary to request each involved document from
+the originating server to rebuild the merged document. Therefor the id of a merged document contains the Solr server name and
 Solr document id of all involved servers/documents (see [SolrFusion Id Generator](#solrfusion-id-generator)). For
 such id queries the received documents are finally merged again.
 
@@ -866,7 +866,7 @@ Because document merging affects the total number of found documents, this count
 is possible that this number varies depending on the page, because equal documents are maybe returned on later pages.
 
 Because facet values are calculated by the configured Solr servers and their value is independent from the returned
-documents, it is not possible to correct the number of word occurrences.
+documents, it is not possible to correct the number of document occurrences.
 
 
 ## Solr Server Settings
@@ -1037,9 +1037,9 @@ The most basic change is to create a copy:
 
 This rule copies values and is used when
 
-* a SolrFusion query is mapped to a Solr query and the SolrFusion query contains "city" fields (__fusion-name__). Then
+* a SolrFusion query is mapped to a Solr query and the SolrFusion query contains "city" fields ( __fusion-name__ ). Then
     the "city" field is replaced with a "town" field and the values are copied.
-* a Solr document is mapped to a SolrFusion document and the document contains "town" fields (__name__). Then the "town"
+* a Solr document is mapped to a SolrFusion document and the document contains "town" fields ( __name__ ). Then the "town"
     field is replaced with a "city" field and the values are copied.
 
 The following rules are equivalent to the rule above:
@@ -1138,12 +1138,15 @@ terms (AND means prefix with "+") which can be deleted one by one. The query bui
 
 ### Add
 You can use `<om:add>` in order to add new query parts or document fields. But the behaviour is different. When applied
-to queries `<om:add>` always create new query parts, but applied to a Solr document it depends to the field's name. As
+to queries `<om:add>` always create new query parts, but applied to a Solr document it depends on the field's name. As
 long as the field is unset it is added, but following rules - using the same field name - will overwrite the field, because
 in a document a field has to be unique.
 
-Another difference is, that it is possible to define where to add a query part. As a global filter at the end (`<om:add level="outside">`) 
+Another difference is, that for queries it is possible to define where to add a query part. As a global filter at the end (`<om:add level="outside">`) 
 or as a sibling of an existing field (`<om:add level="inside">`).
+
+But the specified values for `<om:add>` are always "raw" values and are not modified before inserted. This means for
+`<om:query>` Solr queries are valid and for `<om:response>` SolrFusion values.
 
 Please find below examples for queries and documents.
 
@@ -1330,7 +1333,7 @@ For post processor some additional "incoming" ScriptEnv entries are available:
 * __mappedHighlightQuery__ - the mapped highlight query ("hl.q").
 * __mappedFilterQueries__ - the list of mapped filter queries ("fq").
 
-The return values has to be either: "CONTINUE", "STOP" or "DO_NOT_SEND_QUERY".
+The return value has to be either: "CONTINUE", "STOP" or "DO_NOT_SEND_QUERY".
 
 Currently only two default post processors are implemented:
 
@@ -1395,7 +1398,7 @@ mapping of the affected field.
 Because the value range and semantics of the fuzzy slop changed between Solr versions, SolrFusion can't automatically
 adapt the fuzzy values. In Solr 3.X a value range between 0 and 1 is used and in Solr4 only 0, 1 or 2 are allowed.
 
-SolrFusion's query builder simply print out only the "~" without any value.
+SolrFusion's query builder simply renders only the "~" without any value.
      
 ## Removed Fields In Filter Queries
 Depending on the application which uses SolrFusion and the involved Solr schemas it might happen that query expressions 
@@ -1403,6 +1406,8 @@ of filter queries become "empty", because their contained field is removed. If t
  to a Solr server the server returns to many documents which is not wanted.
      
 In order not to send a request the post processor [Filter Empty Filter Queries](#filter-empty-filter-queries) can be used.
+
+But currently no solution exists when only one part of a query is removed and the Solr query is not empty.
 
 ## Morelikethis
 Especially vufind uses a simple id query with qt=morelikethis in order to get similar documents. If the affected document is

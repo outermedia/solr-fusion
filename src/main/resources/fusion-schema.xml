@@ -87,13 +87,13 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         <!-- merge solr documents of different solrs into one -->
         <!-- "prio" controls which non empty value to use at first -->
         <om:merge fusion-name="ISBN" class="org.outermedia.solrfusion.DefaultMergeStrategy$Factory">
-            <om:target prio="1" target-name="Bibliothek A"/>
-            <om:target prio="2" target-name="Bibliothek B"/>
+            <om:target prio="1" target-name="BibliothekA"/>
+            <om:target prio="2" target-name="BibliothekB"/>
         </om:merge>         
 
         <!-- first server, use XML include if you want to put -->
         <!-- this block in a separate file -->
-        <om:solr-server name="Bibliothek A" version="3.6"
+        <om:solr-server name="BibliothekA" version="3.6"
             class="org.outermedia.solrfusion.adapter.solr.DefaultSolrAdapter$Factory">
 
             <om:url>http://host:port/solr/xyz</om:url>
