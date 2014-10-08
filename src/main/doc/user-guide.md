@@ -1031,7 +1031,7 @@ Especially for facets: When the mapping rules map two Solr fields to one SolrFus
 are combined automatically. Because it is necessary to eliminate duplicate words, their counters are added.
 
 ### Change
-The most basic change is to create a copy:
+The most basic change is to create a copy of a field's value and to rename it:
 
     <om:field name="town" fusion-name="city" />
 
@@ -1095,6 +1095,9 @@ original values). Note: Same applies to `<om:drop>` and `<om:add>` which are des
     </om:field>
     
 For the example above 1 would be converted to 1+1+3 = 5. 
+
+Several "change" rules with e.g. the same "name" field, but different "fusion-name" fields are applied in textual order. The
+last rule's fusion-name defines the finally used SolrFusion field.
 
 ### Drop
 This operation is needed to remove fields from queries when the destination Solr has no equivalent Solr field.
