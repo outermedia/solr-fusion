@@ -440,6 +440,9 @@
                 </om:drop>
             </om:field>
             <om:field name="format_facet" fusion-name="format">
+                <om:add>
+                    <om:response />
+                </om:add>
             </om:field>
             <om:field fusion-name="format_de105">
                 <om:drop>
