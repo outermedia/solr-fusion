@@ -320,8 +320,10 @@
             <om:field name="author_browse" fusion-name="author_browse">
             </om:field>
             <om:field name="author2" fusion-name="author_corp">
+                <om:add><om:response /></om:add>
             </om:field>
             <om:field name="author2" fusion-name="author_corp_orig">
+                <om:add><om:response /></om:add>
             </om:field>
             <om:field fusion-name="author_corp_ref">
                 <om:drop>
@@ -329,8 +331,10 @@
                 </om:drop>
             </om:field>
             <om:field name="author2" fusion-name="author_corp2">
+                <om:add><om:response /></om:add>
             </om:field>
             <om:field name="author2" fusion-name="author_corp2_orig">
+                <om:add><om:response /></om:add>
             </om:field>
 
             <!-- split-merge case author_facet -->
@@ -361,6 +365,7 @@
             <om:field name="author-letter" fusion-name="author_letter">
             </om:field>
             <om:field name="author" fusion-name="author_orig">
+                <om:add><om:response /></om:add>
             </om:field>
             <om:field fusion-name="author_ref">
                 <om:drop>
@@ -370,6 +375,7 @@
             <om:field name="author2" fusion-name="author2">
             </om:field>
             <om:field name="author2" fusion-name="author2_orig">
+                <om:add><om:response /></om:add>
             </om:field>
             <om:field name="author2-role" fusion-name="author2-role">
             </om:field>
@@ -491,6 +497,7 @@
             <om:field name="isbn" fusion-name="isbn">
             </om:field>
             <om:field name="isbn" fusion-name="isbn_canc">
+                <om:add><om:response /></om:add>
             </om:field>
             <om:field fusion-name="ismn">
                 <om:drop>
@@ -500,6 +507,7 @@
             <om:field name="issn" fusion-name="issn">
             </om:field>
             <om:field name="issn" fusion-name="issn_canc">
+                <om:add><om:response /></om:add>
             </om:field>
             <om:field fusion-name="itemdata">
                 <om:drop>
