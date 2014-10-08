@@ -1099,6 +1099,29 @@ For the example above 1 would be converted to 1+1+3 = 5.
 Several "change" rules with e.g. the same "name" field, but different "fusion-name" fields are applied in textual order. The
 last rule's fusion-name defines the finally used SolrFusion field.
 
+__IMPORTANT__: If an `<om:field>` contains an XML child, then no implicit `<om:change>` is used. E.g.
+
+    <!-- change rule for queries and documents -->
+    <om:field name="format_facet" fusion-name="format" />
+    
+If this rule is changed to 
+    
+    <!-- add field to documents only -->
+    <om:field name="format_facet" fusion-name="format">
+        <om:add><om:response /></om:add>
+    </om:field>   
+
+then the rule is not used any more to change queries. But we can improve the rule
+
+    <!-- add field to documents only -->
+    <!-- change field in queries -->
+    <om:field name="format_facet" fusion-name="format">
+        <om:add><om:response /></om:add>
+        <om:change><om:query /></om:add>
+    </om:field>
+
+to do the query mapping again.
+
 ### Drop
 This operation is needed to remove fields from queries when the destination Solr has no equivalent Solr field.
 
