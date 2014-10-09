@@ -1122,6 +1122,17 @@ then the rule is not used any more to change queries. But we can improve the rul
 
 to do the query mapping again.
 
+__IMPORTANT2__: It is not allowed to map different Solr fields to the same SolrFusion field. E.g.:
+
+    <om:field name="s1" fusion-name="sf1"/>
+    <om:field name="s2" fusion-name="sf1"/>
+
+Because in the resulting Solr document the SolrFusion field "sf1" would occur twice. This error is not checked in
+SolrFusion version 1.0.
+
+If applied to queries the later rule overwrites the mapping of the first rule, so that "sf1" is finally mapped to "s2".
+
+
 ### Drop
 This operation is needed to remove fields from queries when the destination Solr has no equivalent Solr field.
 
