@@ -434,6 +434,7 @@ public class FieldMapping
         TargetsOfMapping result = new TargetsOfMapping();
         result.setMappingsSearchServerFieldName(searchServersName);
         result.setMappingsFusionFieldName(fusionName);
+        result.setMapping(this);
         if (operations != null)
         {
             for (Operation o : operations)

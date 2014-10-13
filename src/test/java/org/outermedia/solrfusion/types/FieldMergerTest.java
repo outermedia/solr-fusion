@@ -63,7 +63,7 @@ public class FieldMergerTest extends AbstractTypeTest
 
         Document doc = buildDocument("author", "a1", "author2", "a2");
         testResponseMapper.mapResponse(spyCfg, cfg.getSearchServerConfigByName("GBV"), doc, new ScriptEnv(), null,
-            ResponseTarget.ALL);
+            ResponseTarget.ALL, true);
         String fusionDocStr = doc.buildFusionDocStr();
         // System.out.println("FDOC " + fusionDocStr);
         Assert.assertTrue("Expected to find merged author_facet: " + fusionDocStr,
@@ -72,7 +72,7 @@ public class FieldMergerTest extends AbstractTypeTest
         // nothing to merge
         doc = buildDocument("id", "12345");
         testResponseMapper.mapResponse(spyCfg, cfg.getSearchServerConfigByName("GBV"), doc, new ScriptEnv(), null,
-            ResponseTarget.ALL);
+            ResponseTarget.ALL, true);
         fusionDocStr = doc.buildFusionDocStr();
         // System.out.println("FDOC " + fusionDocStr);
         Assert.assertFalse("Expected not find author_facet: " + fusionDocStr, fusionDocStr.contains("author_facet"));
@@ -93,7 +93,7 @@ public class FieldMergerTest extends AbstractTypeTest
 
         Document doc = buildDocument("author", Arrays.asList("a1a", "a1b"), "author2", "a2");
         testResponseMapper.mapResponse(spyCfg, cfg.getSearchServerConfigByName("GBV"), doc, new ScriptEnv(), null,
-            ResponseTarget.ALL);
+            ResponseTarget.ALL, true);
         String fusionDocStr = doc.buildFusionDocStr();
         // System.out.println("FDOC " + fusionDocStr);
         Assert.assertTrue("Expected to find merged author_facet: " + fusionDocStr,
@@ -116,7 +116,7 @@ public class FieldMergerTest extends AbstractTypeTest
         Document doc = buildDocument("content", "1", "dbName", "2", "description", "3", "edition", "4", "keywords", "5",
             "publisher", "6", "subjects", "7", "titleVT_de", "8", "titleVT_eng", "9");
         testResponseMapper.mapResponse(spyCfg, cfg.getSearchServerConfigByName("DBoD1"), doc, new ScriptEnv(), null,
-            ResponseTarget.ALL);
+            ResponseTarget.ALL, true);
         String fusionDocStr = doc.buildFusionDocStr();
         // System.out.println("FDOC " + fusionDocStr);
         Assert.assertTrue("Expected to find merged allfields: " + fusionDocStr,
@@ -140,7 +140,7 @@ public class FieldMergerTest extends AbstractTypeTest
         Document doc = buildDocument("content", "a", "dbName", Arrays.asList("b1", "b2"), "description", "c", "edition",
             "d", "keywords", "e", "subjects", Arrays.asList("g1", "g2"), "titleVT_de", "h", "titleVT_eng", "i");
         testResponseMapper.mapResponse(spyCfg, cfg.getSearchServerConfigByName("DBoD1"), doc, new ScriptEnv(), null,
-            ResponseTarget.ALL);
+            ResponseTarget.ALL, true);
         String fusionDocStr = doc.buildFusionDocStr();
         // System.out.println("FDOC " + fusionDocStr);
         Assert.assertTrue("Expected to find merged allfields: " + fusionDocStr,
@@ -163,7 +163,7 @@ public class FieldMergerTest extends AbstractTypeTest
         // no value for publisher
         Document doc = buildDocument("titleVT_de", " ...Ja aber doch", "titleVT_eng", "\"..Aber ja");
         testResponseMapper.mapResponse(spyCfg, cfg.getSearchServerConfigByName("DBoD1"), doc, new ScriptEnv(), null,
-            ResponseTarget.ALL);
+            ResponseTarget.ALL, true);
         String fusionDocStr = doc.buildFusionDocStr();
         // System.out.println("FDOC " + fusionDocStr);
         Assert.assertTrue("Expected to find normalized merged title_sort: " + fusionDocStr,
@@ -197,7 +197,7 @@ public class FieldMergerTest extends AbstractTypeTest
         Document doc = buildDocumentWithFacetDocCounts("author", Arrays.asList("a1a", "a1b"), docCounts1, "author2",
             "a2", docCounts2);
         testResponseMapper.mapResponse(spyCfg, cfg.getSearchServerConfigByName("GBV"), doc, new ScriptEnv(), null,
-            ResponseTarget.ALL);
+            ResponseTarget.ALL, true);
         List<Integer> docCounts = doc.getFusionFacetDocCountsOf("author_facet");
         // System.out.println("FWC " + docCounts);
         Assert.assertEquals("Expected other merged facet doc counts", expectedDocCounts, docCounts);

@@ -82,7 +82,7 @@ public class ResponseMapperTest
         Set<String> mapFields = new HashSet<>();
         mapFields.add("Titel");
         int mappedNr = rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, mapFields,
-            ResponseTarget.ALL);
+            ResponseTarget.ALL, true);
         // System.out.println("MAPPED DOC " + doc.buildFusionDocStr());
         // id is mapped automatically
         Assert.assertEquals("Wrong number of mapped fields", 2, mappedNr);
@@ -92,7 +92,7 @@ public class ResponseMapperTest
 
         // map remaining field Autor
         mappedNr = rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null,
-            ResponseTarget.ALL);
+            ResponseTarget.ALL, true);
         Assert.assertEquals("Wrong number of mapped fields", 1, mappedNr);
         String expectedAuthor = "Term(fusionFieldName=author, fusionFieldValue=[Willi Schiller], fusionField=FusionField(fieldName=author, type=text, format=null, multiValue=null), searchServerFieldName=Autor, searchServerFieldValue=[Willi Schiller], removed=false, wasMapped=true, processed=true, newQueries=null)";
         Assert.assertEquals("Mapping of author returned different result.", expectedAuthor,
@@ -122,7 +122,7 @@ public class ResponseMapperTest
         strFields.add(sfId);
         doc.setSolrSingleValuedFields(strFields);
         ScriptEnv env = new ScriptEnv();
-        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL);
+        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL, true);
 
         Term term = sfTitle.getTerm();
         String fusionFieldName = term.getFusionFieldName();

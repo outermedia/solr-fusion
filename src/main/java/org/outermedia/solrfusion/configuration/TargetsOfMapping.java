@@ -38,4 +38,5 @@ public class TargetsOfMapping extends ArrayList<Target>
 {
     private String mappingsSearchServerFieldName;
     private String mappingsFusionFieldName;
+    private FieldMapping mapping;
 }

@@ -91,7 +91,7 @@ public class JsTest extends AbstractTypeTest
         Term sourceField = buildResponseField(doc, "f3", "something");
 
         ScriptEnv env = new ScriptEnv();
-        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL);
+        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL, true);
         Assert.assertTrue("Expected that term was mapped", sourceField.isWasMapped());
         // System.out.println(sourceField.toString());
         Assert.assertEquals("Found wrong field name mapping", "today3", sourceField.getFusionFieldName());

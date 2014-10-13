@@ -81,9 +81,9 @@ public class FacetDocCountBuilder implements FieldVisitor
                 if (docCount.size() != values.size())
                 {
                     log.error(
-                        "Mapping didn't fix facet doc count for field: '{}' of server {}. Facet's doc count is ignored.",
+                        "Mapping didn't fix facet doc count for field: '{}' of server {}. Facet's doc count is ignored.\n\tvalues={} doc-counts={}",
                         sf.getTerm().getSearchServerFieldName(),
-                        idGenerator.getSearchServerIdFromFusionId(doc.getFusionDocId(fusionIdField)));
+                        idGenerator.getSearchServerIdFromFusionId(doc.getFusionDocId(fusionIdField)), values, docCount);
                 }
                 else
                 {

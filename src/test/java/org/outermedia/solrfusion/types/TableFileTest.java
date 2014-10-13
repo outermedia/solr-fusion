@@ -99,7 +99,7 @@ public class TableFileTest extends AbstractTypeTest
         Term sourceField = buildResponseField(doc, "f7", "u2", "u1");
 
         ScriptEnv env = new ScriptEnv();
-        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL);
+        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL, true);
         Assert.assertTrue("Expected that term was mapped", sourceField.isWasMapped());
         // System.out.println(sourceField.toString());
         Assert.assertEquals("Found wrong field name mapping", "text3", sourceField.getFusionFieldName());

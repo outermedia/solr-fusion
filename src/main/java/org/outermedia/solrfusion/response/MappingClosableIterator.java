@@ -41,6 +41,7 @@ import java.util.Set;
 @Slf4j
 public class MappingClosableIterator implements ClosableIterator<Document, SearchServerResponseInfo>
 {
+    protected boolean applyAddRules;
     protected Set<String> fieldsToMap;
     protected Configuration config;
     protected SearchServerConfig searchServerConfig;
@@ -60,7 +61,7 @@ public class MappingClosableIterator implements ClosableIterator<Document, Searc
      * @throws IllegalAccessException
      */
     public MappingClosableIterator(ClosableIterator<Document, SearchServerResponseInfo> documents, Configuration config,
-        SearchServerConfig searchServerConfig, Set<String> fieldsToMap, ResponseTarget target)
+        SearchServerConfig searchServerConfig, Set<String> fieldsToMap, ResponseTarget target, boolean applyAddRules)
         throws InvocationTargetException, IllegalAccessException
     {
         this.config = config;
@@ -68,6 +69,7 @@ public class MappingClosableIterator implements ClosableIterator<Document, Searc
         this.searchServerConfig = searchServerConfig;
         this.fieldsToMap = fieldsToMap;
         this.target = target;
+        this.applyAddRules = applyAddRules;
     }
 
     @Override
@@ -80,7 +82,7 @@ public class MappingClosableIterator implements ClosableIterator<Document, Searc
             try
             {
                 int mappedFieldNr = config.getResponseMapper().mapResponse(config, searchServerConfig, nextDoc, env,
-                    fieldsToMap, target);
+                    fieldsToMap, target, applyAddRules);
                 // no field was mapped = no fusion value present -> ignore the empty document
                 // because the id is always mapped, this should not happen
                 if (mappedFieldNr == 0)

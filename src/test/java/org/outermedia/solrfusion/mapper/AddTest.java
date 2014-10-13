@@ -127,7 +127,7 @@ public class AddTest extends AbstractTypeTest
         SearchServerConfig searchServerConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
         Document doc = createDocument("id", "123", "score", "1.2");
         ScriptEnv env = getNewEnv(null, cfg);
-        int mappedFieldNr = cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, doc, env, null, ResponseTarget.ALL);
+        int mappedFieldNr = cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, doc, env, null, ResponseTarget.ALL, true);
         DefaultXmlResponseRenderer renderer = DefaultXmlResponseRenderer.Factory.getInstance();
         renderer.init(null);
         FusionRequest req = new FusionRequest();
@@ -416,13 +416,13 @@ public class AddTest extends AbstractTypeTest
         // map search document
         Document doc = createDocument("id", "123", "score", "1.2", "s19", "abc");
         ScriptEnv env = getNewEnv(null, cfg);
-        cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, doc, env, null, ResponseTarget.ALL);
+        cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, doc, env, null, ResponseTarget.ALL, true);
 
         // map facet
         Document facetDoc = new Document();
         facetDoc.addField("s19","a","b","c").getTerm().setSearchServerFacetCount(Arrays.asList(1,2,3));
         facetDoc.setSearchServerDocId(searchServerConfig.getIdFieldName(), "1");
-        cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, facetDoc, getNewEnv(null, cfg), null, ResponseTarget.ALL);
+        cfg.getResponseMapper().mapResponse(cfg, searchServerConfig, facetDoc, getNewEnv(null, cfg), null, ResponseTarget.ALL, true);
         Map<String, Map<String, Integer>> facets = new HashMap<>();
         facetDoc.accept(new FacetDocCountBuilder(cfg.getFusionIdFieldName(), cfg.getIdGenerator(), doc, facets), null);
         FacetDocCountSorter facetSorter = new FacetDocCountSorter();

@@ -61,7 +61,7 @@ public class MappingClosableIteratorTest
     {
         ClosableIterator<Document, SearchServerResponseInfo> docs = createDocuments("a", "b", "c");
         SearchServerConfig serverConfig = cfg.getSearchServerConfigByName("Bibliothek 9000");
-        MappingClosableIterator mapper = new MappingClosableIterator(docs, cfg, serverConfig, null, ResponseTarget.ALL);
+        MappingClosableIterator mapper = new MappingClosableIterator(docs, cfg, serverConfig, null, ResponseTarget.ALL, true);
         // neither id nor score is set, and "auto" isn't mapped, so no document should be returned
         Assert.assertFalse("Expected no result", mapper.hasNext());
     }

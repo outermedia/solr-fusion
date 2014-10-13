@@ -86,7 +86,7 @@ public class ResponseConsolidator extends AbstractResponseConsolidator
         ClosableIterator<Document, SearchServerResponseInfo> docIterator, ResponseTarget target)
         throws InvocationTargetException, IllegalAccessException
     {
-        return new MappingClosableIterator(docIterator, configuration, searchServerConfig, null, target);
+        return new MappingClosableIterator(docIterator, configuration, searchServerConfig, null, target, true);
     }
 
     public int numberOfResponseStreams()

@@ -79,7 +79,7 @@ public class DropTest extends AbstractTypeTest
 
         ScriptEnv env = new ScriptEnv();
         SearchServerConfig serverConfig = cfg.getSearchServerConfigs().getSearchServerConfigs().get(0);
-        rm.mapResponse(cfg, serverConfig, doc, env, null, ResponseTarget.ALL);
+        rm.mapResponse(cfg, serverConfig, doc, env, null, ResponseTarget.ALL, true);
         // System.out.println("f8: "+sourceField.toString());
         Assert.assertTrue("Expected that field f8 was removed", sourceField.isRemoved());
         Assert.assertTrue("Expected that field f9-abc was removed", sourceRegExpField.isRemoved());
@@ -101,7 +101,7 @@ public class DropTest extends AbstractTypeTest
         Assert.assertEquals("Found different mapping than expected", "f8", fm.getSearchServersName());
         fm.setFusionName("text4");
         fm.getOperations().clear();
-        rm.mapResponse(cfg, serverConfig, doc, env, null, ResponseTarget.ALL);
+        rm.mapResponse(cfg, serverConfig, doc, env, null, ResponseTarget.ALL, true);
         Assert.assertFalse("Expected that field f8 was not removed", sourceField.isRemoved());
         // System.out.println("W/O DROP "+sourceField.toString());
         docStream = new ClosableListIterator<>(docs, info);

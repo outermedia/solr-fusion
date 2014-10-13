@@ -50,7 +50,8 @@ public interface ResponseMapperIfc extends FieldVisitor, Initiable<ResponseMappe
      * @return the number of mapped fields (added ones included)
      */
     public int mapResponse(Configuration config, SearchServerConfig serverConfig, Document doc, ScriptEnv env,
-        Collection<String> searchServerFieldNamesToMap, ResponseTarget target);
+
+        Collection<String> searchServerFieldNamesToMap, ResponseTarget target, boolean applyAddRules);
 
     /**
      * Per default an exception is thrown if no mapping for a field is found. A call of this methods switches this

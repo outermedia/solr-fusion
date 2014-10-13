@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * Flatten multiple values of one field to one value which is necessary when the destination field is a single value.
- *
+ * <p/>
  * Created by ballmann on 7/16/14.
  */
 @ToString(callSuper = true)
@@ -61,6 +61,7 @@ public class MultiValueMerger extends AbstractType
         List<String> newValues = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         int limit = values.size();
+        int facetDocCount = 0;
         if (!"all".equals(range))
         {
             try
@@ -80,6 +81,10 @@ public class MultiValueMerger extends AbstractType
                 if (i > 0)
                 {
                     sb.append(separator);
+                    if (facetDocCounts != null)
+                    {
+                        facetDocCount += facetDocCounts.get(i);
+                    }
                 }
                 sb.append(s);
             }
@@ -90,13 +95,13 @@ public class MultiValueMerger extends AbstractType
         }
         if (!newValues.isEmpty())
         {
-            if (newValues.size() != values.size() && facetDocCounts != null && facetDocCounts.size() > 0)
+            List<Integer> newFacetDocCounts = null;
+            if (facetDocCounts != null)
             {
-                log.error("Script type MultiValueMerger merged values of search server field {} although facet word " +
-                        "counts are present. Using original facet doc count values.",
-                    env.getBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD));
+                newFacetDocCounts = new ArrayList<>();
+                newFacetDocCounts.add(facetDocCount);
             }
-            result = new TypeResult(newValues, facetDocCounts);
+            result = new TypeResult(newValues, newFacetDocCounts);
         }
         return result;
     }

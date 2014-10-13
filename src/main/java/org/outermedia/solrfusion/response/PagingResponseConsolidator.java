@@ -118,7 +118,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         try
         {
             config.getResponseMapper().mapResponse(config, searchServerConfig, facetFields,
-                getNewScriptEnv(searchServerConfig), searchServerFieldsToMap, ResponseTarget.FACET);
+                getNewScriptEnv(searchServerConfig), searchServerFieldsToMap, ResponseTarget.FACET, false);
         }
         catch (Exception e)
         {
@@ -217,7 +217,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         Set<String> searchServerFieldsToMap, ResponseTarget target)
         throws InvocationTargetException, IllegalAccessException
     {
-        return new MappingClosableIterator(docIterator, config, searchServerConfig, searchServerFieldsToMap, target);
+        return new MappingClosableIterator(docIterator, config, searchServerConfig, searchServerFieldsToMap, target, false);
     }
 
     protected void mapMergeField(Configuration config, SearchServerConfig searchServerConfig, FusionRequest request,
@@ -343,6 +343,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
     protected Map<String, List<DocCount>> mapFacetDocCounts(IdGeneratorIfc idGenerator, String fusionIdField,
         FusionRequest fusionRequest) throws InvocationTargetException, IllegalAccessException
     {
+        log.debug("Mapping facets");
         Map<String, Map<String, Integer>> fusionFacetFields = new LinkedHashMap<>();
         if (facetFields != null)
         {
@@ -376,7 +377,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         {
             newScriptEnv.setBinding(mapType, Boolean.TRUE);
         }
-        config.getResponseMapper().mapResponse(config, searchServerConfig, d, newScriptEnv, null, target);
+        config.getResponseMapper().mapResponse(config, searchServerConfig, d, newScriptEnv, null, target, true);
     }
 
     /**

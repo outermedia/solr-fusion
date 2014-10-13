@@ -96,7 +96,7 @@ public class BshTest extends AbstractTypeTest
         env.setBinding(ScriptEnv.ENV_IN_FUSION_REQUEST, new FusionRequest());
         env.setBinding(ScriptEnv.ENV_IN_MAP_FACET, true);
         env.setBinding(ScriptEnv.ENV_IN_MAP_HIGHLIGHT, true);
-        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL);
+        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL, true);
         Assert.assertTrue("Expected that term was mapped", sourceField.isWasMapped());
         // System.out.println(sourceField.toString());
         Assert.assertEquals("Found wrong field name mapping", "today", sourceField.getFusionFieldName());

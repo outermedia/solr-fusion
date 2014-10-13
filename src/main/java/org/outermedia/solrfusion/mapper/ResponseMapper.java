@@ -84,7 +84,7 @@ public class ResponseMapper implements ResponseMapperIfc
      * @return number of mapped fields
      */
     public int mapResponse(Configuration config, SearchServerConfig serverConfig, Document doc, ScriptEnv env,
-        Collection<String> searchServerFieldNamesToMap, ResponseTarget target)
+        Collection<String> searchServerFieldNamesToMap, ResponseTarget target, boolean applyAddRules)
     {
         this.serverConfig = serverConfig;
         this.doc = doc;
@@ -107,8 +107,11 @@ public class ResponseMapper implements ResponseMapperIfc
                 serverConfig.getSearchServerName(), unmappedFields);
         }
 
-        int addedFieldCounter = addResponseFields(serverConfig, doc, env);
-
+        int addedFieldCounter = 0;
+        if(applyAddRules)
+        {
+            addedFieldCounter = addResponseFields(serverConfig, doc, env);
+        }
         return numberOfMappedFields + addedFieldCounter;
     }
 
@@ -119,6 +122,7 @@ public class ResponseMapper implements ResponseMapperIfc
         Map<String, TargetsOfMapping> allAddResponseTargets = serverConfig.findAllAddResponseMappings(target);
         for (Map.Entry<String, TargetsOfMapping> entry : allAddResponseTargets.entrySet())
         {
+            // TODO support wildcards in field names?
             String fusionFieldName = entry.getKey();
             FusionField fusionField = config.findFieldByName(fusionFieldName);
             if (fusionField != null)
@@ -126,6 +130,7 @@ public class ResponseMapper implements ResponseMapperIfc
                 TargetsOfMapping targets = entry.getValue();
                 String searchServerFieldName = targets.getMappingsSearchServerFieldName();
                 boolean added = false;
+                log.trace("Apply mapping [line: {}]: {}", entry.getValue().getMapping().getLocator().getLineNumber(), searchServerFieldName);
                 for (Target t : targets)
                 {
                     if (addOp.addToResponse(doc, fusionFieldName, fusionField, searchServerFieldName, t, env))
@@ -349,15 +354,16 @@ public class ResponseMapper implements ResponseMapperIfc
             }
             else
             {
-                List<Target> allAddResponseTargets = m.getAllAddResponseTargets(target);
-                if (allAddResponseTargets.size() > 0)
-                {
-                    forResponseOk = true;
-                    AddOperation addOp = new AddOperation();
-                    addOp.setTargets(allAddResponseTargets);
-                    filteredOps.add(addOp);
-                    ar.setAdded(true);
-                }
+                // adding id done later! see addResponseFields()
+//                List<Target> allAddResponseTargets = m.getAllAddResponseTargets(target);
+//                if (allAddResponseTargets.size() > 0)
+//                {
+//                    forResponseOk = true;
+//                    AddOperation addOp = new AddOperation();
+//                    addOp.setTargets(allAddResponseTargets);
+//                    filteredOps.add(addOp);
+//                    ar.setAdded(true);
+//                }
                 if (!foundOkChangeMapping)
                 {
                     List<Target> allChangeResponseTargets = m.getAllChangeResponseTargets(target);

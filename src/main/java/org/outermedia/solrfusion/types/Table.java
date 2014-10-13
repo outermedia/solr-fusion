@@ -121,8 +121,7 @@ public class Table extends AbstractType
     }
 
     @Override
-    public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
-        ConversionDirection dir)
+    public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env, ConversionDirection dir)
     {
         TypeResult result = null;
         List<String> newValues = new ArrayList<>();
@@ -140,11 +139,14 @@ public class Table extends AbstractType
             throw new RuntimeException("Unsupported conversion direction: " + dir);
         }
         result = new TypeResult(newValues, facetDocCounts);
+        List<Integer> newFacetDocCounts = new ArrayList<>();
+        int i = 0;
         for (String v : values)
         {
             if (v == null)
             {
                 newValues.add(null);
+                newFacetDocCounts.add(null);
             }
             else
             {
@@ -152,16 +154,30 @@ public class Table extends AbstractType
                 if (nv != null)
                 {
                     newValues.add(nv);
+                    if (facetDocCounts != null)
+                    {
+                        newFacetDocCounts.add(facetDocCounts.get(i));
+                    }
                 }
                 else
                 {
-                    log.warn("Can't convert '{}' {}. Please fix your mapping.", v, dir);
+                    Object fusionField = env.getBinding(ScriptEnv.ENV_IN_FUSION_FIELD);
+                    Object searchServerField = env.getBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD);
+                    log.warn("Can't convert '{}' {}. Please fix your mapping.", v, dir, fusionField, searchServerField);
                 }
             }
+            i++;
         }
         if (newValues.isEmpty())
         {
             result = null;
+        }
+        else
+        {
+            if (facetDocCounts != null)
+            {
+                result.setDocCounts(newFacetDocCounts);
+            }
         }
         return result;
     }

@@ -89,7 +89,7 @@ public class FreemarkerResponseRendererTest
             response9001.getDocuments(), info9001);
 
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator = new MappingClosableIterator(docIterator,
-            spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null, ResponseTarget.ALL);
+            spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null, ResponseTarget.ALL,true);
 
         FusionRequest req = new FusionRequest();
         req.setQuery(new SolrFusionRequestParam("steak"));
@@ -142,7 +142,7 @@ public class FreemarkerResponseRendererTest
             response9000.getDocuments(), info9000);
 
         ClosableIterator<Document, SearchServerResponseInfo> closableIterator = new MappingClosableIterator(docIterator,
-            spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null, ResponseTarget.ALL);
+            spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null, ResponseTarget.ALL,true);
 
         FusionRequest req = new FusionRequest();
         req.setQuery(new SolrFusionRequestParam("Shakespeares"));
@@ -299,7 +299,7 @@ public class FreemarkerResponseRendererTest
         ClosableListIterator<Document, SearchServerResponseInfo> documentObjectClosableListIterator = new ClosableListIterator<>(
             searchServerHighlightDocs, null);
         ClosableIterator<Document, SearchServerResponseInfo> closableHlIterator = new MappingClosableIterator(
-            documentObjectClosableListIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null, ResponseTarget.ALL);
+            documentObjectClosableListIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null, ResponseTarget.ALL,true);
         while (closableHlIterator.hasNext())
         {
             Document doc = closableHlIterator.next();
@@ -311,7 +311,7 @@ public class FreemarkerResponseRendererTest
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             response9000.getDocuments(), info9000);
         ClosableIterator<Document, SearchServerResponseInfo> closableDocIterator = new MappingClosableIterator(
-            docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null, ResponseTarget.ALL);
+            docIterator, spyCfg, spyCfg.getConfigurationOfSearchServers().get(0), null, ResponseTarget.ALL,true);
         FusionRequest req = new FusionRequest();
         req.setQuery(new SolrFusionRequestParam("goethe"));
         FusionResponse res = new FusionResponse();
@@ -405,7 +405,7 @@ public class FreemarkerResponseRendererTest
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             new ArrayList<Document>(), info9000);
         ClosableIterator<Document, SearchServerResponseInfo> closableDocIterator = new MappingClosableIterator(
-            docIterator, spyCfg, searchServerConfig, null, ResponseTarget.ALL);
+            docIterator, spyCfg, searchServerConfig, null, ResponseTarget.ALL, true);
         FusionResponse res = new FusionResponse();
         res.setOk(true);
         return responseRenderer.getResponseString(cfg, closableDocIterator, req, res);
@@ -474,7 +474,7 @@ public class FreemarkerResponseRendererTest
         ClosableIterator<Document, SearchServerResponseInfo> matchDocIterator = new ClosableListIterator<>(
             moreLikeThisDocs, matchInfo9000);
         ClosableIterator<Document, SearchServerResponseInfo> closableMatchDocIterator = new MappingClosableIterator(
-            matchDocIterator, spyCfg, searchServerConfig, null, ResponseTarget.ALL);
+            matchDocIterator, spyCfg, searchServerConfig, null, ResponseTarget.ALL, true);
         while (closableMatchDocIterator.hasNext())
         {
             mappedMoreLikeThisDocs.add(closableMatchDocIterator.next());
@@ -488,7 +488,7 @@ public class FreemarkerResponseRendererTest
         ClosableIterator<Document, SearchServerResponseInfo> docIterator = new ClosableListIterator<>(
             new ArrayList<Document>(), info9000);
         ClosableIterator<Document, SearchServerResponseInfo> closableDocIterator = new MappingClosableIterator(
-            docIterator, spyCfg, searchServerConfig, null, ResponseTarget.ALL);
+            docIterator, spyCfg, searchServerConfig, null, ResponseTarget.ALL, true);
         FusionResponse res = new FusionResponse();
         res.setOk(true);
         return responseRenderer.getResponseString(cfg, closableDocIterator, req, res);
