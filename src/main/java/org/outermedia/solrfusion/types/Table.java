@@ -50,6 +50,8 @@ public class Table extends AbstractType
     private Map<String, String> fusionToSearchServer;
     private Map<String, String> searchServerToFusion;
 
+    private boolean keepUnmappedValues = true;
+
     protected Table()
     {
         fusionToSearchServer = new HashMap<>();
@@ -153,14 +155,14 @@ public class Table extends AbstractType
                 String nv = mapping.get(v);
                 if (nv != null)
                 {
-                    newValues.add(nv);
-                    if (facetDocCounts != null)
-                    {
-                        newFacetDocCounts.add(facetDocCounts.get(i));
-                    }
+                    storeMappedValue(facetDocCounts, newValues, newFacetDocCounts, i, nv);
                 }
                 else
                 {
+                    if (keepUnmappedValues)
+                    {
+                        storeMappedValue(facetDocCounts, newValues, newFacetDocCounts, i, v);
+                    }
                     Object fusionField = env.getBinding(ScriptEnv.ENV_IN_FUSION_FIELD);
                     Object searchServerField = env.getBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD);
                     log.warn("Can't convert '{}' {}. Please fix your mapping.", v, dir, fusionField, searchServerField);
@@ -180,6 +182,16 @@ public class Table extends AbstractType
             }
         }
         return result;
+    }
+
+    protected void storeMappedValue(List<Integer> facetDocCounts, List<String> newValues,
+        List<Integer> newFacetDocCounts, int i, String nv)
+    {
+        newValues.add(nv);
+        if (facetDocCounts != null)
+        {
+            newFacetDocCounts.add(facetDocCounts.get(i));
+        }
     }
 
     public static Table getInstance()
