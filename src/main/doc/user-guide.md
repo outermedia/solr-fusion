@@ -1117,7 +1117,7 @@ then the rule is not used any more to change queries. But we can improve the rul
     <!-- change field in queries -->
     <om:field name="format_facet" fusion-name="format">
         <om:add><om:response /></om:add>
-        <om:change><om:query /></om:add>
+        <om:change><om:query /></om:change>
     </om:field>
 
 to do the query mapping again.
