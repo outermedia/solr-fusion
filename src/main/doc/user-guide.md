@@ -826,6 +826,19 @@ Declaration (mandatory, child of `<om:solr-servers>`):
     <om:dismax-query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory"/>
     
 The lines above declare the global query builders, which can be overwritten for specific Solr servers.    
+
+Note: At least in Solr 3.6 the value of the "mm" Solr parameter has no effect if a dismax query contains duplicate 
+search words (more duplicates than mm's value). To overcome this limitation the dismax query builder implementation 
+above removes duplicate search words. Because the implementation is very simple, "+", "-" are ignored. So e.g. 
+"abc +abc" is reduced to "abc" (the first occurrence of a search word is used) although "+abc" would be better. The
+deduplication is applied to whole queries and to dismax sub-queries in edismax queries.
+
+Duplicate search words can easily occur when one SolrFusion field is mapped to several Solr fields and the "add" rule
+is not limited to e.g. facets.
+
+The edismax query builder (`<om:query-builder>`) contains no deduplication. Probably, it is impossible to implement 
+this feature.
+
     
 ## Document Merging  
 In order to avoid duplicate Solr documents - same document from different(!) Solr servers - SolrFusion can merge documents
