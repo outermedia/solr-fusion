@@ -47,9 +47,11 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     protected SearchServerConfig searchServerConfig;
     protected Set<String> defaultSearchServerSearchFields;
     protected QueryTarget target;
+    protected Set<String> addedSearchWords;
 
     /**
      * Build the query string for a search server.
+     *
      * @param query              the query to map to process
      * @param configuration
      * @param searchServerConfig
@@ -61,18 +63,19 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
         Locale locale, Set<String> defaultSearchServerSearchFields, QueryTarget target)
     {
         String result = buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale,
-            defaultSearchServerSearchFields, target);
+            defaultSearchServerSearchFields, target, addedSearchWords);
 
         return result;
     }
 
-    // inside add queried have been processed, now add the outside queries
+    // 'inside' add queries have been processed, now add the 'outside' queries
     public String getStaticallyAddedQueries(Configuration configuration, SearchServerConfig searchServerConfig,
         Locale locale, QueryTarget target, String result)
     {
         List<String> newQueriesToAdd = new ArrayList<>();
         AddOperation addOp = new AddOperation();
-        Map<String, List<Target>> allAddQueryTargets = searchServerConfig.findAllAddQueryMappings(AddLevel.OUTSIDE, target);
+        Map<String, List<Target>> allAddQueryTargets = searchServerConfig.findAllAddQueryMappings(AddLevel.OUTSIDE,
+            target);
         for (Map.Entry<String, List<Target>> entry : allAddQueryTargets.entrySet())
         {
             String searchServerFieldName = entry.getKey();
@@ -99,10 +102,22 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
         return result;
     }
 
+    /**
+     *
+     * @param query             the query to process
+     * @param configuration     the SolrFusion schema
+     * @param searchServerConfig    the current destination Solr server configuration
+     * @param locale            the localization to use
+     * @param defaultSearchServerSearchFields especially needed in the case that a dismax query shall be built
+     * @param target            for which request part this query builder is called
+     * @param previouslyAddedSearchWords is a non null Set&lt;String&gt;
+     * @return
+     */
     @Override public String buildQueryStringWithoutNew(Query query, Configuration configuration,
         SearchServerConfig searchServerConfig, Locale locale, Set<String> defaultSearchServerSearchFields,
-        QueryTarget target)
+        QueryTarget target, Object previouslyAddedSearchWords)
     {
+        addedSearchWords = (Set<String>) previouslyAddedSearchWords;
         newQueries = new ArrayList<>();
         queryBuilder = new StringBuilder();
         this.searchServerConfig = searchServerConfig;
@@ -117,7 +132,7 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     @Override
     public void init(QueryBuilderFactory config) throws InvocationTargetException, IllegalAccessException
     {
-        // NOP
+        addedSearchWords = new HashSet<>();
     }
 
     /**
@@ -156,8 +171,9 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
             List<String> insideClauses = new ArrayList<>();
             if (!term.isRemoved())
             {
-                String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(origQuery, configuration,
-                    searchServerConfig, locale, defaultSearchServerSearchFields, target);
+                String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(origQuery,
+                    configuration, searchServerConfig, locale, defaultSearchServerSearchFields, target,
+                    addedSearchWords);
                 insideClauses.add(clauseQueryStr);
             }
             else
@@ -171,29 +187,32 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
         }
         else if (term.isWasMapped() && !term.isRemoved() && searchServerFieldValue != null)
         {
-            // TODO filter out duplicate search words?!
             if (defaultSearchServerSearchFields.contains(term.getSearchServerFieldName()))
             {
-                handleMetaInfo(origQuery.getMetaInfo(), queryBuilder);
-                added = true;
-                if (quoted)
-                {
-                    queryBuilder.append('"');
-                }
                 String s = searchServerFieldValue.get(0);
-                if (!quoted && isSpecialString(s))
+                if (!addedSearchWords.contains(s))
                 {
-                    queryBuilder.append("\\");
-                }
-                queryBuilder.append(s);
-                if (quoted)
-                {
-                    queryBuilder.append('"');
-                }
-                if (boost != null)
-                {
-                    queryBuilder.append("^");
-                    queryBuilder.append(boost);
+                    addedSearchWords.add(s);
+                    handleMetaInfo(origQuery.getMetaInfo(), queryBuilder);
+                    added = true;
+                    if (quoted)
+                    {
+                        queryBuilder.append('"');
+                    }
+                    if (!quoted && isSpecialString(s))
+                    {
+                        queryBuilder.append("\\");
+                    }
+                    queryBuilder.append(s);
+                    if (quoted)
+                    {
+                        queryBuilder.append('"');
+                    }
+                    if (boost != null)
+                    {
+                        queryBuilder.append("^");
+                        queryBuilder.append(boost);
+                    }
                 }
             }
             else
@@ -266,10 +285,11 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
         {
             QueryBuilderIfc newClauseQueryBuilder = newQueryBuilder();
             String clauseQueryStr = newClauseQueryBuilder.buildQueryStringWithoutNew(booleanClause.getQuery(),
-                configuration, searchServerConfig, locale, defaultSearchServerSearchFields, target);
+                configuration, searchServerConfig, locale, defaultSearchServerSearchFields, target, addedSearchWords);
             if (clauseQueryStr.length() > 0)
             {
-                if (boolQueryStringBuilder.length() > 0)
+                int currentQueryLength = boolQueryStringBuilder.length();
+                if (currentQueryLength > 0 && boolQueryStringBuilder.charAt(currentQueryLength - 1) != ' ')
                 {
                     boolQueryStringBuilder.append(" ");
                 }
@@ -348,7 +368,8 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     {
         try
         {
-            return configuration.getDismaxQueryBuilder();
+            DisMaxQueryBuilder result = (DisMaxQueryBuilder) configuration.getDismaxQueryBuilder();
+            return result;
         }
         catch (Exception e)
         {

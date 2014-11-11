@@ -27,8 +27,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.Multimap;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
-import org.outermedia.solrfusion.configuration.Configuration;
-import org.outermedia.solrfusion.configuration.SearchServerConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,8 +45,6 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 @Slf4j
 public class Solr1Adapter extends DefaultSolrAdapter
 {
-    protected Double solrVersion;
-
     /**
      * Factory creates instances only.
      */
@@ -60,30 +56,6 @@ public class Solr1Adapter extends DefaultSolrAdapter
     {
 
         return super.sendQuery(uriBuilder, timeout);
-    }
-
-    protected Double parseDouble(String version)
-    {
-        Double result = null;
-        try
-        {
-            result = Double.valueOf(version);
-        }
-        catch (Exception e)
-        {
-            log.error("Can't parse search server version '{}'", version, e);
-        }
-
-        return result;
-    }
-
-    @Override
-    public SolrFusionUriBuilder buildHttpClientParams(Configuration configuration,
-        SearchServerConfig searchServerConfig, FusionRequest fusionRequest, Multimap<String> params, String version)
-        throws URISyntaxException
-    {
-        this.solrVersion = parseDouble(version);
-        return super.buildHttpClientParams(configuration, searchServerConfig, fusionRequest, params, version);
     }
 
     @Override protected void buildFacetHttpClientParams(Multimap<String> params, URIBuilder ub)

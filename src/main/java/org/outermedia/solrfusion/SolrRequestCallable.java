@@ -68,7 +68,7 @@ public class SolrRequestCallable implements Callable<Object>
             SearchServerAdapterIfc adapter = searchServerConfig.getInstance();
             if (ub.isBuiltForDismax())
             {
-                adapter = newSolr1Adapter(adapter.getUrl());
+                adapter = newSolr1Adapter(adapter.getUrl(), adapter.getSolrVersion());
             }
             InputStream is = adapter.sendQuery(ub, timeout);
             ResponseParserIfc responseParser = searchServerConfig.getResponseParser(
@@ -110,10 +110,11 @@ public class SolrRequestCallable implements Callable<Object>
         }
     }
 
-    protected SearchServerAdapterIfc<?> newSolr1Adapter(String url)
+    protected SearchServerAdapterIfc<?> newSolr1Adapter(String url, Double solrVersion)
     {
         SearchServerAdapterIfc<?> result = Solr1Adapter.Factory.getInstance();
         result.setUrl(url);
+        result.setSolrVersion(solrVersion);
         return result;
     }
 

@@ -337,9 +337,16 @@ public class FusionController implements FusionControllerIfc
                 boolean forDismax = false;
                 if (MetaInfo.DISMAX_PARSER.equals(queryType))
                 {
-                    String url = adapter.getUrl();
-                    adapter = Solr1Adapter.Factory.getInstance();
-                    adapter.setUrl(url);
+                    if(!(adapter instanceof Solr1Adapter))
+                    {
+                        // TODO always use q.alt instead of q? or second dismax config option needed?
+                        String url = adapter.getUrl();
+                        Double version = adapter.getSolrVersion();
+                        adapter = Solr1Adapter.Factory.getInstance();
+                        adapter.setUrl(url);
+                        adapter.setSolrVersion(version);
+                        ((Solr1Adapter)adapter).setSolrVersion(((Solr1Adapter) adapter).getSolrVersion());
+                    }
                     forDismax = true;
                 }
                 result = adapter.buildHttpClientParams(configuration, searchServerConfig, fusionRequest,
@@ -369,8 +376,10 @@ public class FusionController implements FusionControllerIfc
                 {
                     try
                     {
+                        ScriptEnv newEnv = new ScriptEnv(env);
+                        newEnv.setBinding(ScriptEnv.ENV_DISMAX_WORD_CACHE, new HashSet<String>());
                         configuration.getQueryMapper().mapQuery(configuration, searchServerConfig,
-                            parsedQuery.getQuery(), env, fusionRequest, target);
+                            parsedQuery.getQuery(), newEnv, fusionRequest, target);
                     }
                     catch (Exception e)
                     {

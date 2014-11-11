@@ -59,7 +59,7 @@ public class QueryBuilder implements QueryBuilderIfc
         Locale locale, Set<String> defaultSearchServerSearchFields, QueryTarget target)
     {
         String result = buildQueryStringWithoutNew(query, configuration, searchServerConfig, locale,
-            defaultSearchServerSearchFields, target);
+            defaultSearchServerSearchFields, target, null);
 
         return result;
     }
@@ -104,7 +104,7 @@ public class QueryBuilder implements QueryBuilderIfc
     @Override
     public String buildQueryStringWithoutNew(Query query, Configuration configuration,
         SearchServerConfig searchServerConfig, Locale locale, Set<String> defaultSearchServerSearchFields,
-        QueryTarget target)
+        QueryTarget target, Object unused)
     {
         queryBuilder = new StringBuilder();
         this.configuration = configuration;
@@ -157,7 +157,7 @@ public class QueryBuilder implements QueryBuilderIfc
             if (!term.isRemoved())
             {
                 String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(origQuery, configuration,
-                    searchServerConfig, locale, defaultSearchServerSearchFields, target);
+                    searchServerConfig, locale, defaultSearchServerSearchFields, target, null);
                 insideClauses.add(clauseQueryStr);
             }
             else
@@ -257,7 +257,7 @@ public class QueryBuilder implements QueryBuilderIfc
         {
             QueryBuilderIfc newClauseQueryBuilder = newQueryBuilder();
             String clauseQueryStr = newClauseQueryBuilder.buildQueryStringWithoutNew(booleanClause.getQuery(),
-                configuration, searchServerConfig, locale, defaultSearchServerSearchFields, target);
+                configuration, searchServerConfig, locale, defaultSearchServerSearchFields, target, null);
             if (clauseQueryStr.length() > 0)
             {
                 if (boolQueryStringBuilder.length() > 0)
@@ -403,7 +403,7 @@ public class QueryBuilder implements QueryBuilderIfc
             if (!term.isRemoved())
             {
                 String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(rq, configuration,
-                    searchServerConfig, locale, defaultSearchServerSearchFields, target);
+                    searchServerConfig, locale, defaultSearchServerSearchFields, target, null);
                 insideClauses.add(clauseQueryStr);
             }
             handleNewQueries(newQueries, insideClauses);

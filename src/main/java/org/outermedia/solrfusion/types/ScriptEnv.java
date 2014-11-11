@@ -92,10 +92,12 @@ public class ScriptEnv
     public static final String ENV_IN_MAPPED_HIGHLIGHT_QUERY = "mappedHighlightQuery"; // a ParsedQuery
     public static final String ENV_IN_MAPPED_FILTER_QUERIES = "mappedFilterQueries"; // a List<ParsedQuery>
 
-
     // variables set by a script
     public final static String ENV_OUT_NEW_VALUES = "returnValues";
     public final static String ENV_OUT_NEW_DOC_COUNTS = "returnDocCounts";
+
+    // variable used by dismax query builder
+    public static final String ENV_DISMAX_WORD_CACHE = "dismaxWordCache";
 
     public ScriptEnv()
     {

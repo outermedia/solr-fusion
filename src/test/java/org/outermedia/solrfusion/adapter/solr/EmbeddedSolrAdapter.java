@@ -70,6 +70,7 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc<SolrFusionSol
     private SolrTestServer testServer;
 
     @Getter @Setter String url;
+    @Getter @Setter Double solrVersion;
 
     /**
      * Factory creates instances only.

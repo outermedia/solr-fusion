@@ -92,6 +92,9 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
     @Setter @Getter
     private String url;
 
+    @Setter @Getter
+    protected Double solrVersion;
+
     /**
      * Factory creates instances only.
      */
@@ -134,11 +137,27 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
         return contentStream;
     }
 
+    protected Double parseDouble(String version)
+    {
+        Double result = null;
+        try
+        {
+            result = Double.valueOf(version);
+        }
+        catch (Exception e)
+        {
+            log.error("Can't parse search server version '{}'", version, e);
+        }
+
+        return result;
+    }
+
     @Override
     public SolrFusionUriBuilder buildHttpClientParams(Configuration configuration,
         SearchServerConfig searchServerConfig, FusionRequest fusionRequest, Multimap<String> params, String version)
         throws URISyntaxException
     {
+        this.solrVersion = parseDouble(version);
         SolrFusionUriBuilder ub = new SolrFusionUriBuilder(url);
         ub.setParameter(QUERY_PARAMETER, params.getFirst(QUERY));
         Collection<String> fqs = params.get(FILTER_QUERY);
@@ -170,7 +189,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
 
         if (!"q".equals(QUERY_PARAMETER))
         {
-            // create dismax query to get highlightings too
+            // create dismax query to get highlights too
             try
             {
                 Set<String> defaultSearchFields = fusionRequest.mapFusionFieldToSearchServerField(
@@ -179,10 +198,11 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
                 Locale locale = fusionRequest.getLocale();
                 String qs = dismaxQueryBuilder.buildQueryString(fusionRequest.getParsedQuery(), configuration,
                     searchServerConfig, locale, defaultSearchFields, QueryTarget.QUERY);
+                log.debug("Setting q to dismax query in order to get highlights. Step 1: {}", qs);
                 qs = dismaxQueryBuilder.getStaticallyAddedQueries(configuration, searchServerConfig, locale,
                     QueryTarget.QUERY, qs);
                 ub.setParameter("q", qs);
-                log.debug("Setting q to dismax query in order to get highlights: {}", qs);
+                log.debug("Setting q to dismax query in order to get highlights. Step 2: {}", qs);
             }
             catch (Exception e)
             {
@@ -275,6 +295,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
         if (config.getQueryParamName() != null)
         {
             QUERY_PARAMETER = config.getQueryParamName();
+            log.debug("Using special query parameter '{}'", QUERY_PARAMETER);
         }
     }
 

@@ -74,6 +74,10 @@ public interface SearchServerAdapterIfc<Url extends SolrFusionUriBuilderIfc> ext
 
     public String getUrl();
 
+    public void setSolrVersion(Double v);
+
+    public Double getSolrVersion();
+
     public void finish() throws Exception;
 
     public void commitLastDocs();

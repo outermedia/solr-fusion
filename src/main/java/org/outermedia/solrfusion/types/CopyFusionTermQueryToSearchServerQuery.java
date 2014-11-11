@@ -68,6 +68,8 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
         {
             FusionRequest fusionRequest = (FusionRequest) env.getBinding(ScriptEnv.ENV_IN_FUSION_REQUEST);
             QueryBuilderIfc qb;
+            // either tq or the common query builder is dismax (not used by edismax query builder)
+            Object context = env.getBinding(ScriptEnv.ENV_DISMAX_WORD_CACHE);
             if (tq.isDismaxQuery())
             {
                 qb = configuration.getDismaxQueryBuilder();
@@ -79,10 +81,13 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
             Set<String> defaultSearchServerSearchFields = fusionRequest.mapFusionFieldToSearchServerField(
                 configuration.getDefaultSearchField(), configuration, searchServerConfig, null, QueryTarget.QUERY);
             String qs = qb.buildQueryStringWithoutNew(searchServerTermQuery, configuration, searchServerConfig,
-                env.getLocale(), defaultSearchServerSearchFields, target);
-            newValues = new ArrayList<>();
-            newValues.add(qs);
-            result = new TypeResult(newValues, facetDocCounts);
+                env.getLocale(), defaultSearchServerSearchFields, target, context);
+            if(qs != null && qs.length() > 0)
+            {
+                newValues = new ArrayList<>();
+                newValues.add(qs);
+                result = new TypeResult(newValues, facetDocCounts);
+            }
         }
         catch (Exception e)
         {

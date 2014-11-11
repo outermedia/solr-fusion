@@ -62,10 +62,11 @@ public interface QueryBuilderIfc extends QueryVisitor, Initiable<QueryBuilderFac
      * @param locale            the localization to use
      * @param defaultSearchServerSearchFields especially needed in the case that a dismax query shall be built
      * @param target            for which request part this query builder is called
+     * @param context           additional data needed by a specific implementation
      */
     public String buildQueryStringWithoutNew(Query query, Configuration configuration,
         SearchServerConfig searchServerConfig, Locale locale, Set<String> defaultSearchServerSearchFields,
-        QueryTarget target);
+        QueryTarget target, Object context);
 
     /**
      * Get the output of all "outside" non-copying &lt;om:add&gt; mappings.
