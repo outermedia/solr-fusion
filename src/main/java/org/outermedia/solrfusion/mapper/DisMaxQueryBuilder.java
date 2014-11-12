@@ -103,21 +103,29 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     }
 
     /**
-     *
-     * @param query             the query to process
-     * @param configuration     the SolrFusion schema
-     * @param searchServerConfig    the current destination Solr server configuration
-     * @param locale            the localization to use
+     * @param query                           the query to process
+     * @param configuration                   the SolrFusion schema
+     * @param searchServerConfig              the current destination Solr server configuration
+     * @param locale                          the localization to use
      * @param defaultSearchServerSearchFields especially needed in the case that a dismax query shall be built
-     * @param target            for which request part this query builder is called
-     * @param previouslyAddedSearchWords is a non null Set&lt;String&gt;
+     * @param target                          for which request part this query builder is called
+     * @param previouslyAddedSearchWords      is a non null Set&lt;String&gt;
      * @return
      */
     @Override public String buildQueryStringWithoutNew(Query query, Configuration configuration,
         SearchServerConfig searchServerConfig, Locale locale, Set<String> defaultSearchServerSearchFields,
         QueryTarget target, Object previouslyAddedSearchWords)
     {
-        addedSearchWords = (Set<String>) previouslyAddedSearchWords;
+        if (previouslyAddedSearchWords != null)
+        {
+            addedSearchWords = (Set<String>) previouslyAddedSearchWords;
+        }
+        else
+        {
+            log.warn("Ignoring null previouslyAddedSearchWords, so deduplication of search words might be incorrect.",
+                new Exception("Method " + getClass().getName() +
+                    ".buildQueryStringWithoutNew() is called in unexpected context."));
+        }
         newQueries = new ArrayList<>();
         queryBuilder = new StringBuilder();
         this.searchServerConfig = searchServerConfig;
@@ -171,9 +179,8 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
             List<String> insideClauses = new ArrayList<>();
             if (!term.isRemoved())
             {
-                String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(origQuery,
-                    configuration, searchServerConfig, locale, defaultSearchServerSearchFields, target,
-                    addedSearchWords);
+                String clauseQueryStr = newQueryBuilder().buildQueryStringWithoutNew(origQuery, configuration,
+                    searchServerConfig, locale, defaultSearchServerSearchFields, target, addedSearchWords);
                 insideClauses.add(clauseQueryStr);
             }
             else
