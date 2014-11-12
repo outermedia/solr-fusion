@@ -29,7 +29,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.mapper.Term;
-import org.outermedia.solrfusion.mapper.UndeclaredFusionField;
 import org.outermedia.solrfusion.types.ScriptEnv;
 import org.xml.sax.Locator;
 
@@ -87,12 +86,14 @@ public class FieldMapping
     private Locator locator;
 
 
-    @XmlElements(value = {@XmlElement(name = "add", type = AddOperation.class,
-        namespace = "http://solrfusion.outermedia.org/configuration/"), @XmlElement(name = "drop",
+    @XmlElements(value = {
+        @XmlElement(name = "add", type = AddOperation.class,
+            namespace = "http://solrfusion.outermedia.org/configuration/"), @XmlElement(name = "drop",
         type = DropOperation.class,
         namespace = "http://solrfusion.outermedia.org/configuration/"), @XmlElement(name = "change",
         type = ChangeOperation.class,
-        namespace = "http://solrfusion.outermedia.org/configuration/")})
+        namespace = "http://solrfusion.outermedia.org/configuration/")
+    })
     private List<Operation> operations;
 
     /**
@@ -115,7 +116,8 @@ public class FieldMapping
 
     /**
      * This method applies 'this' mapping to a given query term.
-     *  @param term
+     *
+     * @param term
      * @param env
      * @param target
      */
@@ -147,23 +149,15 @@ public class FieldMapping
             {
                 for (Operation o : operations)
                 {
-                    try
-                    {
-                        o.applyAllQueryOperations(term, newEnv, target);
-                        log.trace("Applied op {}:\n{}", o, term);
-                    }
-                    catch (UndeclaredFusionField e)
-                    {
-                        int line = locator.getLineNumber();
-                        throw new UndeclaredFusionField("Fusion schema at line " + line + ": " + e.getMessage());
-                    }
+                    o.applyAllQueryOperations(term, newEnv, target, locator.getLineNumber());
+                    log.trace("Applied op {}:\n{}", o, term);
                 }
             }
             else
             {
                 // without any operations means "change"
                 ChangeOperation changeOp = new ChangeOperation();
-                changeOp.applyAllQueryOperations(term, newEnv, target);
+                changeOp.applyAllQueryOperations(term, newEnv, target, locator.getLineNumber());
                 log.trace("Applied change op:\n{}", term);
             }
         }
@@ -198,7 +192,8 @@ public class FieldMapping
 
     /**
      * This method applies 'this' mapping to a given response term.
-     *  @param term
+     *
+     * @param term
      * @param env
      * @param fusionField
      * @param target
@@ -238,14 +233,14 @@ public class FieldMapping
             {
                 for (Operation o : operations)
                 {
-                    o.applyAllResponseOperations(term, newEnv, target);
+                    o.applyAllResponseOperations(term, newEnv, target, locator.getLineNumber());
                 }
             }
             else
             {
                 // without any operations means "change"
                 ChangeOperation changeOp = new ChangeOperation();
-                changeOp.applyAllResponseOperations(term, newEnv, target);
+                changeOp.applyAllResponseOperations(term, newEnv, target, locator.getLineNumber());
             }
         }
     }

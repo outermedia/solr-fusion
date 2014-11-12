@@ -43,10 +43,9 @@ import javax.xml.bind.annotation.XmlType;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "changeOperation", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder =
-        {
-                "targets"
-        })
+@XmlType(name = "changeOperation", namespace = "http://solrfusion.outermedia.org/configuration/", propOrder = {
+    "targets"
+})
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -60,17 +59,20 @@ public class ChangeOperation extends Operation
     }
 
     @Override
-    public void applyAllResponseOperations(Term term, ScriptEnv env, ResponseTarget target)
+    public void applyAllResponseOperations(Term term, ScriptEnv env, ResponseTarget target, int lineNumber)
     {
+        String fusionField = env.getStringBinding(ScriptEnv.ENV_IN_FUSION_FIELD);
         if (term.getFusionField() == null)
         {
-            throw new UndeclaredFusionField("Didn't find field '" + env.getStringBinding(ScriptEnv.ENV_IN_FUSION_FIELD)
-                    + "' in fusion schema. Please define it there.");
+            log.error("Fusion schema line " + lineNumber + ": Ignoring undeclared fusion field '" + fusionField + "'",
+                new UndeclaredFusionField("Didn't find field '" + fusionField +
+                    "' in fusion schema. Please define it there."));
+            return;
         }
-        String specificFusionName = env.getStringBinding(ScriptEnv.ENV_IN_FUSION_FIELD);
+        String specificFusionName = fusionField;
         term.setFusionFieldName(specificFusionName);
         term.setWasMapped(true);
-        super.applyAllResponseOperations(term, env, target);
+        super.applyAllResponseOperations(term, env, target, lineNumber);
     }
 
     @Override
@@ -78,12 +80,12 @@ public class ChangeOperation extends Operation
     {
         String msg = null;
 
-        if(fieldMapping.getFusionName() == null)
+        if (fieldMapping.getFusionName() == null)
         {
             msg = "A change operation requires a field name in attribute 'name' and 'fusion-name'.";
         }
 
-        if(fieldMapping.getSearchServersName() == null)
+        if (fieldMapping.getSearchServersName() == null)
         {
             msg = "A change operation requires a field name in attribute 'name' and 'fusion-name'.";
         }
@@ -97,13 +99,15 @@ public class ChangeOperation extends Operation
     }
 
     @Override
-    public void applyAllQueryOperations(Term term, ScriptEnv env, QueryTarget target)
+    public void applyAllQueryOperations(Term term, ScriptEnv env, QueryTarget target, int lineNumber)
     {
         if (term.getFusionField() == null)
         {
-            throw new UndeclaredFusionField("Didn't find field '" + term.getFusionFieldName()
-                    + "' in fusion schema. Please define it there.");
+            log.error("Fusion schema line " + lineNumber + ": Ignoring undeclared fusion field '" +
+                term.getFusionFieldName() + "'", new UndeclaredFusionField(
+                "Didn't find field '" + term.getFusionFieldName() + "' in fusion schema. Please define it there."));
+            return;
         }
-        super.applyAllQueryOperations(term, env, target);
+        super.applyAllQueryOperations(term, env, target, lineNumber);
     }
 }

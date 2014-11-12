@@ -56,7 +56,7 @@ public class DropOperation extends Operation
     }
 
     @Override
-    public void applyAllQueryOperations(Term term, ScriptEnv env, QueryTarget target)
+    public void applyAllQueryOperations(Term term, ScriptEnv env, QueryTarget target, int lineNumber)
     {
         List<Target> queryTargets = getQueryTargets(target);
         if (!queryTargets.isEmpty())
@@ -67,7 +67,7 @@ public class DropOperation extends Operation
     }
 
     @Override
-    public void applyAllResponseOperations(Term term, ScriptEnv env, ResponseTarget target)
+    public void applyAllResponseOperations(Term term, ScriptEnv env, ResponseTarget target, int lineNumber)
     {
         List<Target> responseTargets = getResponseTargets(target);
         if (!responseTargets.isEmpty())

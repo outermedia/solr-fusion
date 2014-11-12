@@ -190,7 +190,7 @@ public abstract class Operation
         return result;
     }
 
-    public void applyAllQueryOperations(Term term, ScriptEnv env, QueryTarget target)
+    public void applyAllQueryOperations(Term term, ScriptEnv env, QueryTarget target, int lineNumber)
     {
         ScriptEnv newEnv = getQueryScriptEnv(term, env);
         List<Target> queryTargets = getQueryTargets(target);
@@ -223,7 +223,7 @@ public abstract class Operation
         }
     }
 
-    public void applyAllResponseOperations(Term term, ScriptEnv env, ResponseTarget target)
+    public void applyAllResponseOperations(Term term, ScriptEnv env, ResponseTarget target, int lineNumber)
     {
         ScriptEnv newEnv = getResponseScriptEnv(null, null, term, env);
         List<Target> queryTargets = getResponseTargets(target);
