@@ -97,9 +97,18 @@ This software is licensed under the terms of the GPL V3.
 * One JEE compliant application server >= 2.5. Tested with Tomcat 6.0.41.
 
 # Installation
-For tomcat simply copy the solrfusion-X.Y.war to `<tomcat install dir>/webapps/solrfusion.war` and start the tomcat with
-./start.sh. so that the war is unpacked. Then Ctrl-C start.sh and stop tomcat with ./stop.sh in order to configure 
-SolrFusion to you needs. If the servlet path isn't touched, point your browser finally to 
+For tomcat simply copy the solrfusion-X.Y.war to `<tomcat install dir>/webapps/solrfusion.war`. Save your
+SolrFusion schema into a location you prefer. If it is `<tomcat install dir>/webapps/solrfusion/WEB-INF/classes` 
+no additional configuration is necessary (start your tomcat once to unpack the war). Otherwise edit the file 
+`<tomcat install dir>/conf/catalina.properties` and change the line
+
+    shared.loader=<directory of your solrfusion schema location>
+
+Please note that files in WEB-INF/classes are preferred, so remove e.g. log4j.properties from the "classes" directory
+in order to add your own.
+
+Start the tomcat with ./start.sh. so that the war is unpacked. Then Ctrl-C start.sh and stop tomcat with ./stop.sh in 
+order to configure  SolrFusion to you needs. If the servlet path isn't touched, point your browser finally to 
 `http://<host>:8080/solrfusion/biblio/select/?q=*:*&wt=xml`. The request should return a proper Solr XML response when 
 the configured Solr server(s) support edismax queries.
 
