@@ -226,7 +226,7 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>1000000</om:max-docs>
+            <om:max-docs>100</om:max-docs>
 
             <!-- keep all fields in general -->
             <om:field name="*" fusion-name="*" />
@@ -290,7 +290,7 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>1000000</om:max-docs>
+            <om:max-docs>100</om:max-docs>
 
             <om:field fusion-name="solr-server">
                 <om:add>
@@ -744,7 +744,7 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>1000000</om:max-docs>
+            <om:max-docs>100</om:max-docs>
 
             <om:field fusion-name="solr-server">
                 <om:add>
@@ -985,7 +985,7 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>1000000</om:max-docs>
+            <om:max-docs>100</om:max-docs>
 
             <om:field fusion-name="solr-server">
                 <om:add>
@@ -1223,7 +1223,7 @@
 
             <om:unique-key>id</om:unique-key>
 
-            <om:max-docs>1000000</om:max-docs>
+            <om:max-docs>100</om:max-docs>
 
             <!-- keep all fields in general -->
             <om:field name="*" fusion-name="*" />

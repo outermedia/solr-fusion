@@ -181,7 +181,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         {
             int totalNumberOfHits = docIterator.getExtraInfo().getTotalNumberOfHits();
             rememberTotalDocsFound(searchServerConfig.getSearchServerName(), totalNumberOfHits);
-            totalDocNr += Math.min(searchServerConfig.getMaxDocs(), totalNumberOfHits);
+            totalDocNr += totalNumberOfHits;
 
             try
             {
