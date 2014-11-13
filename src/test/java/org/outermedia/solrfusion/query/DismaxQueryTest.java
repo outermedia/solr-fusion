@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.outermedia.solrfusion.TestHelper;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryParserFactory;
-import org.outermedia.solrfusion.query.parser.ParseException;
 import org.outermedia.solrfusion.query.parser.*;
 import org.xml.sax.SAXException;
 
@@ -256,4 +255,5 @@ public class DismaxQueryTest
             Assert.assertTrue("Expected optional term query", clauses.get(i/2).isOptional());
         }
     }
+
 }

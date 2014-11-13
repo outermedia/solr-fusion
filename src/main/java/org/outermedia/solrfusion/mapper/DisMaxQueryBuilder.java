@@ -30,6 +30,8 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Map a SolrFusion query to a dismax solr query.
@@ -48,6 +50,10 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     protected Set<String> defaultSearchServerSearchFields;
     protected QueryTarget target;
     protected Set<String> addedSearchWords;
+
+    protected Pattern escapePattern = Pattern.compile("([-:\\+\\(\\)\"\\\\])", Pattern.CASE_INSENSITIVE);
+    protected Pattern escapePhrasePattern = Pattern.compile("([\"\\\\])", Pattern.CASE_INSENSITIVE);
+
 
     /**
      * Build the query string for a search server.
@@ -202,14 +208,17 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
                     addedSearchWords.add(s);
                     handleMetaInfo(origQuery.getMetaInfo(), queryBuilder);
                     added = true;
+                    Pattern p = null;
                     if (quoted)
                     {
                         queryBuilder.append('"');
+                        p = escapePhrasePattern;
                     }
-                    if (!quoted && isSpecialString(s))
+                    else
                     {
-                        queryBuilder.append("\\");
+                        p = escapePattern;
                     }
+                    s = escape(p, s);
                     queryBuilder.append(s);
                     if (quoted)
                     {
@@ -231,10 +240,10 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
         return added;
     }
 
-    protected boolean isSpecialString(String s)
+    protected String escape(Pattern p, String s)
     {
-        // TODO more string which need escaping?
-        return "-".equals(s);
+        Matcher m = p.matcher(s);
+        return m.replaceAll("\\\\$1");
     }
 
     protected boolean handleNewQueries(List<String> newQueries, List<String> insideClauses)

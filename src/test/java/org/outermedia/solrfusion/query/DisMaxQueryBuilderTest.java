@@ -423,4 +423,25 @@ public class DisMaxQueryBuilderTest
         String expected = "+Schiller +Räuber";
         Assert.assertEquals("Expected other dismax query string", expected, dqs);
     }
+
+    @Test
+    public void testEscaping() throws InvocationTargetException, IllegalAccessException
+    {
+        QueryBuilderIfc qb = getDismaxQueryBuilder();
+        Term term = Term.newSearchServerTerm("multipart_link", "urn:nbn:de:bsz:14-qucosa-(108346)\"");
+        term.setWasMapped(true);
+
+        TermQuery tq = new TermQuery(term);
+        String qs = buildQueryString(qb, tq, cfg, searchServerConfig, locale, Sets.newHashSet("multipart_link"),
+            QueryTarget.ALL);
+        Assert.assertEquals("Got different query than expected",
+            "urn\\:nbn\\:de\\:bsz\\:14\\-qucosa\\-\\(108346\\)\\\"", qs);
+
+        qb = getDismaxQueryBuilder();
+        PhraseQuery pq = new PhraseQuery(term);
+        qs = buildQueryString(qb, pq, cfg, searchServerConfig, locale, Sets.newHashSet("multipart_link"),
+            QueryTarget.ALL);
+        Assert.assertEquals("Got different query than expected", "\"urn:nbn:de:bsz:14-qucosa-(108346)\\\"\"", qs);
+
+    }
 }

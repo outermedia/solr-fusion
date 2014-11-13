@@ -852,6 +852,11 @@ SolrFusions evaluates the "qt" HTTP request parameter and uses the dismax query 
 SolrFusion always requests XML responses from the configured Solr servers, but is capable to render the requested 
 response format of the combined Solr documents.
 
+Note: The query parsers resolve `\uXXXX` and backslash escaped characters __except "?" and "*"__, because it is impossible
+to decide whether to escape them or not once they have been unescaped. E.g. it is legal to write "hel?o" and "hel\?o".
+All ScriptTypes are affected which execute String equal checks (e.g. Table and Regular Expressions).
+
+
 ## Response Renderer
 SolrFusion supports rendering of Solr documents in xml and json format. The response is always indented.
 

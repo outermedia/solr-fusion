@@ -30,6 +30,8 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Map a SolrFusion query to a solr request which is parsable by an edismax parser.
@@ -46,8 +48,12 @@ public class QueryBuilder implements QueryBuilderIfc
     protected Set<String> defaultSearchServerSearchFields;
     protected QueryTarget target;
 
+    protected Pattern escapePattern = Pattern.compile("([-:\\+\\(\\)\\{\\}\\[\\]!^\"~\\\\])", Pattern.CASE_INSENSITIVE);
+    protected Pattern escapePhrasePattern = Pattern.compile("([\"\\\\])", Pattern.CASE_INSENSITIVE);
+
     /**
      * Build the query string for a search server.
+     *
      * @param query              the query to process
      * @param configuration
      * @param searchServerConfig
@@ -68,8 +74,10 @@ public class QueryBuilder implements QueryBuilderIfc
     public String getStaticallyAddedQueries(Configuration configuration, SearchServerConfig searchServerConfig,
         Locale locale, QueryTarget target, String result)
     {
-        List<String> newQueriesToAdd = new ArrayList<>(); AddOperation addOp = new AddOperation();
-        Map<String, List<Target>> allAddQueryTargets = searchServerConfig.findAllAddQueryMappings(AddLevel.OUTSIDE, target);
+        List<String> newQueriesToAdd = new ArrayList<>();
+        AddOperation addOp = new AddOperation();
+        Map<String, List<Target>> allAddQueryTargets = searchServerConfig.findAllAddQueryMappings(AddLevel.OUTSIDE,
+            target);
         for (Map.Entry<String, List<Target>> entry : allAddQueryTargets.entrySet())
         {
             String searchServerFieldName = entry.getKey();
@@ -175,11 +183,18 @@ public class QueryBuilder implements QueryBuilderIfc
             added = true;
             queryBuilder.append(term.getSearchServerFieldName());
             queryBuilder.append(":");
+            Pattern p = null;
             if (quoted)
             {
                 queryBuilder.append('"');
+                p = escapePhrasePattern;
             }
-            queryBuilder.append(term.getSearchServerFieldValue().get(0));
+            else
+            {
+                p = escapePattern;
+            }
+            String s = escape(p, term.getSearchServerFieldValue().get(0));
+            queryBuilder.append(s);
             if (quoted)
             {
                 queryBuilder.append('"');
@@ -188,6 +203,12 @@ public class QueryBuilder implements QueryBuilderIfc
         }
 
         return added;
+    }
+
+    protected String escape(Pattern p, String s)
+    {
+        Matcher m = p.matcher(s);
+        return m.replaceAll("\\\\$1");
     }
 
     protected void handleMetaInfo(MetaInfo metaInfo, StringBuilder builder)
@@ -378,14 +399,15 @@ public class QueryBuilder implements QueryBuilderIfc
 
         String subQueryStr = newQueryBuilder.buildQueryString(subQuery, configuration, searchServerConfig, locale,
             defaultSearchServerSearchFields, target);
-        subQueryStr = newQueryBuilder.getStaticallyAddedQueries(configuration,searchServerConfig,locale,target,subQueryStr);
+        subQueryStr = newQueryBuilder.getStaticallyAddedQueries(configuration, searchServerConfig, locale, target,
+            subQueryStr);
         MetaInfo metaInfo = subQuery.getMetaInfo();
         // dismax builder doesn't output {!dismax ...}, but edismax should
-        if(metaInfo != null && subQuery.isDismaxQuery() && MetaInfo.DISMAX_PARSER.equals(metaInfo.getName()))
+        if (metaInfo != null && subQuery.isDismaxQuery() && MetaInfo.DISMAX_PARSER.equals(metaInfo.getName()))
         {
             StringBuilder sb = new StringBuilder();
             handleMetaInfo(metaInfo, sb);
-            subQueryStr = sb.toString()+subQueryStr;
+            subQueryStr = sb.toString() + subQueryStr;
         }
         queryBuilder.append(subQueryStr.replace("\"", "\\\""));
         queryBuilder.append("\"");
