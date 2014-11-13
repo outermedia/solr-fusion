@@ -33,7 +33,7 @@ import java.util.Map;
 
 /**
  * A helper class which is used to store Solr HTTP request parameters which might have multiple values.
- *
+ * <p/>
  * Created by ballmann on 8/8/14.
  */
 @EqualsAndHashCode
@@ -125,5 +125,10 @@ public class Multimap<V>
     public void delete(String key)
     {
         map.removeAll(key);
+    }
+
+    public boolean isEmpty()
+    {
+        return map.isEmpty();
     }
 }

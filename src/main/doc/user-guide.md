@@ -316,7 +316,23 @@ is needed.
 Script Types are used to convert data contained in a SolrFusion query to data needed by a Solr server. Also they are applied
  to Solr document fields to create SolrFusion values. In general Script Types work on a java.util.List<java.lang.String>
 and return either a java.lang.String or a java.util.List<java.lang.String>. The incoming list is maybe empty or can
-contain null entries.
+contain null entries. 
+
+When Solr facets are processed a second java.util.List<java.lang.Integer> is used to represent the document counts. 
+Because the association of value and document count is based on the index in the lists, it is important to adjust the 
+document count list when the size of the value list is changed.
+
+Especially for the conversion of Solr __queries__, two different kinds of ScriptType implementations exist. One kind
+returns full maybe complex sub-queries which are inserted unmodified into the query to process. The other kind only 
+returns converted values for which the destination field is automatically prepended (taken from the current rule) and
+no manual specification is permitted. If ignored syntactically wrong queries are created e.g.  
+"permission:permission:employees" instead of "permission:employees".
+
+The next chapters describe all existing ScriptType implementations. In every chapter you will find a comment like
+
+    <!-- returnsFullQueries=true|false -->
+    
+which documents the ScriptType's kind.   
 
 Additional context information is provided in a ScriptEnv (Java) object, which contains the following entries.
  
@@ -358,6 +374,11 @@ Outgoing: To be set by scripting languages only. Java implementations return an 
 * __returnDocCounts__ -  if __mapFacetValue__ is true and the order or number of values is modified then the facet
     document counts need to be adjusted too; the default value is the original document count list
  
+Special internally used variables:
+
+ * __dismaxWordCache__ - a Set&lt;String&gt; which is a search word cache used by the dismax query builder in order to 
+    deduplicate search words.
+ 
 These entries are directly accessible via simple variable names in the scripting languages supported by Java (e.g. [Javascript](#javascript) and
 [Bean Shell](#bean-shell)). In Java implementations the ScriptEnv methods have to be used to access these context variables.
 
@@ -380,7 +401,9 @@ Only ScriptTypes used in mappings have to be declared.
 Convert values by the use of Javascript code.
 Example declaration:  
 
+    <!-- returnsFullQueries=true -->
     <om:script-type name="javascript-file" class="org.outermedia.solrfusion.types.JsFile" />
+    <!-- returnsFullQueries=true -->
     <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js" />
 
 It is possible to embed the Javascript code into the XML (*.Js) or an external file (*.JsFile). Example mapping:
@@ -390,7 +413,8 @@ It is possible to embed the Javascript code into the XML (*.Js) or an external f
             <om:response type="javascript">
                 <script><![CDATA[
                     importClass(java.text.SimpleDateFormat);
-                    importClass(java.util.GregorianCalendar);
+                    importPackage(java.util);
+                    importClass(java.lang.Integer);
                     var now = new GregorianCalendar(2014, 6, 19);
                     var fmt = new SimpleDateFormat("yyyy-MM-dd");
                     // predefined variables: see ScriptEnv.ENV_*
@@ -404,7 +428,9 @@ It is possible to embed the Javascript code into the XML (*.Js) or an external f
                     print("Fusion Schema      : "+fusionSchema+"\n");
                     print("Doc Count          : "+facetDocCount+"\n");
                     returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
-                    returnDocCounts = ["4", "1", "3", "2"];
+                    // Attention: Javascript int literals are Doubles in Java!
+                    returnDocCounts = Arrays.asList(Integer.valueOf("4"), Integer.valueOf("1"),
+                        Integer.valueOf("3"), Integer.valueOf("2"));                    
                 ]]></script>
             </om:response>
          </om:change>
@@ -425,14 +451,16 @@ Note: The file is not classpath based loaded. This means, when relative paths ar
 server (and installation) what the current working directory is.
 
 Hint: When the Javascript code simply returns an integer number, this would be rendered as e.g. "2.0" which is not desired (in Javascript numbers are always floats).
-Simply use x.toFixed() to get rid of the fractional digits.
+Simply use x.toFixed() to get rid of the fractional digits. Be aware that toFixed() returns a String object.
 
 
 ### Bean Shell
 Convert values by the use of Bean Shell code.
 Example declaration:  
 
+    <!-- returnsFullQueries=true -->
     <om:script-type name="beanshell-file" class="org.outermedia.solrfusion.types.BshFile" />
+    <!-- returnsFullQueries=true -->
     <om:script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh" />
     
 It is possible to embed the Beanshell code into the XML (*.Bsh) or an external file (*.BshFile). Example mapping:
@@ -460,8 +488,8 @@ It is possible to embed the Beanshell code into the XML (*.Bsh) or an external f
                     print("Map highlight doc? : "+mapHighlightValue);
                     returnValues = searchServerValue.get(0)+" at "+fmt.format(now.getTime().getTime());
                     returnDocCounts = new ArrayList();
-                    returnDocCounts.add("4");
-                    returnDocCounts.add("1");
+                    returnDocCounts.add(4);
+                    returnDocCounts.add(1);
                 ]]></script>
             </om:response>
          </om:change>
@@ -481,10 +509,13 @@ The file test-bsh-file.bsh contains the code of the CDATA above.
 Note: The file is not classpath based loaded. This means, when relative paths are used, it depends on your applications 
 server (and installation) what the current working directory is.
 
+Hint: In order to check whether a variable is defined or not use: `<var name>` != void.
+
 ### Regular Expressions
 Convert values by the use of regular expressions. The supported format is described [here](http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html "Java Regular Expressions").
 Example declaration:  
 
+    <!-- returnsFullQueries=false -->
     <om:script-type name="regexp" class="org.outermedia.solrfusion.types.RegularExpression"/>
 
 Example usage: Swap first name and last name
@@ -499,10 +530,12 @@ Example usage: Swap first name and last name
     </om:field>
 
 ### Tables
-Map values by the use of a one-to-one relation.
+Map values by the use of a one-to-many relation.
 Example declaration:  
 
+    <!-- returnsFullQueries=false -->
     <om:script-type name="static-table-file" class="org.outermedia.solrfusion.types.TableFile"/>
+    <!-- returnsFullQueries=false -->    
     <om:script-type name="static-table" class="org.outermedia.solrfusion.types.Table"/>
 
 It is possible to embed the table data into the XML (*.Table) or an external file (*.TableFile). Example mapping:
@@ -518,11 +551,15 @@ It is possible to embed the table data into the XML (*.Table) or an external fil
                     <value>u2</value>
                     <fusion-value>user2</fusion-value>
                 </entry>
+                <entry>
+                    <value>u2</value>
+                    <fusion-value>user3</fusion-value>
+                </entry>                
             </om:query-response>
         </om:change>
     </om:field>
     
-The declaration above connects "u1" to "user1" and "u2" to "user2". The definition needs to be bijective. 
+The declaration above connects "u1" to "user1" and "u2" to "user2". The definition needs not to be bijective. 
 External file example:
 
     <om:field name="f7" fusion-name="text3">
@@ -554,6 +591,7 @@ server (and installation) what the current working directory is.
 Set (overwrite) values. It is possible to return one ore more values.
 Example declaration:  
 
+    <!-- returnsFullQueries=true -->
     <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
 
 Example mapping:
@@ -574,6 +612,7 @@ In the case that a value is set for a facet, the document count is automatically
 Flattening multiple values of one field to one value is necessary when the destination field is a single value.
 Example declaration:
 
+    <!-- returnsFullQueries=false -->
     <om:script-type name="merge-multi-value" class="org.outermedia.solrfusion.types.MultiValueMerger"/>
 
 Example mapping:
@@ -607,6 +646,7 @@ SolrFusion creates own ids in order to be able to send queries based on a docume
 trying all configured Solr servers).
 Example declaration:
 
+    <!-- returnsFullQueries=false -->
     <om:script-type name="filter-id" class="org.outermedia.solrfusion.types.IdFilter"/>
 
 Example mapping:
@@ -625,6 +665,7 @@ Merge several Solr fields and their values into one fusion field. Depending on t
 either one or several values are created. So this ScriptType is only applicable to Solr responses.
 Example declaration:
 
+    <!-- returnsFullQueries=false -->
     <om:script-type name="field-merger" class="org.outermedia.solrfusion.types.FieldMerger"/>
 
 Example mapping:
@@ -648,6 +689,7 @@ specified by `<separator>`.
 Especially for SolrFusion's sorting it is necessary to use comparable strings. Therefor this ScriptType allows to build such strings.
 Example declaration:
 
+    <!-- returnsFullQueries=false -->
     <om:script-type name="normalizer" class="org.outermedia.solrfusion.types.Normalizer"/>
         
 Example mapping:
@@ -673,6 +715,7 @@ The "normalizer" supports three actions:
 The "Simple Values" ScriptType uses 1 as document count when a facet is added. If this is not suitable, the "Set Facet Doc Count"
 ScriptType offers more flexibility. Example declaration:
 
+    <!-- returnsFullQueries=false -->
     <om:script-type name="set-doc-count" class="org.outermedia.solrfusion.types.SetFacetDocCount"/>
 
 Example mapping:

@@ -208,7 +208,7 @@ public class DropTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 298: Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target.",
+                "In fusion schema at line 301: Invalid configuration: Found <om:drop> without <om:response> or <om:query-response> target.",
                 e.getMessage());
         }
 
@@ -226,7 +226,7 @@ public class DropTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 303: Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target.",
+                "In fusion schema at line 306: Invalid configuration: Found <om:drop> without <om:query> or <om:query-response> target.",
                 e.getMessage());
         }
     }

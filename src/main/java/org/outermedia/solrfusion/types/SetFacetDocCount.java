@@ -102,7 +102,7 @@ public class SetFacetDocCount extends AbstractType
             v = (Integer) env.getBinding(ScriptEnv.ENV_IN_TOTAL_DOC_NR);
         }
         facetDocCounts.set(0, v);
-        return new TypeResult(values, facetDocCounts);
+        return new TypeResult(values, facetDocCounts, isReturnsFullQueries());
     }
 
     public static SetFacetDocCount getInstance()

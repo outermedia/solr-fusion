@@ -46,7 +46,7 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
 {
     @Override public void passArguments(List<Element> typeConfig, Util util)
     {
-        // NOP
+        setReturnsFullQueries(true);
     }
 
     @Override public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
@@ -76,7 +76,13 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
             }
             else
             {
-                qb = fusionRequest.getQueryBuilder(configuration, searchServerConfig, false);
+                boolean ignoreQT = false;
+                // qt does not affect filter or highlight queries!
+                if(target == QueryTarget.FILTER_QUERY || target == QueryTarget.HIGHLIGHT_QUERY)
+                {
+                    ignoreQT = true;
+                }
+                qb = fusionRequest.getQueryBuilder(configuration, searchServerConfig, ignoreQT);
             }
             Set<String> defaultSearchServerSearchFields = fusionRequest.mapFusionFieldToSearchServerField(
                 configuration.getDefaultSearchField(), configuration, searchServerConfig, null, QueryTarget.QUERY);
@@ -86,7 +92,7 @@ public class CopyFusionTermQueryToSearchServerQuery extends AbstractType
             {
                 newValues = new ArrayList<>();
                 newValues.add(qs);
-                result = new TypeResult(newValues, facetDocCounts);
+                result = new TypeResult(newValues, facetDocCounts, isReturnsFullQueries());
             }
         }
         catch (Exception e)

@@ -74,6 +74,7 @@ public class Js extends AbstractType
     {
         code = getConfigString("script", typeConfig, util);
         logBadConfiguration(code != null, typeConfig);
+        setReturnsFullQueries(true);
     }
 
     @Override

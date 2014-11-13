@@ -89,7 +89,7 @@ public class RegularExpression extends AbstractType
         ConversionDirection dir)
     {
         List<String> newValues = new ArrayList<>();
-        TypeResult result = new TypeResult(newValues, facetDocCounts);
+        TypeResult result = new TypeResult(newValues, facetDocCounts, isReturnsFullQueries());
         for (String v : values)
         {
             if (v != null)

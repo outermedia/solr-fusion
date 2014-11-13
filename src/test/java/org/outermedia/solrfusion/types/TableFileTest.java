@@ -63,8 +63,8 @@ public class TableFileTest extends AbstractTypeTest
 
         String fusion2search = tableType.getFusionToSearchServer().toString();
         String search2fusion = tableType.getSearchServerToFusion().toString();
-        Assert.assertEquals("Parsing of configuration failed.", "{user2=u2, user1=u1}", fusion2search);
-        Assert.assertEquals("Parsing of configuration failed.", "{u2=user2, u1=user1}", search2fusion);
+        Assert.assertEquals("Parsing of configuration failed.", "{user2=[u2], user1=[u1]}", fusion2search);
+        Assert.assertEquals("Parsing of configuration failed.", "{u2=[user2], u1=[user1]}", search2fusion);
     }
 
     @Test

@@ -22,6 +22,8 @@ package org.outermedia.solrfusion.types;
  * #L%
  */
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.Initiable;
@@ -44,6 +46,8 @@ import java.util.List;
 @Slf4j
 public abstract class AbstractType implements Initiable<ScriptType>
 {
+    @Getter @Setter
+    private boolean returnsFullQueries = false;
 
     /**
      * Pass global configuration to the instance.
@@ -144,7 +148,7 @@ public abstract class AbstractType implements Initiable<ScriptType>
             {
                 returnValues.add(evaluated.toString());
             }
-            result = new TypeResult(returnValues, returnDocCounts);
+            result = new TypeResult(returnValues, returnDocCounts, returnsFullQueries);
         }
         return result;
     }

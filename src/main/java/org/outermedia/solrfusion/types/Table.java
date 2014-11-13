@@ -26,14 +26,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.Multimap;
 import org.outermedia.solrfusion.configuration.Util;
 import org.w3c.dom.Element;
 
 import javax.xml.transform.TransformerException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A fusionToSearchServer table, embedded in the xml, is used to replace field values.
@@ -47,15 +48,15 @@ import java.util.Map;
 @Setter
 public class Table extends AbstractType
 {
-    private Map<String, String> fusionToSearchServer;
-    private Map<String, String> searchServerToFusion;
+    private Multimap<String> fusionToSearchServer;
+    private Multimap<String> searchServerToFusion;
 
     private boolean keepUnmappedValues = true;
 
     protected Table()
     {
-        fusionToSearchServer = new HashMap<>();
-        searchServerToFusion = new HashMap<>();
+        fusionToSearchServer = new Multimap<>();
+        searchServerToFusion = new Multimap<>();
     }
 
     /**
@@ -127,7 +128,7 @@ public class Table extends AbstractType
     {
         TypeResult result = null;
         List<String> newValues = new ArrayList<>();
-        Map<String, String> mapping = null;
+        Multimap<String> mapping = null;
         if (dir == ConversionDirection.SEARCH_TO_FUSION)
         {
             mapping = searchServerToFusion;
@@ -140,7 +141,7 @@ public class Table extends AbstractType
         {
             throw new RuntimeException("Unsupported conversion direction: " + dir);
         }
-        result = new TypeResult(newValues, facetDocCounts);
+        result = new TypeResult(newValues, facetDocCounts, isReturnsFullQueries());
         List<Integer> newFacetDocCounts = new ArrayList<>();
         int i = 0;
         for (String v : values)
@@ -152,16 +153,17 @@ public class Table extends AbstractType
             }
             else
             {
-                String nv = mapping.get(v);
+                Collection<String> nv = mapping.get(v);
                 if (nv != null)
                 {
-                    storeMappedValue(facetDocCounts, newValues, newFacetDocCounts, i, nv);
+                    storeMappedValue(facetDocCounts, newValues, newFacetDocCounts, i, nv, env);
                 }
                 else
                 {
                     if (keepUnmappedValues)
                     {
-                        storeMappedValue(facetDocCounts, newValues, newFacetDocCounts, i, v);
+                        List<String> vAsList = Arrays.asList(v);
+                        storeMappedValue(facetDocCounts, newValues, newFacetDocCounts, i, vAsList, env);
                     }
                     Object fusionField = env.getBinding(ScriptEnv.ENV_IN_FUSION_FIELD);
                     Object searchServerField = env.getBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD);
@@ -185,12 +187,21 @@ public class Table extends AbstractType
     }
 
     protected void storeMappedValue(List<Integer> facetDocCounts, List<String> newValues,
-        List<Integer> newFacetDocCounts, int i, String nv)
+        List<Integer> newFacetDocCounts, int i, Collection<String> nv, ScriptEnv env)
     {
-        newValues.add(nv);
+        newValues.addAll(nv);
         if (facetDocCounts != null)
         {
-            newFacetDocCounts.add(facetDocCounts.get(i));
+            Object docCount = facetDocCounts.get(i);
+            if(docCount instanceof String)
+            {
+                log.error("EXPECTED INT " + env.getBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD)+"=f="+docCount, new Exception("TEST"));
+            }
+            // correct facet doc count list
+            for(String unused : nv)
+            {
+                newFacetDocCounts.add((Integer)docCount);
+            }
         }
     }
 

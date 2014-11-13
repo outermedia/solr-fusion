@@ -58,7 +58,8 @@ public class FilterEmptyFq extends AbstractType
     @Override public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
         ConversionDirection dir)
     {
-        TypeResult result = new TypeResult(Arrays.asList(PostProcessorStatus.CONTINUE.name()), null);
+        TypeResult result = new TypeResult(Arrays.asList(PostProcessorStatus.CONTINUE.name()), null,
+            isReturnsFullQueries());
         List<ParsedQuery> filterQueries = (List<ParsedQuery>) env.getBinding(ScriptEnv.ENV_IN_MAPPED_FILTER_QUERIES);
         if (filterQueries != null)
         {

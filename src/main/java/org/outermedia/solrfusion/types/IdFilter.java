@@ -33,7 +33,7 @@ import java.util.List;
 
 /**
  * Remove the id query term from a query if the id references no document of the currently used Solr server.
- *
+ * <p/>
  * Created by ballmann on 8/18/14.
  */
 @Slf4j
@@ -70,14 +70,15 @@ public class IdFilter extends AbstractType
                         if (sourceSearchServer.equals(searchServerConfig.getSearchServerName()))
                         {
                             result = new TypeResult(
-                                Arrays.asList(idGen.getSearchServerDocIdFromFusionId(mergedFusionId)), null);
+                                Arrays.asList(idGen.getSearchServerDocIdFromFusionId(mergedFusionId)), null,
+                                isReturnsFullQueries());
                             break;
                         }
                     }
                     if (result == null)
                     {
                         // remove value
-                        result = new TypeResult(null, null);
+                        result = new TypeResult(null, null, false);
                     }
                 }
                 catch (Exception e)
@@ -88,7 +89,7 @@ public class IdFilter extends AbstractType
             else
             {
                 // search server id to fusion id: prefix will be added later
-                result = new TypeResult(values, null);
+                result = new TypeResult(values, null, isReturnsFullQueries());
             }
         }
         return result;

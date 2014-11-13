@@ -74,6 +74,7 @@ public class Bsh extends AbstractType
     {
         code = getConfigString("script", typeConfig, util);
         logBadConfiguration(code != null, typeConfig);
+        setReturnsFullQueries(true);
     }
 
     /**

@@ -82,7 +82,7 @@ public class Normalizer extends AbstractType
                 result.add(v);
             }
         }
-        return new TypeResult(result, facetDocCounts);
+        return new TypeResult(result, facetDocCounts, isReturnsFullQueries());
     }
 
     public static Normalizer getInstance()

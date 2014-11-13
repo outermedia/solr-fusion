@@ -116,6 +116,7 @@ public class QueryMapper implements QueryVisitor, QueryMapperIfc, MetaParamsVisi
             else if (noMappingPolicy.equals(NO_MAPPING_DELETE))
             {
                 t.setRemoved(true);
+                t.setWasMapped(true);
                 log.warn("Found no mapping of fusion field '{}' for server {}. Deleting query part.", fusionFieldName,
                     serverConfig.getSearchServerName());
             }

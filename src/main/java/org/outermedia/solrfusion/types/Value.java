@@ -64,6 +64,7 @@ public class Value extends AbstractType
     @Override
     public void passArguments(List<Element> typeConfig, Util util)
     {
+        setReturnsFullQueries(true);
         values = new ArrayList<>();
 
         /* unfortunately the ":" is necessary for the empty xml namespace!
@@ -110,7 +111,7 @@ public class Value extends AbstractType
                 facetDocCounts.add(1);
             }
         }
-        return new TypeResult(this.values, facetDocCounts);
+        return new TypeResult(this.values, facetDocCounts, isReturnsFullQueries());
     }
 
     public static Value getInstance()

@@ -78,7 +78,7 @@ public class AddTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 310: Please specify a field for attribute 'name' in order to add something to a query.",
+                "In fusion schema at line 313: Please specify a field for attribute 'name' in order to add something to a query.",
                 e.getMessage());
         }
 
@@ -95,7 +95,7 @@ public class AddTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 355: Please specify the level attribute when <om:add> is used for queries. Possible values are 'inside' and 'outside'.",
+                "In fusion schema at line 358: Please specify the level attribute when <om:add> is used for queries. Possible values are 'inside' and 'outside'.",
                 e.getMessage());
         }
 
@@ -113,7 +113,7 @@ public class AddTest extends AbstractTypeTest
         catch (Exception e)
         {
             Assert.assertEquals("Got other error message than expected",
-                "In fusion schema at line 317: Please specify a field for attribute 'fusion-name' in order to add something to a response.",
+                "In fusion schema at line 320: Please specify a field for attribute 'fusion-name' in order to add something to a response.",
                 e.getMessage());
         }
     }

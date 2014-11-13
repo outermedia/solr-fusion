@@ -43,4 +43,6 @@ public class TypeResult
     private List<String> values;
 
     private List<Integer> docCounts;
+
+    private boolean returnsFullQueries;
 }

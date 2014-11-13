@@ -63,8 +63,9 @@ public class AddOperation extends Operation
     }
 
     @Override
-    protected void applyOneQueryOperation(Term term, ScriptEnv env, Target t)
+    protected boolean applyOneQueryOperation(Term term, ScriptEnv env, Target t)
     {
+        boolean result = false;
         // outside added queries will be handled later
         if (level == AddLevel.INSIDE)
         {
@@ -75,9 +76,12 @@ public class AddOperation extends Operation
                 ConversionDirection.FUSION_TO_SEARCH);
             if (opResult != null)
             {
-                term.addNewSearchServerQuery(true, opResult.getValues(), env.getConfiguration(), env.getLocale());
+                result = opResult.isReturnsFullQueries();
+                term.addNewSearchServerQuery(true, opResult.getValues(), env.getConfiguration(), env.getLocale(),
+                    !result);
             }
         }
+        return result;
     }
 
     @Override
@@ -128,8 +132,8 @@ public class AddOperation extends Operation
     {
         Term term = Term.newSearchServerTerm(searchServerFieldName);
         ScriptEnv env = getQueryScriptEnv(term, new ScriptEnv());
-        super.applyOneQueryOperation(term, env, t);
-        term.addNewSearchServerQuery(false, term.getSearchServerFieldValue(), configuration, locale);
+        boolean returnsFullQueries = super.applyOneQueryOperation(term, env, t);
+        term.addNewSearchServerQuery(false, term.getSearchServerFieldValue(), configuration, locale, !returnsFullQueries);
         List<String> newQueries = term.getNewQueries();
         return newQueries;
     }

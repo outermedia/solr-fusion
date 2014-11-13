@@ -53,13 +53,18 @@ public class TableTest extends AbstractTypeTest
     public void testConfigParsing() throws IOException, SAXException, ParserConfigurationException, TransformerException
     {
         String xml = docOpen + "<entry>\n" +
-                "                   <value>u1</value>\n" +
-                "                   <fusion-value>user1</fusion-value>\n" +
-                "               </entry>\n" +
-                "               <entry>\n" +
-                "                   <value>u2</value>\n" +
-                "                   <fusion-value>user2</fusion-value>\n" +
-                "               </entry>" + docClose;
+            "                   <value>u1</value>\n" +
+            "                   <fusion-value>user1</fusion-value>\n" +
+            "               </entry>\n" +
+            "               <entry>\n" +
+            "                   <value>u2</value>\n" +
+            "                   <fusion-value>user2</fusion-value>\n" +
+            "               </entry>\n" +
+            "               <entry>\n" +
+            "                   <value>u2</value>\n" +
+            "                   <fusion-value>user3</fusion-value>\n" +
+            "               </entry>\n" +
+            docClose;
 
         Util util = new Util();
         Element elem = util.parseXml(xml);
@@ -70,8 +75,8 @@ public class TableTest extends AbstractTypeTest
 
         String fusion2search = tableType.getFusionToSearchServer().toString();
         String search2fusion = tableType.getSearchServerToFusion().toString();
-        Assert.assertEquals("Parsing of configuration failed.", "{user2=u2, user1=u1}", fusion2search);
-        Assert.assertEquals("Parsing of configuration failed.", "{u2=user2, u1=user1}", search2fusion);
+        Assert.assertEquals("Parsing of configuration failed.", "{user2=[u2], user1=[u1], user3=[u2]}", fusion2search);
+        Assert.assertEquals("Parsing of configuration failed.", "{u2=[user3, user2], u1=[user1]}", search2fusion);
     }
 
     @Test
@@ -94,7 +99,7 @@ public class TableTest extends AbstractTypeTest
 
     @Test
     public void testResponseMapping()
-            throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
         ResponseMapperIfc rm = ResponseMapper.Factory.getInstance();
@@ -106,17 +111,18 @@ public class TableTest extends AbstractTypeTest
         Term sourceField = buildResponseField(doc, "f6", "u2", "u1");
 
         ScriptEnv env = new ScriptEnv();
-        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null, ResponseTarget.ALL, true);
+        rm.mapResponse(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), doc, env, null,
+            ResponseTarget.ALL, true);
         Assert.assertTrue("Expected that term was mapped", sourceField.isWasMapped());
         // System.out.println(sourceField.toString());
         Assert.assertEquals("Found wrong field name mapping", "text2", sourceField.getFusionFieldName());
         Assert.assertEquals("Found wrong field value mapping", Arrays.asList("user2", "user1"),
-                sourceField.getFusionFieldValue());
+            sourceField.getFusionFieldValue());
     }
 
     @Test
     public void testQueryMapping()
-            throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
+        throws FileNotFoundException, ParserConfigurationException, SAXException, JAXBException
     {
         Configuration cfg = helper.readFusionSchemaWithoutValidation("test-script-types-fusion-schema.xml");
         QueryMapperIfc qm = QueryMapper.Factory.getInstance();
@@ -126,11 +132,11 @@ public class TableTest extends AbstractTypeTest
         Query query = new TermQuery(term);
 
         ScriptEnv env = new ScriptEnv();
-        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), query, env, null, QueryTarget.ALL);
+        qm.mapQuery(cfg, cfg.getSearchServerConfigs().getSearchServerConfigs().get(0), query, env, null,
+            QueryTarget.ALL);
         Assert.assertTrue("Expected that term was mapped", term.isWasMapped());
         // System.out.println(term.toString());
         Assert.assertEquals("Found wrong field name mapping", "f6", term.getSearchServerFieldName());
-        Assert.assertEquals("Found wrong field value mapping", Arrays.asList("u1"),
-                term.getSearchServerFieldValue());
+        Assert.assertEquals("Found wrong field value mapping", Arrays.asList("u1"), term.getSearchServerFieldValue());
     }
 }

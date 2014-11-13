@@ -195,17 +195,21 @@ public class Term
      * @param searchServerFieldValue one complete search server query
      */
     public void addNewSearchServerQuery(boolean inside, List<String> searchServerFieldValue,
-        Configuration configuration, Locale locale)
+        Configuration configuration, Locale locale, boolean addField)
     {
         if (newQueries == null)
         {
             newQueries = new ArrayList<>();
         }
-        // TODO throw exception if searchServerFieldValue.size() == 0
+        // TODO what if searchServerFieldValue.size() == 0?!
         for (String qs : searchServerFieldValue)
         {
             // qs contains whole query, otherwise it would be difficult to mix-in the field name, because complex
             // queries are possible here
+            if (inside && searchServerFieldName != null && addField)
+            {
+                qs = searchServerFieldName + ":" + qs;
+            }
             newQueries.add(qs);
         }
         setWasMapped(true);

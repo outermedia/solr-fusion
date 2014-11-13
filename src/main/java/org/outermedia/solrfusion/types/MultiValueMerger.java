@@ -101,7 +101,7 @@ public class MultiValueMerger extends AbstractType
                 newFacetDocCounts = new ArrayList<>();
                 newFacetDocCounts.add(facetDocCount);
             }
-            result = new TypeResult(newValues, newFacetDocCounts);
+            result = new TypeResult(newValues, newFacetDocCounts, isReturnsFullQueries());
         }
         return result;
     }

@@ -51,7 +51,7 @@ public class CopySearchServerFieldToFusionField extends AbstractType
         {
             newValues = new ArrayList<>();
             newValues.addAll(values);
-            result = new TypeResult(newValues, facetDocCounts);
+            result = new TypeResult(newValues, facetDocCounts, isReturnsFullQueries());
         }
         return result;
     }

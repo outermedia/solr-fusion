@@ -120,6 +120,12 @@ public class TermQuery extends Query
     public boolean isSearchServerFieldEmpty()
     {
         List<String> searchServerValues = getSearchServerFieldValue();
-        return searchServerValues == null || searchServerValues.isEmpty() || term.isRemoved();
+        // it is possible to remove a term, but add new term "inside"!
+        if (term.getNewQueries() != null)
+        {
+            return false;
+        }
+        return searchServerValues == null || searchServerValues.isEmpty() ||
+            term.isRemoved();
     }
 }

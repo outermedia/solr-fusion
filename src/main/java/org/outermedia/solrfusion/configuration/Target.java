@@ -93,6 +93,10 @@ public abstract class Target
                 {
                     typeImpl.passArguments(typeConfig, util);
                     result = typeImpl.apply(values, facetDocCounts, env, dir);
+                    if (result != null)
+                    {
+                        result.setReturnsFullQueries(typeImpl.isReturnsFullQueries());
+                    }
                 }
                 else
                 {
@@ -101,7 +105,11 @@ public abstract class Target
             }
             catch (Exception e)
             {
-                log.error("Caught exception while applying " + type + " to " + this, e);
+                String fusionField = env.getStringBinding(ScriptEnv.ENV_IN_FUSION_FIELD);
+                String searchServerField = env.getStringBinding(ScriptEnv.ENV_IN_SEARCH_SERVER_FIELD);
+                log.error("Caught exception while applying " + type + " to " + this + "\nfusionField=" + fusionField +
+                    "\nsearchServerField=" + searchServerField + "\nvalues=" + values + "\ndocCounts=" + facetDocCounts,
+                    e);
             }
         }
         return result;

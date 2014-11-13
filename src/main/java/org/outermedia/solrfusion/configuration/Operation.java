@@ -209,18 +209,21 @@ public abstract class Operation
         return newEnv;
     }
 
-    protected void applyOneQueryOperation(Term term, ScriptEnv newEnv, Target t)
+    protected boolean applyOneQueryOperation(Term term, ScriptEnv newEnv, Target t)
     {
         // the searchServerFieldValue is initialized with the fusionFieldValue
         // because it is possible to apply several mappings in sequence the searchServerFieldValue
         // has to be used
         TypeResult opResult = t.apply(term.getSearchServerFieldValue(), term.getSearchServerFacetCount(), newEnv,
             ConversionDirection.FUSION_TO_SEARCH);
+        boolean result = false;
         if (opResult != null)
         {
             term.setSearchServerFieldValue(opResult.getValues());
             term.setSearchServerFacetCount(opResult.getDocCounts());
+            result = opResult.isReturnsFullQueries();
         }
+        return result;
     }
 
     public void applyAllResponseOperations(Term term, ScriptEnv env, ResponseTarget target, int lineNumber)

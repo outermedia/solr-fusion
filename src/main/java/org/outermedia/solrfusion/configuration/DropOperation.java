@@ -62,6 +62,7 @@ public class DropOperation extends Operation
         if (!queryTargets.isEmpty())
         {
             term.setRemoved(true);
+            term.setWasMapped(true);
             term.setSearchServerFieldValue(null);
         }
     }

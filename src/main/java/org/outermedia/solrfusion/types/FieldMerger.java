@@ -198,7 +198,7 @@ public class FieldMerger extends AbstractType
             allDocCounts = null;
         }
 
-        return new TypeResult(allValues, allDocCounts);
+        return new TypeResult(allValues, allDocCounts, isReturnsFullQueries());
     }
 
     public static FieldMerger getInstance()

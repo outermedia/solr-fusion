@@ -22,6 +22,7 @@ package org.outermedia.solrfusion.types;
  * #L%
  */
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -45,6 +46,7 @@ import java.util.Arrays;
 /**
  * Created by ballmann on 6/19/14.
  */
+@Slf4j
 public class JsTest extends AbstractTypeTest
 {
     @SuppressWarnings("unchecked") @Test
@@ -97,7 +99,7 @@ public class JsTest extends AbstractTypeTest
         Assert.assertEquals("Found wrong field name mapping", "today3", sourceField.getFusionFieldName());
         Assert.assertEquals("Found wrong field value mapping", Arrays.asList("something at 2014-07-19"),
             sourceField.getFusionFieldValue());
-        Assert.assertEquals("Found wrong facet doc counts", Arrays.asList("4", "1", "3", "2"),
+        Assert.assertEquals("Found wrong facet doc counts", Arrays.asList(4, 1, 3, 2),
             sourceField.getFusionFacetCount());
     }
 
