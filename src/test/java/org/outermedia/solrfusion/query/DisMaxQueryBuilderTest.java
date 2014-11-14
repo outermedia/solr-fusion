@@ -443,5 +443,15 @@ public class DisMaxQueryBuilderTest
             QueryTarget.ALL);
         Assert.assertEquals("Got different query than expected", "\"urn:nbn:de:bsz:14-qucosa-(108346)\\\"\"", qs);
 
+        qb = QueryBuilder.Factory.getInstance();
+        term = Term.newSearchServerTerm("title", "text space");
+        term.setWasMapped(true);
+        qs = buildQueryString(qb, new TermQuery(term), cfg, searchServerConfig, locale, Sets.newHashSet("title"),
+            QueryTarget.ALL);
+        Assert.assertEquals("Got different query than expected", "title:\"text space\"", qs);
+
+        DisMaxQueryBuilder builder = (DisMaxQueryBuilder) getDismaxQueryBuilder();
+        qs = builder.escape(builder.getEscapePattern(), "a:\\?\\*:?:*:b");
+        Assert.assertEquals("Got different query than expected", "a\\:\\?\\*\\:?\\:*\\:b", qs);
     }
 }

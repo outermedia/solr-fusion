@@ -80,4 +80,12 @@ public interface QueryBuilderIfc extends QueryVisitor, Initiable<QueryBuilderFac
      */
     public String getStaticallyAddedQueries(Configuration configuration, SearchServerConfig searchServerConfig,
         Locale locale, QueryTarget target, String result);
+
+    /**
+     * Build a valid solr phrase from a search word.
+     * @param queryBuilder
+     * @param quoted
+     * @param searchWord
+     */
+    public void escapeSearchWord(StringBuilder queryBuilder, boolean quoted, String searchWord);
 }

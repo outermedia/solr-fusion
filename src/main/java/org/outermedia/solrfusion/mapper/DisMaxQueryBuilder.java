@@ -22,6 +22,7 @@ package org.outermedia.solrfusion.mapper;
  * #L%
  */
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.query.parser.*;
@@ -30,7 +31,6 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
  * @author stephan / sballmann
  */
 @Slf4j
-public class DisMaxQueryBuilder implements QueryBuilderIfc
+public class DisMaxQueryBuilder extends AbstractQueryBuilder
 {
     protected List<Query> newQueries;
     protected StringBuilder queryBuilder;
@@ -51,8 +51,8 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
     protected QueryTarget target;
     protected Set<String> addedSearchWords;
 
+    @Getter
     protected Pattern escapePattern = Pattern.compile("([-:\\+\\(\\)\"\\\\])", Pattern.CASE_INSENSITIVE);
-    protected Pattern escapePhrasePattern = Pattern.compile("([\"\\\\])", Pattern.CASE_INSENSITIVE);
 
 
     /**
@@ -208,22 +208,7 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
                     addedSearchWords.add(s);
                     handleMetaInfo(origQuery.getMetaInfo(), queryBuilder);
                     added = true;
-                    Pattern p = null;
-                    if (quoted)
-                    {
-                        queryBuilder.append('"');
-                        p = escapePhrasePattern;
-                    }
-                    else
-                    {
-                        p = escapePattern;
-                    }
-                    s = escape(p, s);
-                    queryBuilder.append(s);
-                    if (quoted)
-                    {
-                        queryBuilder.append('"');
-                    }
+                    escapeSearchWord(queryBuilder, quoted, s);
                     if (boost != null)
                     {
                         queryBuilder.append("^");
@@ -238,12 +223,6 @@ public class DisMaxQueryBuilder implements QueryBuilderIfc
             }
         }
         return added;
-    }
-
-    protected String escape(Pattern p, String s)
-    {
-        Matcher m = p.matcher(s);
-        return m.replaceAll("\\\\$1");
     }
 
     protected boolean handleNewQueries(List<String> newQueries, List<String> insideClauses)

@@ -193,6 +193,9 @@ public class Term
      *
      * @param inside                 if true or outside (false)
      * @param searchServerFieldValue one complete search server query
+     * @param configuration
+     * @param locale
+     * @param addField true if the generating ScriptType doesn't "returnsFullQueries" (then a simple word)
      */
     public void addNewSearchServerQuery(boolean inside, List<String> searchServerFieldValue,
         Configuration configuration, Locale locale, boolean addField)
@@ -201,16 +204,27 @@ public class Term
         {
             newQueries = new ArrayList<>();
         }
+        // qb.init() not called! but sufficient for escaping
+        // The used edismax query builder below escapes more chars than the dismax builder, but a dismax parser
+        // should understand the additional escaped chars too
+        QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
         // TODO what if searchServerFieldValue.size() == 0?!
         for (String qs : searchServerFieldValue)
         {
             // qs contains whole query, otherwise it would be difficult to mix-in the field name, because complex
             // queries are possible here
+            StringBuilder queryBuilder = new StringBuilder();
             if (inside && searchServerFieldName != null && addField)
             {
-                qs = searchServerFieldName + ":" + qs;
+                queryBuilder.append(searchServerFieldName);
+                queryBuilder.append(":");
+                qb.escapeSearchWord(queryBuilder, false, qs);
             }
-            newQueries.add(qs);
+            else
+            {
+                queryBuilder.append(qs);
+            }
+            newQueries.add(queryBuilder.toString());
         }
         setWasMapped(true);
     }

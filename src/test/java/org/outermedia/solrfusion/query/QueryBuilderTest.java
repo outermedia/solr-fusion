@@ -417,9 +417,20 @@ public class QueryBuilderTest
         Assert.assertEquals("Got different query than expected",
             "multipart_link:urn\\:nbn\\:de\\:bsz\\:\\{14\\}\\-\\[qucosa\\]\\-\\(108346\\)\\!\\^\\\"\\~\\\\", qs);
 
+        qb = QueryBuilder.Factory.getInstance();
         PhraseQuery pq = new PhraseQuery(term);
         qs = buildQueryString(qb, pq, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
         Assert.assertEquals("Got different query than expected",
             "multipart_link:\"urn:nbn:de:bsz:{14}-[qucosa]-(108346)!^\\\"~\\\\\"", qs);
+
+        qb = QueryBuilder.Factory.getInstance();
+        term = Term.newSearchServerTerm("title", "text space");
+        term.setWasMapped(true);
+        qs = buildQueryString(qb, new TermQuery(term), cfg, searchServerConfig, locale, null, QueryTarget.ALL);
+        Assert.assertEquals("Got different query than expected", "title:\"text space\"", qs);
+
+        QueryBuilder builder = (QueryBuilder) QueryBuilder.Factory.getInstance();
+        qs = builder.escape(builder.getEscapePattern(), "a:\\?\\*:?:*:b");
+        Assert.assertEquals("Got different query than expected", "a\\:\\?\\*\\:?\\:*\\:b", qs);
     }
 }

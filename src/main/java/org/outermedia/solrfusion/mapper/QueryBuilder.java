@@ -22,6 +22,7 @@ package org.outermedia.solrfusion.mapper;
  * #L%
  */
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.query.parser.*;
@@ -30,7 +31,6 @@ import org.outermedia.solrfusion.types.ScriptEnv;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
  * Created by ballmann on 03.06.14.
  */
 @Slf4j
-public class QueryBuilder implements QueryBuilderIfc
+public class QueryBuilder extends AbstractQueryBuilder
 {
     protected StringBuilder queryBuilder;
     protected Configuration configuration;
@@ -48,8 +48,8 @@ public class QueryBuilder implements QueryBuilderIfc
     protected Set<String> defaultSearchServerSearchFields;
     protected QueryTarget target;
 
+    @Getter
     protected Pattern escapePattern = Pattern.compile("([-:\\+\\(\\)\\{\\}\\[\\]!^\"~\\\\])", Pattern.CASE_INSENSITIVE);
-    protected Pattern escapePhrasePattern = Pattern.compile("([\"\\\\])", Pattern.CASE_INSENSITIVE);
 
     /**
      * Build the query string for a search server.
@@ -183,32 +183,12 @@ public class QueryBuilder implements QueryBuilderIfc
             added = true;
             queryBuilder.append(term.getSearchServerFieldName());
             queryBuilder.append(":");
-            Pattern p = null;
-            if (quoted)
-            {
-                queryBuilder.append('"');
-                p = escapePhrasePattern;
-            }
-            else
-            {
-                p = escapePattern;
-            }
-            String s = escape(p, term.getSearchServerFieldValue().get(0));
-            queryBuilder.append(s);
-            if (quoted)
-            {
-                queryBuilder.append('"');
-            }
+            String searchWord = term.getSearchServerFieldValue().get(0);
+            escapeSearchWord(queryBuilder, quoted, searchWord);
             handleBoost(boost);
         }
 
         return added;
-    }
-
-    protected String escape(Pattern p, String s)
-    {
-        Matcher m = p.matcher(s);
-        return m.replaceAll("\\\\$1");
     }
 
     protected void handleMetaInfo(MetaInfo metaInfo, StringBuilder builder)
