@@ -120,6 +120,10 @@ public class ResponseMapper implements ResponseMapperIfc
         int addedFieldCounter = 0;
         AddOperation addOp = new AddOperation();
         Map<String, TargetsOfMapping> allAddResponseTargets = serverConfig.findAllAddResponseMappings(target);
+        if(log.isTraceEnabled())
+        {
+            log.trace("BEFORE ADD {}", doc.buildFusionDocStr());
+        }
         for (Map.Entry<String, TargetsOfMapping> entry : allAddResponseTargets.entrySet())
         {
             // TODO support wildcards in field names?
@@ -136,6 +140,10 @@ public class ResponseMapper implements ResponseMapperIfc
                     if (addOp.addToResponse(doc, fusionFieldName, fusionField, searchServerFieldName, t, env))
                     {
                         added = true;
+                    }
+                    if(log.isTraceEnabled())
+                    {
+                        log.trace("AFTER ADD {}", doc.buildFusionDocStr());
                     }
                 }
                 if (added)

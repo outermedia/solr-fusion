@@ -24,6 +24,7 @@ package org.outermedia.solrfusion.configuration;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 
@@ -34,6 +35,7 @@ import java.util.ArrayList;
  */
 @Getter
 @Setter
+@ToString
 public class TargetsOfMapping extends ArrayList<Target>
 {
     private String mappingsSearchServerFieldName;

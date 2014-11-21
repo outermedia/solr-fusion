@@ -25,6 +25,7 @@ package org.outermedia.solrfusion.configuration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.ScoreCorrectorIfc;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SolrFusionUriBuilderIfc;
@@ -54,6 +55,7 @@ import java.util.Map;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@Slf4j
 public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc<SolrFusionUriBuilderIfc>, SearchServerConfig>
 {
     @XmlAttribute(name = "name", required = true)

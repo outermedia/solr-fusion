@@ -150,11 +150,19 @@ public class Table extends AbstractType
             {
                 newValues.add(null);
                 newFacetDocCounts.add(null);
+                if(log.isTraceEnabled())
+                {
+                    log.trace("Table maps null to null");
+                }
             }
             else
             {
                 Collection<String> nv = mapping.get(v);
-                if (nv != null)
+                if(log.isTraceEnabled())
+                {
+                    log.trace("Table maps '{}' to '{}'", v, nv);
+                }
+                if (nv != null && !nv.isEmpty())
                 {
                     storeMappedValue(facetDocCounts, newValues, newFacetDocCounts, i, nv, env);
                 }
@@ -182,6 +190,10 @@ public class Table extends AbstractType
             {
                 result.setDocCounts(newFacetDocCounts);
             }
+        }
+        if(log.isTraceEnabled())
+        {
+            log.trace("Table mapped {} to {}", values, result);
         }
         return result;
     }

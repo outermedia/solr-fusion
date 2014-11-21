@@ -349,6 +349,10 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         {
             for (Document doc : facetFields)
             {
+                if (log.isTraceEnabled())
+                {
+                    log.trace("BEFORE APPLY {}", doc.buildFusionDocStr());
+                }
                 completelyMapDoc(config, doc, doc.getFusionDocId(fusionIdField), ScriptEnv.ENV_IN_MAP_FACET,
                     ResponseTarget.FACET);
                 doc.accept(getFacetBuilder(idGenerator, fusionIdField, fusionFacetFields, doc), null);
