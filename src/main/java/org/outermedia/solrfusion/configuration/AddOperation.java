@@ -113,6 +113,7 @@ public class AddOperation extends Operation
             term = Term.newFusionTerm(fusionFieldName, searchServerValues);
             term.setFusionField(fusionField);
             term.setFusionFacetCount(searchServerDocCounts);
+            term.setWasMapped(true);
             isNew = true;
         }
         newEnv.setBinding(ScriptEnv.ENV_IN_DOCUMENT, doc);
