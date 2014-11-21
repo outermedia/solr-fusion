@@ -409,19 +409,19 @@ public class QueryBuilderTest
     public void testEscaping()
     {
         QueryBuilderIfc qb = QueryBuilder.Factory.getInstance();
-        Term term = Term.newSearchServerTerm("multipart_link", "urn:nbn:de:bsz:{14}-[qucosa]-(108346)!^\"~\\");
+        Term term = Term.newSearchServerTerm("multipart_link", "|!&urn:nbn:de:bsz:{14}-[qucosa]-(108346)!^\"~\\");
         term.setWasMapped(true);
 
         TermQuery tq = new TermQuery(term);
         String qs = buildQueryString(qb, tq, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
         Assert.assertEquals("Got different query than expected",
-            "multipart_link:urn\\:nbn\\:de\\:bsz\\:\\{14\\}\\-\\[qucosa\\]\\-\\(108346\\)\\!\\^\\\"\\~\\\\", qs);
+            "multipart_link:\\|\\!\\&urn\\:nbn\\:de\\:bsz\\:\\{14\\}\\-\\[qucosa\\]\\-\\(108346\\)\\!\\^\\\"\\~\\\\", qs);
 
         qb = QueryBuilder.Factory.getInstance();
         PhraseQuery pq = new PhraseQuery(term);
         qs = buildQueryString(qb, pq, cfg, searchServerConfig, locale, null, QueryTarget.ALL);
         Assert.assertEquals("Got different query than expected",
-            "multipart_link:\"urn:nbn:de:bsz:{14}-[qucosa]-(108346)!^\\\"~\\\\\"", qs);
+            "multipart_link:\"|!&urn:nbn:de:bsz:{14}-[qucosa]-(108346)!^\\\"~\\\\\"", qs);
 
         qb = QueryBuilder.Factory.getInstance();
         term = Term.newSearchServerTerm("title", "text space");

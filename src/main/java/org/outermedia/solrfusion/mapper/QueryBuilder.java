@@ -49,7 +49,7 @@ public class QueryBuilder extends AbstractQueryBuilder
     protected QueryTarget target;
 
     @Getter
-    protected Pattern escapePattern = Pattern.compile("([-:\\+\\(\\)\\{\\}\\[\\]!^\"~\\\\])", Pattern.CASE_INSENSITIVE);
+    protected Pattern escapePattern = Pattern.compile("([-:\\+\\(\\)\\{\\}\\[\\]!^\"~\\\\&|!])", Pattern.CASE_INSENSITIVE);
 
     /**
      * Build the query string for a search server.
