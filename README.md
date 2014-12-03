@@ -13,7 +13,7 @@ This document explains the
 * installation
 * configuration
 
-Version 1.0 was implemented by [outermedia GmbH](http://www.outermedia.de/ "outermedia GmbH").
+Version 1.0 and 1.1 were implemented by [outermedia GmbH](http://www.outermedia.de/ "outermedia GmbH").
 
 <img src="http://www.strukturfonds.sachsen.de/img/EFRE_EU_quer_2013_rgb_rdax_413x107.jpg">
 

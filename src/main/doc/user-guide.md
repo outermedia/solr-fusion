@@ -1,6 +1,6 @@
 # User Guide
 
-For SolrFusion 1.0.
+For SolrFusion 1.1.
 Date: 2014-09-03
 
 Outermedia GmbH 
@@ -77,13 +77,13 @@ SolrFusion is intended to be used in the case that several Solr servers have to 
 server. In order to be able to create a unified logical Solr schema several basic operations are provided to map and 
 normalize data of the used Solr servers.
 
-The first release (version 1.0) is limited to a subset of supported Solr HTTP request parameters and features. The primary focus
+The first release (version 1.0, 1.1) is limited to a subset of supported Solr HTTP request parameters and features. The primary focus
 of this version is to work with the customized vufind 1.3 used by the [Universitätsbibliothek Leipzig](http://www.ub.uni-leipzig.de/ "Universitätsbibliothek Leipzig").
 
 But the concept and implementation allows a high level of customization, so it is conceivably to use SolrFusion to
 combine e.g. data bases too.
     
-Version 1.0 was tested with vufind 1.3 and  Solr 1.4, 3.5, 3.6, 4.3 servers.
+Version 1.0, 1.1 was tested with vufind 1.3 and  Solr 1.4, 3.5, 3.6, 4.3 servers.
 
 A basic test with vufind 2.3 succeeded too.
 
@@ -872,7 +872,7 @@ by a freemarker template which can be easily adjusted (see json.ftl and xml.ftl 
 
 The line above declares the global response renderer, which can be overwritten for specific Solr servers.
 
-Note: The php renderer is not implemented in version 1.0.    
+Note: The php renderer is not implemented in version 1.0, 1.1.    
     
 ## Query Builder    
 Corresponding to the query parsers SolrFusion is capable to render dismax or edismax queries from mapped SolrFusion queries.
@@ -1198,7 +1198,7 @@ __IMPORTANT2__: It is not allowed to map different Solr fields to the same SolrF
     <om:field name="s2" fusion-name="sf1"/>
 
 Because in the resulting Solr document the SolrFusion field "sf1" would occur twice. This error is not checked in
-SolrFusion version 1.0.
+SolrFusion version 1.0, 1.1.
 
 If applied to queries the later rule overwrites the mapping of the first rule, so that "sf1" is finally mapped to "s2".
 
@@ -1491,7 +1491,7 @@ possible to map the semantics to a Solr field. Because the Solr sort field suppo
 field can be specified. All other sort fields have a lower precedence and it is not possible to decide which of the split fields
 is the most important field.
 
-In version 1.0 SolrFusion uses only the textually first mapping for sorting.
+In version 1.0, 1.1 SolrFusion uses only the textually first mapping for sorting.
      
 ## Map Values With Wildcards
 In general it is not possible to map values which e.g. contain a "?" or "*", because it is not possible to map all
@@ -1557,7 +1557,7 @@ Perhaps domain/application specific solutions are possible, i.e. the query mappi
 Solr field (instead of several). A SolrFusion improvement, which automatically removes duplicate search word,  
 is conceivable too.
 
-In version 1.0 SolrFusion no special handling exists for this case and the query is directly sent to a Solr server.
+In version 1.0, 1.1 SolrFusion no special handling exists for this case and the query is directly sent to a Solr server.
      
 ## Total Document Count Correction And Document Merging
 Because SolrFusion (almost) never works on all documents found by a search, it is impossible to return the right
