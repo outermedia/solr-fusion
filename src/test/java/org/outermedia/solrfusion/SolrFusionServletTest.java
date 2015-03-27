@@ -28,6 +28,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.outermedia.solrfusion.configuration.Configuration;
@@ -401,7 +402,7 @@ public class SolrFusionServletTest
 
         // no q param
         String outStr = runRequest(new HashMap<String, String[]>(), servlet, req);
-        // System.out.println("OUT " + outStr);
+        System.out.println("OUT1 " + outStr);
         Assert.assertTrue("Expected error message. but got:\n" + outStr,
             outStr.contains("\"msg\":\"ERROR: Found no query parameter (q)\\n\","));
 
@@ -418,7 +419,7 @@ public class SolrFusionServletTest
         reqParams.put("q", new String[]{"xyz:3"});
         reqParams.put("wt", new String[]{"xml"});
         outStr = runRequest(reqParams, servlet, req);
-        System.out.println("OUT " + outStr);
+        System.out.println("OUT2 " + outStr);
         Assert.assertTrue("Expected error message. but got:\n" + outStr,
             outStr.contains("<str name=\"msg\"><![CDATA[Query parsing failed: xyz:3;\n" +
                 "Cause: ERROR: Parsing of query xyz:3 failed.\n" +
@@ -437,6 +438,8 @@ public class SolrFusionServletTest
         PrintWriter pw = new PrintWriter(out);
         doReturn(pw).when(res).getWriter();
         servlet.doGet(req, res);
-        return out.toString();
+        ArgumentCaptor<String> msgArg = ArgumentCaptor.forClass(String.class);
+        verify(res).sendError(eq(400), msgArg.capture());
+        return msgArg.getValue();
     }
 }

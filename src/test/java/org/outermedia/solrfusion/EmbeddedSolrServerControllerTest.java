@@ -30,6 +30,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SolrFusionUriBuilderIfc;
+import org.outermedia.solrfusion.adapter.solr.Version;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
@@ -43,6 +44,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -128,7 +131,7 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "    <arr name=\"fq\">\n" +
             "        <str>title:XYZ</str>\n" +
             "    </arr>\n" +
-            "    <str name=\"wt\">wt</str>\n" +
+            "    <str name=\"wt\">xml</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "  </lst>\n" +
             "</lst>\n" +
@@ -138,10 +141,10 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         Assert.assertEquals("Found different xml response", expectedXml, xml.trim());
         verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest,
             buildMap(QUERY, "title:xyz", FILTER_QUERY, "title:XYZ", FIELDS_TO_RETURN, "id title score", WRITER_TYPE,
-                "xml"), "3.6");
+                "xml"), new Version("3.6"));
         verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest,
             buildMap(QUERY, "titleVT_eng:xyz", FILTER_QUERY, "titleVT_eng:XYZ", FIELDS_TO_RETURN,
-                "id titleVT_eng score", WRITER_TYPE, "xml"), "3.6");
+                "id titleVT_eng score", WRITER_TYPE, "xml"), new Version("3.6"));
     }
 
     protected Multimap<String> buildMap(Object... v)
@@ -172,7 +175,7 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
             "    <arr name=\"fq\">\n" +
             "        <str>title:abc</str>\n" +
             "    </arr>\n" +
-            "    <str name=\"wt\">wt</str>\n" +
+            "    <str name=\"wt\">xml</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "  </lst>\n" +
             "</lst>\n" +
@@ -193,10 +196,10 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         Assert.assertEquals("Found different xml response", expected, xml.trim());
         verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest,
             buildMap(QUERY, "title:abc", FILTER_QUERY, "title:abc", FIELDS_TO_RETURN, "id title score", WRITER_TYPE,
-                "xml"), "3.6");
+                "xml"), new Version("3.6"));
         verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest,
             buildMap(QUERY, "titleVT_eng:abc", FILTER_QUERY, "titleVT_eng:abc", FIELDS_TO_RETURN,
-                "id titleVT_eng score", WRITER_TYPE, "xml"), "3.6");
+                "id titleVT_eng score", WRITER_TYPE, "xml"), new Version("3.6"));
     }
 
     protected String testMultipleServers(String queryStr, String filterQueryStr) throws Exception
@@ -229,12 +232,15 @@ public class EmbeddedSolrServerControllerTest extends SolrServerDualTestBase
         fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam(filterQueryStr)));
         fusionRequest.setResponseType(ResponseRendererType.XML);
         fusionRequest.setFieldsToReturn(new SolrFusionRequestParam("id title " + fusionRequest.getFusionSortField()));
-        FusionResponse fusionResponse = spy(new FusionResponse());
-        doReturn(0l).when(fusionResponse).getQueryTime();
-        fc.process(spyCfg, fusionRequest, fusionResponse);
-        Assert.assertTrue("Expected no processing error: " + fusionResponse.getErrorMessage(), fusionResponse.isOk());
+        FusionResponse fusionResponse = new FusionResponse();
+        StringWriter sw = new StringWriter();
+        fusionResponse.setTextWriter(new PrintWriter(sw));
+        FusionResponse fusionResponseSpy = spy(fusionResponse);
+        doReturn(0l).when(fusionResponseSpy).getQueryTime();
+        fc.process(spyCfg, fusionRequest, fusionResponseSpy);
+        Assert.assertTrue("Expected no processing error: " + fusionResponseSpy.getErrorMessage(), fusionResponseSpy.isOk());
 
-        String result = fusionResponse.getResponseAsString();
+        String result = sw.toString();
         Assert.assertNotNull("Expected XML result, but got nothing", result);
         System.out.println("RESPONSE " + result);
         return result;

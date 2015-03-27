@@ -45,6 +45,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +90,11 @@ public class DropTest extends AbstractTypeTest
         FusionRequest req = new FusionRequest();
         req.setQuery(new SolrFusionRequestParam("a:dummy"));
         req.setLocale(Locale.GERMAN);
-        String ds = renderer.getResponseString(cfg, docStream, req, new FusionResponse());
+        FusionResponse fusionResponse = new FusionResponse();
+        StringWriter sw = new StringWriter();
+        fusionResponse.setTextWriter(new PrintWriter(sw));
+        renderer.writeResponse(cfg, docStream, req, fusionResponse);
+        String ds = sw.toString();
         String expectedField = "<arr name=\"text4\">\n" +
             "        <str>something &amp; more</str>\n" +
             "        <str>other</str>\n" +
@@ -105,8 +111,12 @@ public class DropTest extends AbstractTypeTest
         Assert.assertFalse("Expected that field f8 was not removed", sourceField.isRemoved());
         // System.out.println("W/O DROP "+sourceField.toString());
         docStream = new ClosableListIterator<>(docs, info);
-        String s = renderer.getResponseString(cfg, docStream, req, new FusionResponse());
-        Assert.assertTrue("Field f8 was not mapped:\n" + s, s.contains(expectedField));
+        fusionResponse = new FusionResponse();
+        sw = new StringWriter();
+        fusionResponse.setTextWriter(new PrintWriter(sw));
+        renderer.writeResponse(cfg, docStream, req, fusionResponse);
+        String s = sw.toString();
+            Assert.assertTrue("Field f8 was not mapped:\n" + s, s.contains(expectedField));
     }
 
     protected FieldMapping findByName(String s, List<FieldMapping> mappings)

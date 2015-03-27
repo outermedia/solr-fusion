@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.outermedia.solrfusion.adapter.SolrFusionUriBuilderIfc;
 import org.outermedia.solrfusion.adapter.solr.SolrFusionUriBuilder;
+import org.outermedia.solrfusion.adapter.solr.Version;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryTarget;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
@@ -36,15 +37,11 @@ import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.mapper.Term;
 import org.outermedia.solrfusion.query.parser.TermQuery;
-import org.outermedia.solrfusion.response.ClosableIterator;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -86,8 +83,8 @@ public class ControllerTest extends AbstractControllerTest
         IllegalAccessException, URISyntaxException
     {
         Configuration cfg = spy(helper.readFusionSchemaWithoutValidation("test-query-mapper-fusion-schema.xml"));
-        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class),
-            any(FusionRequest.class), any(FusionResponse.class))).thenReturn("<xml>42</xml>");
+//        when(testRenderer.writeResponse(any(Configuration.class), any(ClosableIterator.class), any(FusionRequest.class),
+//            any(FusionResponse.class))).thenReturn("<xml>42</xml>");
         List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
         SearchServerConfig configuredSearchServer = spy(searchServerConfigs.get(0));
         searchServerConfigs.clear();
@@ -95,7 +92,7 @@ public class ControllerTest extends AbstractControllerTest
         when(configuredSearchServer.getInstance()).thenReturn(testAdapter);
         SolrFusionUriBuilderIfc testParams = mock(SolrFusionUriBuilderIfc.class);
         when(testAdapter.buildHttpClientParams(any(Configuration.class), any(SearchServerConfig.class),
-            any(FusionRequest.class), any(Multimap.class), anyString())).thenReturn(testParams);
+            any(FusionRequest.class), any(Multimap.class), any(Version.class))).thenReturn(testParams);
         when(testAdapter.sendQuery(any(SolrFusionUriBuilder.class), Mockito.anyInt())).thenReturn(testResponse);
         FusionControllerIfc fc = cfg.getController();
         FusionRequest fusionRequest = new FusionRequest();
@@ -181,9 +178,9 @@ public class ControllerTest extends AbstractControllerTest
         testMultipleServers("target/test-classes/test-xml-response-9000.xml",
             "target/test-classes/test-xml-response-9002.xml");
         verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest,
-            buildParams("title:abc", null), "3.6");
+            buildParams("title:abc", null), new Version("3.6"));
         verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest,
-            buildParams("titleVT_eng:abc", null), "3.6");
+            buildParams("titleVT_eng:abc", null), new Version("3.6"));
     }
 
     @Test
@@ -202,7 +199,7 @@ public class ControllerTest extends AbstractControllerTest
             "    <str name=\"indent\">on</str>\n" +
             "    <str name=\"rows\"><![CDATA[0]]></str>\n" +
             "    <str name=\"q\"><![CDATA[title:abc]]></str>\n" +
-            "    <str name=\"wt\">wt</str>\n" +
+            "    <str name=\"wt\">xml</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "  </lst>\n" +
             "</lst>\n" +
@@ -211,9 +208,9 @@ public class ControllerTest extends AbstractControllerTest
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
         verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest,
-            buildParams("title:abc", null), "3.6");
+            buildParams("title:abc", null), new Version("3.6"));
         verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest,
-            buildParams("titleVT_eng:abc", null), "3.6");
+            buildParams("titleVT_eng:abc", null), new Version("3.6"));
     }
 
     protected String testMultipleServers(String responseServer1, String responseServer2)
@@ -253,12 +250,15 @@ public class ControllerTest extends AbstractControllerTest
         fusionRequest = new FusionRequest();
         fusionRequest.setQuery(new SolrFusionRequestParam("title:abc", null));
         fusionRequest.setResponseType(ResponseRendererType.XML);
-        FusionResponse fusionResponse = spy(new FusionResponse());
-        doReturn(0l).when(fusionResponse).getQueryTime();
-        fc.process(spyCfg, fusionRequest, fusionResponse);
-        Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
+        FusionResponse fusionResponse = new FusionResponse();
+        StringWriter sw = new StringWriter();
+        fusionResponse.setTextWriter(new PrintWriter(sw));
+        FusionResponse fusionResponseSpy = spy(fusionResponse);
+        doReturn(0l).when(fusionResponseSpy).getQueryTime();
+        fc.process(spyCfg, fusionRequest, fusionResponseSpy);
+        Assert.assertTrue("Expected no processing error", fusionResponseSpy.isOk());
 
-        String result = fusionResponse.getResponseAsString();
+        String result = sw.toString();
         Assert.assertNotNull("Expected XML result, but got nothing", result);
         // System.out.println("RESPONSE " + result);
         return result;

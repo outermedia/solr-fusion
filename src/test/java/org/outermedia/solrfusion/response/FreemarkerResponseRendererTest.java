@@ -39,6 +39,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
@@ -95,13 +97,21 @@ public class FreemarkerResponseRendererTest
         req.setQuery(new SolrFusionRequestParam("steak"));
         req.setSort(new SolrFusionRequestParam("title asc"));
         req.setStart(new SolrFusionRequestParam("7"));
-        String xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, req, new FusionResponse());
+        FusionResponse fusionResponse = new FusionResponse();
+        StringWriter sw = new StringWriter();
+        fusionResponse.setTextWriter(new PrintWriter(sw));
+        responseRenderer.writeResponse(cfg, closableIterator, req, fusionResponse);
+        String xmlResponse = sw.toString();
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
         Assert.assertFalse("xml response should not contain filter query in header",
             xmlResponse.contains("<str name=\"fq\">"));
 
+        fusionResponse = new FusionResponse();
+        sw = new StringWriter();
+        fusionResponse.setTextWriter(new PrintWriter(sw));
         req.setFilterQuery(Arrays.asList(new SolrFusionRequestParam("salat"), new SolrFusionRequestParam("tomato")));
-        xmlResponse = responseRenderer.getResponseString(cfg, closableIterator, req, new FusionResponse());
+        responseRenderer.writeResponse(cfg, closableIterator, req, fusionResponse);
+        xmlResponse = sw.toString();
         // System.out.println(xmlResponse);
         Assert.assertNotNull("xmlResponse is expected to be not null", xmlResponse);
         Assert.assertTrue("xml response should contain filter query in header",
@@ -148,8 +158,11 @@ public class FreemarkerResponseRendererTest
         req.setQuery(new SolrFusionRequestParam("Shakespeares"));
 
         FusionResponse res = new FusionResponse();
+        StringWriter sw = new StringWriter();
+        res.setTextWriter(new PrintWriter(sw));
         res.setOk(true);
-        String jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req, res);
+        responseRenderer.writeResponse(cfg, closableIterator, req, res);
+        String jsonResponse = sw.toString();
         // System.out.println("JSON " + jsonResponse);
 
         try
@@ -174,16 +187,22 @@ public class FreemarkerResponseRendererTest
 
         req.setFilterQuery(Arrays.asList(new SolrFusionRequestParam("salat"), new SolrFusionRequestParam("tomato")));
         res = new FusionResponse();
+        sw = new StringWriter();
+        res.setTextWriter(new PrintWriter(sw));
         res.setOk(true);
-        jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req, res);
-        // System.out.println(jsonResponse);
+        responseRenderer.writeResponse(cfg, closableIterator, req, res);
+        jsonResponse = sw.toString();
+            // System.out.println(jsonResponse);
         Assert.assertTrue("json response should contain filter query in header", jsonResponse.contains("\"fq\":[\n" +
             "        \"salat\",\"tomato\"\n" +
             "      ],"));
 
         res.setResponseForException(new Exception("An\nerror\noccurred."));
-        jsonResponse = responseRenderer.getResponseString(cfg, closableIterator, req, res);
-        // System.out.println(jsonResponse);
+        sw = new StringWriter();
+        res.setTextWriter(new PrintWriter(sw));
+        responseRenderer.writeResponse(cfg, closableIterator, req, res);
+        jsonResponse = sw.toString();
+            // System.out.println(jsonResponse);
         Assert.assertTrue("json response should contain error header",
             jsonResponse.contains("\"msg\":\"Internal processing error. Reason: An\\nerror\\noccurred.\","));
     }
@@ -315,8 +334,11 @@ public class FreemarkerResponseRendererTest
         FusionRequest req = new FusionRequest();
         req.setQuery(new SolrFusionRequestParam("goethe"));
         FusionResponse res = new FusionResponse();
+        StringWriter sw = new StringWriter();
+        res.setTextWriter(new PrintWriter(sw));
         res.setOk(true);
-        return responseRenderer.getResponseString(cfg, closableDocIterator, req, res);
+        responseRenderer.writeResponse(cfg, closableDocIterator, req, res);
+        return sw.toString();
     }
 
     @Test
@@ -407,8 +429,11 @@ public class FreemarkerResponseRendererTest
         ClosableIterator<Document, SearchServerResponseInfo> closableDocIterator = new MappingClosableIterator(
             docIterator, spyCfg, searchServerConfig, null, ResponseTarget.ALL, true);
         FusionResponse res = new FusionResponse();
+        StringWriter sw = new StringWriter();
+        res.setTextWriter(new PrintWriter(sw));
         res.setOk(true);
-        return responseRenderer.getResponseString(cfg, closableDocIterator, req, res);
+        responseRenderer.writeResponse(cfg, closableDocIterator, req, res);
+        return sw.toString();
     }
 
     @Test
@@ -490,7 +515,10 @@ public class FreemarkerResponseRendererTest
         ClosableIterator<Document, SearchServerResponseInfo> closableDocIterator = new MappingClosableIterator(
             docIterator, spyCfg, searchServerConfig, null, ResponseTarget.ALL, true);
         FusionResponse res = new FusionResponse();
+        StringWriter sw = new StringWriter();
+        res.setTextWriter(new PrintWriter(sw));
         res.setOk(true);
-        return responseRenderer.getResponseString(cfg, closableDocIterator, req, res);
+        responseRenderer.writeResponse(cfg, closableDocIterator, req, res);
+        return sw.toString();
     }
 }

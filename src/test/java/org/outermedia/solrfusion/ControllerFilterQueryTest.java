@@ -27,6 +27,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.outermedia.solrfusion.adapter.solr.SolrFusionUriBuilder;
+import org.outermedia.solrfusion.adapter.solr.Version;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
@@ -35,9 +36,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -124,9 +123,9 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
     {
         testMultipleServers("title:abc", "title:def", "target/test-classes/test-xml-response-9000.xml",
             "target/test-classes/test-xml-response-9002.xml");
-        verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest, buildParams("title:abc", "title:def"), "3.6");
+        verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest, buildParams("title:abc", "title:def"), new Version("3.6"));
         verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest, buildParams("titleVT_eng:abc", "titleVT_eng:def"),
-            "3.6");
+            new Version("3.6"));
     }
 
     @Test
@@ -148,7 +147,7 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
             "    <arr name=\"fq\">\n" +
             "        <str>title:def</str>\n" +
             "    </arr>\n" +
-            "    <str name=\"wt\">wt</str>\n" +
+            "    <str name=\"wt\">xml</str>\n" +
             "    <str name=\"version\">2.2</str>\n" +
             "  </lst>\n" +
             "</lst>\n" +
@@ -156,9 +155,9 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
             "</result>\n" +
             "</response>";
         Assert.assertEquals("Found different xml response", expected, xml.trim());
-        verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest, buildParams("title:abc", "title:def"), "3.6");
+        verify(testAdapter9000, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9000, fusionRequest, buildParams("title:abc", "title:def"), new Version("3.6"));
         verify(testAdapter9002, times(1)).buildHttpClientParams(spyCfg, searchServerConfig9002, fusionRequest, buildParams("titleVT_eng:abc", "titleVT_eng:def"),
-            "3.6");
+            new Version("3.6"));
     }
 
     protected String testMultipleServers(String queryStr, String filterQueryStr, String responseServer1,
@@ -198,12 +197,15 @@ public class ControllerFilterQueryTest extends AbstractControllerTest
         fusionRequest.setQuery(new SolrFusionRequestParam(queryStr));
         fusionRequest.setFilterQuery(Arrays.asList(new SolrFusionRequestParam(filterQueryStr)));
         fusionRequest.setResponseType(ResponseRendererType.XML);
-        FusionResponse fusionResponse = spy(new FusionResponse());
-        doReturn(0l).when(fusionResponse).getQueryTime();
-        fc.process(spyCfg, fusionRequest, fusionResponse);
-        Assert.assertTrue("Expected no processing error", fusionResponse.isOk());
+        FusionResponse fusionResponse = new FusionResponse();
+        StringWriter sw = new StringWriter();
+        fusionResponse.setTextWriter(new PrintWriter(sw));
+        FusionResponse fusionResponseSpy = spy(fusionResponse);
+        doReturn(0l).when(fusionResponseSpy).getQueryTime();
+        fc.process(spyCfg, fusionRequest, fusionResponseSpy);
+        Assert.assertTrue("Expected no processing error", fusionResponseSpy.isOk());
 
-        String result = fusionResponse.getResponseAsString();
+        String result = sw.toString();
         Assert.assertNotNull("Expected XML result, but got nothing", result);
         // System.out.println("RESPONSE " + result);
         return result;

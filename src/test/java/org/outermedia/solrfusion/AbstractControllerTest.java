@@ -30,11 +30,11 @@ import org.mockito.MockitoAnnotations;
 import org.outermedia.solrfusion.adapter.SearchServerAdapterIfc;
 import org.outermedia.solrfusion.adapter.SolrFusionUriBuilderIfc;
 import org.outermedia.solrfusion.adapter.solr.SolrFusionUriBuilder;
+import org.outermedia.solrfusion.adapter.solr.Version;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Merge;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
-import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.xml.sax.SAXException;
 
@@ -114,8 +114,8 @@ public class AbstractControllerTest
         IllegalAccessException, URISyntaxException
     {
         cfg = spy(helper.readFusionSchemaWithoutValidation(fusionSchema));
-        when(testRenderer.getResponseString(any(Configuration.class), any(ClosableIterator.class),
-            any(FusionRequest.class), any(FusionResponse.class))).thenReturn("<xml>42</xml>");
+//        when(testRenderer.writeResponse(any(Configuration.class), any(ClosableIterator.class), any(FusionRequest.class),
+//            any(FusionResponse.class))).thenReturn("<xml>42</xml>");
         when(cfg.getResponseRendererByType(any(ResponseRendererType.class))).thenReturn(testRenderer);
         List<SearchServerConfig> searchServerConfigs = cfg.getSearchServerConfigs().getSearchServerConfigs();
         if (searchServerConfigs != null && !searchServerConfigs.isEmpty())
@@ -125,7 +125,7 @@ public class AbstractControllerTest
             searchServerConfigs.add(searchServerConfig);
             when(searchServerConfig.getInstance()).thenReturn(testAdapter);
             when(testAdapter.buildHttpClientParams(any(Configuration.class), any(SearchServerConfig.class),
-                any(FusionRequest.class), any(Multimap.class), anyString())).thenReturn(testParams);
+                any(FusionRequest.class), any(Multimap.class), any(Version.class))).thenReturn(testParams);
             when(testAdapter.sendQuery(any(SolrFusionUriBuilder.class), Mockito.anyInt())).thenReturn(testResponse);
         }
         return cfg.getController();
