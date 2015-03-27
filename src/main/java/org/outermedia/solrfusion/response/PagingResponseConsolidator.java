@@ -217,7 +217,8 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         Set<String> searchServerFieldsToMap, ResponseTarget target)
         throws InvocationTargetException, IllegalAccessException
     {
-        return new MappingClosableIterator(docIterator, config, searchServerConfig, searchServerFieldsToMap, target, false);
+        return new MappingClosableIterator(docIterator, config, searchServerConfig, searchServerFieldsToMap, target,
+            false);
     }
 
     protected void mapMergeField(Configuration config, SearchServerConfig searchServerConfig, FusionRequest request,
@@ -242,18 +243,21 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         }
     }
 
-    @Override public int numberOfResponseStreams()
+    @Override
+    public int numberOfResponseStreams()
     {
         return streamCounter;
     }
 
-    @Override public void clear()
+    @Override
+    public void clear()
     {
         allDocs.clear();
     }
 
-    @Override public ClosableIterator<Document, SearchServerResponseInfo> getResponseIterator(
-        FusionRequest fusionRequest) throws InvocationTargetException, IllegalAccessException
+    @Override
+    public ClosableIterator<Document, SearchServerResponseInfo> getResponseIterator(FusionRequest fusionRequest)
+        throws InvocationTargetException, IllegalAccessException
     {
         String fusionSortField = fusionRequest.getFusionSortField();
         MultiKeyAndValueMap<String, Document> docLookup = null;
@@ -297,7 +301,11 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             Document d = allDocs.get(start + i);
             // id was mapped too when sort field was mapped
             String fusionDocId = d.getFusionDocId(fusionIdField);
-            if (idGenerator.isMergedDocument(fusionDocId))
+            if (fusionMergeField == null && idGenerator.isMergedDocument(fusionDocId))
+            {
+                log.error("DOC MERGING IS OFF, BUT FOUND MERGED ID: " + fusionDocId);
+            }
+            if (fusionMergeField != null && idGenerator.isMergedDocument(fusionDocId))
             {
                 String mergeFieldValue = d.getFusionValuesOf(fusionMergeField).get(0);
                 // all values of fusionMergeField point to the same container which holds the same documents
