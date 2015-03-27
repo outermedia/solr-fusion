@@ -78,6 +78,8 @@ public class FusionRequest
     private List<SolrFusionRequestParam> facetFields;
     private List<SolrFusionRequestParam> facetSortFields;
 
+    private SolrFusionRequestParam omitHeader;
+
     private SortSpec sortSpec;
 
     private List<String> errors;
@@ -109,6 +111,7 @@ public class FusionRequest
         queryType = new SolrFusionRequestParam();
         sortSpec = new SortSpec(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE, null, false);
         minimumMatch = new SolrFusionRequestParam();
+        omitHeader = new SolrFusionRequestParam();
     }
 
     public Map<String, Float> getBoosts()
@@ -259,6 +262,7 @@ public class FusionRequest
         {
             fusionFieldsToReturn = "*";
         }
+
         fusionFieldsToReturn += " " + solrFusionSortField;
         // TODO still necessary when highlighting is supported?
         if (highlightingFieldsToReturn.getValue() != null)
@@ -333,10 +337,12 @@ public class FusionRequest
     }
 
     /**
-     * Map a list of fusion field names to a list of search server fields. The search server's id field is automatically
+     * Map a list of fusion field names to a list of search server fields. The search server's id field is
+     * automatically
      * added.
      *
-     * @param fieldList          separated by SPACE or comma or combinations of them
+     * @param fieldList
+     *     separated by SPACE or comma or combinations of them
      * @param configuration
      * @param searchServerConfig
      * @param addIdField
@@ -375,6 +381,7 @@ public class FusionRequest
         if (addIdField)
         {
             fieldSet.add(searchServerConfig.getIdFieldName());
+            fieldSet.add(ResponseMapperIfc.DOC_FIELD_NAME_SCORE); // add if missing
         }
 
         return mergeFields(fieldSet);
@@ -456,6 +463,7 @@ public class FusionRequest
         if (fusionField.equals("*"))
         {
             result.add("*");
+            result.add(ResponseMapperIfc.DOC_FIELD_NAME_SCORE);
         }
         else
         {
