@@ -9,7 +9,7 @@
     <arr name="${key}"><#list responseHeader.multiValueQueryParams[key] as v>
         <str>${v?xml}</str></#list>
     </arr></#list>
-    <str name="wt">wt</str>
+    <str name="wt">xml</str>
     <str name="version">2.2</str>
   </lst>
 </lst>
