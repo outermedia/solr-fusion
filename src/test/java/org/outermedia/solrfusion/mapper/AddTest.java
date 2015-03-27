@@ -46,6 +46,8 @@ import org.xml.sax.SAXException;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
@@ -136,8 +138,12 @@ public class AddTest extends AbstractTypeTest
         SearchServerResponseInfo info = new SearchServerResponseInfo(1, null, null, null);
         ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(Arrays.asList(doc),
             info);
-        String xmlDocStr = renderer.getResponseString(cfg, docStream, req, new FusionResponse());
-        // System.out.println("DOC "+xmlDocStr);
+        FusionResponse fusionResponse = new FusionResponse();
+        StringWriter sw = new StringWriter();
+        fusionResponse.setTextWriter(new PrintWriter(sw));
+        renderer.writeResponse(cfg, docStream, req, fusionResponse);
+        String xmlDocStr = sw.toString();
+            // System.out.println("DOC "+xmlDocStr);
         Assert.assertTrue("Expected field text12 set in " + xmlDocStr,
             xmlDocStr.contains("<str name=\"text12\">1</str>"));
         Assert.assertTrue("Expected field text13 set" + xmlDocStr, xmlDocStr.contains("<arr name=\"text13\">\n" +
@@ -435,9 +441,12 @@ public class AddTest extends AbstractTypeTest
         ClosableIterator<Document, SearchServerResponseInfo> docStream = new ClosableListIterator<>(Arrays.asList(doc),
             info);
         FusionResponse fusionResponse = new FusionResponse();
+        StringWriter sw = new StringWriter();
+        fusionResponse.setTextWriter(new PrintWriter(sw));
         fusionResponse.setOk();
-        String xmlDocStr = renderer.getResponseString(cfg, docStream, req, fusionResponse);
-        // System.out.println("DOC " + xmlDocStr);
+        renderer.writeResponse(cfg, docStream, req, fusionResponse);
+        String xmlDocStr = sw.toString();
+            // System.out.println("DOC " + xmlDocStr);
 
         // check result
         String expected = "<lst name=\"text18a\">\n" +
