@@ -39,6 +39,7 @@ import org.outermedia.solrfusion.response.parser.Document;
 public interface ResponseRendererIfc extends Initiable<ResponseRendererFactory>
 {
     /**
+     * The answer is written to fusionResponse.textWriter().
      *
      * @param configuration     the SolrFusion schema
      * @param docStream         the document stream to render
@@ -46,7 +47,7 @@ public interface ResponseRendererIfc extends Initiable<ResponseRendererFactory>
      * @param fusionResponse    the current SolrFusion response
      * @return an perhaps empty string
      */
-    public String getResponseString(Configuration configuration,
+    public void writeResponse(Configuration configuration,
         ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
         FusionResponse fusionResponse);
 }

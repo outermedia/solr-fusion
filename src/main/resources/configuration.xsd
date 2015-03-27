@@ -288,9 +288,10 @@
 
   <xs:simpleType name="responseRendererType">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="php"/>
-      <xs:enumeration value="json"/>
-      <xs:enumeration value="xml"/>
+        <xs:enumeration value="php"/>
+        <xs:enumeration value="json"/>
+        <xs:enumeration value="xml"/>
+        <xs:enumeration value="javabin"/>
     </xs:restriction>
   </xs:simpleType>
 

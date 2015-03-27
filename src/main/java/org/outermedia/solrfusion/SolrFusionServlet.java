@@ -31,15 +31,13 @@ import org.outermedia.solrfusion.configuration.ResponseRendererType;
 import org.outermedia.solrfusion.configuration.Util;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
+import org.outermedia.solrfusion.response.TextResponseRendererIfc;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.*;
 
 import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
@@ -94,8 +92,10 @@ public class SolrFusionServlet extends AbstractServlet
      * The HTTP request parameter <b>forceSchemaReload</b>=&lt;any value&gt; forces an immediate re-load of the
      * solrfusion schema file.
      *
-     * @param request  the received http get request which contains a solr query
-     * @param response the answer is a typical solr response.
+     * @param request
+     *     the received http get request which contains a solr query
+     * @param response
+     *     the answer is a typical solr response.
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
@@ -118,38 +118,47 @@ public class SolrFusionServlet extends AbstractServlet
         log.debug("Sending back response in {}", rendererType.toString());
         response.setContentType(rendererType.getMimeType());
 
-        PrintWriter pw = response.getWriter();
-        FusionResponse fusionResponse = getNewFusionResponse();
+        FusionResponse fusionResponse = getNewFusionResponse(response);
         fusionResponse.setQStart(startTime);
+        startTime = System.currentTimeMillis();
         processRequest(response, fusionRequest, fusionResponse, rendererType);
-        String responseStr = fusionResponse.getResponseAsString();
-        if (responseStr != null && fusionResponse.isOk())
+        if (fusionResponse.isWroteSomeData() && fusionResponse.isOk())
         {
-            log.trace("Returning:\n{}", responseStr);
             response.setStatus(200);
-            startTime = System.currentTimeMillis();
-            pw.println(responseStr);
             long endTime = System.currentTimeMillis();
-            log.info("Wrote response in {}ms", endTime-startTime);
+            log.info("Wrote response in {}ms", endTime - startTime);
         }
-        else
+        else if (!fusionResponse.isWroteSomeData())
         {
-            if (responseStr == null)
+            // if no content was written, try to send an error and an empty content
+            String errorMessage = fusionResponse.getErrorMessage();
+            if (errorMessage == null)
             {
-                String errorMessage = fusionResponse.getErrorMessage();
-                if (errorMessage == null)
+                errorMessage = "unknown";
+            }
+            // try to create empty answer if a text response is expected
+            try
+            {
+                ResponseRendererIfc responseRenderer = cfg.getResponseRendererByType(rendererType);
+                if (responseRenderer != null && (responseRenderer instanceof TextResponseRendererIfc))
                 {
-                    errorMessage = "unknown";
+                    StringWriter emptyResponseWriter = new StringWriter();
+                    PrintWriter textWriter = new PrintWriter(emptyResponseWriter);
+                    fusionResponse.setTextWriter(textWriter);
+                    responseRenderer.writeResponse(cfg, null, fusionRequest, fusionResponse);
+                    if (fusionResponse.isWroteSomeData())
+                    {
+                        textWriter.flush();
+                        errorMessage = emptyResponseWriter.toString();
+                    }
                 }
-                log.error("Returning error, but no response:\n{}", errorMessage);
-                response.sendError(400, errorMessage);
             }
-            else
+            catch (Exception e)
             {
-                log.error("Returning error:\n{}", responseStr);
-                response.setStatus(400);
-                pw.println(responseStr);
+                log.error("Caught exception while creating error response", e);
             }
+            log.error("Returning error, but no response:\n{}", errorMessage);
+            response.sendError(400, errorMessage);
         }
     }
 
@@ -163,22 +172,6 @@ public class SolrFusionServlet extends AbstractServlet
         else
         {
             fusionResponse.setError(fusionRequest.buildErrorMessage(), null);
-        }
-        if (!fusionResponse.isOk() && fusionResponse.getResponseAsString() == null)
-        {
-            try
-            {
-                ResponseRendererIfc responseRenderer = cfg.getResponseRendererByType(rendererType);
-                if (responseRenderer != null)
-                {
-                    String responseStr = responseRenderer.getResponseString(cfg, null, fusionRequest, fusionResponse);
-                    fusionResponse.setErrorResponse(responseStr);
-                }
-            }
-            catch (Exception e)
-            {
-                log.error("Caught exception while creating error response", e);
-            }
         }
     }
 
@@ -242,9 +235,11 @@ public class SolrFusionServlet extends AbstractServlet
         }
     }
 
-    protected FusionResponse getNewFusionResponse()
+    protected FusionResponse getNewFusionResponse(HttpServletResponse servletResponse)
     {
-        return new FusionResponse();
+        FusionResponse r = new FusionResponse();
+        r.setServletResponse(servletResponse);
+        return r;
     }
 
     protected FusionRequest buildFusionRequest(Map<String, String[]> requestParams, Map<String, Object> headerValues)
@@ -296,6 +291,9 @@ public class SolrFusionServlet extends AbstractServlet
         SolrFusionRequestParam minimumMatch = getOptionalSingleSearchParamValue(requestParams, MINIMUM_MATCH, null,
             fusionRequest);
         fusionRequest.setMinimumMatch(minimumMatch);
+        SolrFusionRequestParam omitHeader = getOptionalSingleSearchParamValue(requestParams, OMIT_HEADER, null,
+            fusionRequest);
+        fusionRequest.setOmitHeader(omitHeader);
     }
 
     protected void buildFacetFusionRequest(Map<String, String[]> requestParams, FusionRequest fusionRequest)

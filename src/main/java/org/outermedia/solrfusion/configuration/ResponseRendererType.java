@@ -22,12 +22,20 @@ package org.outermedia.solrfusion.configuration;
  * #L%
  */
 
+import org.apache.solr.client.solrj.impl.BinaryResponseParser;
+
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * The three supported response renderer types: <li>{@link #XML}</li><li> {@link #JSON}</li><li>{@link #PHP}</li>
+ * The three supported response renderer types:
+ * <ul>
+ * <li>{@link #XML}</li>
+ * <li> {@link #JSON}</li>
+ * <li>{@link #PHP}</li>
+ * <li>{@link #JAVABIN}</li>
+ * </ul>
  *
  * @author ballmann
  */
@@ -37,9 +45,14 @@ import javax.xml.bind.annotation.XmlType;
 public enum ResponseRendererType
 {
     @XmlEnumValue("xml")
-    XML("text/xml;charset=UTF-8"), @XmlEnumValue("json")
-JSON("application/json;charset=UTF-8"), @XmlEnumValue("php")
-PHP("text/x-php;charset=UTF-8");
+    XML("text/xml;charset=UTF-8"),
+    @XmlEnumValue("json")
+    JSON("application/json;charset=UTF-8"),
+    @XmlEnumValue("php")
+    PHP("text/x-php;charset=UTF-8"),
+    @XmlEnumValue("javabin")
+    JAVABIN(BinaryResponseParser.BINARY_CONTENT_TYPE + ";charset=UTF-8");
+
     private String mimeType;
 
     ResponseRendererType(String mimeType)

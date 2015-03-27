@@ -35,6 +35,7 @@ import org.outermedia.solrfusion.response.parser.DocCount;
 import org.outermedia.solrfusion.response.parser.Document;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +49,7 @@ import java.util.Map;
  * @author stephan
  */
 @Slf4j
-public class FreemarkerResponseRenderer implements ResponseRendererIfc
+public class FreemarkerResponseRenderer implements TextResponseRendererIfc
 {
     public final String XMLTEMPLATEFILE = "xml.ftl";
     public final String JSONTEMPLATEFILE = "json.ftl";
@@ -96,7 +97,7 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(org.outermedia.solrfusion.configuration.Configuration configuration,
+    public void writeResponse(org.outermedia.solrfusion.configuration.Configuration configuration,
         ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
         FusionResponse fusionResponse)
     {
@@ -145,7 +146,11 @@ public class FreemarkerResponseRenderer implements ResponseRendererIfc
             log.error("Caught exception while applying template " + templateFile, e);
         }
 
-        return stringWriter.getBuffer().toString();
+        PrintWriter pw = fusionResponse.textWriter();
+        // have to set the flag here, because perhaps the data is written partially
+        fusionResponse.wroteSomeData();
+        pw.println(stringWriter.getBuffer().toString());
+        pw.flush();
     }
 
     @Override

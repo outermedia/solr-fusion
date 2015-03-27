@@ -25,6 +25,7 @@ package org.outermedia.solrfusion;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.adapter.*;
 import org.outermedia.solrfusion.adapter.solr.Solr1Adapter;
+import org.outermedia.solrfusion.adapter.solr.Version;
 import org.outermedia.solrfusion.configuration.*;
 import org.outermedia.solrfusion.mapper.ResetQueryState;
 import org.outermedia.solrfusion.query.QueryParserIfc;
@@ -200,10 +201,7 @@ public class FusionController implements FusionControllerIfc
                     fusionRequest);
                 // set state BEFORE response is rendered, because their the status is read out! the query time too.
                 fusionResponse.setOk();
-                // TODO better to pass in a Writer in order to avoid building of very big String
-                String responseString = responseRenderer.getResponseString(configuration, response, fusionRequest,
-                    fusionResponse);
-                fusionResponse.setOkResponse(responseString);
+                responseRenderer.writeResponse(configuration, response, fusionRequest, fusionResponse);
                 response.close();
             }
         }
@@ -341,7 +339,7 @@ public class FusionController implements FusionControllerIfc
                     {
                         // TODO always use q.alt instead of q? or second dismax config option needed?
                         String url = adapter.getUrl();
-                        Double version = adapter.getSolrVersion();
+                        Version version = adapter.getSolrVersion();
                         adapter = Solr1Adapter.Factory.getInstance();
                         adapter.setUrl(url);
                         adapter.setSolrVersion(version);
@@ -350,7 +348,7 @@ public class FusionController implements FusionControllerIfc
                     forDismax = true;
                 }
                 result = adapter.buildHttpClientParams(configuration, searchServerConfig, fusionRequest,
-                    searchServerParams, searchServerConfig.getSearchServerVersion());
+                    searchServerParams, new Version(searchServerConfig.getSearchServerVersion()));
                 if (result != null)
                 {
                     result.setBuiltForDismax(forDismax);

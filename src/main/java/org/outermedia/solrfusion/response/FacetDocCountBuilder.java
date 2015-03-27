@@ -24,6 +24,7 @@ package org.outermedia.solrfusion.response;
 
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.IdGeneratorIfc;
+import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.response.parser.*;
 import org.outermedia.solrfusion.types.ScriptEnv;
 
@@ -70,7 +71,7 @@ public class FacetDocCountBuilder implements FieldVisitor
 
     protected void handleSolrField(SolrField sf)
     {
-        if (!sf.isFusionField(fusionIdField) && !sf.isFusionField("score"))
+        if (!sf.isFusionField(fusionIdField) && !sf.isFusionField(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE))
         {
             List<Integer> docCount = sf.getFusionFacetCount();
             // because all mappings are applied, perhaps some fields were added which are not facet fields

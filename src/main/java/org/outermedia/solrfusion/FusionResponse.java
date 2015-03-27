@@ -28,6 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.configuration.Message;
 import org.outermedia.solrfusion.configuration.ResponseRendererType;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -40,18 +44,22 @@ import java.util.List;
 @Slf4j
 public class FusionResponse
 {
-    private String responseBody;
-
     private String errorMessage;
 
     private boolean ok;
 
     private long qStart;
     private long qEnd;
+    private HttpServletResponse servletResponse;
+
+    private PrintWriter textWriter;
+    private boolean wroteSomeData;
+    private BufferedOutputStream binWriter;
 
     public FusionResponse()
     {
         ok = false;
+        wroteSomeData = false;
         errorMessage = "Unknown";
     }
 
@@ -111,17 +119,6 @@ public class FusionResponse
     }
 
     /**
-     * Transform the found documents into a string using the requested format (xml, json, php). Call {@link #isOk()}
-     * before calling this method here.
-     *
-     * @return a non null String instance if response is OK
-     */
-    public String getResponseAsString()
-    {
-        return responseBody;
-    }
-
-    /**
      * No response renderer was configured in the fusion schema for the required renderer type.
      *
      * @param requestedType is the requested, but unknown type
@@ -134,17 +131,6 @@ public class FusionResponse
             type = requestedType.toString();
         }
         setError("Found no configuration for response renderer: " + type, null);
-    }
-
-    public void setOkResponse(String responseBody)
-    {
-        setOk();
-        this.responseBody = responseBody;
-    }
-
-    public void setErrorResponse(String responseBody)
-    {
-        this.responseBody = responseBody;
     }
 
     public boolean requestSucceeded()
@@ -184,5 +170,49 @@ public class FusionResponse
     public long getQueryTime()
     {
         return qEnd - qStart;
+    }
+
+    public PrintWriter textWriter()
+    {
+        PrintWriter pw = textWriter;
+        if(pw == null)
+        {
+            try
+            {
+                pw = servletResponse.getWriter();
+            }
+            catch (IOException e)
+            {
+                log.error("Caught exception while getting text writer from servlet response", e);
+                pw = null;
+            }
+        }
+        return pw;
+    }
+
+    public BufferedOutputStream binWriter()
+    {
+        BufferedOutputStream out = binWriter;
+        if(out == null)
+        {
+            try
+            {
+                out = new BufferedOutputStream(servletResponse.getOutputStream());
+            }
+            catch (IOException e)
+            {
+                log.error("Caught exception while getting bin writer from servlet response", e);
+                out = null;
+            }
+        }
+        return out;
+    }
+
+    /**
+     * In an error case avoid to write an empty response when a response has been written.
+     */
+    public void wroteSomeData()
+    {
+        wroteSomeData = true;
     }
 }

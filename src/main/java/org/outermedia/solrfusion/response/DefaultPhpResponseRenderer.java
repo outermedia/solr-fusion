@@ -37,7 +37,7 @@ import org.outermedia.solrfusion.response.parser.Document;
  */
 
 @ToString
-public class DefaultPhpResponseRenderer implements ResponseRendererIfc
+public class DefaultPhpResponseRenderer implements TextResponseRendererIfc
 {
 
     /**
@@ -48,11 +48,11 @@ public class DefaultPhpResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(Configuration configuration,
+    public void writeResponse(Configuration configuration,
         ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
         FusionResponse fusionResponse)
     {
-        return null; // TODO
+        // TODO
     }
 
     public static class Factory

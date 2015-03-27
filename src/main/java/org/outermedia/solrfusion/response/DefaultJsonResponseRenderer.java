@@ -37,7 +37,7 @@ import org.outermedia.solrfusion.response.parser.Document;
  */
 
 @ToString
-public class DefaultJsonResponseRenderer implements ResponseRendererIfc
+public class DefaultJsonResponseRenderer implements TextResponseRendererIfc
 {
     private FreemarkerResponseRenderer freemarkerResponseRenderer;
 
@@ -50,11 +50,11 @@ public class DefaultJsonResponseRenderer implements ResponseRendererIfc
     }
 
     @Override
-    public String getResponseString(Configuration configuration,
+    public void writeResponse(Configuration configuration,
         ClosableIterator<Document, SearchServerResponseInfo> docStream, FusionRequest request,
         FusionResponse fusionResponse)
     {
-        return freemarkerResponseRenderer.getResponseString(configuration, docStream, request, fusionResponse);
+        freemarkerResponseRenderer.writeResponse(configuration, docStream, request, fusionResponse);
     }
 
     public static class Factory
