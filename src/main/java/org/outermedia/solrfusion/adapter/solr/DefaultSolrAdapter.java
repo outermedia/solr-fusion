@@ -93,7 +93,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
     private String url;
 
     @Setter @Getter
-    protected Double solrVersion;
+    protected Version solrVersion;
 
     /**
      * Factory creates instances only.
@@ -154,10 +154,10 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
 
     @Override
     public SolrFusionUriBuilder buildHttpClientParams(Configuration configuration,
-        SearchServerConfig searchServerConfig, FusionRequest fusionRequest, Multimap<String> params, String version)
+        SearchServerConfig searchServerConfig, FusionRequest fusionRequest, Multimap<String> params, Version version)
         throws URISyntaxException
     {
-        this.solrVersion = parseDouble(version);
+        this.solrVersion = version;
         SolrFusionUriBuilder ub = new SolrFusionUriBuilder(url);
         ub.setParameter(QUERY_PARAMETER, params.getFirst(QUERY));
         Collection<String> fqs = params.get(FILTER_QUERY);
