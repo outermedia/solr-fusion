@@ -70,7 +70,7 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc<SolrFusionSol
     private SolrTestServer testServer;
 
     @Getter @Setter String url;
-    @Getter @Setter Double solrVersion;
+    @Getter @Setter Version solrVersion;
 
     /**
      * Factory creates instances only.
@@ -81,7 +81,7 @@ public class EmbeddedSolrAdapter implements SearchServerAdapterIfc<SolrFusionSol
 
     @Override
     public SolrFusionSolrQuery buildHttpClientParams(Configuration configuration, SearchServerConfig searchServerConfig,
-        FusionRequest fusionRequest, Multimap<String> params, String version) throws URISyntaxException
+        FusionRequest fusionRequest, Multimap<String> params, Version version) throws URISyntaxException
     {
         String q = params.getFirst(SolrFusionRequestParams.QUERY);
         String fq = params.getFirst(SolrFusionRequestParams.FILTER_QUERY);
