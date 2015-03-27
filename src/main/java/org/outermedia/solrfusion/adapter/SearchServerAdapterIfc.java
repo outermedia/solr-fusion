@@ -24,6 +24,7 @@ package org.outermedia.solrfusion.adapter;
 
 import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.Multimap;
+import org.outermedia.solrfusion.adapter.solr.Version;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.Initiable;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
@@ -46,10 +47,12 @@ public interface SearchServerAdapterIfc<Url extends SolrFusionUriBuilderIfc> ext
      * Send the provided query to a search server and returns the retrieved documents as InputStream. In the case of an
      * error a {@link org.outermedia.solrfusion.adapter.SearchServerResponseException} is thrown.
      *
-     * @param uriBuilder an object created by a previous call of {@link #buildHttpClientParams(org.outermedia.solrfusion.configuration.Configuration,
-     *                   org.outermedia.solrfusion.configuration.SearchServerConfig, org.outermedia.solrfusion.FusionRequest,
-     *                   org.outermedia.solrfusion.Multimap, String)}
-     * @param timeout    a timeout in milliseconds
+     * @param uriBuilder
+     *     an object created by a previous call of {@link #buildHttpClientParams(org.outermedia.solrfusion.configuration.Configuration,
+     *     org.outermedia.solrfusion.configuration.SearchServerConfig, org.outermedia.solrfusion.FusionRequest,
+     *     org.outermedia.solrfusion.Multimap, org.outermedia.solrfusion.adapter.solr.Version)}
+     * @param timeout
+     *     a timeout in milliseconds
      * @return null for error or a document stream
      */
     public InputStream sendQuery(Url uriBuilder, int timeout) throws URISyntaxException, IOException;
@@ -57,16 +60,21 @@ public interface SearchServerAdapterIfc<Url extends SolrFusionUriBuilderIfc> ext
     /**
      * Create an url suitable for a Solr server.
      *
-     * @param params             the prepared Solr request parameters
-     * @param fusionRequest      the current SolrFusion request
-     * @param searchServerConfig the current destination Solr server configuration
-     * @param configuration      the SolrFusion schema
-     * @param version            the version of the search server
+     * @param params
+     *     the prepared Solr request parameters
+     * @param fusionRequest
+     *     the current SolrFusion request
+     * @param searchServerConfig
+     *     the current destination Solr server configuration
+     * @param configuration
+     *     the SolrFusion schema
+     * @param version
+     *     the version of the search server
      * @return a new object
      * @throws URISyntaxException
      */
     public Url buildHttpClientParams(Configuration configuration, SearchServerConfig searchServerConfig,
-        FusionRequest fusionRequest, Multimap<String> params, String version) throws URISyntaxException;
+        FusionRequest fusionRequest, Multimap<String> params, Version version) throws URISyntaxException;
 
     public void init(SearchServerConfig config);
 
@@ -74,9 +82,9 @@ public interface SearchServerAdapterIfc<Url extends SolrFusionUriBuilderIfc> ext
 
     public String getUrl();
 
-    public void setSolrVersion(Double v);
+    public void setSolrVersion(Version v);
 
-    public Double getSolrVersion();
+    public Version getSolrVersion();
 
     public void finish() throws Exception;
 
