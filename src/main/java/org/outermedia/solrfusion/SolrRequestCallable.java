@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.outermedia.solrfusion.adapter.*;
 import org.outermedia.solrfusion.adapter.solr.Solr1Adapter;
+import org.outermedia.solrfusion.adapter.solr.Version;
 import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.response.ClosableIterator;
@@ -110,7 +111,7 @@ public class SolrRequestCallable implements Callable<Object>
         }
     }
 
-    protected SearchServerAdapterIfc<?> newSolr1Adapter(String url, Double solrVersion)
+    protected SearchServerAdapterIfc<?> newSolr1Adapter(String url, Version solrVersion)
     {
         SearchServerAdapterIfc<?> result = Solr1Adapter.Factory.getInstance();
         result.setUrl(url);
