@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Solr uses HTTP request parameters with a variable part, so that it is necessary to store two values per parameter.
- *
+ * <p/>
  * Created by ballmann on 8/8/14.
  */
 @Getter
@@ -89,6 +89,27 @@ public class SolrFusionRequestParam
             catch (Exception e)
             {
                 log.error("Invalid int number. Can't parse int from '{}'.", value, e);
+            }
+        }
+        return result;
+    }
+
+    public boolean getValueAsBool(boolean defaultValue)
+    {
+        boolean result = defaultValue;
+        if (value != null && containedInRequest)
+        {
+            if ("true".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value))
+            {
+                result = true;
+            }
+            else if ("false".equalsIgnoreCase(value) || "no".equalsIgnoreCase(value))
+            {
+                result = false;
+            }
+            else
+            {
+                log.warn("Unsupported bool value '" + value + "'. Known are 'yes', 'no', 'true' and 'false'.");
             }
         }
         return result;

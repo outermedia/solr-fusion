@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 
 /**
  * This class enumerates all supported HTTP request parameters.
- *
+ * <p/>
  * Created by ballmann on 7/4/14.
  */
 @Getter
@@ -59,7 +59,8 @@ public enum SolrFusionRequestParams
     FACET_FIELD("facet.field", false, null),
     QUERY_TYPE("qt", false, null),
     QUERY_FIELD("qf", false, null),
-    MINIMUM_MATCH("mm", false, null);
+    MINIMUM_MATCH("mm", false, null),
+    OMIT_HEADER("omitHeader", false, null);
 
     protected String requestParamName;
 
