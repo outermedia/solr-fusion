@@ -61,7 +61,7 @@ public class Solr1Adapter extends DefaultSolrAdapter
     @Override protected void buildFacetHttpClientParams(Multimap<String> params, URIBuilder ub)
     {
         // Solr Doc: Prior to Solr1.4, one needed to use true instead of count and false instead of index.
-        if (solrVersion != null && solrVersion < 1.4)
+        if (solrVersion != null && solrVersion.lessThan(new Version("1.4")))
         {
             String facetSort = params.getFirst(FACET_SORT);
             if (facetSort != null)
