@@ -10,7 +10,9 @@ import org.outermedia.solrfusion.FusionRequest;
 import org.outermedia.solrfusion.FusionResponse;
 import org.outermedia.solrfusion.adapter.SearchServerResponseInfo;
 import org.outermedia.solrfusion.configuration.Configuration;
+import org.outermedia.solrfusion.configuration.FusionField;
 import org.outermedia.solrfusion.configuration.ResponseRendererFactory;
+import org.outermedia.solrfusion.mapper.ResponseMapperIfc;
 import org.outermedia.solrfusion.response.ClosableIterator;
 import org.outermedia.solrfusion.response.ResponseRendererIfc;
 import org.outermedia.solrfusion.response.freemarker.*;
@@ -20,6 +22,8 @@ import org.outermedia.solrfusion.response.parser.Document;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +74,10 @@ public class JavaBin4 implements ResponseRendererIfc
             highlighting);
         FreemarkerFacets freemarkerFacets = new FreemarkerFacets(configuration, facets);
 
-        responseEntries.add("sort_values", new NamedList<>()); // TODO add sort settings?
+        // sort_values ::= { <sort field name> : [<sort value of doc1>, <sort value of doc2>, ...], ... }
+        // doc1, doc2, ... are the returned documents
+        NamedList<ArrayList> sorValuesNl = new NamedList<>();
+        responseEntries.add("sort_values", sorValuesNl);
 
         boolean omitHeaders = request.getOmitHeader().getValueAsBool(false);
         if (!omitHeaders)
@@ -111,7 +118,7 @@ public class JavaBin4 implements ResponseRendererIfc
             solrDocs.setStart(0);
             for (FreemarkerDocument doc : matchDocs)
             {
-                solrDocs.add(convertToSolrDocument(doc));
+                solrDocs.add(convertToSolrDocument(doc, configuration));
             }
         }
 
@@ -123,14 +130,23 @@ public class JavaBin4 implements ResponseRendererIfc
             responseEntries.add("response", solrDocs);
             solrDocs.setNumFound(freemarkerResponse.getTotalHitNumber());
             solrDocs.setStart(0);
+            String fusionSortField = request.getFusionSortField();
+            ArrayList sortValuesOfReturnedDocs = new ArrayList();
+            // don't set sort_values in response if score is the sort field (explicitly or implicitly specified)
+            if(!ResponseMapperIfc.FUSION_FIELD_NAME_SCORE.equalsIgnoreCase(fusionSortField))
+            {
+                sorValuesNl.add(fusionSortField, sortValuesOfReturnedDocs);
+            }
             for (FreemarkerDocument doc : foundDocs)
             {
-                solrDocs.add(convertToSolrDocument(doc));
+                SolrDocument solrDoc = convertToSolrDocument(doc, configuration);
+                solrDocs.add(solrDoc);
+                sortValuesOfReturnedDocs.add(solrDoc.getFieldValue(fusionSortField));
             }
         }
 
         // handle facets
-        if(freemarkerFacets.isHasFacets())
+        if (freemarkerFacets.isHasFacets())
         {
             // see /mnt/mvnrepo-om/org/apache/solr/solr-core/4.8.1/solr-core-4.8.1.jar!/org/apache/solr/handler/component/FacetComponent.class
             SimpleOrderedMap<Object> facetNamedList = new SimpleOrderedMap<>();
@@ -139,11 +155,11 @@ public class JavaBin4 implements ResponseRendererIfc
 
             SimpleOrderedMap<Object> facetFieldsNamedList = new SimpleOrderedMap<>();
             Map<String, List<DocCount>> facetFieldsAndValues = freemarkerFacets.getFacets();
-            for(String key : facetFieldsAndValues.keySet())
+            for (String key : facetFieldsAndValues.keySet())
             {
                 List<DocCount> count = facetFieldsAndValues.get(key);
                 NamedList<Integer> namedListCount = new SimpleOrderedMap<>();
-                for(DocCount dc : count)
+                for (DocCount dc : count)
                 {
                     namedListCount.add(dc.getWord(), dc.getCount());
                 }
@@ -156,18 +172,18 @@ public class JavaBin4 implements ResponseRendererIfc
         }
 
         // handle highlights
-        if(freemarkerHighlighting.isHasHighlights())
+        if (freemarkerHighlighting.isHasHighlights())
         {
             // see /mnt/mvnrepo-om/org/apache/solr/solr-core/4.8.1/solr-core-4.8.1.jar!/org/apache/solr/handler/component/HighlightComponent.class
             SimpleOrderedMap<Object> hlNamedList = new SimpleOrderedMap<>();
             responseEntries.add("highlighting", hlNamedList);
             List<FreemarkerDocument> hlDocs = freemarkerHighlighting.getHighlighting();
-            for(FreemarkerDocument hlDoc : hlDocs)
+            for (FreemarkerDocument hlDoc : hlDocs)
             {
                 SimpleOrderedMap<Object> namedListHlDoc = new SimpleOrderedMap<>();
                 hlNamedList.add(hlDoc.getId(), namedListHlDoc);
                 List<FreemarkerMultiValuedField> fieldSnippets = hlDoc.getMultiValuedFields();
-                for(FreemarkerMultiValuedField mv : fieldSnippets)
+                for (FreemarkerMultiValuedField mv : fieldSnippets)
                 {
                     namedListHlDoc.add(mv.getName(), mv.getValues().toArray());
                 }
@@ -176,20 +192,66 @@ public class JavaBin4 implements ResponseRendererIfc
 
     }
 
-    protected SolrDocument convertToSolrDocument(FreemarkerDocument fmDoc)
+    protected SolrDocument convertToSolrDocument(FreemarkerDocument fmDoc, Configuration config)
     {
         SolrDocument sDoc = new SolrDocument();
         List<FreemarkerSingleValuedField> singleFields = fmDoc.getSingleValuedFields();
         for (FreemarkerSingleValuedField f : singleFields)
         {
-            sDoc.addField(f.getName(), f.getValue());
+            String fusionField = f.getName();
+            sDoc.addField(fusionField, objectFromString(f.getValue(), config.findFieldByName(fusionField)));
         }
         List<FreemarkerMultiValuedField> multiFields = fmDoc.getMultiValuedFields();
         for (FreemarkerMultiValuedField f : multiFields)
         {
-            sDoc.addField(f.getName(), f.getValues());
+            for (String v : f.getValues())
+            {
+                String fusionField = f.getName();
+                sDoc.addField(fusionField, objectFromString(v, config.findFieldByName(fusionField)));
+            }
         }
         return sDoc;
+    }
+
+    protected Object objectFromString(String docFieldValue, FusionField fusionField)
+    {
+        if (fusionField == null)
+        {
+            return docFieldValue;
+        }
+
+        switch (fusionField.getFieldType())
+        {
+            case BOOLEAN:
+                return Boolean.valueOf("1".equals(docFieldValue) || "true".equalsIgnoreCase(docFieldValue) ||
+                    "yes".equalsIgnoreCase(docFieldValue));
+            case TEXT:
+                return docFieldValue;
+            case INT:
+                return Integer.valueOf(docFieldValue);
+            case LONG:
+                return Long.valueOf(docFieldValue);
+            case FLOAT:
+                return Float.valueOf(docFieldValue);
+            case DOUBLE:
+                return Double.valueOf(docFieldValue);
+            case DATE:
+                SimpleDateFormat sdf = new SimpleDateFormat(fusionField.getFormat());
+                try
+                {
+                    return sdf.parse(docFieldValue);
+                }
+                catch (Exception e)
+                {
+                    log.warn(
+                        "Couldn't parse date from '" + docFieldValue + "' with pattern '" + fusionField.getFormat() +
+                            "'. Return string object.", e);
+                    return docFieldValue;
+                }
+        }
+        log.warn(
+            "Couldn't convert value '" + docFieldValue + "' of type '" + fusionField.getFormat() + "'. Using string.");
+        return docFieldValue;
     }
 
     @Override
