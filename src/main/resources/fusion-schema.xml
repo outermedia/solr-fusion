@@ -9,6 +9,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <!-- supported types: text, int, long, float, double, boolean, date -->
     <!-- mappings in <fields> below use the following field names: -->
     <om:fusion-schema-fields default-type="text">
+        <om:field name="score" type="float"/> <!-- always add score! -->
         <om:field name="id" />
         <om:field name="city" />
         <om:field name="title" />
