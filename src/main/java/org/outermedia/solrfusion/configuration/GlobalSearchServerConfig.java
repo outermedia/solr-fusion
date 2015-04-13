@@ -50,62 +50,84 @@ import java.util.List;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "globalSearchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/",
-    propOrder = {
-        "timeout", "disasterLimit", "disasterMessage", "defaultPageSize", "queryParserFactory",
-        "dismaxQueryParserFactory", "defaultResponseParserFactory", "responseRendererFactories", "queryBuilderFactory",
-        "dismaxQueryBuilderFactory", "merge", "searchServerConfigs"
-    })
+@XmlType(name = "globalSearchServerConfig",
+         namespace = "http://solrfusion.outermedia.org/configuration/",
+         propOrder = {
+             "timeout", "disasterLimit", "disasterMessage", "defaultPageSize", "queryParserFactory",
+             "dismaxQueryParserFactory", "defaultResponseParserFactory", "responseRendererFactories",
+             "queryBuilderFactory", "dismaxQueryBuilderFactory", "merge", "searchServerConfigs"
+         })
 @Getter
 @Setter
 @ToString
 @Slf4j
 public class GlobalSearchServerConfig
 {
-    @XmlElement(name = "timeout", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @XmlElement(name = "timeout",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
     private int timeout;
 
-    @XmlElement(name = "disaster-limit", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @XmlElement(name = "disaster-limit",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
     private int disasterLimit;
 
-    @XmlElement(name = "error", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @XmlElement(name = "error",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
     private Message disasterMessage;
 
-    @XmlElement(name = "page-size", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @XmlElement(name = "page-size",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
     private int defaultPageSize;
 
-    @XmlElement(name = "query-parser", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @XmlElement(name = "query-parser",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
     private QueryParserFactory queryParserFactory;
 
-    @XmlElement(name = "dismax-query-parser", namespace = "http://solrfusion.outermedia.org/configuration/",
-        required = true)
+    @XmlElement(name = "dismax-query-parser",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
     private QueryParserFactory dismaxQueryParserFactory;
 
-    @XmlElement(name = "response-parser", namespace = "http://solrfusion.outermedia.org/configuration/",
-        required = true)
+    @XmlElement(name = "response-parser",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
     private ResponseParserFactory defaultResponseParserFactory;
 
-    @XmlElement(name = "response-renderer", namespace = "http://solrfusion.outermedia.org/configuration/",
-        required = true)
+    @XmlElement(name = "response-renderer",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
     private List<ResponseRendererFactory> responseRendererFactories;
 
-    @XmlElement(name = "query-builder", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @XmlElement(name = "query-builder",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
     private QueryBuilderFactory queryBuilderFactory;
 
-    @XmlElement(name = "dismax-query-builder", namespace = "http://solrfusion.outermedia.org/configuration/",
-        required = true)
+    @XmlElement(name = "dismax-query-builder",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
     private QueryBuilderFactory dismaxQueryBuilderFactory;
 
-    @XmlElement(name = "merge", namespace = "http://solrfusion.outermedia.org/configuration/", required = false)
+    @XmlElement(name = "merge",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = false)
     private Merge merge;
 
-    @XmlElement(name = "solr-server", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
+    @XmlElement(name = "solr-server",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
     private List<SearchServerConfig> searchServerConfigs;
 
     /**
      * Find a response renderer by type.
      *
-     * @param type is either PHP, JSON or XML (see {@link ResponseRendererType})
+     * @param type
+     *     is either PHP, JSON or XML (see {@link ResponseRendererType})
      * @return null for an error or an instance of {@link ResponseRendererIfc}
      */
     public ResponseRendererIfc getResponseRendererByType(ResponseRendererType type)
@@ -238,4 +260,13 @@ public class GlobalSearchServerConfig
         return dismaxQueryParserFactory.getInstance();
     }
 
+    public List<String> allSearchServerNames()
+    {
+        List<String> result = new ArrayList<>();
+        for (SearchServerConfig searchServerConfig : searchServerConfigs)
+        {
+            result.add(searchServerConfig.getSearchServerName());
+        }
+        return result;
+    }
 }

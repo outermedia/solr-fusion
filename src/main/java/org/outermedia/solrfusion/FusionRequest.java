@@ -463,7 +463,11 @@ public class FusionRequest
         if (fusionField.equals("*"))
         {
             result.add("*");
-            result.add(ResponseMapperIfc.DOC_FIELD_NAME_SCORE);
+            // if "score" is added to hl.fl, then solr returns no snippets!
+            if(target != QueryTarget.HIGHLIGHT_QUERY)
+            {
+                result.add(ResponseMapperIfc.DOC_FIELD_NAME_SCORE);
+            }
         }
         else
         {

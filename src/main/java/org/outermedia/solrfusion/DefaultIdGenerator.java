@@ -84,7 +84,8 @@ public class DefaultIdGenerator implements IdGeneratorIfc
      * @param fusionDocId
      * @return
      */
-    @Override public String getSearchServerIdFromFusionId(String fusionDocId)
+    @Override
+    public String getSearchServerIdFromFusionId(String fusionDocId)
     {
         int hashPos = fusionDocId.indexOf(SEPARATOR);
         if (hashPos < 0)
@@ -101,7 +102,8 @@ public class DefaultIdGenerator implements IdGeneratorIfc
      * @param fusionDocId
      * @return
      */
-    @Override public String getSearchServerDocIdFromFusionId(String fusionDocId)
+    @Override
+    public String getSearchServerDocIdFromFusionId(String fusionDocId)
     {
         if (fusionDocId.contains(ID_SEPARATOR))
         {
@@ -118,11 +120,14 @@ public class DefaultIdGenerator implements IdGeneratorIfc
     /**
      * Returns a merged id if otherId is not contained in thisId. Otherwise thisId is returned.
      *
-     * @param thisId  not null
-     * @param otherId not null
+     * @param thisId
+     *     a not null fusion id
+     * @param otherId
+     *     a not null fusion id
      * @return either thisId or a new merged id
      */
-    @Override public String mergeIds(String thisId, String otherId)
+    @Override
+    public String mergeIds(String thisId, String otherId)
     {
         String result = thisId;
         if (!thisId.contains(otherId))
@@ -132,7 +137,8 @@ public class DefaultIdGenerator implements IdGeneratorIfc
         return result;
     }
 
-    @Override public List<String> splitMergedId(String mergedIds)
+    @Override
+    public List<String> splitMergedId(String mergedIds)
     {
         List<String> result = new ArrayList<>();
         String split[] = mergedIds.split(ID_SEPARATOR.replace("\\", "\\\\"));
@@ -150,9 +156,38 @@ public class DefaultIdGenerator implements IdGeneratorIfc
         return result;
     }
 
-    @Override public boolean isMergedDocument(String fusionDocId)
+    @Override
+    public boolean isMergedDocument(String fusionDocId, List<String> searchServerNames)
     {
-        return fusionDocId != null && fusionDocId.contains(ID_SEPARATOR);
+        boolean result = fusionDocId != null && fusionDocId.contains(ID_SEPARATOR);
+        if (result)
+        {
+            List<String> singleDocIds = splitMergedId(fusionDocId);
+            for (String fid : singleDocIds)
+            {
+                if (!isFusionDocId(fid, searchServerNames))
+                {
+                    result = false;
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    protected boolean isFusionDocId(String fid, List<String> searchServerNames)
+    {
+        boolean result = false;
+        for (String serverName : searchServerNames)
+        {
+            if (fid.startsWith(serverName + SEPARATOR))
+            {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
     public static class Factory

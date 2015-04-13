@@ -68,7 +68,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         allDocs = new ArrayList<>();
         streamCounter = 0;
         maxDocNr = 0;
-        allHighlighting = new HighlightingMap();
+        allHighlighting = new HighlightingMap(false, null);
         totalDocsFoundMap = new HashMap<>();
     }
 
@@ -84,6 +84,8 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             fusionMergeField = merger.getFusionField();
         }
         allHighlighting.init(config.getIdGenerator());
+        allHighlighting.setDocMergingEnabled(config.getMerger() != null);
+        allHighlighting.setSearchServerNames(config.allSearchServerNames());
     }
 
     @Override
@@ -301,11 +303,12 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
             Document d = allDocs.get(start + i);
             // id was mapped too when sort field was mapped
             String fusionDocId = d.getFusionDocId(fusionIdField);
-            if (fusionMergeField == null && idGenerator.isMergedDocument(fusionDocId))
+            boolean isMergedDoc = idGenerator.isMergedDocument(fusionDocId, config.allSearchServerNames());
+            if (fusionMergeField == null && isMergedDoc)
             {
                 log.error("DOC MERGING IS OFF, BUT FOUND MERGED ID: " + fusionDocId);
             }
-            if (fusionMergeField != null && idGenerator.isMergedDocument(fusionDocId))
+            if (fusionMergeField != null && isMergedDoc)
             {
                 String mergeFieldValue = d.getFusionValuesOf(fusionMergeField).get(0);
                 // all values of fusionMergeField point to the same container which holds the same documents
@@ -463,7 +466,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
                 newAllDocs.add(doc);
             }
         }
-        HighlightingMap emptyHighlights = new HighlightingMap();
+        HighlightingMap emptyHighlights = new HighlightingMap(config.getMerger() != null, config.allSearchServerNames());
         emptyHighlights.init(config.getIdGenerator());
         for (Set<Document> sameDocuments : lookup.values())
         {

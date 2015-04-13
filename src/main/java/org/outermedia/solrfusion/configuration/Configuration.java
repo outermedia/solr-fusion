@@ -49,63 +49,98 @@ import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "",
-    propOrder = {
-        "fusionFields", "scriptTypes", "defaultSearchField", "defaultSortField", "defaultOperator",
-        "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory", "queryMapperFactory",
-        "controllerFactory", "searchServerConfigs"
-    })
-@XmlRootElement(name = "core", namespace = "http://solrfusion.outermedia.org/configuration/")
+         propOrder = {
+             "fusionFields", "scriptTypes", "defaultSearchField", "defaultSortField", "defaultOperator",
+             "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory", "queryMapperFactory",
+             "controllerFactory", "searchServerConfigs"
+         })
+@XmlRootElement(name = "core",
+                namespace = "http://solrfusion.outermedia.org/configuration/")
 @ToString
 public class Configuration
 {
-    @XmlElement(name = "fusion-schema-fields", namespace = "http://solrfusion.outermedia.org/configuration/",
-        required = true) @Getter @Setter
+    @XmlElement(name = "fusion-schema-fields",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
+    @Getter
+    @Setter
     private FusionFieldList fusionFields;
 
-    @XmlElement(name = "script-type", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter @Setter
+    @XmlElement(name = "script-type",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
+    @Getter
+    @Setter
     private List<ScriptType> scriptTypes;
 
-    @XmlElement(name = "default-search-field", namespace = "http://solrfusion.outermedia.org/configuration/",
-        required = true) @Getter @Setter
+    @XmlElement(name = "default-search-field",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
+    @Getter
+    @Setter
     private String defaultSearchField;
 
-    @XmlElement(name = "default-sort-field", namespace = "http://solrfusion.outermedia.org/configuration/",
-        required = true) @Getter @Setter
+    @XmlElement(name = "default-sort-field",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
+    @Getter
+    @Setter
     private String defaultSortField;
 
-    @XmlElement(name = "default-operator", namespace = "http://solrfusion.outermedia.org/configuration/",
-        required = true) @Getter @Setter
+    @XmlElement(name = "default-operator",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
+    @Getter
+    @Setter
     private String defaultOperator;
 
-    @XmlElement(name = "id-generator", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter @Setter
+    @XmlElement(name = "id-generator",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
+    @Getter
+    @Setter
     private IdGeneratorFactory idGeneratorFactory;
 
-    @XmlElement(name = "response-consolidator", namespace = "http://solrfusion.outermedia.org/configuration/",
-        required = true) @Getter @Setter
+    @XmlElement(name = "response-consolidator",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
+    @Getter
+    @Setter
     private ResponseConsolidatorFactory responseConsolidatorFactory;
 
-    @XmlElement(name = "response-mapper", namespace = "http://solrfusion.outermedia.org/configuration/",
-        required = true) @Getter @Setter
+    @XmlElement(name = "response-mapper",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
+    @Getter
+    @Setter
     private ResponseMapperFactory responseMapperFactory;
 
-    @XmlElement(name = "query-mapper", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter @Setter
+    @XmlElement(name = "query-mapper",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
+    @Getter
+    @Setter
     private QueryMapperFactory queryMapperFactory;
 
-    @XmlElement(name = "controller", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter @Setter
+    @XmlElement(name = "controller",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
+    @Getter
+    @Setter
     private ControllerFactory controllerFactory;
 
-    @XmlElement(name = "solr-servers", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
-    @Getter @Setter
+    @XmlElement(name = "solr-servers",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
+    @Getter
+    @Setter
     private GlobalSearchServerConfig searchServerConfigs;
 
     /**
      * Find a response renderer by type.
      *
-     * @param type is either PHP, JSON or XML (see {@link ResponseRendererType})
+     * @param type
+     *     is either PHP, JSON or XML (see {@link ResponseRendererType})
      * @return null for an error or an instance of {@link ResponseRendererIfc}
      */
     public ResponseRendererIfc getResponseRendererByType(ResponseRendererType type)
@@ -334,6 +369,12 @@ public class Configuration
     }
 
     public QueryParserIfc getDismaxQueryParser() throws InvocationTargetException, IllegalAccessException
-    { return searchServerConfigs.getDismaxQueryParser(); }
+    {
+        return searchServerConfigs.getDismaxQueryParser();
+    }
 
+    public List<String> allSearchServerNames()
+    {
+        return searchServerConfigs.allSearchServerNames();
+    }
 }

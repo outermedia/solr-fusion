@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+    <lst name="responseHeader">
+        <int name="status">0</int>
+        <int name="QTime">6</int>
+        <lst name="params">
+            <str name="fl">* score id</str>
+            <str name="q">name:sdram</str>
+            <str name="hl.fl">*</str>
+            <str name="wt">xml</str>
+            <str name="hl">true</str>
+        </lst>
+    </lst>
+    <result name="response" numFound="3" start="0" maxScore="0.7698604">
+        <doc>
+            <str name="id">VS1GB400C3</str>
+            <str name="name">CORSAIR ValueSelect 1GB 184-Pin DDR SDRAM Unbuffered DDR 400 (PC 3200) System Memory -
+                Retail
+            </str>
+            <str name="manu">Corsair Microsystems Inc.</str>
+            <str name="manu_id_s">corsair</str>
+            <arr name="cat">
+                <str>electronics</str>
+                <str>memory</str>
+            </arr>
+            <float name="price">74.99</float>
+            <str name="price_c">74.99,USD</str>
+            <int name="popularity">7</int>
+            <bool name="inStock">true</bool>
+            <str name="store">37.7752,-100.0232</str>
+            <date name="manufacturedate_dt">2006-02-13T15:26:37Z</date>
+            <str name="payloads">electronics|4.0 memory|2.0</str>
+            <long name="_version_">1496816149280587776</long>
+            <float name="score">0.7698604</float>
+        </doc>
+        <doc>
+            <str name="id">VDBDB1A16</str>
+            <str name="name">A-DATA V-Series 1GB 184-Pin DDR SDRAM Unbuffered DDR 400 (PC 3200) System Memory - OEM
+            </str>
+            <str name="manu">A-DATA Technology Inc.</str>
+            <str name="manu_id_s">corsair</str>
+            <arr name="cat">
+                <str>electronics</str>
+                <str>memory</str>
+            </arr>
+            <arr name="features">
+                <str>CAS latency 3, 2.7v</str>
+            </arr>
+            <int name="popularity">0</int>
+            <bool name="inStock">true</bool>
+            <str name="store">45.18414,-93.88141</str>
+            <date name="manufacturedate_dt">2006-02-13T15:26:37Z</date>
+            <str name="payloads">electronics|0.9 memory|0.1</str>
+            <long name="_version_">1496816149286879232</long>
+            <float name="score">0.67362785</float>
+        </doc>
+        <doc>
+            <str name="id">TWINX2048-3200PRO</str>
+            <str name="name">CORSAIR XMS 2GB (2 x 1GB) 184-Pin DDR SDRAM Unbuffered DDR 400 (PC 3200) Dual Channel Kit
+                System Memory - Retail
+            </str>
+            <str name="manu">Corsair Microsystems Inc.</str>
+            <str name="manu_id_s">corsair</str>
+            <arr name="cat">
+                <str>electronics</str>
+                <str>memory</str>
+            </arr>
+            <arr name="features">
+                <str>CAS latency 2, 2-3-3-6 timing, 2.75v, unbuffered, heat-spreader</str>
+            </arr>
+            <float name="price">185.0</float>
+            <str name="price_c">185,USD</str>
+            <int name="popularity">5</int>
+            <bool name="inStock">true</bool>
+            <str name="store">37.7752,-122.4232</str>
+            <date name="manufacturedate_dt">2006-02-13T15:26:37Z</date>
+            <str name="payloads">electronics|6.0 memory|3.0</str>
+            <long name="_version_">1496816149273247744</long>
+            <float name="score">0.5773953</float>
+        </doc>
+    </result>
+    <lst name="highlighting">
+        <lst name="VS1GB400C3">
+            <arr name="name">
+                <str>CORSAIR ValueSelect 1GB 184-Pin DDR &lt;em&gt;SDRAM&lt;/em&gt; Unbuffered DDR 400 (PC 3200) System
+                    Memory - Retail
+                </str>
+            </arr>
+        </lst>
+        <lst name="VDBDB1A16">
+            <arr name="name">
+                <str>A-DATA V-Series 1GB 184-Pin DDR &lt;em&gt;SDRAM&lt;/em&gt; Unbuffered DDR 400 (PC 3200) System
+                    Memory - OEM
+                </str>
+            </arr>
+        </lst>
+        <lst name="TWINX2048-3200PRO">
+            <arr name="name">
+                <str>CORSAIR XMS 2GB (2 x 1GB) 184-Pin DDR &lt;em&gt;SDRAM&lt;/em&gt; Unbuffered DDR 400 (PC 3200) Dual
+                    Channel Kit System
+                </str>
+            </arr>
+        </lst>
+    </lst>
+</response>

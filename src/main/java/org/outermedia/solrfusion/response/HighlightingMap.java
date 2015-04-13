@@ -22,10 +22,13 @@ package org.outermedia.solrfusion.response;
  * #L%
  */
 
+import lombok.Getter;
+import lombok.Setter;
 import org.outermedia.solrfusion.IdGeneratorIfc;
 import org.outermedia.solrfusion.response.parser.Document;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,13 +38,20 @@ import java.util.Map;
  */
 public class HighlightingMap
 {
-    private Map<String, Document> map;
-    private String fusionIdField;
-    private IdGeneratorIfc idGen;
+    @Setter
+    protected List<String> searchServerNames;
+    @Setter
+    private boolean docMergingEnabled;
+    @Getter
+    protected Map<String, Document> map;
+    protected String fusionIdField;
+    protected IdGeneratorIfc idGen;
 
-    public HighlightingMap()
+    public HighlightingMap(boolean docMergingEnabled, List<String> searchServerNames)
     {
         map = new HashMap<>();
+        this.docMergingEnabled = docMergingEnabled;
+        this.searchServerNames = searchServerNames;
     }
 
     public void init(IdGeneratorIfc idGen)
@@ -64,7 +74,7 @@ public class HighlightingMap
     public Document get(String fusionDocId)
     {
         // we need the simple fusion doc id to lookup the highlighting
-        if(idGen.isMergedDocument(fusionDocId))
+        if(docMergingEnabled && idGen.isMergedDocument(fusionDocId, searchServerNames))
         {
             fusionDocId = idGen.splitMergedId(fusionDocId).get(0);
         }

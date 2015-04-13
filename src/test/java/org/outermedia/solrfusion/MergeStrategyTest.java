@@ -61,7 +61,7 @@ public class MergeStrategyTest
         MergeStrategyIfc merger = cfg.getMerger();
         Set<Document> docs = new HashSet<>();
         docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
-        HighlightingMap emptyHighlights = new HighlightingMap();
+        HighlightingMap emptyHighlights = new HighlightingMap(false, null);
         emptyHighlights.init(cfg.getIdGenerator());
         List<Document> mergedDoc = merger.mergeDocuments("isbn", cfg, docs, emptyHighlights, null);
         // System.out.println("MD " + mergedDoc.buildFusionDocStr());
@@ -76,7 +76,7 @@ public class MergeStrategyTest
         docs.add(buildDocument("id", fusionId("BibliothekA", "1"), "title", "t1", "isbn", "i1"));
         docs.add(buildDocument("id", fusionId("BibliothekB", "2"), "title", "t2", "isbn", "i1", "author", "a1"));
         docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
-        HighlightingMap emptyHighlights = new HighlightingMap();
+        HighlightingMap emptyHighlights = new HighlightingMap(false, null);
         emptyHighlights.init(cfg.getIdGenerator());
         List<Document> mergedDoc = merger.mergeDocuments("isbn", cfg, docs, emptyHighlights, null);
         Assert.assertNotNull("Expected merged document", mergedDoc);
@@ -93,7 +93,7 @@ public class MergeStrategyTest
         Set<Document> docs = new HashSet<>();
         docs.add(buildDocument("id", fusionId("BibliothekA", "1"), "title", "t1", "isbn", "i1"));
         docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
-        HighlightingMap emptyHighlights = new HighlightingMap();
+        HighlightingMap emptyHighlights = new HighlightingMap(false, null);
         emptyHighlights.init(cfg.getIdGenerator());
         List<Document> mergedDoc = merger.mergeDocuments("isbn", cfg, docs, emptyHighlights, null);
         Assert.assertNotNull("Expected merged document", mergedDoc);
@@ -109,7 +109,7 @@ public class MergeStrategyTest
         Set<Document> docs = new HashSet<>();
         docs.add(buildDocument("id", fusionId("BibliothekB", "2"), "isbn", "i1", "author", "a1"));
         docs.add(buildDocument("id", fusionId("BibliothekC", "3"), "title", "t3", "isbn", "i1", "author", "a2"));
-        HighlightingMap emptyHighlights = new HighlightingMap();
+        HighlightingMap emptyHighlights = new HighlightingMap(false, null);
         emptyHighlights.init(cfg.getIdGenerator());
         List<Document> mergedDoc = merger.mergeDocuments("isbn", cfg, docs, emptyHighlights, null);
         Assert.assertNotNull("Expected merged document", mergedDoc);
@@ -171,7 +171,7 @@ public class MergeStrategyTest
             "other1", "a3"));
         docs.add(buildDocument("id", fusionId("BibliothekC", "4"), "title", "t3b", "isbn", Arrays.asList("ic", "ie"),
             "other2", "a4"));
-        HighlightingMap emptyHighlights = new HighlightingMap();
+        HighlightingMap emptyHighlights = new HighlightingMap(false, null);
         emptyHighlights.init(cfg.getIdGenerator());
         List<Document> mergedDocs = merger.mergeDocuments("isbn", cfg, docs, emptyHighlights, null);
         Assert.assertNotNull("Expected merged document", mergedDocs);

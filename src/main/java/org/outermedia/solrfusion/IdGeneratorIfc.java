@@ -87,7 +87,8 @@ public interface IdGeneratorIfc extends Initiable<IdGeneratorFactory>
      * servers.
      *
      * @param fusionDocId
+     * @param strings
      * @return true if the document was merged, otherwise false
      */
-    public boolean isMergedDocument(String fusionDocId);
+    public boolean isMergedDocument(String fusionDocId, List<String> strings);
 }

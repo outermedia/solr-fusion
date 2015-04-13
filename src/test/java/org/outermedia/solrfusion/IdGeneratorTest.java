@@ -76,8 +76,15 @@ public class IdGeneratorTest
             "ServerA" + sep + "1" + isep + "ServerB" + sep + "2" + isep + "ServerC" + sep + "3", mergedId);
 
         List<String> splitIds = idGen.splitMergedId(mergedId);
-        List<String> expectedList = Arrays.asList("ServerA" + sep + "1", "ServerB" + sep + "2",
-            "ServerC" + sep + "3");
+        List<String> expectedList = Arrays.asList("ServerA" + sep + "1", "ServerB" + sep + "2", "ServerC" + sep + "3");
         Assert.assertEquals("Got different split doc ids", expectedList, splitIds);
+
+        // isMergedDocument() uses search server names to find real merged doc ids
+        Assert.assertFalse("Expected single doc id detection",
+            idGen.isMergedDocument("a-b", Arrays.asList("s1", "s2")));
+        Assert.assertFalse("Expected single doc id detection",
+            idGen.isMergedDocument("s2_1234-a-b", Arrays.asList("s1", "s2")));
+        Assert.assertTrue("Expected merged doc id detection",
+            idGen.isMergedDocument("s2_1234-s1_ab", Arrays.asList("s1", "s2")));
     }
 }
