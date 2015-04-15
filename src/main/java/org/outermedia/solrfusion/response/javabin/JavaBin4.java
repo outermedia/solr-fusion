@@ -124,7 +124,8 @@ public class JavaBin4 implements ResponseRendererIfc
 
         // handle found docs
         List<FreemarkerDocument> foundDocs = freemarkerResponse.getDocuments();
-        if (foundDocs.size() > 0)
+        // always return the response part, even if empty
+        // if (foundDocs.size() > 0)
         {
             SolrDocumentList solrDocs = new SolrDocumentList();
             responseEntries.add("response", solrDocs);
