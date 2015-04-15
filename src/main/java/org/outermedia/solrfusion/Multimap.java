@@ -26,10 +26,7 @@ import com.google.common.collect.HashMultimap;
 import lombok.EqualsAndHashCode;
 import org.outermedia.solrfusion.query.SolrFusionRequestParams;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A helper class which is used to store Solr HTTP request parameters which might have multiple values.
@@ -105,7 +102,50 @@ public class Multimap<V>
 
     public String toString()
     {
-        return map.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        for (String key : map.keySet())
+        {
+            sb.append("\n\t");
+            if (sb.length() > 2)
+            {
+                sb.append(",");
+            }
+            sb.append(key);
+            sb.append(": [");
+            Set<V> values = map.get(key);
+            if (values != null)
+            {
+                int count = 0;
+                for (V v : values)
+                {
+                    if (count > 0)
+                    {
+                        sb.append(", ");
+                    }
+                    if (v instanceof String)
+                    {
+                        sb.append('"');
+                    }
+                    if (v == null)
+                    {
+                        sb.append("null");
+                    }
+                    else
+                    {
+                        sb.append(v.toString());
+                    }
+                    if (v instanceof String)
+                    {
+                        sb.append('"');
+                    }
+                    count++;
+                }
+            }
+            sb.append("]");
+        }
+        sb.append("\n}");
+        return sb.toString();
     }
 
     public List<Map.Entry<String, V>> filterBy(SolrFusionRequestParams field)
@@ -130,5 +170,10 @@ public class Multimap<V>
     public boolean isEmpty()
     {
         return map.isEmpty();
+    }
+
+    public Set<String> allKeys()
+    {
+        return map.keySet();
     }
 }

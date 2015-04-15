@@ -103,11 +103,11 @@ public class DefaultIdGenerator implements IdGeneratorIfc
      * @return
      */
     @Override
-    public String getSearchServerDocIdFromFusionId(String fusionDocId)
+    public String getSearchServerDocIdFromFusionId(String fusionDocId, List<String> searchServerNames)
     {
-        if (fusionDocId.contains(ID_SEPARATOR))
+        if (isMergedDocument(fusionDocId, searchServerNames))
         {
-            fusionDocId = fusionDocId.substring(0, fusionDocId.indexOf(ID_SEPARATOR));
+            fusionDocId = splitMergedId(fusionDocId).get(0);
         }
         int hashPos = fusionDocId.indexOf(SEPARATOR);
         if (hashPos < 0)

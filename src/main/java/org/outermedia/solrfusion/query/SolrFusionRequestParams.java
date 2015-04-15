@@ -60,7 +60,8 @@ public enum SolrFusionRequestParams
     QUERY_TYPE("qt", false, null),
     QUERY_FIELD("qf", false, null),
     MINIMUM_MATCH("mm", false, null),
-    OMIT_HEADER("omitHeader", false, null);
+    OMIT_HEADER("omitHeader", false, null),
+    IDS("ids", false, null);
 
     protected String requestParamName;
 

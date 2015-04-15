@@ -107,6 +107,8 @@ public class FreemarkerResponseHeader
                 queryParams.put(fusionParam, sp.getValue());
             }
         }
+
+        // TODO add omitHeaders, ids
     }
 
     protected void buildMultiValueParam(List<SolrFusionRequestParam> facetFieldParams,

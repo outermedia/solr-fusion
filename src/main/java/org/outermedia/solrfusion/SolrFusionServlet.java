@@ -294,6 +294,8 @@ public class SolrFusionServlet extends AbstractServlet
         SolrFusionRequestParam omitHeader = getOptionalSingleSearchParamValue(requestParams, OMIT_HEADER, null,
             fusionRequest);
         fusionRequest.setOmitHeader(omitHeader);
+        SolrFusionRequestParam ids = getOptionalSingleSearchParamValue(requestParams, IDS, null, fusionRequest);
+        fusionRequest.setIds(ids);
     }
 
     protected void buildFacetFusionRequest(Map<String, String[]> requestParams, FusionRequest fusionRequest)
@@ -458,7 +460,18 @@ public class SolrFusionServlet extends AbstractServlet
     {
         try
         {
-            FusionControllerIfc fc = cfg.getController();
+            FusionControllerIfc fc;
+            SolrFusionRequestParam ids = fusionRequest.getIds();
+            if (ids.getValue() != null)
+            {
+                // TODO should be configurable in schema
+                fc = new IdsFusionController();
+                fc.init(null);
+            }
+            else
+            {
+                fc = cfg.getController();
+            }
             fc.process(cfg, fusionRequest, fusionResponse);
         }
         catch (Exception e)

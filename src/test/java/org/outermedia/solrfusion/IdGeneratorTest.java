@@ -40,15 +40,17 @@ public class IdGeneratorTest
         String serverName = "abc";
         String searchServerDocId = "3" + DefaultIdGenerator.SEPARATOR + "2";
         String fid = idGen.computeId(serverName, searchServerDocId);
-        System.out.println("CID " + fid);
+        // System.out.println("CID " + fid);
         Assert.assertEquals("Got wrong server name", serverName, idGen.getSearchServerIdFromFusionId(fid));
-        Assert.assertEquals("Got wrong doc id", searchServerDocId, idGen.getSearchServerDocIdFromFusionId(fid));
+        Assert.assertEquals("Got wrong doc id", searchServerDocId,
+            idGen.getSearchServerDocIdFromFusionId(fid, Arrays.asList("3")));
 
         // for merged ids the first entry should be used
         String fid1 = idGen.computeId("Server2", "4");
         String mergedId = idGen.mergeIds(fid, fid1);
         Assert.assertEquals("Got wrong server name", serverName, idGen.getSearchServerIdFromFusionId(mergedId));
-        Assert.assertEquals("Got wrong doc id", searchServerDocId, idGen.getSearchServerDocIdFromFusionId(mergedId));
+        Assert.assertEquals("Got wrong doc id", searchServerDocId,
+            idGen.getSearchServerDocIdFromFusionId(mergedId, Arrays.asList("abc", "Server2")));
 
         try
         {

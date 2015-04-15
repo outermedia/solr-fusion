@@ -49,6 +49,7 @@ import static org.outermedia.solrfusion.query.SolrFusionRequestParams.*;
 public class FusionRequest
 {
     public static final String FIELD_LIST_SEPARATOR = " ,";
+
     private SolrFusionRequestParam query;
     private List<SolrFusionRequestParam> filterQuery;
     private SolrFusionRequestParam start;
@@ -62,6 +63,7 @@ public class FusionRequest
     private SolrFusionRequestParam queryType;
     private SolrFusionRequestParam queryFields;
     private SolrFusionRequestParam minimumMatch;
+    private SolrFusionRequestParam ids;
 
     private SolrFusionRequestParam highlightingFieldsToReturn;
     private SolrFusionRequestParam highlightQuery;
@@ -112,6 +114,7 @@ public class FusionRequest
         sortSpec = new SortSpec(ResponseMapperIfc.FUSION_FIELD_NAME_SCORE, null, false);
         minimumMatch = new SolrFusionRequestParam();
         omitHeader = new SolrFusionRequestParam();
+        ids = new SolrFusionRequestParam();
     }
 
     public Map<String, Float> getBoosts()
@@ -306,6 +309,10 @@ public class FusionRequest
         {
             searchServerParams.put(MINIMUM_MATCH, minimumMatch.getValue());
         }
+        if (ids.getValue() != null)
+        {
+            searchServerParams.put(IDS, ids.getValue());
+        }
     }
 
     protected void addIfContained(Multimap<String> searchServerParams, SolrFusionRequestParams param,
@@ -464,7 +471,7 @@ public class FusionRequest
         {
             result.add("*");
             // if "score" is added to hl.fl, then solr returns no snippets!
-            if(target != QueryTarget.HIGHLIGHT_QUERY)
+            if (target != QueryTarget.HIGHLIGHT_QUERY)
             {
                 result.add(ResponseMapperIfc.DOC_FIELD_NAME_SCORE);
             }

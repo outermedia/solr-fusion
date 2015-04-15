@@ -77,6 +77,12 @@ public class FusionController implements FusionControllerIfc
     {
         this.configuration = configuration;
 
+        processRequestWithQParam(configuration, fusionRequest, fusionResponse);
+    }
+
+    protected void processRequestWithQParam(Configuration configuration, FusionRequest fusionRequest,
+        FusionResponse fusionResponse)
+    {
         String queryStr = fusionRequest.getQuery().getValue();
         List<SolrFusionRequestParam> filterQueryList = fusionRequest.getFilterQuery();
         String highlightQueryStr = fusionRequest.getHighlightQuery().getValue();
@@ -152,7 +158,7 @@ public class FusionController implements FusionControllerIfc
             if (consolidator != null)
             {
                 requestAllSearchServers(fusionRequest, configuredSearchServers, consolidator);
-                if (consolidator.numberOfResponseStreams() < configuration.getDisasterLimit())
+                if (consolidator.numberOfResponseStreams() < getDisasterLimit(configuration))
                 {
                     fusionResponse.setResponseForTooLessServerAnsweredError(configuration.getDisasterMessage(),
                         consolidator.getErrorMsg());
@@ -168,6 +174,11 @@ public class FusionController implements FusionControllerIfc
                 fusionResponse.setResponseForException(lastException);
             }
         }
+    }
+
+    protected int getDisasterLimit(Configuration configuration)
+    {
+        return configuration.getDisasterLimit();
     }
 
     protected ResponseConsolidatorIfc getNewResponseConsolidator()
@@ -212,8 +223,8 @@ public class FusionController implements FusionControllerIfc
         }
     }
 
-    protected void requestAllSearchServers(final FusionRequest fusionRequest,
-        List<SearchServerConfig> configuredSearchServers, final ResponseConsolidatorIfc consolidator)
+    protected void requestAllSearchServers(FusionRequest fusionRequest,
+        List<SearchServerConfig> configuredSearchServers, ResponseConsolidatorIfc consolidator)
     {
         log.debug("Requesting all configured servers with query: {}", fusionRequest.getQuery());
         ScriptEnv env = getNewScriptEnv(fusionRequest);
@@ -335,7 +346,7 @@ public class FusionController implements FusionControllerIfc
                 boolean forDismax = false;
                 if (MetaInfo.DISMAX_PARSER.equals(queryType))
                 {
-                    if(!(adapter instanceof Solr1Adapter))
+                    if (!(adapter instanceof Solr1Adapter))
                     {
                         // TODO always use q.alt instead of q? or second dismax config option needed?
                         String url = adapter.getUrl();
@@ -343,7 +354,7 @@ public class FusionController implements FusionControllerIfc
                         adapter = Solr1Adapter.Factory.getInstance();
                         adapter.setUrl(url);
                         adapter.setSolrVersion(version);
-                        ((Solr1Adapter)adapter).setSolrVersion(((Solr1Adapter) adapter).getSolrVersion());
+                        ((Solr1Adapter) adapter).setSolrVersion(((Solr1Adapter) adapter).getSolrVersion());
                     }
                     forDismax = true;
                 }

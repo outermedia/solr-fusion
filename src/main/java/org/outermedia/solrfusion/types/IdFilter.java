@@ -39,7 +39,8 @@ import java.util.List;
 @Slf4j
 public class IdFilter extends AbstractType
 {
-    @Override public void passArguments(List<Element> typeConfig, Util util)
+    @Override
+    public void passArguments(List<Element> typeConfig, Util util)
     {
         // NOP
     }
@@ -49,8 +50,8 @@ public class IdFilter extends AbstractType
         return new IdFilter();
     }
 
-    @Override public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env,
-        ConversionDirection dir)
+    @Override
+    public TypeResult apply(List<String> values, List<Integer> facetDocCounts, ScriptEnv env, ConversionDirection dir)
     {
         TypeResult result = null;
         if (values.size() > 0)
@@ -63,14 +64,15 @@ public class IdFilter extends AbstractType
                 {
                     IdGeneratorIfc idGen = env.getConfiguration().getIdGenerator();
                     List<String> mergedIds = idGen.splitMergedId(mergedFusionId);
+                    List<String> allSearchServerNames = env.getConfiguration().allSearchServerNames();
                     for (String singleFusionId : mergedIds)
                     {
                         // if the current search server is not the originator, remove the id term query
                         String sourceSearchServer = idGen.getSearchServerIdFromFusionId(singleFusionId);
                         if (sourceSearchServer.equals(searchServerConfig.getSearchServerName()))
                         {
-                            result = new TypeResult(
-                                Arrays.asList(idGen.getSearchServerDocIdFromFusionId(mergedFusionId)), null,
+                            result = new TypeResult(Arrays.asList(
+                                idGen.getSearchServerDocIdFromFusionId(mergedFusionId, allSearchServerNames)), null,
                                 isReturnsFullQueries());
                             break;
                         }

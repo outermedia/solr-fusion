@@ -88,11 +88,15 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
     public String QUERY_TYPE_PARAMETER = "qt";
     public String BOOST_PARAMETER = "qf";
     public String MIN_MATCH_PARAMETER = "mm";
+    public String IDS_PARAMETER = "ids";
+    public String OMIT_HEADER_PARAMETER = "omitHeader";
 
-    @Setter @Getter
+    @Setter
+    @Getter
     private String url;
 
-    @Setter @Getter
+    @Setter
+    @Getter
     protected Version solrVersion;
 
     /**
@@ -125,7 +129,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
         int httpStatusCode = statusLine.getStatusCode();
         String reason = statusLine.getReasonPhrase();
 
-        log.debug("Received response in {}ms from host {}: {}", endTime-startTime, url, statusLine.toString());
+        log.debug("Received response in {}ms from host {}: {}", endTime - startTime, url, statusLine.toString());
 
         InputStream contentStream = response.getEntity().getContent();
 
@@ -175,6 +179,7 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
         addIfNotNull(ub, SORT_PARAMETER, params.getFirst(SORT));
         addIfNotNull(ub, BOOST_PARAMETER, params.getFirst(QUERY_FIELD));
         addIfNotNull(ub, MIN_MATCH_PARAMETER, params.getFirst(MINIMUM_MATCH));
+        addIfNotNull(ub, OMIT_HEADER_PARAMETER, params.getFirst(OMIT_HEADER));
 
         ub.setParameter(FIELDS_TO_RETURN_PARAMETER, params.getFirst(FIELDS_TO_RETURN));
         String queryType = params.getFirst(QUERY_TYPE);
@@ -209,6 +214,8 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
                 log.error("Caught exception while creating dismax query", e);
             }
         }
+
+        addIfNotNull(ub, IDS_PARAMETER, params.getFirst(IDS));
 
         return ub;
     }
@@ -271,7 +278,8 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
             timeout).build();
     }
 
-    protected HttpPost newHttpPost(String url, SolrFusionUriBuilderIfc ub) throws URISyntaxException, UnsupportedEncodingException
+    protected HttpPost newHttpPost(String url, SolrFusionUriBuilderIfc ub)
+        throws URISyntaxException, UnsupportedEncodingException
     {
         HttpPost result = new HttpPost(url);
         List<NameValuePair> params = ub.getQueryParams();
@@ -299,22 +307,26 @@ public class DefaultSolrAdapter implements SearchServerAdapterIfc<SolrFusionUriB
         }
     }
 
-    @Override public void finish() throws Exception
+    @Override
+    public void finish() throws Exception
     {
         // NOP
     }
 
-    @Override public void commitLastDocs()
+    @Override
+    public void commitLastDocs()
     {
         throw new RuntimeException("Not implemented.");
     }
 
-    @Override public void add(Document doc) throws Exception
+    @Override
+    public void add(Document doc) throws Exception
     {
         throw new RuntimeException("Not implemented.");
     }
 
-    @Override public void deleteByQuery(String query) throws Exception
+    @Override
+    public void deleteByQuery(String query) throws Exception
     {
         throw new RuntimeException("Not implemented.");
     }

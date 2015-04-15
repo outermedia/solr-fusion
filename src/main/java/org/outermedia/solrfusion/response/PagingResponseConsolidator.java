@@ -167,7 +167,7 @@ public class PagingResponseConsolidator extends AbstractResponseConsolidator
         }
     }
 
-    private Set<String> getSingleFieldMapping(String searchServerField)
+    protected Set<String> getSingleFieldMapping(String searchServerField)
     {
         // map only id field
         Set<String> searchServerFieldsToMap = new HashSet<>();
