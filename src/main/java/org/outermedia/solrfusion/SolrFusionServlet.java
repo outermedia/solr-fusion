@@ -130,32 +130,43 @@ public class SolrFusionServlet extends AbstractServlet
         }
         else if (!fusionResponse.isWroteSomeData())
         {
+            ResponseRendererIfc responseRenderer = null;
+            try
+            {
+                responseRenderer = cfg.getResponseRendererByType(rendererType);
+            }
+            catch (Exception e)
+            {
+                log.error("Caught exception while creating response renderer", e);
+            }
+
             // if no content was written, try to send an error and an empty content
             String errorMessage = fusionResponse.getErrorMessage();
             if (errorMessage == null)
             {
                 errorMessage = "unknown";
             }
-            // try to create empty answer if a text response is expected
-            try
+            // try to create empty answer if javabin is expected
+            if (responseRenderer != null && rendererType == ResponseRendererType.JAVABIN)
             {
-                ResponseRendererIfc responseRenderer = cfg.getResponseRendererByType(rendererType);
-                if (responseRenderer != null && (responseRenderer instanceof TextResponseRendererIfc))
+                responseRenderer.writeResponse(cfg, null, fusionRequest, fusionResponse);
+                if (fusionResponse.isWroteSomeData())
                 {
-                    StringWriter emptyResponseWriter = new StringWriter();
-                    PrintWriter textWriter = new PrintWriter(emptyResponseWriter);
-                    fusionResponse.setTextWriter(textWriter);
-                    responseRenderer.writeResponse(cfg, null, fusionRequest, fusionResponse);
-                    if (fusionResponse.isWroteSomeData())
-                    {
-                        textWriter.flush();
-                        errorMessage = emptyResponseWriter.toString();
-                    }
+                    return;
                 }
             }
-            catch (Exception e)
+            // try to create empty answer if a text response is expected
+            if (responseRenderer != null && (responseRenderer instanceof TextResponseRendererIfc))
             {
-                log.error("Caught exception while creating error response", e);
+                StringWriter emptyResponseWriter = new StringWriter();
+                PrintWriter textWriter = new PrintWriter(emptyResponseWriter);
+                fusionResponse.setTextWriter(textWriter);
+                responseRenderer.writeResponse(cfg, null, fusionRequest, fusionResponse);
+                if (fusionResponse.isWroteSomeData())
+                {
+                    textWriter.flush();
+                    errorMessage = emptyResponseWriter.toString();
+                }
             }
             log.error("Returning error, but no response:\n{}", errorMessage);
             response.sendError(400, errorMessage);
