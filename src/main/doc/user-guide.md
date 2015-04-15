@@ -9,6 +9,7 @@ Outermedia GmbH
 
 * [Overview](#overview)
 * [Licence](#licence)
+* [Change Log](#change-log)
 * [Software Requirements](#software-requirements)
 * [Installation](#installation)
     * [Error Handling](#error-handling)
