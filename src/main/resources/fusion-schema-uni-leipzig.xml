@@ -178,6 +178,9 @@
     <!-- This component controls the whole processing. -->
     <om:controller class="org.outermedia.solrfusion.FusionController$Factory"/>
 
+    <!-- This component controls the whole processing of ids queries (javabin). -->
+    <om:ids-controller class="org.outermedia.solrfusion.IdsFusionController$Factory" />
+
     <om:solr-servers>
         <om:timeout>4000</om:timeout>
         <om:disaster-limit>0</om:disaster-limit>
@@ -201,6 +204,8 @@
 
         <om:response-renderer type="php"
                               class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory"/>
+
+        <om:response-renderer type="javabin" class="org.outermedia.solrfusion.response.javabin.JavaBin4$Factory"/>
 
         <!-- edismax query builder -->
         <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>

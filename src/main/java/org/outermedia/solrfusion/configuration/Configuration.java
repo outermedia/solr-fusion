@@ -52,7 +52,7 @@ import java.util.List;
          propOrder = {
              "fusionFields", "scriptTypes", "defaultSearchField", "defaultSortField", "defaultOperator",
              "idGeneratorFactory", "responseConsolidatorFactory", "responseMapperFactory", "queryMapperFactory",
-             "controllerFactory", "searchServerConfigs"
+             "controllerFactory", "idsControllerFactory", "searchServerConfigs"
          })
 @XmlRootElement(name = "core",
                 namespace = "http://solrfusion.outermedia.org/configuration/")
@@ -128,6 +128,13 @@ public class Configuration
     @Getter
     @Setter
     private ControllerFactory controllerFactory;
+
+    @XmlElement(name = "ids-controller",
+                namespace = "http://solrfusion.outermedia.org/configuration/",
+                required = true)
+    @Getter
+    @Setter
+    private IdsControllerFactory idsControllerFactory;
 
     @XmlElement(name = "solr-servers",
                 namespace = "http://solrfusion.outermedia.org/configuration/",
@@ -307,6 +314,17 @@ public class Configuration
     {
         return controllerFactory.getInstance();
     }
+
+    /**
+     * Get the configured "ids" controller.
+     *
+     * @return a non null instance of FusionControllerIfc
+     */
+    public FusionControllerIfc getIdsController() throws InvocationTargetException, IllegalAccessException
+    {
+        return idsControllerFactory.getInstance();
+    }
+
 
     /**
      * Get the default page size.

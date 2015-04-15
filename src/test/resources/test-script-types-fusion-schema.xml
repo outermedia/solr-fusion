@@ -66,6 +66,8 @@
 
     <om:controller class="org.outermedia.solrfusion.FusionController$Factory"/>
 
+    <om:ids-controller class="org.outermedia.solrfusion.IdsFusionController$Factory" />
+
     <om:solr-servers>
         <om:timeout>4000</om:timeout>
         <om:disaster-limit>1</om:disaster-limit>

@@ -1,7 +1,7 @@
 # User Guide
 
-For SolrFusion 1.1.
-Date: 2014-09-03
+For SolrFusion 1.2.
+Date: 2015-04-15
 
 Outermedia GmbH 
 
@@ -38,6 +38,7 @@ Outermedia GmbH
         * [Paging And Sorting](#paging-and-sorting)
     * [Mapper](#mapper)
     * [Controller](#controller)
+    * ["ids" Controller](#ids-controller)
     * [Solr Connection Values](#solr-connection-values)
     * [Query Response Parser](#query-response-parser)
     * [Response Renderer](#response-renderer)
@@ -96,6 +97,14 @@ This software is licensed under the terms of the GPL V3.
 * Java >= 1.7
 * One JEE compliant application server >= 2.5. Tested with Tomcat 6.0.41.
 
+# Change Log
+
+2014-09-30 Version 1.0: First release.
+
+2014-12-03 Version 1.1: Bug fix release.
+
+2015-XX-YY Version 1.2: Added javabin (version 2 of solr 4.X.Y) support to run solrfusion as a shard.
+
 # Installation
 For tomcat simply copy the solrfusion-X.Y.war to `<tomcat install dir>/webapps/solrfusion.war`. Save your
 SolrFusion schema into a location you prefer. If it is `<tomcat install dir>/webapps/solrfusion/WEB-INF/classes` 
@@ -152,7 +161,7 @@ SolrFusion supports the following (e)dismax query types:
 The supported Solr HTTP request parameters are:
 
 * q - query; in dismax or edismax format (depends on qt and {!...})
-* wt - response type (only json or xml)
+* wt - response type (only json or xml or javabin)
 * fq - (multiple) filter query
 * rows - paging number of documents
 * start - paging offset
@@ -173,6 +182,8 @@ The supported Solr HTTP request parameters are:
 * qt - query type; supported values are "dismax" and "morelikethis"
 * qf - boost values
 * mm - minimum match
+* omitHeaders - header is not rendered in response (only if wt=javabin; since version 1.2)
+* ids - return documents of the given document ids (internally used during shard requests; since version 1.2)
 
 If not mentioned all fields occur at most once in a HTTP request.
 
@@ -815,6 +826,18 @@ Declaration (mandatory):
 
 The requests are sent in parallel.
 
+## ids Controller
+In the case that a request contains the parameter "ids" this special controller is used. Instead of requesting the query
+in parallel, the provided document ids are filtered by the originating solr server and then every solr server is
+requested in parallel with his ids.
+Note: "ids" is an internal request parameter used during the processing of shard requests.
+
+Declaration (mandatory):
+
+    <om:ids-controller class="org.outermedia.solrfusion.IdsFusionController$Factory" />
+
+This schema option is supported since version 1.2.
+
 ## Solr Connection Values
 Global connection values are the  
 
@@ -866,13 +889,31 @@ Declaration (mandatory, child of `<om:solr-servers>`):
         class="org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory" />
     <om:response-renderer type="json"
         class="org.outermedia.solrfusion.response.DefaultJsonResponseRenderer$Factory" />
+    <om:response-renderer type="javabin"
+        class="org.outermedia.solrfusion.response.javabin.JavaBin4$Factory"/>
 
+"xml" and "json":
 The json response renderer always renders facets in json.nl=arrarr format. But the format of json and xml is described
 by a freemarker template which can be easily adjusted (see json.ftl and xml.ftl in chapter [Configuration Files](#configuration-files)).
 
 The line above declares the global response renderer, which can be overwritten for specific Solr servers.
 
-Note: The php renderer is not implemented in version 1.0, 1.1.    
+Note: The php renderer is not implemented in version 1.0, 1.1.
+
+"javabin" is used automatically when solrfusion is used as one shard. Please note, that the class JavaBin4 implements
+partially version 2 of solr 4.X.Y, without request distribution. Supported solr features are: facets, highlights and
+sorting (only one single sort field). Especially not supported are shards.info=true and shards.tolerant=true. The
+javabin specific request parameters "omitHeader" and "ids" are supported too. "javabin" is implemented since version
+1.2 and caused a change of the response render interface. Since 1.2 the response is directly written into the
+response stream and can't therefor not be logged anymore. But the solr request is still logged, so it is very easy
+to run the request in a web browser. The advantage of this solution is a lower RAM consumption.
+
+Example shard request:
+
+    http://localhost:8983/solr/select?q=*:*&wt=xml&shards=localhost:8983/solr,localhost:8080/solrfusion/biblio&rows=100
+
+Where 8983 is a standard solr server (tested with 4.8.1) and 8080 solrfusion.
+
     
 ## Query Builder    
 Corresponding to the query parsers SolrFusion is capable to render dismax or edismax queries from mapped SolrFusion queries.

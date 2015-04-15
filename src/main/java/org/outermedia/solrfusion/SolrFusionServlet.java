@@ -475,9 +475,7 @@ public class SolrFusionServlet extends AbstractServlet
             SolrFusionRequestParam ids = fusionRequest.getIds();
             if (ids.getValue() != null)
             {
-                // TODO should be configurable in schema
-                fc = new IdsFusionController();
-                fc.init(null);
+                fc = cfg.getIdsController();
             }
             else
             {

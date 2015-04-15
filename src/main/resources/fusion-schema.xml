@@ -52,8 +52,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     <!-- The fusion query is transformed into a specific search server query -->
     <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory" />
 
-    <!-- This component controls the whole processing. -->
+    <!-- This component controls the whole processing of normal queries. -->
     <om:controller class="org.outermedia.solrfusion.FusionController$Factory" />
+
+    <!-- This component controls the whole processing of ids queries (javabin). -->
+    <om:ids-controller class="org.outermedia.solrfusion.IdsFusionController$Factory" />
 
     <om:solr-servers>
         <!-- global settings -->
@@ -78,6 +81,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 
         <om:response-renderer type="php"
             class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory" />
+
+        <om:response-renderer type="javabin"
+            class="org.outermedia.solrfusion.response.javabin.JavaBin4$Factory"/>
 
         <!-- An edismax search String is created from an already mapped query -->
         <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory" />

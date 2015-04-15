@@ -197,4 +197,11 @@ public class IdsFusionController extends FusionController
         fusionRequest.setIds(origIds);
     }
 
+    public static class Factory
+    {
+        public static FusionControllerIfc getInstance()
+        {
+            return new IdsFusionController();
+        }
+    }
 }
