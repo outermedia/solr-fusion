@@ -42,6 +42,7 @@
         <om:field name="manufacturedate_dt" />
         <om:field name="compName_s" />
         <om:field name="address_s" />
+        <om:field name="solr-server" />
     </om:fusion-schema-fields>
 
     <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js"/>
