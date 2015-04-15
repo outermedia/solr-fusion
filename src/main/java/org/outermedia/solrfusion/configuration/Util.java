@@ -63,9 +63,12 @@ public class Util
     /**
      * Read xml into an object of class docClass.
      *
-     * @param docClass   objects of this class represent the xml
-     * @param xml        the resource path to an XML file
-     * @param schemaPath null (no validation) or a resource path to an XML schema file.
+     * @param docClass
+     *     objects of this class represent the xml
+     * @param xml
+     *     the resource path to an XML file
+     * @param schemaPath
+     *     null (no validation) or a resource path to an XML schema file.
      * @return null for error or an instance of class docClass.
      * @throws JAXBException
      * @throws SAXException
@@ -88,10 +91,14 @@ public class Util
     /**
      * Read xml from reader into an object of class docClass.
      *
-     * @param docClass   objects of this class represent the xml
-     * @param xmlPath    the resource path whose content is returned by xmlReader (only used in log statement)
-     * @param xmlReader  the xml to read in
-     * @param schemaPath null (no validation) or a resource path to an XML schema file.
+     * @param docClass
+     *     objects of this class represent the xml
+     * @param xmlPath
+     *     the resource path whose content is returned by xmlReader (only used in log statement)
+     * @param xmlReader
+     *     the xml to read in
+     * @param schemaPath
+     *     null (no validation) or a resource path to an XML schema file.
      * @return null for error or an instance of class docClass.
      * @throws JAXBException
      * @throws SAXException
@@ -171,6 +178,7 @@ public class Util
         else
         {
             result = url.getFile();
+            log.info("Using '" + resourcePath + "' in: " + result);
         }
         return result;
     }
@@ -179,8 +187,10 @@ public class Util
      * Get the value for a given xpath and a list of elements. VERY IMPORTANT: Use the ":" e.g. in //:script, otherwise
      * no xpath will match. The value is trimmed.
      *
-     * @param xpathStr   is the xpath.
-     * @param typeConfig is a list of dom w3c elements
+     * @param xpathStr
+     *     is the xpath.
+     * @param typeConfig
+     *     is a list of dom w3c elements
      * @return null if nothing is found or the value of the first(!) matched element
      * @throws XPathExpressionException
      */
@@ -193,9 +203,12 @@ public class Util
      * Get the value for a given xpath and a list of elements. VERY IMPORTANT: Use the ":" e.g. in //:script, otherwise
      * no xpath will match. The value is trimmed if the trim parameter is true.
      *
-     * @param xpathStr   is the xpath.
-     * @param typeConfig is a list of dom w3c elements
-     * @param trim       whether to trim the found value or not
+     * @param xpathStr
+     *     is the xpath.
+     * @param typeConfig
+     *     is a list of dom w3c elements
+     * @param trim
+     *     whether to trim the found value or not
      * @return null if nothing is found or the value of the first(!) matched element
      * @throws XPathExpressionException
      */
@@ -219,8 +232,10 @@ public class Util
      * Get a elements, matching the given xpath. VERY IMPORTANT: Use the ":" e.g. in //:script, otherwise no xpath will
      * match.
      *
-     * @param xpathStr   is the xpath
-     * @param typeConfig is a list of dom w3c elements
+     * @param xpathStr
+     *     is the xpath
+     * @param typeConfig
+     *     is a list of dom w3c elements
      * @return a list of w3c org nodes (perhaps empty)
      * @throws XPathExpressionException
      */
