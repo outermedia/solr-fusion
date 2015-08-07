@@ -47,6 +47,7 @@ import org.outermedia.solrfusion.configuration.Configuration;
 import org.outermedia.solrfusion.configuration.QueryTarget;
 import org.outermedia.solrfusion.configuration.SearchServerConfig;
 import org.outermedia.solrfusion.mapper.QueryBuilderIfc;
+import org.outermedia.solrfusion.query.parser.Query;
 import org.outermedia.solrfusion.response.parser.Document;
 
 import javax.sql.DataSource;
@@ -209,6 +210,11 @@ public class DefaultSqlAdapter implements SearchServerAdapterIfc<SolrFusionUriBu
         this.solrVersion = version;
         SolrFusionUriBuilder ub = new SolrFusionUriBuilder(url);
         ub.setParameter(QUERY_PARAMETER, params.getFirst(QUERY));
+
+        Query rawQuery = fusionRequest.getParsedQuery();
+        // TODO create select columns: FIELDS_TO_RETURN contains "*" collect all fields from query and add them to
+        // the listed fields of FIELDS_TO_RETURN
+        // TODO where to get the "left join" condition from? per possible relation needed
 
         /* TODO
         Collection<String> fqs = params.get(FILTER_QUERY);
