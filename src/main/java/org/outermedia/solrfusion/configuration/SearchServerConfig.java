@@ -48,10 +48,8 @@ import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "searchServerConfig", namespace = "http://solrfusion.outermedia.org/configuration/",
-    propOrder = {
-        "adapterConfig", "url", "scoreFactory", "responseParserFactory", "queryBuilderFactory", "idFieldName",
-        "maxDocs", "fieldMappings", "postProcessors"
-    })
+        propOrder = {"adapterConfig", "url", "scoreFactory", "responseParserFactory", "queryBuilderFactory",
+                "dismaxQueryBuilderFactory", "idFieldName", "maxDocs", "fieldMappings", "postProcessors"})
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -85,6 +83,9 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
 
     @XmlElement(name = "query-builder", namespace = "http://solrfusion.outermedia.org/configuration/", required = false)
     private QueryBuilderFactory queryBuilderFactory;
+
+    @XmlElement(name = "dismax-query-builder", namespace = "http://solrfusion.outermedia.org/configuration/", required = false)
+    private QueryBuilderFactory dismaxQueryBuilderFactory;
 
     @XmlElement(name = "unique-key", namespace = "http://solrfusion.outermedia.org/configuration/", required = true)
     private String idFieldName;
@@ -162,6 +163,17 @@ public class SearchServerConfig extends ConfiguredFactory<SearchServerAdapterIfc
         if (queryBuilderFactory != null)
         {
             result = queryBuilderFactory.getInstance();
+        }
+        return result;
+    }
+
+    public QueryBuilderIfc getDismaxQueryBuilder(QueryBuilderIfc defaultQueryBuilder)
+            throws InvocationTargetException, IllegalAccessException
+    {
+        QueryBuilderIfc result = defaultQueryBuilder;
+        if (dismaxQueryBuilderFactory != null)
+        {
+            result = dismaxQueryBuilderFactory.getInstance();
         }
         return result;
     }

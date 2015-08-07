@@ -1,6 +1,7 @@
 package org.outermedia.solrfusion.mapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.outermedia.solrfusion.configuration.DefaultFieldType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,11 @@ public abstract class AbstractQueryBuilder implements QueryBuilderIfc
     }
 
     public void escapeSearchWord(StringBuilder queryBuilder, boolean quoted, String searchWord)
+    {
+        escapeSearchWord(queryBuilder, quoted, searchWord, null);
+    }
+
+    public void escapeSearchWord(StringBuilder queryBuilder, boolean quoted, String searchWord, DefaultFieldType fusionFieldType)
     {
         Pattern p;
         if(searchWord.contains(" "))
