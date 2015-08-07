@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<om:core xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:om="http://solrfusion.outermedia.org/configuration/"
+         xmlns="http://solrfusion.outermedia.org/configuration/type/"
+         xsi:schemaLocation="http://solrfusion.outermedia.org/configuration/ ../../main/resources/configuration.xsd ">
+
+    <om:fusion-schema-fields default-type="text">
+        <om:field name="id"/>
+        <om:field name="birthday" type="date" format="dd.MM.yyyy"/>
+        <om:field name="username"/>
+        <om:field name="failLoginNr" type="int"/>
+        <om:field name="name"/>
+        <om:field name="postalCode"/>
+        <om:field name="street"/>
+        <om:field name="state"/>
+        <om:field name="country"/>
+        <om:field name="city" />
+    </om:fusion-schema-fields>
+
+    <om:script-type name="javascript" class="org.outermedia.solrfusion.types.Js"/>
+    <om:script-type name="beanshell" class="org.outermedia.solrfusion.types.Bsh"/>
+    <om:script-type name="merge-multi-value" class="org.outermedia.solrfusion.types.MultiValueMerger"/>
+    <om:script-type name="static-value" class="org.outermedia.solrfusion.types.Value"/>
+    <om:script-type name="filter-id" class="org.outermedia.solrfusion.types.IdFilter"/>
+    <om:script-type name="field-merger" class="org.outermedia.solrfusion.types.FieldMerger"/>
+    <om:script-type name="normalizer" class="org.outermedia.solrfusion.types.Normalizer"/>
+    <om:script-type name="set-doc-count" class="org.outermedia.solrfusion.types.SetFacetDocCount"/>
+    <!-- Post Processors -->
+    <om:script-type name="send-if-fq-eq" class="org.outermedia.solrfusion.types.FilterSpecificFq"/>
+    <om:script-type name="filter-empty-fq" class="org.outermedia.solrfusion.types.FilterEmptyFq"/>
+
+    <om:default-search-field>name</om:default-search-field>
+
+    <om:default-sort-field>score desc</om:default-sort-field>
+
+    <om:default-operator>AND</om:default-operator>
+
+    <om:id-generator fusion-name="id"
+                     class="org.outermedia.solrfusion.DefaultIdGenerator$Factory"/>
+
+    <om:response-consolidator class="org.outermedia.solrfusion.response.PagingResponseConsolidator$Factory"/>
+
+    <om:response-mapper class="org.outermedia.solrfusion.mapper.ResponseMapper$Factory" ignore-missing-mappings="true"/>
+
+    <!-- The fusion query is transformed into a specific search server query -->
+    <om:query-mapper class="org.outermedia.solrfusion.mapper.QueryMapper$Factory"/>
+
+    <!-- This component controls the whole processing. -->
+    <om:controller class="org.outermedia.solrfusion.FusionController$Factory"/>
+
+    <!-- This component controls the whole processing of ids queries (javabin). -->
+    <om:ids-controller class="org.outermedia.solrfusion.IdsFusionController$Factory" />
+
+    <om:solr-servers>
+        <om:timeout>4000</om:timeout>
+        <om:disaster-limit>0</om:disaster-limit>
+        <om:error key="disaster-limit">Please try later again.</om:error>
+        <om:page-size>10</om:page-size>
+
+        <om:query-parser
+                class="org.outermedia.solrfusion.query.EdisMaxQueryParser$Factory"/>
+
+        <om:dismax-query-parser
+            class="org.outermedia.solrfusion.query.DisMaxQueryParser$Factory"/>
+
+        <om:response-parser
+                class="org.outermedia.solrfusion.response.DefaultResponseParser$Factory"/>
+
+        <om:response-renderer type="xml"
+                              class="org.outermedia.solrfusion.response.DefaultXmlResponseRenderer$Factory"/>
+
+        <om:response-renderer type="json"
+                              class="org.outermedia.solrfusion.response.DefaultJsonResponseRenderer$Factory"/>
+
+        <om:response-renderer type="php"
+                              class="org.outermedia.solrfusion.response.DefaultPhpResponseRenderer$Factory"/>
+
+        <om:response-renderer type="javabin" class="org.outermedia.solrfusion.response.javabin.JavaBin4$Factory"/>
+
+        <!-- edismax query builder -->
+        <om:query-builder class="org.outermedia.solrfusion.mapper.QueryBuilder$Factory"/>
+
+        <om:dismax-query-builder class="org.outermedia.solrfusion.mapper.DisMaxQueryBuilder$Factory"/>
+
+        <om:solr-server name="DB1" version="mysql5.5"
+                        class="org.outermedia.solrfusion.adapter.sql.DefaultSqlAdapter$Factory">
+
+            <om:url>jdbc:mysql:///?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8</om:url>
+
+            <om:score factor="1.0"
+                      class="org.outermedia.solrfusion.DefaultScore$Factory"/>
+
+            <om:response-parser class="org.outermedia.solrfusion.response.DefaultSqlResponseParser$Factory" />
+
+            <om:query-builder class="org.outermedia.solrfusion.mapper.EdismaxToMySqlQueryBuilder$Factory" />
+
+            <om:dismax-query-builder class="org.outermedia.solrfusion.mapper.DisMaxToMySqlQueryBuilder$Factory" />
+
+            <om:unique-key>id</om:unique-key>
+
+            <om:max-docs>100</om:max-docs>
+
+            <!-- keep all fields in general -->
+            <om:field name="*" fusion-name="*" />
+
+            <!-- TODO all ids of response! -->
+            <om:field name="id" fusion-name="id">
+                <om:change>
+                    <om:query type="filter-id" />
+                </om:change>
+            </om:field>
+
+            <om:field name="dbatest.de_sball_model_PersonIfc.birthday" fusion-name="birthday">
+            </om:field>
+
+            <om:field name="dbatest.de_sball_model_PersonIfc.username" fusion-name="username">
+            </om:field>
+
+            <om:field name="dbatest.de_sball_model_PersonIfc.failLoginNr" fusion-name="failLoginNr">
+            </om:field>
+
+            <om:field name="dbatest.de_sball_model_PersonIfc.name" fusion-name="name">
+            </om:field>
+
+            <om:field name="dbatest.de_sball_model_AddressIfc.postalCode" fusion-name="postalCode">
+            </om:field>
+
+            <om:field name="dbatest.de_sball_model_AddressIfc.street" fusion-name="street">
+            </om:field>
+
+            <om:field name="dbatest.de_sball_model_AddressIfc.state" fusion-name="state">
+            </om:field>
+
+            <om:field name="dbatest.de_sball_model_AddressIfc.country" fusion-name="country">
+            </om:field>
+
+            <om:field name="dbatest.de_sball_model_AddressIfc.city" fusion-name="city">
+            </om:field>
+
+        </om:solr-server>
+
+    </om:solr-servers>
+</om:core>

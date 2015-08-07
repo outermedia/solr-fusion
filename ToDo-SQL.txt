@@ -1,0 +1,17 @@
+Done:
+- src/test/resources/fusion-schema-sql.xml
+- src/test/java/org/outermedia/solrfusion/mapper/EdismaxToSqlQueryMapperTest.java
+- src/test/java/org/outermedia/solrfusion/mapper/DismaxToSqlQueryMapperTest.java
+- added missing dismax-query-builder overwrite possibility to server config
+- added field's type to escapeSearchWord(), so that escaping can be implemented
+
+Open:
+- use Levenshtein instead of "sounds like" for fuzzy queries?
+- because every OR ends with "OR true" it is not necessary to keep OR'ed conditions in a where block
+    OR'ed conditions are evaluated for the score only!?
+- implement and test src/main/java/org/outermedia/solrfusion/adapter/sql/DefaultSqlAdapter.java
+- implement and test src/main/java/org/outermedia/solrfusion/response/DefaultSqlResponseParser.java
+- Facets: Per facet create new table in sql database which maps facet word to existing record
+    id x "facet word" x "table name" x "id of record in table name"
+  group-by/count sql query retrieves all occurrences of the "facet word" and the amount
+? highlighting?
