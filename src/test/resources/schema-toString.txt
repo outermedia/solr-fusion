@@ -59,7 +59,7 @@ Configuration(fusionFields=FusionFieldList(defaultType=text, fusionFields=[
  searchServerName=BibliothekA, queryParamName=null, searchServerVersion=3.6, enabled=true, adapterConfig=null, url=http://host:port/solr/xyz, scoreFactory=ScoreFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.DefaultScore$Factory, typeClassFactory=class org.outermedia.solrfusion.DefaultScore$Factory),
  factor=1.2),
  responseParserFactory=ResponseParserFactory(super=ConfiguredFactory(classFactory=org.outermedia.solrfusion.SpecialResponseParser$Factory, typeClassFactory=class org.outermedia.solrfusion.SpecialResponseParser$Factory)),
- queryBuilderFactory=null, idFieldName=id, maxDocs=100, fieldMappings=[
+ queryBuilderFactory=null, dismaxQueryBuilderFactory=null, idFieldName=id, maxDocs=100, fieldMappings=[
  FieldMapping(searchServersName=start, fusionName=city, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=EXACT_NAME_AND_FUSION_NAME, operations=null),
  FieldMapping(searchServersName=*_text, fusionName=*_t, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=WILDCARD_NAME_AND_FUSION_NAME, operations=null),
  FieldMapping(searchServersName=int_*, fusionName=i_*, searchServersNamePattern=null, fusionNameReplacement=null, searchServersNameReplacement=null, fusionNamePattern=null, mappingType=WILDCARD_NAME_AND_FUSION_NAME, operations=null),

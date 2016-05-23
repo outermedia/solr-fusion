@@ -155,7 +155,7 @@
             <xs:element name="score" type="tns:scoreFactory"/>
             <xs:element name="response-parser" type="tns:responseParser" minOccurs="0"/>
             <xs:element name="query-builder" type="tns:queryBuilder" minOccurs="0"/>
-            <xs:element name="dismax-query-builder" type="tns:queryBuilder" maxOccurs="0"/>
+            <xs:element name="dismax-query-builder" type="tns:queryBuilder" minOccurs="0"/>
             <xs:element name="unique-key" type="xs:string"/>
             <xs:element name="max-docs" type="xs:int"/>
             <xs:element name="field" type="tns:fieldMapping" maxOccurs="unbounded"/>
