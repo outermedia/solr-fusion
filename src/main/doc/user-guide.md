@@ -95,7 +95,7 @@ A basic test with vufind 2.3 succeeded too.
 This software is licensed under the terms of the GPL V3.
 
 # Software Requirements
-* Java >= 1.7
+* Java 1.7 (not compatible with 1.8!)
 * One JEE compliant application server >= 2.5. Tested with Tomcat 6.0.41.
 
 # Change Log
