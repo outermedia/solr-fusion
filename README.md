@@ -4,7 +4,7 @@ solr-fusion [![Build Status](https://travis-ci.org/outermedia/solr-fusion.svg?br
 Single solr proxy to multiple solr servers with different schemas
 
 
-Please find the user guide [here](https://github.com/outermedia/solr-fusion/blob/master/src/main/doc/user-guide.md "User Guide").
+Please find the getting started guide [here](https://github.com/outermedia/solr-fusion/blob/master/Getting_Started.md "Getting Started") and the user guide [here](https://github.com/outermedia/solr-fusion/blob/master/src/main/doc/user-guide.md "User Guide").
 
 This document explains the
 
