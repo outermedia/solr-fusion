@@ -1084,7 +1084,7 @@ The general format of mapping rules is:
 The matching of __name__ and __fusion-name__ supports
 
 * literals e.g. "city"
-* wildcards e.g name="*author*" and fusion-name="*Person*". Please note, that the number of wildcards ("*") has to be
+* wildcards e.g name="\*author\*" and fusion-name="\*Person\*". Please note, that the number of wildcards ("*") has to be
 equal in name and fusion-name. With e.g. name="first_author1" fusion-name="first_Person1" is produced and vice versa.
 Note: The current implementation rewrites wildcard field names to regular expressions.
 * regular expressions, e.g.: 
