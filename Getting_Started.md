@@ -372,10 +372,10 @@ Rules are explained in detail in: <https://github.com/outermedia/solr-fusion/blo
 
 **IMPORTANT:** Although <https://github.com/outermedia/solr-fusion/blob/master/src/main/doc/user-guide.md#javascript>
 states that the right-hand-side value for "returnValues" is automatically
-converted to a list, it is at least not correct for SolrFusion version 1.1. 
+converted to a list, it is not correct (fails even in SolrFusion's unreleased master). 
 It is necessary to manually build a list as shown in the example above (Arrays.asList(v1, v2, ...)).
-I encourage you to build your own version and to use the current stable "trunk"
-to get javabin support too.
+I encourage you to build your own version with "mvn clean package" and to use the current stable "master"
+to get javabin support too. Then it is necessary to update existing schema files and to add before line 31: \<om:ids-controller class="org.outermedia.solrfusion.IdsFusionController$Factory" /\>.
 
 Java exceptions will be written to log4j.log and catalina.out. "println" output
 (see last line in code above) goes to catalina.out only. But initially
